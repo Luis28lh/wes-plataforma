@@ -1,83 +1,118 @@
 # WARN ELECTRICAL SERVICES, SRL (WES)
-## Plataforma Web Empresarial, Catálogo Digital y Centro de Soporte
-### Taller 2: Publicación de Productos Digitales — Estándar AIDET v2.0
+## Plataforma Web Empresarial, Catálogo Digital, Centro de Soporte y Portal Administrativo Autónomo
+### Estándar AIDET v2.0 — El Profesional Potenciado por Tecnología
 
 ---
 
 ## 1. Resumen Ejecutivo de la Solución
 
-Esta solución implementa la plataforma web empresarial para **Warn Electrical Services, SRL (WES)**, diseñada y construida según las especificaciones técnicas, corporativas y operativas de la **Guía Maestra de Despliegue y Publicación Web AIDET v2.0**.
+Esta solución implementa la plataforma web empresarial para **Warn Electrical Services, SRL (WES)**, diseñada y construida con una división arquitectónica estricta entre dos espacios desacoplados:
+1. **Portal Público para Clientes y Visitantes (`index.html`)**: accesible en `http://localhost:3000/`.
+2. **Portal Administrativo Autónomo y Privado (`admin.html`)**: accesible exclusivamente en `http://localhost:3000/admin`.
 
-### Datos Corporativos Incorporados del Manual Oficial:
+### Datos Corporativos Oficiales:
 * **Razón Social:** Warn Electrical Services, SRL (WES)
-* **Incorporación:** Fundada el 9 de julio de 2017 · Incorporada por Decreto No. 326-06 del 11 de diciembre de 2017
-* **Capital y Socios:** Iniciada con 3 Socios y RD$100,000.00
+* **RNC:** 1-31-89326-4
 * **Sede:** Autopista Ramón Cáceres, Plaza Megatone, Moca, Provincia Espaillat, República Dominicana
-* **Horarios Oficiales:**
-  * Lunes a Viernes: 7:30 AM – 6:00 PM (Receso almuerzo 12:00 PM – 2:00 PM)
-  * Sábados: 8:00 AM – 1:00 PM
-* **Estructura Interna:** Administración; Ventas; Instalación, Soporte y Seguimiento
-* **Misión, Visión y Valores:** Integrados íntegramente del manual corporativo (Servicios, Puntualidad, Ética, Emprendedores, Responsabilidad)
-* **Colores Institucionales:** Azul Corporativo (`#0D2A5C`), Amarillo Relámpago (`#F5B300`) y Blanco
+* **Teléfono Principal y WhatsApp:** **`(849) 207-5474`** (`https://wa.me/18492075474`)
+* **Ubicación Google Maps:** [https://maps.app.goo.gl/KMosxdkCGwXxqFjC9](https://maps.app.goo.gl/KMosxdkCGwXxqFjC9) (`19.3877255, -70.531041`)
+* **Correos Electrónicos:** **`wes.inform@gmail.com`**
+* **Redes Sociales:** Instagram **`@wes.inform`** (`https://instagram.com/wes.inform`)
+* **Horarios:** Lun - Vie: 7:30 AM – 6:00 PM | Sáb: 8:00 AM – 1:00 PM
 
 ---
 
-## 2. Módulos y Capacidades Implementadas
+## 2. Arquitectura de Dos Espacios Desacoplados
 
-1. **Portada & Hero:**
-   * Propuesta de valor de alto impacto y métricas de confianza (+8 años, 15 especialistas).
-   * 4 botones de acción rápida (*Ver productos*, *Solicitar cotización*, *Solicitar soporte*, *WhatsApp*).
-   * 3 beneficios estratégicos: *Asesoría Personalizada*, *Instalación Profesional*, *Soporte Técnico Continuo*.
-   * Cuadrícula interactiva de categorías destacadas con llamado a la acción comercial.
-
-2. **Sección Institucional y Fundadores:**
-   * Historia real y valores de la empresa.
-   * 3 tarjetas para los fundadores con designaciones ejecutivas y marco de reserva *"Fotografía próximamente"* sin rostros falsos generados por IA.
-
-3. **Tienda y Catálogo Comercial:**
-   * Catálogo interactivo de equipos (CCTV, cámaras IP, biométricos, cerraduras inteligentes, switches PoE, cableado Cat6, fuentes reguladas).
-   * Buscador en tiempo real por texto, código y características.
-   * Filtros dinámicos por Categoría, Marca y Disponibilidad.
-   * Botón directo *"Agregar a cotización"* y *"Consultar por WhatsApp"*.
-
-4. **Sistema de Cotización (Cotizador Inteligente):**
-   * Carrito flotante con contador en tiempo real.
-   * Formulario completo con validación y selección de tipo de cliente.
-   * Generación automática de código correlativo único: `COT-2026-XXXX`.
-   * Almacenamiento local persistente + despacho opcional al backend de Google Apps Script.
-
-5. **Centro de Servicios Técnicos:**
-   * 6 servicios especializados con llamada a evaluación técnica.
-
-6. **Módulo de Soporte Técnico con Evidencia Fotográfica:**
-   * Formulario técnico con clasificación de fallas y selector de prioridad (*Baja*, *Media*, *Alta*).
-   * Módulo Drag & Drop para subir hasta 5 fotografías con previsualización en miniatura y eliminación selectiva antes de enviar.
-   * Generación automática de número de ticket único: `SOP-2026-XXXX`.
-
-7. **Contacto y Geolocalización:**
-   * Datos reales de la sede en Plaza Megatone, Moca.
-   * Mapa de Google Maps integrado.
-   * Botón flotante accesible de WhatsApp.
-
-8. **Panel Administrativo Privado (`admin` / `wes2026`):**
-   * Acceso protegido con contraseña.
-   * Gestión integral de cotizaciones con cambio de estado y notas internas.
-   * Gestión de tickets de soporte con visualizador de fotografías ampliadas.
-   * Administrador de productos (crear, editar, activar/desactivar).
-   * Configuración de textos y enlace al Web App de Google Apps Script.
-   * Exportación instantánea a CSV.
-
-9. **Backend en Google Apps Script (`backend/Code.gs`):**
-   * Integración con Google Sheets para registro en tiempo real.
-   * Despacho automático de correos con formato corporativo HTML para la empresa y para el cliente.
-   * Almacenamiento seguro de fotos en Google Drive.
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 1. ESPACIO PÚBLICO (index.html -> http://localhost:3000/)   │
+│ - Catálogo digital, cotizaciones en línea y soporte         │
+│ - Mapa interactivo Leaflet con marcador WES y cómo llegar   │
+│ - Feature Flags: precios, cotizaciones, soporte, WhatsApp   │
+│ - Sin enlaces visibles hacia el panel de administración     │
+└─────────────────────────────────────────────────────────────┘
+                               ▲
+                               │ Sincronización en tiempo real
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. ESPACIO ADMINISTRATIVO PRIVADO (/admin -> admin.html)    │
+│ - Ruta protegida independiente con <meta noindex, nofollow> │
+│ - Bloqueo temporal de 15 min tras 5 intentos fallidos       │
+│ - Verificación en dos pasos (2FA) y Watchdog de inactividad │
+│ - 7 Roles y Matriz de Permisos (Ver/Crear/Editar/Eliminar)  │
+│ - Cotizaciones, Soporte, Contactos, Catálogo y Auditoría    │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 3. Instrucciones para la Versión de Prueba Local
+## 3. Módulos y Capacidades del Sistema
 
-Para visualizar y probar la plataforma en este equipo:
-1. Abre tu navegador web en: **`http://localhost:3000`**
-2. Para acceder al panel administrativo, haz clic en **"Portal Administrador"** en la barra superior o en el pie de página.
-   * **Usuario:** `admin`
-   * **Contraseña:** `wes2026`
+### A. Portal Público (`index.html`)
+* **Catálogo Comercial Interactivo:** Soluciones de videovigilancia, controles de acceso, cerraduras inteligentes, switches PoE, redes y automatización.
+* **Cotizador Inteligente:** Carrito dinámico, validación de datos del solicitante y generación automática de identificador correlativo `COT-2026-XXXX`.
+* **Módulo de Soporte Técnico Especializado:**
+  * Disparadores directos de cámara móvil (`capture="environment"`), selector de galería y zona Drag & Drop.
+  * Compresión inteligente en el navegador (Canvas HTML5) para optimizar fotos a ~200 KB sin perder nitidez.
+  * Generación de ticket correlativo `SOP-2026-XXXX`.
+* **Mapa Interactivo Leaflet:** Centrado en las coordenadas oficiales (`19.3877255, -70.531041`), con marcador corporativo en forma de rayo amarillo y tarjeta popup con enlace directo "Cómo llegar".
+* **Conexión a Feature Flags:** Se adapta en tiempo real a las configuraciones establecidas desde el panel administrativo.
+
+### B. Portal Administrativo Autónomo (`/admin`)
+* **Privacidad y Seguridad:**
+  * Protegido contra indexación de buscadores con `<meta name="robots" content="noindex, nofollow">`.
+  * Bloqueo temporal por 15 minutos tras 5 intentos fallidos consecutivos con temporizador visible.
+  * Verificación en dos pasos (2FA) opcional con código de 6 dígitos.
+  * Monitor de inactividad de 15 minutos con aviso previo a los 14 minutos (60 segundos para renovar sesión).
+* **7 Roles Corporativos y Matriz Interactiva de Permisos (RBAC):**
+  1. *Propietario:* Control total e irrestricto de la plataforma.
+  2. *Administrador:* Gestión integral de módulos operativos.
+  3. *Gestor de Tienda:* Catálogo de productos, categorías, inventario y precios.
+  4. *Gestor de Cotizaciones:* Atención comercial, cambio de estados y notas privadas.
+  5. *Gestor de Soporte:* Tickets de servicio, inspección de fotos de averías y asignación técnica.
+  6. *Editor de Contenido:* Mantenimiento de textos institucionales, servicios y fundadores.
+  7. *Usuario de Consulta:* Acceso en modo de solo lectura.
+  * *Validación centralizada:* Oculta módulos no autorizados y emite la notificación: *"No tienes autorización para realizar esta acción"*.
+* **Feature Toggles (Conmutadores Públicos):**
+  * Mostrar u ocultar precios en catálogo.
+  * Pausar cotizaciones (con mensaje de cortesía configurable).
+  * Pausar soporte técnico (con mensaje de calibración).
+  * Ocultar productos sin disponibilidad inmediata.
+  * Activar o desactivar categorías enteras.
+  * Conmutar visibilidad de fundadores, mapa interactivo y botón de WhatsApp.
+* **Gestión de Solicitudes y Bitácora Confidencial:**
+  * Asignación de colaboradores responsables.
+  * Registro de notas internas privadas (ocultas para el cliente).
+  * Visor modal de fotos de evidencias en alta resolución.
+  * Cola de reintento de correos (*"Solicitud registrada, correo pendiente de envío"* y botón *"Reenviar correo"*).
+  * Exportación de solicitudes a archivos CSV.
+* **Historial de Auditoría (Audit Log):**
+  * Registro inmutable de operaciones (fecha/hora, usuario, rol, módulo, acción, valores anteriores/nuevos).
+  * Buscador en vivo y exportación a CSV.
+
+---
+
+## 4. Credenciales de Demostración del Portal Administrativo
+
+Dirección de acceso: **`http://localhost:3000/admin`**
+
+| Rol Corporativo | Correo / Usuario | Contraseña |
+| :--- | :--- | :--- |
+| **Propietario** | `wes.inform@gmail.com` | `Wes2026!` |
+| **Administrador** | `admin@wes.com.do` | `Wes2026!` |
+| **Gestor de Tienda** | `tienda@wes.com.do` | `Wes2026!` |
+| **Gestor de Cotizaciones** | `cotizaciones@wes.com.do` | `Wes2026!` |
+| **Gestor de Soporte** | `soporte@wes.com.do` | `Wes2026!` |
+| **Editor de Contenido** | `editor@wes.com.do` | `Wes2026!` |
+| **Usuario de Consulta** | `consulta@wes.com.do` | `Wes2026!` |
+
+---
+
+## 5. Control de Versiones Git
+
+```text
+494750d feat(admin): implement standalone admin portal, 7-role RBAC matrix, feature flags, audit log, and interactive Leaflet map
+252cb40 fix(contact-support): update phone to (849) 207-5474, email to wes.inform@gmail.com, Google Maps coordinates, and enhance photo upload
+77f2fd1 feat(wes): initial enterprise web platform release
+```
