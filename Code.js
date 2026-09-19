@@ -31,7 +31,6 @@ function doGet(e) {
   const template = HtmlService.createTemplateFromFile('index');
   return template.evaluate()
     .setTitle('Warn Electrical Services (WES) | Seguridad Electrónica y Automatización')
-    .setFaviconUrl('https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/shield.svg')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1.0')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }

@@ -43,8 +43,8 @@ async function deployToAppsScript() {
 
   // Leer scripts frontend
   const productsJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'products.js'), 'utf8');
+  const featureFlagsJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'feature_flags.js'), 'utf8');
   const appJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'app.js'), 'utf8');
-  const adminJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'admin.js'), 'utf8');
 
   // Leer HTML base y reemplazar las rutas relativas de assets y scripts por versiones autocontenidas
   let htmlContent = fs.readFileSync(path.join(ROOT_DIR, 'index.html'), 'utf8');
@@ -58,16 +58,16 @@ async function deployToAppsScript() {
     // Inyección de Productos WES
     ${productsJs}
 
+    // Inyección de Feature Flags WES
+    ${featureFlagsJs}
+
     // Inyección de Lógica Frontend WES
     ${appJs}
-
-    // Inyección de Panel Admin WES
-    ${adminJs}
   </script>
   `;
 
   // Remover scripts externos que apuntan a js/... y poner el bundle
-  htmlContent = htmlContent.replace(/<script src="js\/products\.js"><\/script>[\s\S]*?<script src="js\/admin\.js"><\/script>/, scriptsBundle);
+  htmlContent = htmlContent.replace(/<script src="js\/products\.js"><\/script>[\s\S]*?<script src="js\/app\.js"><\/script>/, scriptsBundle);
 
   // Leer Code.js y appsscript.json
   const codeJs = fs.readFileSync(path.join(ROOT_DIR, 'Code.js'), 'utf8');
