@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warn Electrical Services (WES) | Seguridad Electrónica, Automatización e Instalaciones</title>
+  <meta name="description" content="Warn Electrical Services, SRL (WES) — Venta, instalación y soporte técnico de cámaras de seguridad, controles de acceso, cerraduras inteligentes y automatización en Moca, República Dominicana.">
+  
+  <!-- Favicon con logo WES -->
+  <link rel="icon" type="image/png" href="assets/logo-wes.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'wes-blue': '#0D2A5C',
+            'wes-dark': '#071836',
+            'wes-gold': '#F5B300',
+            'wes-gold-light': '#FDD835',
+            'wes-amber': '#D97706'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-brand {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, rgba(7, 24, 54, 0.94) 0%, rgba(13, 42, 92, 0.88) 100%);
+    }
+    .accent-lightning {
+      position: relative;
+    }
+    .accent-lightning::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 48px;
+      height: 4px;
+      background-color: #F5B300;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-wes-gold selection:text-wes-dark">
+
+  <!-- ========================================================= -->
+  <!-- BARRA SUPERIOR DE INFORMACIÓN Y ACCESO PRIVADO            -->
+  <!-- ========================================================= -->
+  <div class="bg-wes-dark text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+      <div class="flex items-center space-x-4">
+        <span class="flex items-center"><i class="fas fa-map-marker-alt text-wes-gold mr-1.5"></i> Autopista Ramón Cáceres, Plaza Megatone, Moca, Rep. Dom.</span>
+        <span class="hidden sm:inline text-slate-600">|</span>
+        <span class="hidden sm:flex items-center"><i class="fas fa-clock text-wes-gold mr-1.5"></i> Lun - Vie: 7:30 AM - 6:00 PM</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="tel:8095784320" class="hover:text-wes-gold transition flex items-center">
+          <i class="fas fa-phone-alt text-wes-gold mr-1.5"></i> <span class="company-phone">(809) 578-4320</span>
+        </a>
+        <span class="text-slate-600">|</span>
+        <button onclick="openAdminLogin()" class="text-slate-400 hover:text-white transition flex items-center space-x-1" title="Acceso al Panel Administrativo">
+          <i class="fas fa-lock text-[10px]"></i>
+          <span>Portal Administrador</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- NAVEGACIÓN PRINCIPAL (STICKY NAVBAR)                      -->
+  <!-- ========================================================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logotipo Oficial WES -->
+        <a href="#inicio" class="flex items-center space-x-3 group">
+          <img src="assets/logo-wes.png" alt="Warn Electrical Services Logo" class="h-12 w-auto object-contain">
+          <div class="hidden lg:block leading-tight">
+            <span class="text-sm font-bold tracking-tight text-wes-blue block uppercase font-brand">Warn Electrical Services</span>
+            <span class="text-[11px] font-medium text-slate-500 tracking-wide">Tecnología & Seguridad Electrónica</span>
+          </div>
+        </a>
+
+        <!-- Menú Desktop -->
+        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-semibold text-slate-700">
+          <a href="#inicio" class="px-3 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Inicio</a>
+          <a href="#nosotros" class="px-3 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Nosotros</a>
+          <a href="#fundadores" class="px-3 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Fundadores</a>
+          <a href="#tienda" class="px-3 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Tienda</a>
+          <a href="#servicios" class="px-3 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Servicios</a>
+          <a href="#soporte" class="px-3 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition text-amber-600 font-bold">
+            <i class="fas fa-tools mr-1"></i>Solicitar Soporte
+          </a>
+          <a href="#contacto" class="px-3 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Contacto</a>
+        </nav>
+
+        <!-- Botones de Acción Rápida -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <!-- Carrito de Cotización -->
+          <button onclick="openQuoteModal()" class="relative p-2.5 sm:px-4 sm:py-2 bg-slate-100 hover:bg-slate-200 text-wes-blue rounded-xl flex items-center space-x-2 transition">
+            <i class="fas fa-file-invoice text-base"></i>
+            <span class="hidden sm:inline text-xs font-bold">Cotizador</span>
+            <span class="cart-count-badge hidden absolute -top-1.5 -right-1.5 bg-wes-gold text-wes-dark font-extrabold text-[11px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+              0
+            </span>
+          </button>
+
+          <!-- Botón WhatsApp -->
+          <a href="https://wa.me/18095784320" target="_blank" class="hidden sm:flex items-center space-x-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm hover:shadow-emerald-600/20">
+            <i class="fab fa-whatsapp text-sm"></i>
+            <span>WhatsApp</span>
+          </a>
+
+          <!-- Botón Menú Móvil (Hamburger) -->
+          <button id="mobile-menu-btn" class="md:hidden p-2.5 text-slate-700 hover:text-wes-blue hover:bg-slate-100 rounded-xl transition" aria-label="Abrir menú">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================= -->
+  <!-- MENÚ MÓVIL DESLIZABLE (DRAWER)                            -->
+  <!-- ========================================================= -->
+  <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 z-50 w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col md:hidden">
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+      <div class="flex items-center space-x-2">
+        <img src="assets/logo-wes.png" alt="WES" class="h-8 w-auto">
+        <span class="font-bold text-xs text-wes-blue uppercase font-brand">Warn Electrical</span>
+      </div>
+      <button id="mobile-menu-close" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">
+        <i class="fas fa-times text-lg"></i>
+      </button>
+    </div>
+
+    <div class="p-6 flex-1 overflow-y-auto space-y-3 text-sm font-semibold text-slate-700">
+      <a href="#inicio" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Inicio</a>
+      <a href="#nosotros" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Nosotros</a>
+      <a href="#fundadores" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Fundadores</a>
+      <a href="#tienda" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Tienda y Catálogo</a>
+      <a href="#servicios" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Servicios</a>
+      <a href="#soporte" class="mobile-nav-link block p-2.5 rounded-lg bg-amber-50 text-amber-700">
+        <i class="fas fa-tools mr-2"></i>Solicitar Soporte Técnico
+      </a>
+      <a href="#contacto" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Contacto</a>
+
+      <div class="pt-6 border-t border-slate-100 space-y-3">
+        <button onclick="openQuoteModal()" class="w-full py-2.5 bg-wes-blue text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
+          <i class="fas fa-file-invoice"></i>
+          <span>Revisar Cotización (<span class="cart-count-badge">0</span>)</span>
+        </button>
+        <a href="https://wa.me/18095784320" target="_blank" class="w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
+          <i class="fab fa-whatsapp"></i>
+          <span>Escribir por WhatsApp</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="p-4 bg-slate-50 border-t border-slate-100 text-center text-xs text-slate-400">
+      <button onclick="openAdminLogin()" class="text-slate-500 hover:text-wes-blue flex items-center justify-center space-x-1 mx-auto">
+        <i class="fas fa-lock"></i>
+        <span>Acceso Administrativo</span>
+      </button>
+    </div>
+  </div>
+
+  <main>
+    <!-- ========================================================= -->
+    <!-- 1. PORTADA E INICIO (HERO SECTION)                        -->
+    <!-- ========================================================= -->
+    <section id="inicio" class="relative min-h-[620px] flex items-center justify-center bg-slate-900 text-white overflow-hidden">
+      <!-- Fondo fotográfico con overlay corporativo -->
+      <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1920&q=80" alt="Tecnología y Seguridad" class="w-full h-full object-cover opacity-25">
+        <div class="absolute inset-0 hero-gradient"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div class="max-w-3xl">
+          
+          <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-wes-gold/20 text-wes-gold text-xs font-bold mb-6 border border-wes-gold/30">
+            <i class="fas fa-bolt text-wes-gold"></i>
+            <span>Líderes en Seguridad e Instalaciones Eléctricas en Espaillat</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight sm:leading-tight lg:leading-tight mb-6 font-brand">
+            Soluciones tecnológicas que <span class="text-wes-gold">protegen y conectan</span> lo que más valoras.
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-300 font-normal leading-relaxed mb-8">
+            Ofrecemos productos confiables, instalaciones organizadas y soporte técnico especializado para hogares, comercios y empresas. Nuestro objetivo es ayudarte a encontrar una solución eficiente y adaptada a tus necesidades reales.
+          </p>
+
+          <!-- 4 Botones Principales -->
+          <div class="flex flex-wrap gap-3 sm:gap-4">
+            <a href="#tienda" class="px-6 py-3.5 bg-wes-gold hover:bg-wes-gold-light text-wes-dark font-extrabold rounded-xl text-sm transition shadow-lg hover:shadow-wes-gold/30 flex items-center space-x-2">
+              <i class="fas fa-store"></i>
+              <span>Ver productos</span>
+            </a>
+            <button onclick="openQuoteModal()" class="px-6 py-3.5 bg-white hover:bg-slate-100 text-wes-blue font-bold rounded-xl text-sm transition shadow-lg flex items-center space-x-2">
+              <i class="fas fa-file-invoice"></i>
+              <span>Solicitar cotización</span>
+            </button>
+            <a href="#soporte" class="px-6 py-3.5 bg-slate-800/80 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm border border-slate-700 transition flex items-center space-x-2">
+              <i class="fas fa-wrench text-wes-gold"></i>
+              <span>Solicitar soporte</span>
+            </a>
+            <a href="https://wa.me/18095784320" target="_blank" class="px-5 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition flex items-center space-x-2">
+              <i class="fab fa-whatsapp text-base"></i>
+              <span>WhatsApp</span>
+            </a>
+          </div>
+
+          <!-- Métricas de Confianza -->
+          <div class="mt-12 pt-8 border-t border-slate-800/80 grid grid-cols-3 gap-4 text-center sm:text-left">
+            <div>
+              <div class="text-2xl font-extrabold text-white font-brand">+8 Años</div>
+              <div class="text-xs text-slate-400">Trayectoria desde 2017</div>
+            </div>
+            <div>
+              <div class="text-2xl font-extrabold text-wes-gold font-brand">15 Especialistas</div>
+              <div class="text-xs text-slate-400">Equipo técnico y ventas</div>
+            </div>
+            <div>
+              <div class="text-2xl font-extrabold text-white font-brand">100% Garantía</div>
+              <div class="text-xs text-slate-400">Instalación profesional</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TRES BENEFICIOS PRINCIPALES                               -->
+    <!-- ========================================================= -->
+    <section class="py-16 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div class="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-wes-blue/30 transition-all duration-300 hover:shadow-lg group">
+            <div class="w-14 h-14 rounded-xl bg-blue-100/70 text-wes-blue flex items-center justify-center text-2xl mb-6 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-comments"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Asesoría Personalizada</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Analizamos las necesidades de cada cliente para recomendarle los productos y servicios más adecuados, optimizando su inversión.
+            </p>
+          </div>
+
+          <div class="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-wes-blue/30 transition-all duration-300 hover:shadow-lg group">
+            <div class="w-14 h-14 rounded-xl bg-amber-100/70 text-amber-700 flex items-center justify-center text-2xl mb-6 group-hover:bg-wes-gold group-hover:text-wes-dark transition">
+              <i class="fas fa-tools"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Instalación Profesional</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Realizamos instalaciones organizadas, seguras y adaptadas a las condiciones de cada espacio residencial, comercial o industrial.
+            </p>
+          </div>
+
+          <div class="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-wes-blue/30 transition-all duration-300 hover:shadow-lg group">
+            <div class="w-14 h-14 rounded-xl bg-emerald-100/70 text-emerald-700 flex items-center justify-center text-2xl mb-6 group-hover:bg-emerald-600 group-hover:text-white transition">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Soporte Técnico Continuo</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Acompañamos al cliente antes, durante y después de cada instalación, garantizando la operatividad continua de sus equipos.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- CATEGORÍAS DESTACADAS Y CTA INTERMEDIO                    -->
+    <!-- ========================================================= -->
+    <section class="py-16 bg-slate-100/70">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Gama de Soluciones</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 font-brand">Categorías Destacadas</h2>
+          <p class="text-sm text-slate-600 mt-2">Tecnología de vanguardia para la seguridad, el control y la eficiencia.</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-video"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Cámaras y CCTV</h4>
+            <p class="text-xs text-slate-500 mt-1">IP, HD, domo y PTZ</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-id-card"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Controles de Acceso</h4>
+            <p class="text-xs text-slate-500 mt-1">Facial, huella y RFID</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Cerraduras Inteligentes</h4>
+            <p class="text-xs text-slate-500 mt-1">Digitales y magnéticas</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-microchip"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Automatización</h4>
+            <p class="text-xs text-slate-500 mt-1">Domótica y control remoto</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Redes y Conectividad</h4>
+            <p class="text-xs text-slate-500 mt-1">Switches PoE y cableado</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-ethernet"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Cables y Conectores</h4>
+            <p class="text-xs text-slate-500 mt-1">UTP Cat6 100% cobre</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-plug"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Fuentes y Respaldo</h4>
+            <p class="text-xs text-slate-500 mt-1">Cajas de poder y baterías</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-bell"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Alarmas y Sensores</h4>
+            <p class="text-xs text-slate-500 mt-1">Kits inalámbricos WiFi/GSM</p>
+          </div>
+
+        </div>
+
+        <!-- Banner de Llamado a la Acción -->
+        <div class="mt-12 bg-wes-blue text-white rounded-2xl p-8 sm:p-10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="max-w-xl text-center md:text-left">
+            <h3 class="text-xl sm:text-2xl font-bold font-brand text-wes-gold">¿Necesitas ayuda para seleccionar la solución correcta?</h3>
+            <p class="text-sm text-slate-200 mt-2">
+              Cuéntanos qué deseas proteger, controlar o automatizar. Nuestro equipo evaluará tu necesidad y preparará una recomendación personalizada sin compromiso.
+            </p>
+          </div>
+          <a href="#contacto" class="px-6 py-3.5 bg-wes-gold hover:bg-wes-gold-light text-wes-dark font-extrabold rounded-xl text-sm transition shadow-lg whitespace-nowrap">
+            Solicitar asesoría
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 2. SECCIÓN NOSOTROS (HISTORIA, MISIÓN, VISIÓN, VALORES)   -->
+    <!-- ========================================================= -->
+    <section id="nosotros" class="py-20 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          <div>
+            <div class="inline-flex items-center space-x-2 text-xs font-bold text-wes-blue uppercase tracking-widest mb-2">
+              <i class="fas fa-shield-alt text-wes-gold"></i>
+              <span>Nuestra Identidad</span>
+            </div>
+            <h2 class="text-3xl font-extrabold text-slate-900 font-brand mb-6 accent-lightning">
+              Conoce nuestra empresa
+            </h2>
+            <div class="prose prose-sm text-slate-600 space-y-4">
+              <p>
+                En <strong>Warn Electrical Services, SRL (WES)</strong> trabajamos para acercar soluciones tecnológicas confiables a hogares, comercios y empresas. Nuestra labor no se limita a vender equipos. Nos enfocamos en comprender cada necesidad, recomendar la solución adecuada, realizar una instalación profesional y ofrecer acompañamiento técnico cuando el cliente lo necesite.
+              </p>
+              <p>
+                <strong>Historia de WES:</strong> Warn Electrical Services, SRL fue fundada el <strong>9 de julio de 2017</strong>, e incorporada formalmente por el Decreto No. 326-06 del 11 de diciembre del 2017. Inició sus operaciones con 3 Socios y un capital de RD$100,000.00.
+              </p>
+              <p>
+                El origen de nuestra organización parte de las circunstancias de brindar a nuestra comunidad un servicio mixto e integral de <strong>Seguridad Electrónica e Instalaciones Eléctricas</strong>. Aliados comerciales de gran prestigio como <em>Coopcibao, Farmacia Naraly y Carbec Import</em> contribuyeron a la formación y rápido crecimiento de nuestra compañía en la Provincia Espaillat.
+              </p>
+            </div>
+
+            <!-- Estructura Organizativa WES -->
+            <div class="mt-8 pt-6 border-t border-slate-100">
+              <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3">Estructura Operativa</h4>
+              <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-semibold text-slate-700">A) Administración</div>
+                <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-semibold text-slate-700">B) Ventas</div>
+                <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-semibold text-slate-700">C) Instalación y Soporte</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="space-y-6">
+            <!-- Misión -->
+            <div class="p-6 bg-slate-50 rounded-2xl border-l-4 border-wes-blue shadow-sm">
+              <div class="flex items-center space-x-3 mb-2">
+                <i class="fas fa-bullseye text-wes-blue text-lg"></i>
+                <h3 class="font-bold text-slate-900 text-base font-brand">MISIÓN</h3>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Ser una empresa proveedora de los productos de más altos Estándares de Seguridad y servicios múltiples de excelente calidad, que satisfaga plenamente la demanda de nuestros clientes.
+              </p>
+            </div>
+
+            <!-- Visión -->
+            <div class="p-6 bg-slate-50 rounded-2xl border-l-4 border-wes-gold shadow-sm">
+              <div class="flex items-center space-x-3 mb-2">
+                <i class="fas fa-eye text-wes-gold text-lg"></i>
+                <h3 class="font-bold text-slate-900 text-base font-brand">VISIÓN</h3>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Ser proveedores líderes de productos y servicios en nuestra provincia, con un modelo empresarial eficiente, contribuyendo de manera activa al fortalecimiento de la comunidad.
+              </p>
+            </div>
+
+            <!-- Valores Corporativos -->
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm">
+              <h3 class="font-bold text-slate-900 text-base font-brand mb-4 flex items-center space-x-2">
+                <i class="fas fa-award text-wes-blue"></i>
+                <span>VALORES CORPORATIVOS</span>
+              </h3>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Servicios</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Puntualidad</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Ética</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Emprendedores</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Responsabilidad</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Espíritu de Calidez</span></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 3. SECCIÓN DE FUNDADORES                                   -->
+    <!-- ========================================================= -->
+    <section id="fundadores" class="py-20 bg-slate-50 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Liderazgo & Dirección</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-2 font-brand">Conoce a nuestros fundadores</h2>
+          <p class="text-sm text-slate-600 mt-2">
+            Profesionales comprometidos con el desarrollo tecnológico, la calidad operativa y el servicio de excelencia.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Fundador 1 -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition group">
+            <div class="h-64 bg-slate-100 flex items-center justify-center p-6 border-b border-slate-100 relative">
+              <div class="w-32 h-32 rounded-full bg-slate-200 border-4 border-white shadow-inner flex flex-col items-center justify-center text-slate-400">
+                <i class="fas fa-user-tie text-3xl mb-1"></i>
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider text-center px-2">Fotografía próximamente</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-wes-blue uppercase tracking-wider block mb-1">Fundador 1</span>
+              <h3 class="text-lg font-bold text-slate-900">[NOMBRE COMPLETO]</h3>
+              <div class="text-xs font-semibold text-wes-gold uppercase mt-0.5 mb-3">Fundador / Director General</div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Profesional comprometido con el desarrollo de soluciones tecnológicas que mejoren la seguridad, el control y la eficiencia de hogares y empresas. Su visión combina innovación, servicio y atención personalizada.
+              </p>
+            </div>
+          </div>
+
+          <!-- Fundador 2 -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition group">
+            <div class="h-64 bg-slate-100 flex items-center justify-center p-6 border-b border-slate-100 relative">
+              <div class="w-32 h-32 rounded-full bg-slate-200 border-4 border-white shadow-inner flex flex-col items-center justify-center text-slate-400">
+                <i class="fas fa-user-cog text-3xl mb-1"></i>
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider text-center px-2">Fotografía próximamente</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-wes-blue uppercase tracking-wider block mb-1">Fundador 2</span>
+              <h3 class="text-lg font-bold text-slate-900">[NOMBRE COMPLETO]</h3>
+              <div class="text-xs font-semibold text-wes-gold uppercase mt-0.5 mb-3">Cofundador / Director de Operaciones</div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Responsable de coordinar los procesos operativos y garantizar que cada proyecto e instalación se desarrolle con orden, calidad rigurosa y puntualidad.
+              </p>
+            </div>
+          </div>
+
+          <!-- Fundador 3 -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition group">
+            <div class="h-64 bg-slate-100 flex items-center justify-center p-6 border-b border-slate-100 relative">
+              <div class="w-32 h-32 rounded-full bg-slate-200 border-4 border-white shadow-inner flex flex-col items-center justify-center text-slate-400">
+                <i class="fas fa-user-shield text-3xl mb-1"></i>
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider text-center px-2">Fotografía próximamente</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-wes-blue uppercase tracking-wider block mb-1">Fundador 3</span>
+              <h3 class="text-lg font-bold text-slate-900">[NOMBRE COMPLETO]</h3>
+              <div class="text-xs font-semibold text-wes-gold uppercase mt-0.5 mb-3">Cofundador / Director Técnico</div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Especialista encargado de evaluar, implementar y supervisar la arquitectura técnica de seguridad y conectividad ofrecida por la empresa.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 4. TIENDA Y CATÁLOGO DE PRODUCTOS                         -->
+    <!-- ========================================================= -->
+    <section id="tienda" class="py-20 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
+          <div>
+            <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Catálogo Comercial</span>
+            <h2 class="text-3xl font-extrabold text-slate-900 mt-1 font-brand">Tienda de Equipos y Accesorios</h2>
+            <p class="text-sm text-slate-600 mt-1">Selecciona los productos y agrégalos a tu lista para solicitar una cotización formal.</p>
+          </div>
+          <div id="products-count" class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg">
+            Cargando productos...
+          </div>
+        </div>
+
+        <!-- Barra de Búsqueda y Filtros Interactivos -->
+        <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 mb-8 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            
+            <!-- Buscador -->
+            <div class="lg:col-span-2 relative">
+              <i class="fas fa-search absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+              <input type="text" id="search-input" placeholder="Buscar por nombre, código o características..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+            </div>
+
+            <!-- Filtro de Categoría -->
+            <div>
+              <select id="category-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                <option value="all">Todas las Categorías</option>
+              </select>
+            </div>
+
+            <!-- Filtro de Marca -->
+            <div>
+              <select id="brand-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                <option value="all">Todas las Marcas</option>
+              </select>
+            </div>
+
+            <!-- Filtro de Disponibilidad / Orden -->
+            <div>
+              <select id="sort-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                <option value="featured">Destacados</option>
+                <option value="price-asc">Precio: Menor a Mayor</option>
+                <option value="price-desc">Precio: Mayor a Menor</option>
+                <option value="name-asc">Nombre (A - Z)</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Malla de Productos -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <!-- Renderizado dinámicamente mediante app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 6. SECCIÓN DE SERVICIOS                                   -->
+    <!-- ========================================================= -->
+    <section id="servicios" class="py-20 bg-slate-50 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Soluciones Llave en Mano</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-2 font-brand">Nuestros Servicios Profesionales</h2>
+          <p class="text-sm text-slate-600 mt-2">
+            Ingeniería, montaje técnico y mantenimiento certificado para infraestructura eléctrica y de seguridad.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          <!-- Servicio 1 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-video"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Instalación de Cámaras</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Diseño e instalación de sistemas de videovigilancia CCTV y cámaras IP de alta definición para hogares, comercios e industrias, con visualización remota en el móvil.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 2 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-fingerprint"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Controles de Acceso</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Soluciones para controlar y registrar el ingreso de personas a áreas residenciales, comerciales y empresariales mediante biométricos faciales, huella y tarjetas.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 3 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-key"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Cerraduras Eléctricas e Inteligentes</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Instalación y configuración de electroimanes de alta retención, pestillos eléctricos y cerraduras digitales adaptadas a diferentes tipos de puertas.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 4 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-robot"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Automatización</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Integración de dispositivos inteligentes para facilitar el control de iluminación, apertura de portones, seguridad perimetral y ahorro de energía.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 5 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-network-wired"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Redes y Conectividad</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Instalación, peinado y certificación de cableado estructurado Cat6, enlaces inalámbricos y switches PoE para garantizar comunicación estable entre equipos.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 6 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-headset"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Mantenimiento y Soporte</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Diagnóstico técnico especializado, mantenimiento preventivo y corrección de averías en equipos y cableados preexistentes.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 7. SOLICITUD DE SOPORTE TÉCNICO CON FOTOGRAFÍAS           -->
+    <!-- ========================================================= -->
+    <section id="soporte" class="py-20 bg-white border-b border-slate-200">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <div class="inline-flex items-center space-x-1.5 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold mb-3">
+            <i class="fas fa-tools"></i>
+            <span>Asistencia Técnica Especializada WES</span>
+          </div>
+          <h2 class="text-3xl font-extrabold text-slate-900 font-brand">¿Necesitas soporte técnico?</h2>
+          <p class="text-sm text-slate-600 mt-2">
+            Completa el siguiente formulario y comparte toda la información posible. Las fotografías nos ayudarán a evaluar el problema antes de comunicarnos contigo.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm">
+          <form id="support-form" class="space-y-6">
+            
+            <!-- Datos del Cliente -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
+                <input type="text" name="clientName" required placeholder="Ej. Juan Pérez" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Empresa / Negocio (si aplica)</label>
+                <input type="text" name="company" placeholder="Ej. Farmacia Naraly / Particular" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Teléfono de Contacto *</label>
+                <input type="tel" name="phone" required placeholder="809-000-0000" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">WhatsApp</label>
+                <input type="tel" name="whatsapp" placeholder="809-000-0000" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
+                <input type="email" name="email" required placeholder="tu-correo@ejemplo.com" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Dirección / Ubicación del Servicio *</label>
+                <input type="text" name="address" required placeholder="Calle, sector, ciudad (Moca o región)" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+            </div>
+
+            <!-- Datos Técnicos del Incidente -->
+            <div class="pt-4 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nº Factura / Orden (Opcional)</label>
+                <input type="text" name="orderNumber" placeholder="FAC-XXXX o instalación previa" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Categoría del Problema *</label>
+                <select name="category" required class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                  <option value="Cámara sin imagen">Cámara sin imagen</option>
+                  <option value="Problema de grabación">Problema de grabación (DVR/NVR)</option>
+                  <option value="Acceso remoto celular">Acceso remoto / App en celular</option>
+                  <option value="Control de acceso">Control de acceso biométrico/RFID</option>
+                  <option value="Cerradura eléctrica">Cerradura eléctrica o imán</option>
+                  <option value="Red o conectividad">Red o conectividad / Switch</option>
+                  <option value="Fuente de alimentación">Fuente de alimentación / Energía</option>
+                  <option value="Automatización">Automatización</option>
+                  <option value="Instalación">Instalación nueva</option>
+                  <option value="Mantenimiento">Mantenimiento preventivo</option>
+                  <option value="Otro">Otro problema</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nivel de Prioridad *</label>
+                <select name="priority" required class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                  <option value="Baja">Baja (Consulta o inconveniente menor)</option>
+                  <option value="Media" selected>Media (Funcionamiento parcial)</option>
+                  <option value="Alta">Alta (Sistema principal fuera de servicio)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Producto o Sistema Relacionado</label>
+              <input type="text" name="productSystem" placeholder="Ej. Sistema CCTV Hikvision 8 cámaras, Control ZKTeco, etc." class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Descripción Detallada del Problema *</label>
+              <textarea name="description" required rows="4" placeholder="Explica detalladamente qué ocurre, qué luces están encendidas, si ocurrió tras una lluvia o corte eléctrico..." class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none"></textarea>
+            </div>
+
+            <!-- ADJUNTAR FOTOGRAFÍAS (DRAG & DROP + PREVIEW) -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">
+                Adjuntar Fotografías del Problema (JPG, PNG, WEBP - Máx. 5MB c/u)
+              </label>
+              <div id="support-dropzone" class="border-2 border-dashed border-slate-300 hover:border-wes-blue p-6 rounded-2xl text-center cursor-pointer bg-white transition duration-200">
+                <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-2"></i>
+                <p class="text-xs sm:text-sm text-slate-600 font-medium">Arrastra tus fotografías aquí o <span class="text-wes-blue font-bold underline">haz clic para seleccionarlas</span></p>
+                <p class="text-[11px] text-slate-400 mt-1">Imágenes de los equipos, conexiones o pantalla de error (hasta 5 fotos)</p>
+                <input type="file" id="support-file-input" multiple accept="image/jpeg,image/png,image/webp" class="hidden">
+              </div>
+
+              <!-- Contenedor de Vista Previa de Imágenes -->
+              <div id="support-images-preview" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3"></div>
+            </div>
+
+            <!-- Preferencias de Contacto -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Horario Preferido de Contacto</label>
+                <select name="preferredTime" class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue">
+                  <option value="Mañana (7:30 AM - 12:00 PM)">Mañana (7:30 AM - 12:00 PM)</option>
+                  <option value="Tarde (2:00 PM - 6:00 PM)">Tarde (2:00 PM - 6:00 PM)</option>
+                  <option value="Cualquier momento">Cualquier momento disponible</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Método Preferido de Contacto</label>
+                <select name="contactMethod" class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue">
+                  <option value="WhatsApp">WhatsApp</option>
+                  <option value="Llamada telefónica">Llamada telefónica</option>
+                  <option value="Correo electrónico">Correo electrónico</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Política de Privacidad -->
+            <div class="flex items-start space-x-2">
+              <input type="checkbox" id="support-privacy" required class="mt-1 w-4 h-4 rounded text-wes-blue focus:ring-wes-blue border-slate-300">
+              <label for="support-privacy" class="text-xs text-slate-600">
+                Acepto la <button type="button" onclick="openPolicyModal('privacy')" class="text-wes-blue underline font-semibold">Política de Privacidad</button> y autorizo el uso de estos datos para la gestión del soporte técnico solicitado.
+              </label>
+            </div>
+
+            <!-- Botón Principal -->
+            <div>
+              <button type="submit" class="w-full py-4 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-sm transition shadow-lg hover:shadow-wes-blue/20 flex items-center justify-center space-x-2">
+                <i class="fas fa-paper-plane"></i>
+                <span>Enviar solicitud de soporte</span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 8. PÁGINA DE CONTACTO Y UBICACIÓN                         -->
+    <!-- ========================================================= -->
+    <section id="contacto" class="py-20 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Atención al Cliente</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-2 font-brand">Contacto y Ubicación</h2>
+          <p class="text-sm text-slate-600 mt-2">Visítanos en nuestra sede en Moca o contáctanos por los canales directos.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          
+          <!-- Información y Mapa -->
+          <div class="space-y-6">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              
+              <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center mb-3">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h4 class="font-bold text-xs uppercase text-slate-500">Dirección Sede</h4>
+                <p class="text-xs font-semibold text-slate-800 mt-1 company-address">
+                  Autopista Ramón Cáceres, Plaza Megatone, Moca, Provincia Espaillat.
+                </p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
+                  <i class="fab fa-whatsapp"></i>
+                </div>
+                <h4 class="font-bold text-xs uppercase text-slate-500">WhatsApp Directo</h4>
+                <a href="https://wa.me/18095784320" target="_blank" class="text-xs font-bold text-emerald-600 hover:underline mt-1 block company-whatsapp">
+                  (809) 578-4320
+                </a>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <h4 class="font-bold text-xs uppercase text-slate-500">Horario de Atención</h4>
+                <p class="text-xs text-slate-700 mt-1 company-schedule-week">Lun - Vie: 7:30 AM – 6:00 PM</p>
+                <p class="text-[11px] text-slate-500 company-schedule-sat">Sáb: 8:00 AM – 1:00 PM</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-3">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <h4 class="font-bold text-xs uppercase text-slate-500">Correos Electrónicos</h4>
+                <a href="mailto:info@wes.com.do" class="text-xs text-slate-800 hover:text-wes-blue block truncate company-email-general">info@wes.com.do</a>
+                <a href="mailto:soporte@wes.com.do" class="text-xs text-amber-700 hover:underline block truncate company-email-support">soporte@wes.com.do</a>
+              </div>
+
+            </div>
+
+            <!-- Mapa Embebido -->
+            <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-sm h-64 bg-slate-200">
+              <iframe id="gmap-iframe" class="w-full h-full border-0" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3761.4284792376994!2d-70.5283995!3d19.4005876!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eb1cf6027a42b1f%3A0x1d61994a4c6a28bf!2sAutopista%20Ram%C3%B3n%20C%C3%A1ceres%2C%20Moca!5e0!3m2!1ses!2sdo!4v1700000000000!5m2!1ses!2sdo"></iframe>
+            </div>
+
+          </div>
+
+          <!-- Formulario de Mensaje Rápido -->
+          <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-900 text-lg mb-2 font-brand">Envíanos un Mensaje</h3>
+            <p class="text-xs text-slate-500 mb-6">Responderemos a tus requerimientos a la brevedad posible.</p>
+
+            <form id="contact-form" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
+                <input type="text" name="name" required placeholder="Tu nombre" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Teléfono</label>
+                  <input type="tel" name="phone" placeholder="809-000-0000" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
+                  <input type="email" name="email" required placeholder="correo@ejemplo.com" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Asunto *</label>
+                <input type="text" name="subject" required placeholder="Motivo de la consulta" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mensaje *</label>
+                <textarea name="message" required rows="4" placeholder="Escribe tu mensaje aquí..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3.5 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs uppercase tracking-wider transition shadow-md">
+                Enviar mensaje
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- PIE DE PÁGINA (FOOTER)                                    -->
+  <!-- ========================================================= -->
+  <footer class="bg-wes-dark text-slate-400 text-xs py-14 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        
+        <div class="md:col-span-2 space-y-4">
+          <div class="flex items-center space-x-3">
+            <img src="assets/logo-wes.png" alt="WES" class="h-10 w-auto">
+            <div>
+              <span class="text-sm font-bold text-white font-brand uppercase block">Warn Electrical Services, SRL</span>
+              <span class="text-[11px] text-wes-gold">Tecnología, seguridad y soporte a tu alcance</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 max-w-md leading-relaxed">
+            Empresa incorporada por el Decreto No. 326-06. Dedicada a la venta, instalación y soporte técnico de sistemas de videovigilancia, controles de acceso, cerraduras inteligentes y automatización en la Provincia Espaillat.
+          </p>
+          <div class="flex space-x-3 text-slate-400">
+            <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-wes-blue hover:text-white flex items-center justify-center transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-wes-blue hover:text-white flex items-center justify-center transition"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/18095784320" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4">Enlaces Rápidos</h4>
+          <ul class="space-y-2">
+            <li><a href="#inicio" class="hover:text-white transition">Inicio</a></li>
+            <li><a href="#nosotros" class="hover:text-white transition">Nuestra Empresa</a></li>
+            <li><a href="#fundadores" class="hover:text-white transition">Fundadores</a></li>
+            <li><a href="#tienda" class="hover:text-white transition">Catálogo de Productos</a></li>
+            <li><a href="#servicios" class="hover:text-white transition">Servicios e Instalación</a></li>
+            <li><a href="#soporte" class="hover:text-white transition text-wes-gold">Módulo de Soporte Técnico</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4">Políticas y Legal</h4>
+          <ul class="space-y-2">
+            <li><button onclick="openPolicyModal('privacy')" class="hover:text-white transition text-left">Política de Privacidad</button></li>
+            <li><button onclick="openPolicyModal('terms')" class="hover:text-white transition text-left">Términos y Condiciones</button></li>
+            <li><button onclick="openAdminLogin()" class="hover:text-white transition text-left text-slate-500">Acceso Privado Administrador</button></li>
+          </ul>
+          <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
+            RNC: 1-31-89326-4
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-500 gap-2">
+        <p>&copy; 2026 Warn Electrical Services, SRL (WES). Todos los derechos reservados.</p>
+        <p>Estándar AIDET Core — El Profesional Potenciado por Tecnología</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================= -->
+  <!-- BOTÓN FLOTANTE DE WHATSAPP ACCESIBLE                      -->
+  <!-- ========================================================= -->
+  <a id="floating-whatsapp" href="https://wa.me/18095784320" target="_blank" class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition duration-300 focus:outline-none" aria-label="Contactar por WhatsApp">
+    <i class="fab fa-whatsapp text-3xl"></i>
+  </a>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 1: SISTEMA DE COTIZACIÓN (CARRITO + FORMULARIO)     -->
+  <!-- ========================================================= -->
+  <div id="quote-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+      
+      <!-- Encabezado Modal -->
+      <div class="p-6 bg-wes-blue text-white flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <i class="fas fa-file-invoice text-2xl text-wes-gold"></i>
+          <div>
+            <h3 class="font-bold text-base font-brand">Solicitud de Cotización Formal</h3>
+            <p class="text-xs text-slate-300">Revisa tus productos y completa tus datos para enviarte la propuesta</p>
+          </div>
+        </div>
+        <button onclick="closeQuoteModal()" class="text-slate-400 hover:text-white p-2">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
+        
+        <!-- Lista de Productos en la Cotización -->
+        <div>
+          <h4 class="font-bold text-slate-800 uppercase tracking-wide text-xs mb-3 flex items-center justify-between">
+            <span>Productos en tu lista</span>
+            <span id="quote-total-amount" class="text-wes-blue text-sm font-bold">RD$ 0.00</span>
+          </h4>
+          <div id="quote-items-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+            <!-- Renderizado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Formulario del Cliente -->
+        <form id="quote-form" class="space-y-4 pt-4 border-t border-slate-200">
+          <h4 class="font-bold text-slate-800 uppercase tracking-wide text-xs">Datos del Solicitante</h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Nombre Completo *</label>
+              <input type="text" name="clientName" required placeholder="Tu nombre" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Empresa / Negocio (si aplica)</label>
+              <input type="text" name="company" placeholder="Nombre comercial" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">RNC o Cédula (Opcional)</label>
+              <input type="text" name="taxId" placeholder="1-XX-XXXXX-X" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Tipo de Cliente *</label>
+              <select name="clientType" required class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+                <option value="Personal">Personal / Residencial</option>
+                <option value="Comercial">Comercial / Negocio local</option>
+                <option value="Empresarial">Empresarial / Institucional</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Teléfono Directo *</label>
+              <input type="tel" name="phone" required placeholder="809-000-0000" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">WhatsApp *</label>
+              <input type="tel" name="whatsapp" required placeholder="809-000-0000" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Correo Electrónico *</label>
+              <input type="email" name="email" required placeholder="correo@ejemplo.com" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Ciudad o Dirección *</label>
+              <input type="text" name="city" required placeholder="Moca, Espaillat u otra" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Método Preferido de Contacto *</label>
+            <select name="contactMethod" required class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Correo electrónico">Correo electrónico</option>
+              <option value="Llamada telefónica">Llamada telefónica</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Comentarios u Observaciones Especiales</label>
+            <textarea name="comments" rows="2" placeholder="Indícanos si requieres el servicio de instalación, metraje aproximado o fecha estimada de entrega..." class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue"></textarea>
+          </div>
+
+          <div class="flex items-start space-x-2 pt-2">
+            <input type="checkbox" id="quote-privacy" required class="mt-0.5 w-4 h-4 rounded text-wes-blue focus:ring-wes-blue">
+            <label for="quote-privacy" class="text-[11px] text-slate-600">
+              He leído y acepto la <button type="button" onclick="openPolicyModal('privacy')" class="text-wes-blue underline font-bold">política de privacidad</button> para la tramitación de esta cotización.
+            </label>
+          </div>
+
+          <div class="pt-4 flex items-center justify-end space-x-3">
+            <button type="button" onclick="closeQuoteModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition">
+              Continuar viendo productos
+            </button>
+            <button type="submit" class="px-6 py-2.5 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl shadow-lg transition">
+              Enviar solicitud de cotización
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 2: CONFIRMACIÓN DE SOLICITUD (COTIZACIÓN O SOPORTE) -->
+  <!-- ========================================================= -->
+  <div id="confirmation-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-7 text-center shadow-2xl animate-scaleUp">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+        <i class="fas fa-check"></i>
+      </div>
+      
+      <h3 id="conf-title" class="text-xl font-extrabold text-slate-900 font-brand">¡Solicitud recibida!</h3>
+      
+      <div class="my-4 py-3 px-4 bg-slate-50 rounded-2xl border border-slate-200">
+        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Número de Registro Oficial</div>
+        <div id="conf-code" class="text-2xl font-mono font-extrabold text-wes-blue tracking-wider mt-1">COT-2026-0001</div>
+      </div>
+
+      <div id="conf-message" class="text-xs text-slate-600 leading-relaxed space-y-2 mb-6 text-left bg-slate-50/50 p-4 rounded-xl border border-slate-100">
+        <!-- Contenido dinámico -->
+      </div>
+
+      <div class="space-y-2">
+        <a id="conf-wa-btn" href="#" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-2 transition shadow">
+          <i class="fab fa-whatsapp text-sm"></i>
+          <span>Notificar por WhatsApp de inmediato</span>
+        </a>
+        <button onclick="closeConfirmationModal()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+          Entendido, cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 3: POLÍTICAS Y TÉRMINOS                             -->
+  <!-- ========================================================= -->
+  <div id="policy-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 max-h-[85vh] flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+        <h3 id="policy-title" class="font-bold text-base text-slate-900 font-brand">Política de Privacidad</h3>
+        <button onclick="closePolicyModal()" class="text-slate-400 hover:text-slate-700 p-2"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="policy-content" class="overflow-y-auto text-xs text-slate-600 space-y-3 leading-relaxed flex-1 pr-2">
+        <!-- Inyectado dinámicamente -->
+      </div>
+      <div class="pt-4 border-t border-slate-200 text-right mt-4">
+        <button onclick="closePolicyModal()" class="px-5 py-2 bg-wes-blue text-white rounded-xl text-xs font-bold hover:bg-opacity-90">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 4: LOGIN ADMINISTRATIVO PRIVADO                     -->
+  <!-- ========================================================= -->
+  <div id="admin-login-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl">
+      <div class="w-12 h-12 rounded-2xl bg-wes-blue text-white flex items-center justify-center text-xl mx-auto mb-4">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 text-center font-brand">Acceso Administrativo</h3>
+      <p class="text-xs text-slate-500 text-center mb-6">Área exclusiva para gestión operativa y cotizaciones WES</p>
+
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Usuario:</label>
+          <input type="text" name="user" id="admin-user-input" required class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue" placeholder="admin">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Contraseña:</label>
+          <input type="password" name="pass" required class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue" placeholder="••••••••">
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl shadow transition">
+            Iniciar Sesión
+          </button>
+        </div>
+      </form>
+      <div class="mt-4 text-center">
+        <button onclick="closeAdminLogin()" class="text-xs text-slate-400 hover:text-slate-600">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 5: PANEL ADMINISTRATIVO PRIVADO COMPLETO            -->
+  <!-- ========================================================= -->
+  <div id="admin-dashboard-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-slate-100 rounded-3xl w-full max-w-6xl max-h-[96vh] flex flex-col shadow-2xl overflow-hidden border border-slate-300">
+      
+      <!-- Barra Superior Dashboard -->
+      <div class="bg-wes-dark text-white p-4 sm:p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <img src="assets/logo-wes.png" alt="WES" class="h-8 w-auto">
+          <div>
+            <h2 class="font-bold text-sm font-brand flex items-center space-x-2">
+              <span>Panel Operativo WES</span>
+              <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono font-normal">v2.0 Admin</span>
+            </h2>
+            <span class="text-[11px] text-slate-400">Gestión de Cotizaciones, Soporte Técnico y Catálogo</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <button onclick="adminLogout()" class="px-3 py-1.5 bg-slate-800 hover:bg-red-700 text-white rounded-lg text-xs font-semibold transition" title="Cerrar sesión">
+            <i class="fas fa-sign-out-alt mr-1"></i> Salir
+          </button>
+          <button onclick="closeAdminDashboard()" class="p-1.5 text-slate-400 hover:text-white rounded-lg">
+            <i class="fas fa-times text-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tarjetas de Métricas Rápidas -->
+      <div class="bg-white px-6 py-3 border-b border-slate-200 flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex items-center space-x-6 text-xs">
+          <div>
+            <span class="text-slate-400 block font-medium">Cotizaciones Totales:</span>
+            <span id="admin-stat-quotes" class="text-base font-extrabold text-wes-blue">0</span>
+          </div>
+          <div class="border-l border-slate-200 pl-6">
+            <span class="text-slate-400 block font-medium">Soporte Pendiente:</span>
+            <span id="admin-stat-support" class="text-base font-extrabold text-amber-600">0</span>
+          </div>
+          <div class="border-l border-slate-200 pl-6">
+            <span class="text-slate-400 block font-medium">Productos Activos:</span>
+            <span id="admin-stat-products" class="text-base font-extrabold text-emerald-600">0</span>
+          </div>
+        </div>
+
+        <!-- Botones de Pestañas -->
+        <div class="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl">
+          <button onclick="switchAdminTab('quotes')" data-tab="quotes" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition">
+            <i class="fas fa-file-invoice mr-1"></i> Cotizaciones
+          </button>
+          <button onclick="switchAdminTab('support')" data-tab="support" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition">
+            <i class="fas fa-tools mr-1"></i> Soporte
+          </button>
+          <button onclick="switchAdminTab('products')" data-tab="products" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition">
+            <i class="fas fa-boxes mr-1"></i> Productos
+          </button>
+          <button onclick="switchAdminTab('settings')" data-tab="settings" class="admin-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold transition">
+            <i class="fas fa-cog mr-1"></i> Empresa
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenedor de Contenido Dinámico de la Pestaña -->
+      <div id="admin-tab-content" class="p-6 overflow-y-auto flex-1">
+        <!-- Inyectado dinámicamente mediante admin.js -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL SECUNDARIO: DETALLE DE COTIZACIÓN O SOPORTE ADMIN -->
+  <div id="admin-detail-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] flex flex-col">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
+        <h3 id="admin-detail-title" class="font-bold text-base text-slate-800">Detalle</h3>
+        <button onclick="closeAdminDetailModal()" class="text-slate-400 hover:text-slate-600 p-1"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="admin-detail-content" class="overflow-y-auto flex-1 pr-1"></div>
+      <div class="pt-3 border-t border-slate-200 text-right mt-3">
+        <button onclick="closeAdminDetailModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL SECUNDARIO: EDICIÓN O CREACIÓN DE PRODUCTOS -->
+  <div id="admin-product-edit-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
+        <h3 class="font-bold text-base text-slate-800">Gestión de Producto</h3>
+        <button onclick="closeProductEditModal()" class="text-slate-400 hover:text-slate-600 p-1"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <form id="product-edit-form" onsubmit="handleProductSave(event)" class="space-y-3 text-xs">
+        <input type="hidden" name="productId">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nombre del Producto *</label>
+          <input type="text" name="name" required class="w-full p-2 border border-slate-300 rounded">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Código / Referencia *</label>
+            <input type="text" name="code" required class="w-full p-2 border border-slate-300 rounded font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Marca *</label>
+            <input type="text" name="brand" required class="w-full p-2 border border-slate-300 rounded">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Categoría *</label>
+            <input type="text" name="category" required class="w-full p-2 border border-slate-300 rounded">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Precio Referencial (RD$) *</label>
+            <input type="number" name="price" step="0.01" required class="w-full p-2 border border-slate-300 rounded">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Disponibilidad *</label>
+          <select name="availability" class="w-full p-2 border border-slate-300 rounded">
+            <option value="Disponible">Disponible</option>
+            <option value="Bajo pedido">Bajo pedido</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">URL de Fotografía *</label>
+          <input type="url" name="image" required class="w-full p-2 border border-slate-300 rounded">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Descripción Breve *</label>
+          <textarea name="description" rows="2" required class="w-full p-2 border border-slate-300 rounded"></textarea>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Características (una por línea):</label>
+          <textarea name="features" rows="3" class="w-full p-2 border border-slate-300 rounded" placeholder="Resolución 4MP&#10;Visión Nocturna 30m"></textarea>
+        </div>
+        <div class="pt-3 flex justify-end space-x-2">
+          <button type="button" onclick="closeProductEditModal()" class="px-4 py-2 bg-slate-100 rounded text-slate-700 font-semibold">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-wes-blue text-white rounded font-bold hover:bg-wes-dark">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- AVISO DE COOKIES                                          -->
+  <!-- ========================================================= -->
+  <div id="cookie-banner" class="fixed bottom-0 inset-x-0 z-40 bg-slate-900 text-white p-4 shadow-2xl border-t border-slate-800 hidden flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+    <div class="flex items-center space-x-3">
+      <i class="fas fa-cookie-bite text-wes-gold text-lg"></i>
+      <p class="text-slate-300">
+        Utilizamos cookies técnicas locales para gestionar tu lista de cotización y optimizar tu experiencia en el sitio.
+      </p>
+    </div>
+    <div class="flex space-x-2">
+      <button onclick="acceptCookies()" class="px-4 py-1.5 bg-wes-gold text-wes-dark font-bold rounded-lg hover:bg-wes-gold-light transition">
+        Aceptar
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- CONTENEDOR DE TOAST NOTIFICATIONS                         -->
+  <!-- ========================================================= -->
+  <div id="toast-container" class="fixed bottom-6 left-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
+
+  <!-- Scripts -->
+  <script src="js/products.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
