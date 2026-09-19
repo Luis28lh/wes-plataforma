@@ -441,64 +441,105 @@ async function handleQuoteSubmit(e) {
 function setupSupportImageUploader() {
   const dropZone = document.getElementById('support-dropzone');
   const fileInput = document.getElementById('support-file-input');
-  const previewContainer = document.getElementById('support-images-preview');
+  const cameraInput = document.getElementById('support-camera-input');
+  const btnCamera = document.getElementById('btn-trigger-camera');
+  const btnGallery = document.getElementById('btn-trigger-gallery');
 
-  if (!dropZone || !fileInput) return;
+  if (btnCamera && cameraInput) {
+    btnCamera.addEventListener('click', () => cameraInput.click());
+    cameraInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        processSelectedFiles(e.target.files);
+        cameraInput.value = ''; // Reset para permitir tomar otra foto
+      }
+    });
+  }
 
-  dropZone.addEventListener('click', () => fileInput.click());
+  if (btnGallery && fileInput) {
+    btnGallery.addEventListener('click', () => fileInput.click());
+  }
 
-  dropZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('border-wes-blue', 'bg-blue-50/50');
-  });
+  if (dropZone && fileInput) {
+    dropZone.addEventListener('click', () => fileInput.click());
 
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('border-wes-blue', 'bg-blue-50/50');
-  });
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-wes-blue', 'bg-blue-50/70');
+    });
 
-  dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('border-wes-blue', 'bg-blue-50/50');
-    if (e.dataTransfer.files) {
-      processSelectedFiles(e.dataTransfer.files);
-    }
-  });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-wes-blue', 'bg-blue-50/70');
+    });
 
-  fileInput.addEventListener('change', (e) => {
-    if (e.target.files) {
-      processSelectedFiles(e.target.files);
-    }
-  });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-wes-blue', 'bg-blue-50/70');
+      if (e.dataTransfer.files) {
+        processSelectedFiles(e.dataTransfer.files);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        processSelectedFiles(e.target.files);
+        fileInput.value = ''; // Reset
+      }
+    });
+  }
 }
 
 function processSelectedFiles(files) {
   const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-  const maxBytes = 5 * 1024 * 1024; // 5 MB
 
   Array.from(files).forEach(file => {
-    if (!allowedTypes.includes(file.type)) {
-      showToast(`El formato de "${file.name}" no está permitido. Solo se aceptan JPG, PNG o WEBP.`, 'warning');
-      return;
-    }
-
-    if (file.size > maxBytes) {
-      showToast(`"${file.name}" excede el límite máximo de 5MB.`, 'warning');
+    if (!allowedTypes.includes(file.type) && !file.type.startsWith('image/')) {
+      showToast(`El formato de "${file.name}" no está permitido. Solo se aceptan imágenes (JPG, PNG, WEBP).`, 'warning');
       return;
     }
 
     if (AppState.supportImages.length >= 5) {
-      showToast('Puedes adjuntar un máximo de 5 fotografías por solicitud de soporte.', 'warning');
+      showToast('Límite alcanzado: máximo 5 fotografías por solicitud de soporte.', 'warning');
       return;
     }
 
+    // Compresión y optimización cliente para garantizar carga rápida
     const reader = new FileReader();
     reader.onload = (e) => {
-      AppState.supportImages.push({
-        name: file.name,
-        size: (file.size / 1024).toFixed(1) + ' KB',
-        base64: e.target.result
-      });
-      renderSupportImagePreviews();
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDimension = 1400;
+
+        if (width > maxDimension || height > maxDimension) {
+          if (width > height) {
+            height = Math.round((height * maxDimension) / width);
+            width = maxDimension;
+          } else {
+            width = Math.round((width * maxDimension) / height);
+            height = maxDimension;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.82);
+        const approxKb = Math.round((optimizedBase64.length * 0.75) / 1024);
+
+        AppState.supportImages.push({
+          name: file.name || `Foto_${AppState.supportImages.length + 1}.jpg`,
+          size: approxKb + ' KB',
+          base64: optimizedBase64
+        });
+
+        renderSupportImagePreviews();
+        showToast(`Fotografía agregada (${approxKb} KB)`, 'success');
+      };
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   });
@@ -506,6 +547,19 @@ function processSelectedFiles(files) {
 
 function renderSupportImagePreviews() {
   const container = document.getElementById('support-images-preview');
+  const counter = document.getElementById('support-photo-counter');
+
+  if (counter) {
+    counter.textContent = `${AppState.supportImages.length} de 5 fotos`;
+    if (AppState.supportImages.length > 0) {
+      counter.classList.add('bg-blue-100', 'text-wes-blue');
+      counter.classList.remove('bg-slate-100', 'text-slate-700');
+    } else {
+      counter.classList.remove('bg-blue-100', 'text-wes-blue');
+      counter.classList.add('bg-slate-100', 'text-slate-700');
+    }
+  }
+
   if (!container) return;
 
   if (AppState.supportImages.length === 0) {
@@ -514,15 +568,15 @@ function renderSupportImagePreviews() {
   }
 
   container.innerHTML = AppState.supportImages.map((img, idx) => `
-    <div class="relative group rounded-xl overflow-hidden border border-slate-200 h-24 bg-slate-100 shadow-sm">
-      <img src="${img.base64}" alt="${img.name}" class="w-full h-full object-cover">
-      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center space-x-2">
-        <button type="button" onclick="removeSupportImage(${idx})" class="w-7 h-7 bg-red-600 text-white rounded-full flex items-center justify-center shadow hover:bg-red-700 transition">
-          <i class="fas fa-trash-alt text-xs"></i>
-        </button>
+    <div class="relative group rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shadow-sm flex flex-col">
+      <div class="h-24 w-full overflow-hidden bg-slate-900 flex items-center justify-center">
+        <img src="${img.base64}" alt="${img.name}" class="w-full h-full object-cover">
       </div>
-      <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-1">
-        <span class="text-[10px] text-white truncate block px-1">${img.name}</span>
+      <div class="p-1.5 bg-white border-t border-slate-100 flex items-center justify-between text-[10px]">
+        <span class="text-slate-600 font-medium truncate flex-1 pr-1">${img.size}</span>
+        <button type="button" onclick="removeSupportImage(${idx})" class="text-rose-600 hover:text-rose-800 font-bold px-1 py-0.5 hover:bg-rose-50 rounded transition" title="Eliminar foto">
+          <i class="fas fa-trash-alt"></i> Quitar
+        </button>
       </div>
     </div>
   `).join('');
@@ -531,6 +585,7 @@ function renderSupportImagePreviews() {
 function removeSupportImage(index) {
   AppState.supportImages.splice(index, 1);
   renderSupportImagePreviews();
+  showToast('Fotografía retirada.', 'info');
 }
 
 // 6. Envío del Formulario de Soporte Técnico

@@ -8,9 +8,9 @@
 
 const CONFIG = {
   COMPANY_NAME: 'Warn Electrical Services, SRL (WES)',
-  COMPANY_EMAIL_GENERAL: 'info@wes.com.do',
-  COMPANY_EMAIL_SUPPORT: 'soporte@wes.com.do',
-  COMPANY_PHONE: '(809) 578-4320',
+  COMPANY_EMAIL_GENERAL: 'wes.inform@gmail.com',
+  COMPANY_EMAIL_SUPPORT: 'wes.inform@gmail.com',
+  COMPANY_PHONE: '(849) 207-5474',
   COMPANY_ADDRESS: 'Autopista Ramón Cáceres, Plaza Megatone, Moca, República Dominicana',
   SHEET_NAME: 'WES - Base de Datos Operativa',
   DRIVE_FOLDER_NAME: 'WES_Soporte_Evidencias'

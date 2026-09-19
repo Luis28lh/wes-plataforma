@@ -29,7 +29,8 @@ async function deployToAppsScript() {
   console.log('✓ Token de acceso obtenido con éxito.');
 
   // 2. Leer configuración de clasp
-  const claspConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '.clasp.json'), 'utf8'));
+  const ROOT_DIR = path.join(__dirname, '..');
+  const claspConfig = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '.clasp.json'), 'utf8'));
   const scriptId = claspConfig.scriptId;
   console.log(`✓ ID de Proyecto Apps Script: ${scriptId}`);
 
@@ -37,16 +38,16 @@ async function deployToAppsScript() {
   console.log('\n2. Empaquetando interfaz web y backend...');
   
   // Base64 del logotipo oficial
-  const logoB64 = fs.readFileSync(path.join(__dirname, 'assets', 'logo-wes.png')).toString('base64');
+  const logoB64 = fs.readFileSync(path.join(ROOT_DIR, 'assets', 'logo-wes.png')).toString('base64');
   const logoDataUri = `data:image/png;base64,${logoB64}`;
 
   // Leer scripts frontend
-  const productsJs = fs.readFileSync(path.join(__dirname, 'js', 'products.js'), 'utf8');
-  const appJs = fs.readFileSync(path.join(__dirname, 'js', 'app.js'), 'utf8');
-  const adminJs = fs.readFileSync(path.join(__dirname, 'js', 'admin.js'), 'utf8');
+  const productsJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'products.js'), 'utf8');
+  const appJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'app.js'), 'utf8');
+  const adminJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'admin.js'), 'utf8');
 
   // Leer HTML base y reemplazar las rutas relativas de assets y scripts por versiones autocontenidas
-  let htmlContent = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+  let htmlContent = fs.readFileSync(path.join(ROOT_DIR, 'index.html'), 'utf8');
   
   // Reemplazar rutas de logo
   htmlContent = htmlContent.split('assets/logo-wes.png').join(logoDataUri);
@@ -69,8 +70,8 @@ async function deployToAppsScript() {
   htmlContent = htmlContent.replace(/<script src="js\/products\.js"><\/script>[\s\S]*?<script src="js\/admin\.js"><\/script>/, scriptsBundle);
 
   // Leer Code.js y appsscript.json
-  const codeJs = fs.readFileSync(path.join(__dirname, 'Code.js'), 'utf8');
-  const appsscriptJson = fs.readFileSync(path.join(__dirname, 'appsscript.json'), 'utf8');
+  const codeJs = fs.readFileSync(path.join(ROOT_DIR, 'Code.js'), 'utf8');
+  const appsscriptJson = fs.readFileSync(path.join(ROOT_DIR, 'appsscript.json'), 'utf8');
 
   const filesPayload = [
     {
@@ -164,7 +165,7 @@ async function deployToAppsScript() {
     webAppUrl: webAppUrl,
     publishedAt: new Date().toISOString()
   };
-  fs.writeFileSync(path.join(__dirname, 'deployment_info.json'), JSON.stringify(deployInfo, null, 2));
+  fs.writeFileSync(path.join(ROOT_DIR, 'deployment_info.json'), JSON.stringify(deployInfo, null, 2));
 
   return deployInfo;
 }

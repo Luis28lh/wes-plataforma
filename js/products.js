@@ -371,31 +371,38 @@ const StorageService = {
   },
 
   getCompanySettings: function() {
+    const defaultSettings = {
+      name: "Warn Electrical Services, SRL (WES)",
+      slogan: "Tecnología, seguridad y soporte a tu alcance",
+      rnc: "1-31-89326-4",
+      address: "Autopista Ramón Cáceres, Plaza Megatone, Moca, Provincia Espaillat, República Dominicana",
+      phone: "(849) 207-5474",
+      whatsapp: "18492075474",
+      whatsappDisplay: "(849) 207-5474",
+      emailGeneral: "wes.inform@gmail.com",
+      emailSupport: "wes.inform@gmail.com",
+      scheduleWeek: "Lunes a Viernes: 7:30 AM – 6:00 PM (Almuerzo 12:00 PM – 2:00 PM)",
+      scheduleSat: "Sábados: 8:00 AM – 1:00 PM",
+      instagram: "@wes.inform",
+      facebook: "Warn Electrical Services SRL",
+      mapsUrl: "https://maps.app.goo.gl/KMosxdkCGwXxqFjC9",
+      googleMapsEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3761.644026857189!2d-70.53322972412808!3d19.387725481881775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eb1d15627d6e5d1%3A0x6786e017c4c3a285!2sWES!5e0!3m2!1ses!2sdo!4v1710000000000!5m2!1ses!2sdo"
+    };
     const saved = localStorage.getItem("wes_company_settings");
     if (!saved) {
-      const defaultSettings = {
-        name: "Warn Electrical Services, SRL (WES)",
-        slogan: "Tecnología, seguridad y soporte a tu alcance",
-        rnc: "1-31-89326-4",
-        address: "Autopista Ramón Cáceres, Plaza Megatone, Moca, Provincia Espaillat, República Dominicana",
-        phone: "(809) 578-4320",
-        whatsapp: "18095784320",
-        whatsappDisplay: "(809) 578-4320",
-        emailGeneral: "info@wes.com.do",
-        emailSupport: "soporte@wes.com.do",
-        scheduleWeek: "Lunes a Viernes: 7:30 AM – 6:00 PM (Almuerzo 12:00 PM – 2:00 PM)",
-        scheduleSat: "Sábados: 8:00 AM – 1:00 PM",
-        instagram: "@wessrl",
-        facebook: "Warn Electrical Services SRL",
-        googleMapsEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3761.4284792376994!2d-70.5283995!3d19.4005876!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eb1cf6027a42b1f%3A0x1d61994a4c6a28bf!2sAutopista%20Ram%C3%B3n%20C%C3%A1ceres%2C%20Moca!5e0!3m2!1ses!2sdo!4v1700000000000!5m2!1ses!2sdo"
-      };
       localStorage.setItem("wes_company_settings", JSON.stringify(defaultSettings));
       return defaultSettings;
     }
     try {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      // Forzar actualización si tenía el número anterior
+      if (!parsed.phone || parsed.phone.includes("578-4320")) {
+        localStorage.setItem("wes_company_settings", JSON.stringify(defaultSettings));
+        return defaultSettings;
+      }
+      return parsed;
     } catch (e) {
-      return {};
+      return defaultSettings;
     }
   },
 
