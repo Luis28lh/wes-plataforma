@@ -188,7 +188,7 @@ const INITIAL_PRODUCTS = [
     ],
     price: 16500,
     availability: "Disponible",
-    image: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1558089687-f282ffcbc126?auto=format&fit=crop&w=600&q=80",
     active: true
   },
   {
@@ -207,7 +207,7 @@ const INITIAL_PRODUCTS = [
     ],
     price: 7400,
     availability: "Disponible",
-    image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     active: true
   },
   {
@@ -264,7 +264,7 @@ const INITIAL_PRODUCTS = [
     ],
     price: 8900,
     availability: "Disponible",
-    image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     active: true
   }
 ];
@@ -272,9 +272,10 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin
 const StorageService = {
   getProducts: function() {
-    const saved = localStorage.getItem("wes_products");
+    const versionKey = "wes_products_v2";
+    const saved = localStorage.getItem(versionKey);
     if (!saved) {
-      localStorage.setItem("wes_products", JSON.stringify(INITIAL_PRODUCTS));
+      localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
       return INITIAL_PRODUCTS;
     }
     try {
@@ -285,7 +286,7 @@ const StorageService = {
   },
 
   saveProducts: function(products) {
-    localStorage.setItem("wes_products", JSON.stringify(products));
+    localStorage.setItem("wes_products_v2", JSON.stringify(products));
   },
 
   getQuotes: function() {
