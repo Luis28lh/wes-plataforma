@@ -20,13 +20,23 @@ const AppState = {
   backendUrl: localStorage.getItem('wes_backend_url') || ''
 };
 
+let wesMapInstance = null;
+
 function initApp() {
   renderCompanyInfo();
+  initInteractiveMap();
+  applyFeatureFlags();
   renderProducts();
   setupEventListeners();
   updateCartBadge();
   setupSupportImageUploader();
   checkCookieConsent();
+
+  // Reaccionar a cambios de Feature Flags emitidos desde el portal administrativo
+  window.addEventListener('wes_flags_changed', () => {
+    applyFeatureFlags();
+    renderProducts();
+  });
 }
 
 // 1. Renderizar datos de contacto y textos de la empresa
@@ -60,11 +70,135 @@ function renderCompanyInfo() {
   document.querySelectorAll('.company-address').forEach(el => el.textContent = s.address);
   document.querySelectorAll('.company-schedule-week').forEach(el => el.textContent = s.scheduleWeek);
   document.querySelectorAll('.company-schedule-sat').forEach(el => el.textContent = s.scheduleSat);
+}
 
-  // Mapa
-  const mapIframe = document.getElementById('gmap-iframe');
-  if (mapIframe && s.googleMapsEmbed) {
-    mapIframe.src = s.googleMapsEmbed;
+// 1.1 Inicializar Mapa Interactivo con Marcador Personalizado WES
+function initInteractiveMap() {
+  const mapContainer = document.getElementById('wes-interactive-map');
+  if (!mapContainer || !window.L) return;
+
+  if (wesMapInstance) {
+    wesMapInstance.remove();
+  }
+
+  const wesCoords = [19.3877255, -70.531041]; // Autopista Ramón Cáceres, Plaza Megatone, Moca
+
+  wesMapInstance = L.map('wes-interactive-map', {
+    center: wesCoords,
+    zoom: 16,
+    scrollWheelZoom: false
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> | Warn Electrical Services',
+    maxZoom: 19
+  }).addTo(wesMapInstance);
+
+  // Marcador Corporativo WES con Isotipo de Rayo
+  const wesCustomIcon = L.divIcon({
+    className: 'wes-marker-icon',
+    html: `
+      <div style="position: relative; width: 44px; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+        <div style="width: 40px; height: 40px; border-radius: 12px; background: #071836; border: 2.5px solid #F5B300; display: flex; align-items: center; justify-content: center; color: #F5B300; font-size: 18px; box-shadow: 0 4px 12px rgba(13,42,92,0.5);">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <div style="width: 12px; height: 12px; background: #F5B300; transform: rotate(45deg); margin-top: -6px; border-radius: 2px;"></div>
+      </div>
+    `,
+    iconSize: [44, 50],
+    iconAnchor: [22, 48],
+    popupAnchor: [0, -46]
+  });
+
+  const popupHtml = `
+    <div style="font-family: 'Inter', sans-serif; font-size: 12px; color: #1e293b; padding: 4px; min-width: 220px;">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0;">
+        <img src="assets/logo-wes.png" style="height: 28px; width: auto;" alt="WES">
+        <div>
+          <strong style="display: block; font-size: 11px; color: #071836; font-family: 'Montserrat', sans-serif; text-transform: uppercase;">Warn Electrical Services</strong>
+          <span style="font-size: 9px; color: #d97706; font-weight: bold;">SRL • RNC: 1-31-89326-4</span>
+        </div>
+      </div>
+      <p style="margin: 0 0 6px 0; color: #475569; font-size: 11px; line-height: 1.4;">
+        <i class="fas fa-map-marker-alt" style="color: #0D2A5C; margin-right: 4px;"></i>
+        Autopista Ramón Cáceres, Plaza Megatone, Moca, Rep. Dominicana.
+      </p>
+      <p style="margin: 0 0 8px 0; color: #475569; font-size: 11px;">
+        <i class="fas fa-phone-alt" style="color: #059669; margin-right: 4px;"></i>
+        (849) 207-5474
+      </p>
+      <a href="https://maps.app.goo.gl/KMosxdkCGwXxqFjC9" target="_blank" style="display: block; width: 100%; padding: 6px 0; background: #0D2A5C; color: #ffffff; text-align: center; font-weight: bold; border-radius: 8px; text-decoration: none; font-size: 11px;">
+        <i class="fas fa-directions" style="margin-right: 4px;"></i> Cómo llegar
+      </a>
+    </div>
+  `;
+
+  const marker = L.marker(wesCoords, { icon: wesCustomIcon }).addTo(wesMapInstance);
+  marker.bindPopup(popupHtml).openPopup();
+}
+
+// 1.2 Aplicar Estados de Feature Flags a la Interfaz Pública
+function applyFeatureFlags() {
+  if (!window.FeatureFlags) return;
+  const flags = FeatureFlags.getFlags();
+
+  // Control de sección fundadores
+  const foundersSec = document.getElementById('fundadores');
+  if (foundersSec) {
+    foundersSec.style.display = flags.showFounders ? '' : 'none';
+  }
+
+  // Control de mapa interactivo
+  const mapSec = document.getElementById('wes-map-section-container');
+  if (mapSec) {
+    mapSec.style.display = flags.showMap ? '' : 'none';
+  }
+
+  // Control de botón flotante WhatsApp
+  const waBtn = document.getElementById('floating-whatsapp');
+  if (waBtn) {
+    waBtn.style.display = flags.showWhatsAppButton ? '' : 'none';
+  }
+
+  // Aviso de pausa para cotizaciones
+  const quoteNoticeBox = document.getElementById('quote-pause-banner');
+  if (quoteNoticeBox) {
+    if (!flags.enableQuotes) {
+      quoteNoticeBox.classList.remove('hidden');
+      quoteNoticeBox.innerHTML = `
+        <div class="p-4 bg-amber-50 border border-amber-300 rounded-2xl text-amber-900 text-xs flex items-center space-x-3 mb-6 shadow-sm">
+          <i class="fas fa-exclamation-circle text-amber-600 text-lg shrink-0"></i>
+          <div>
+            <strong class="block font-bold text-sm mb-0.5">Solicitudes de Cotización Pausadas</strong>
+            <span>${flags.quotesNotice}</span>
+          </div>
+        </div>
+      `;
+    } else {
+      quoteNoticeBox.classList.add('hidden');
+    }
+  }
+
+  // Aviso de pausa para soporte
+  const supportForm = document.getElementById('support-form');
+  const supportNoticeBox = document.getElementById('support-pause-banner');
+  if (supportForm && supportNoticeBox) {
+    if (!flags.enableSupport) {
+      supportForm.classList.add('hidden');
+      supportNoticeBox.classList.remove('hidden');
+      supportNoticeBox.innerHTML = `
+        <div class="p-6 bg-amber-50 border border-amber-300 rounded-3xl text-amber-900 text-xs flex items-start space-x-3 shadow-sm">
+          <i class="fas fa-tools text-amber-600 text-xl shrink-0 mt-0.5"></i>
+          <div>
+            <strong class="block font-bold text-sm mb-1">Módulo de Soporte en Calibración</strong>
+            <p class="leading-relaxed">${flags.supportNotice}</p>
+          </div>
+        </div>
+      `;
+    } else {
+      supportForm.classList.remove('hidden');
+      supportNoticeBox.classList.add('hidden');
+    }
   }
 }
 
@@ -73,7 +207,23 @@ function renderProducts() {
   const container = document.getElementById('products-grid');
   if (!container) return;
 
-  const allProducts = StorageService.getProducts().filter(p => p.active !== false);
+  const flags = window.FeatureFlags ? window.FeatureFlags.getFlags() : {
+    showPrices: true,
+    enableQuotes: true,
+    hideOutOfStock: false
+  };
+
+  let allProducts = StorageService.getProducts().filter(p => p.active !== false);
+
+  // Filtrar si la categoría está activa en Feature Flags
+  if (window.FeatureFlags) {
+    allProducts = allProducts.filter(p => FeatureFlags.isCategoryActive(p.category));
+  }
+
+  // Filtrar productos sin stock inmediato si está encendido el toggle
+  if (flags.hideOutOfStock) {
+    allProducts = allProducts.filter(p => p.availability === 'Disponible');
+  }
   
   // Extraer categorías y marcas únicas para poblar los filtros dinámicamente
   populateFilterOptions(allProducts);
@@ -104,7 +254,7 @@ function renderProducts() {
   // Actualizar contador
   const countEl = document.getElementById('products-count');
   if (countEl) {
-    countEl.textContent = `${filtered.length} producto${filtered.length === 1 ? '' : 's'} encontrado${filtered.length === 1 ? '' : 's'}`;
+    countEl.textContent = `${filtered.length} producto${filtered.length === 1 ? '' : 's'} disponible${filtered.length === 1 ? '' : 's'}`;
   }
 
   if (filtered.length === 0) {
@@ -127,6 +277,23 @@ function renderProducts() {
     const isAvail = product.availability === 'Disponible';
     const availClass = isAvail ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
     const waUrl = `https://wa.me/${AppState.settings.whatsapp}?text=${encodeURIComponent(`Hola WES, deseo consultar disponibilidad y precio sobre: ${product.name} (Código: ${product.code})`)}`;
+
+    const priceHtml = flags.showPrices
+      ? `RD$ ${(product.price || 0).toLocaleString()}`
+      : `<span class="text-xs text-slate-500 font-bold italic">Consultar precio</span>`;
+
+    const quoteBtnHtml = flags.enableQuotes
+      ? `
+        <button onclick="addToQuote('${product.id}')" title="Agregar a cotización" class="px-3.5 h-10 rounded-xl bg-wes-blue text-white hover:bg-wes-dark flex items-center space-x-1.5 text-xs font-semibold transition shadow-md hover:shadow-wes-blue/20">
+          <i class="fas fa-cart-plus"></i>
+          <span class="hidden sm:inline">Cotizar</span>
+        </button>
+      `
+      : `
+        <a href="${waUrl}" target="_blank" title="Consultar por WhatsApp" class="px-3.5 h-10 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center space-x-1 text-xs font-semibold transition">
+          <span>Consultar</span>
+        </a>
+      `;
 
     return `
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
@@ -160,7 +327,7 @@ function renderProducts() {
             <div>
               <span class="text-xs text-slate-400 block font-medium">Precio Ref:</span>
               <span class="text-lg font-bold text-wes-blue">
-                RD$ ${(product.price || 0).toLocaleString()}
+                ${priceHtml}
               </span>
             </div>
             
@@ -168,10 +335,7 @@ function renderProducts() {
               <a href="${waUrl}" target="_blank" title="Consultar por WhatsApp" class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-sm">
                 <i class="fab fa-whatsapp text-lg"></i>
               </a>
-              <button onclick="addToQuote('${product.id}')" title="Agregar a cotización" class="px-3.5 h-10 rounded-xl bg-wes-blue text-white hover:bg-wes-dark flex items-center space-x-1.5 text-xs font-semibold transition shadow-md hover:shadow-wes-blue/20">
-                <i class="fas fa-cart-plus"></i>
-                <span class="hidden sm:inline">Cotizar</span>
-              </button>
+              ${quoteBtnHtml}
             </div>
           </div>
         </div>
@@ -353,6 +517,12 @@ function removeFromCart(id) {
 async function handleQuoteSubmit(e) {
   e.preventDefault();
 
+  if (window.FeatureFlags && !FeatureFlags.isFeatureActive('enableQuotes')) {
+    const flags = FeatureFlags.getFlags();
+    showToast(flags.quotesNotice || 'Las cotizaciones están temporalmente en pausa.', 'warning');
+    return;
+  }
+
   if (AppState.cart.length === 0) {
     showToast('Debes agregar al menos un producto a la lista de cotización.', 'warning');
     return;
@@ -373,20 +543,26 @@ async function handleQuoteSubmit(e) {
   const quoteData = {
     id: quoteId,
     date: now,
+    client: {
+      name: form.clientName.value.trim(),
+      company: form.company.value.trim() || 'N/A',
+      taxId: form.taxId.value.trim() || 'N/A',
+      phone: form.phone.value.trim(),
+      whatsapp: form.whatsapp.value.trim() || form.phone.value.trim(),
+      email: form.email.value.trim(),
+      city: form.city.value.trim(),
+      clientType: form.clientType.value,
+      contactMethod: form.contactMethod.value
+    },
     clientName: form.clientName.value.trim(),
-    company: form.company.value.trim() || 'N/A',
-    taxId: form.taxId.value.trim() || 'N/A',
-    phone: form.phone.value.trim(),
-    whatsapp: form.whatsapp.value.trim() || form.phone.value.trim(),
-    email: form.email.value.trim(),
-    city: form.city.value.trim(),
-    clientType: form.clientType.value,
-    contactMethod: form.contactMethod.value,
     items: [...AppState.cart],
+    total: totalEst,
     totalEstimated: totalEst,
     comments: form.comments.value.trim(),
-    status: 'Recibida',
-    internalNotes: ''
+    status: 'Pendiente',
+    assignedTo: '',
+    emailStatus: 'sent',
+    internalNotes: []
   };
 
   try {
@@ -591,6 +767,13 @@ function removeSupportImage(index) {
 // 6. Envío del Formulario de Soporte Técnico
 async function handleSupportSubmit(e) {
   e.preventDefault();
+
+  if (window.FeatureFlags && !FeatureFlags.isFeatureActive('enableSupport')) {
+    const flags = FeatureFlags.getFlags();
+    showToast(flags.supportNotice || 'El módulo de soporte está temporalmente en calibración.', 'warning');
+    return;
+  }
+
   const form = e.target;
   const submitBtn = form.querySelector('button[type="submit"]');
   const originalBtnText = submitBtn.innerHTML;
@@ -612,13 +795,18 @@ async function handleSupportSubmit(e) {
     orderNumber: form.orderNumber.value.trim() || 'N/A',
     productSystem: form.productSystem.value.trim() || 'Reportado',
     category: form.category.value,
+    problemType: form.category.value,
     priority: form.priority.value,
+    urgency: form.priority.value,
     description: form.description.value.trim(),
     preferredTime: form.preferredTime.value,
     contactMethod: form.contactMethod.value,
+    photos: AppState.supportImages.map(img => img.base64),
     images: AppState.supportImages.map(img => img.base64),
-    status: 'Recibido',
-    internalNotes: ''
+    status: 'Nuevo',
+    assignedTech: '',
+    emailStatus: 'sent',
+    internalNotes: []
   };
 
   try {
@@ -672,13 +860,32 @@ async function handleSupportSubmit(e) {
 function handleContactSubmit(e) {
   e.preventDefault();
   const form = e.target;
-  const name = form.name.value;
-  const subject = form.subject.value;
-  const message = form.message.value;
+  const name = form.name.value.trim();
+  const phone = form.phone ? form.phone.value.trim() : '';
+  const email = form.email ? form.email.value.trim() : '';
+  const subject = form.subject.value.trim();
+  const message = form.message.value.trim();
+
+  // Guardar en buzón interno para el portal administrativo
+  try {
+    const contacts = JSON.parse(localStorage.getItem('wes_contact_messages') || '[]');
+    contacts.unshift({
+      id: 'CNT-' + Date.now().toString().slice(-4),
+      date: new Date().toISOString(),
+      name,
+      phone,
+      email,
+      subject,
+      message
+    });
+    localStorage.setItem('wes_contact_messages', JSON.stringify(contacts));
+  } catch (err) {
+    console.warn('Error guardando contacto:', err);
+  }
 
   const waUrl = `https://wa.me/${AppState.settings.whatsapp}?text=${encodeURIComponent(`Hola WES, soy ${name}.\nAsunto: ${subject}\n\nMensaje: ${message}`)}`;
   
-  showToast('¡Mensaje listo! Se abrirá WhatsApp para comunicación directa.', 'success');
+  showToast('¡Mensaje enviado con éxito! Se abrirá WhatsApp para comunicación directa.', 'success');
   window.open(waUrl, '_blank');
   form.reset();
 }

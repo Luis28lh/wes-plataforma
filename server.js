@@ -23,6 +23,8 @@ const server = http.createServer((req, res) => {
   let reqUrl = req.url.split('?')[0];
   if (reqUrl === '/' || reqUrl === '') {
     reqUrl = '/index.html';
+  } else if (reqUrl === '/admin' || reqUrl === '/admin/') {
+    reqUrl = '/admin.html';
   }
 
   const filePath = path.join(PUBLIC_DIR, reqUrl);

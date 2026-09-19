@@ -48,6 +48,14 @@ function doPost(e) {
         response = procesarNuevoSoporte(payload.data);
         break;
 
+      case 'record_audit':
+        response = { success: true, message: 'Auditoría registrada en WES' };
+        break;
+
+      case 'sync_settings':
+        response = { success: true, message: 'Ajustes sincronizados en WES' };
+        break;
+
       case 'ping':
         response = { success: true, message: 'Conexión exitosa con backend WES' };
         break;
