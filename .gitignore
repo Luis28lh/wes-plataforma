@@ -14,3 +14,7 @@ desktop.ini
 
 # Logs de tareas temporales
 .system_generated/
+
+# Repositorio independiente Asistente de Reuniones
+asistente-reuniones/
+
