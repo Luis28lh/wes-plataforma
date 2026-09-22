@@ -573,6 +573,29 @@ async function handleQuoteSubmit(e) {
     quotes.unshift(quoteData);
     StorageService.saveQuotes(quotes);
 
+    // 1b. Si Supabase PostgreSQL está activo, sincronizar en base de datos en la nube
+    if (window.WesDB && WesDB.isConfigured()) {
+      try {
+        await WesDB.createQuote({
+          id: quoteId,
+          clientName: quoteData.client.name,
+          company: quoteData.client.company,
+          taxId: quoteData.client.taxId,
+          phone: quoteData.client.phone,
+          email: quoteData.client.email,
+          city: quoteData.client.city,
+          address: '',
+          subtotal: totalEst / 1.18,
+          tax: totalEst - (totalEst / 1.18),
+          total: totalEst,
+          items: quoteData.items,
+          notes: quoteData.comments
+        });
+      } catch (pgErr) {
+        console.warn('Error sincronizando cotización con PostgreSQL:', pgErr);
+      }
+    }
+
     // 2. Si hay backend de Apps Script configurado, enviar vía POST
     if (AppState.backendUrl) {
       try {
@@ -816,6 +839,23 @@ async function handleSupportSubmit(e) {
     // 1. Guardar localmente
     tickets.unshift(ticketData);
     StorageService.saveSupportTickets(tickets);
+
+    // 1b. Si Supabase PostgreSQL está activo, registrar ticket y fotos en la nube
+    if (window.WesDB && WesDB.isConfigured()) {
+      try {
+        await WesDB.createSupportTicket({
+          ticketCode: caseId,
+          name: ticketData.clientName,
+          phone: ticketData.phone,
+          email: ticketData.email,
+          serviceType: ticketData.productSystem,
+          location: ticketData.address,
+          description: ticketData.description
+        });
+      } catch (pgErr) {
+        console.warn('Error sincronizando ticket con PostgreSQL:', pgErr);
+      }
+    }
 
     // 2. Enviar a backend de Apps Script si está conectado
     if (AppState.backendUrl) {

@@ -2117,8 +2117,80 @@ const AdminApp = {
             </div>
           </form>
         </div>
+
+        <!-- Panel 3: Base de Datos PostgreSQL (Supabase) -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 font-brand flex items-center space-x-2">
+                <i class="fas fa-database text-wes-gold"></i>
+                <span>Base de Datos PostgreSQL (Supabase Cloud)</span>
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">Gestión de datos con Row Level Security (RLS) y almacenamiento de fotos.</p>
+            </div>
+            <div id="db-connection-status-badge">
+              ${(typeof WesDB !== 'undefined' && WesDB.isConfigured())
+                ? '<span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full flex items-center"><i class="fas fa-check-circle mr-1 text-emerald-600"></i> PostgreSQL Conectado</span>'
+                : '<span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-full flex items-center"><i class="fas fa-info-circle mr-1 text-slate-400"></i> Modo Local / Apps Script</span>'
+              }
+            </div>
+          </div>
+
+          <form onsubmit="AdminApp.handleSaveDatabaseCredentials(event)" class="space-y-4 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Project URL (Supabase):</label>
+                <input type="url" name="supabaseUrl" id="admin-supabase-url" placeholder="https://xyzcompany.supabase.co" value="${(typeof WesDB !== 'undefined') ? WesDB.getCredentials().url : ''}" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-wes-blue focus:outline-none font-mono">
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">Project Anon Key (Clave Pública):</label>
+                <input type="password" name="supabaseAnonKey" id="admin-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." value="${(typeof WesDB !== 'undefined') ? WesDB.getCredentials().key : ''}" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-wes-blue focus:outline-none font-mono">
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+              <div class="text-[11px] text-slate-500">
+                <i class="fas fa-shield-alt text-emerald-600 mr-1"></i> Protegido con Row Level Security (RLS), aislamiento de roles y encriptación.
+              </div>
+              <div class="flex space-x-2">
+                <button type="button" onclick="AdminApp.disconnectDatabase()" class="px-4 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-xs transition">
+                  Desconectar
+                </button>
+                <button type="submit" class="px-5 py-2 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs transition shadow flex items-center space-x-1.5">
+                  <i class="fas fa-plug text-wes-gold"></i>
+                  <span>Guardar y Conectar Base de Datos</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     `;
+  },
+
+  handleSaveDatabaseCredentials(e) {
+    e.preventDefault();
+    if (!PermissionsManager.checkOrAlert('ajustes', 'configurar')) return;
+    const form = e.target;
+    const url = form.supabaseUrl.value.trim();
+    const key = form.supabaseAnonKey.value.trim();
+
+    try {
+      WesDB.saveCredentials(url, key);
+      showToast('Credenciales de PostgreSQL guardadas con éxito.', 'success');
+      this.renderAjustes();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  },
+
+  disconnectDatabase() {
+    if (!PermissionsManager.checkOrAlert('ajustes', 'configurar')) return;
+    if (confirm('¿Deseas desconectar la base de datos PostgreSQL y volver al modo local / Google Apps Script?')) {
+      WesDB.disconnect();
+      showToast('Base de datos desconectada. Operando en modo local.', 'info');
+      this.renderAjustes();
+    }
   },
 
   updateFeatureToggle(key, val) {
