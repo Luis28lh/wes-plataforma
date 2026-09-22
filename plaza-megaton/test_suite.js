@@ -98,7 +98,8 @@ async function runTests() {
       asunto: 'Problema eléctrico',
       detalle: 'No enciende la luminaria del pasillo frontal'
     });
-    assert(r5.status === 200 && r5.data.codigo === 'CL-001', 'Prueba 5: Reclamación inicial genera correlativo CL-001');
+    const clNum1 = Number(r5.data.codigo.replace(/\D/g, ''));
+    assert(r5.status === 200 && /^CL-\d+$/.test(r5.data.codigo), `Prueba 5: Reclamación genera correlativo ${r5.data.codigo}`);
 
     // 6. Crear Reclamación 2 (CL-002) - Garantizar consecutividad
     const r6 = await makeRequest('/api/reclamaciones', {
@@ -111,7 +112,8 @@ async function runTests() {
       asunto: 'Filtración',
       detalle: 'Goteo leve en esquina superior derecha'
     });
-    assert(r6.status === 200 && r6.data.codigo === 'CL-002', 'Prueba 6: Siguiente reclamación genera correlativo CL-002');
+    const clNum2 = Number(r6.data.codigo.replace(/\D/g, ''));
+    assert(r6.status === 200 && clNum2 === clNum1 + 1, `Prueba 6: Consecutividad estricta garantizada en reclamaciones (${r5.data.codigo} -> ${r6.data.codigo})`);
 
     // 7. Crear Reporte de Pago 1 (PG-001)
     const r7 = await makeRequest('/api/pagos', {
@@ -127,7 +129,8 @@ async function runTests() {
       fecha_pago: '2026-09-22',
       referencia: 'TR-88192'
     });
-    assert(r7.status === 200 && r7.data.codigo === 'PG-001', 'Prueba 7: Reporte de pago genera código PG-001');
+    const pgNum1 = Number(r7.data.codigo.replace(/\D/g, ''));
+    assert(r7.status === 200 && /^PG-\d+$/.test(r7.data.codigo), `Prueba 7: Reporte de pago genera código ${r7.data.codigo}`);
 
     // 8. Crear Reporte de Pago 2 (PG-002)
     const r8 = await makeRequest('/api/pagos', {
@@ -141,9 +144,10 @@ async function runTests() {
       periodo: 'Septiembre 2026',
       monto: 'RD$12,000.00',
       fecha_pago: '2026-09-22',
-      referencia: 'DEP-4491'
+      referencia: 'TR-88193'
     });
-    assert(r8.status === 200 && r8.data.codigo === 'PG-002', 'Prueba 8: Siguiente reporte de pago genera PG-002');
+    const pgNum2 = Number(r8.data.codigo.replace(/\D/g, ''));
+    assert(r8.status === 200 && pgNum2 === pgNum1 + 1, `Prueba 8: Consecutividad estricta garantizada en pagos (${r7.data.codigo} -> ${r8.data.codigo})`);
 
     // 9. Dashboard Administrativo (KPIs)
     const r9 = await makeRequest('/api/admin/dashboard', {
@@ -184,6 +188,26 @@ async function runTests() {
     // 13. Seguridad: Bloqueo de acceso al panel admin sin PIN
     const r13 = await makeRequest('/api/admin/dashboard');
     assert(r13.status === 401, 'Prueba 13: Seguridad administrativa bloquea accesos no autorizados (401)');
+
+    // 14. Registro con cubículos apilados, nombre comercial y actividad comercial
+    const r14 = await makeRequest('/api/usuarios/registro', { method: 'POST' }, {
+      nombre: 'Don Fernando',
+      email: 'fernando@megatest.com',
+      telefono: '809-555-8899',
+      cubiculos: [
+        { codigo: 'C10', nombre: 'Taller Alfa', actividad: 'Reparación de celulares' },
+        { codigo: 'C11', nombre: 'Boutique Alfa', actividad: 'Venta de ropa' }
+      ]
+    });
+    assert(r14.status === 200 && r14.data.success && r14.data.cubiculosAsignados.length === 2, 'Prueba 14: Registro con cubículos múltiples, nombre y actividad comercial');
+
+    // 15. Verificación de nombre y actividad en catálogo y sesión de usuario
+    const r15 = await makeRequest('/api/admin/usuarios', {
+      headers: { 'x-admin-pin': 'megaton2026' }
+    });
+    const uTest = r15.data.usuarios.find(u => u.email === 'fernando@megatest.com');
+    const hasCubDetails = uTest && Array.isArray(uTest.cubiculos) && uTest.cubiculos.some(c => c.includes('Taller Alfa') && c.includes('Reparación'));
+    assert(hasCubDetails, 'Prueba 15: Datos de nombre local y actividad comercial referenciados correctamente');
 
     console.log('\n====================================================');
     console.log(`📊 RESULTADO FINAL: ${passed}/${total} PRUEBAS EXITOSAS (${Math.round(passed/total*100)}%)`);

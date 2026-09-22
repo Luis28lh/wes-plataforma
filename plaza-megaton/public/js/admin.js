@@ -159,13 +159,21 @@ function renderUsuariosTable(users) {
   tbody.innerHTML = '';
   users.forEach(u => {
     const tr = document.createElement('tr');
-    const cubs = Array.isArray(u.cubiculos) ? u.cubiculos.join(', ') : '';
+    const cubsHtml = Array.isArray(u.cubiculos) && u.cubiculos.length > 0
+      ? u.cubiculos.map(c => {
+          if (typeof c === 'object' && c !== null) {
+            const extra = [c.nombre, c.actividad].filter(Boolean).join(' · ');
+            return `<div style="margin-bottom: 2px;"><strong>${c.codigo}</strong>${extra ? ' <span style="font-size:11px; color:#475569;">(' + extra + ')</span>' : ''}</div>`;
+          }
+          return `<div style="margin-bottom: 2px;"><strong>${c}</strong></div>`;
+        }).join('')
+      : '<span style="color:#94A3B8;">Ninguno</span>';
 
     tr.innerHTML = `
       <td><strong>${u.user_id}</strong></td>
       <td><strong>${u.nombre}</strong></td>
       <td>${u.email}<br><small style="color:#64748B;">${u.telefono || 'Sin tel.'}</small></td>
-      <td><span style="background:#FEE2E2; color:#B71C1C; padding:3px 8px; border-radius:6px; font-weight:700; font-size:12px;">${cubs || 'Ninguno'}</span></td>
+      <td><span style="background:#FEE2E2; color:#B71C1C; padding:4px 8px; border-radius:6px; font-weight:600; font-size:12px; display:inline-block;">${cubsHtml}</span></td>
       <td><span class="badge ${u.estado === 'Activo' ? 'badge-activo' : 'badge-rechazado'}">${u.estado}</span></td>
       <td>
         <button class="btn-sm btn-sm-outline" onclick="openEditUserModal('${u.user_id}')">⚙️ Gestionar</button>
@@ -181,7 +189,10 @@ function filterUsuarios() {
     u.nombre.toLowerCase().includes(q) || 
     u.email.toLowerCase().includes(q) || 
     u.user_id.toLowerCase().includes(q) ||
-    (Array.isArray(u.cubiculos) && u.cubiculos.some(c => c.toLowerCase().includes(q)))
+    (Array.isArray(u.cubiculos) && u.cubiculos.some(c => {
+      const txt = typeof c === 'object' ? `${c.codigo} ${c.nombre || ''} ${c.actividad || ''}` : String(c);
+      return txt.toLowerCase().includes(q);
+    }))
   );
   renderUsuariosTable(filtered);
 }
@@ -193,7 +204,15 @@ function openEditUserModal(userId) {
   const modal = document.getElementById('edit-user-modal');
   const body = document.getElementById('edit-user-body');
 
-  const cubs = Array.isArray(user.cubiculos) ? user.cubiculos.join(', ') : '';
+  const cubsFormatted = Array.isArray(user.cubiculos) && user.cubiculos.length > 0
+    ? user.cubiculos.map(c => {
+        if (typeof c === 'object' && c !== null) {
+          const extra = [c.nombre, c.actividad].filter(Boolean).join(' · ');
+          return `• <strong>${c.codigo}</strong>${extra ? ' — ' + extra : ''}`;
+        }
+        return `• <strong>${c}</strong>`;
+      }).join('<br>')
+    : 'Ninguno';
 
   body.innerHTML = `
     <div style="font-size:16px; font-weight:800; margin-bottom:12px;">Usuario: ${user.nombre} (${user.user_id})</div>
@@ -214,7 +233,7 @@ function openEditUserModal(userId) {
     </div>
     <div class="form-group">
       <label class="form-label">Cubículos actualmente asociados:</label>
-      <div style="font-size:14px; font-weight:700; color:#B71C1C; margin-bottom:8px;">${cubs || 'Ninguno'}</div>
+      <div style="font-size:13px; color:#B71C1C; margin-bottom:8px; line-height:1.5;">${cubsFormatted}</div>
     </div>
     <div style="border-top:1px solid #E2E8F0; padding-top:12px; margin-top:12px;">
       <div class="form-group">

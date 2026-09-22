@@ -128,7 +128,17 @@ class EmailService {
    * 1. Correo automático de Bienvenida post-registro
    */
   async sendWelcomeEmail({ nombre, email, cubiculoCodigos }) {
-    const cubiculosStr = Array.isArray(cubiculoCodigos) ? cubiculoCodigos.join(', ') : cubiculoCodigos;
+    const cubiculosStr = Array.isArray(cubiculoCodigos)
+      ? cubiculoCodigos.map(c => {
+          if (typeof c === 'object' && c !== null) {
+            const parts = [c.codigo];
+            if (c.nombre) parts.push(`"${c.nombre}"`);
+            if (c.actividad) parts.push(`(${c.actividad})`);
+            return parts.join(' ');
+          }
+          return String(c);
+        }).join(', ')
+      : cubiculoCodigos;
     const subject = 'Bienvenido a Plaza Megatón';
 
     const htmlBody = `

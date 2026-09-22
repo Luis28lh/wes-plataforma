@@ -110,7 +110,13 @@ class DataService {
       const userCubRels = relations.filter(r => r.user_id === u.user_id && r.estado === 'Activo');
       const cubList = userCubRels.map(rel => {
         const c = cubiculos.find(cb => cb.cubiculo_id === rel.cubiculo_id);
-        return c ? c.codigo : rel.cubiculo_id;
+        const cod = c ? c.codigo : rel.cubiculo_id;
+        const nom = rel.nombre_local || (c ? c.nombre_local : '') || '';
+        const act = rel.actividad_comercial || (c ? c.actividad_comercial : '') || '';
+        if (nom || act) {
+          return `${cod} (${nom ? nom + (act ? ' · ' + act : '') : act})`;
+        }
+        return cod;
       });
       return {
         ...u,
@@ -177,7 +183,14 @@ class DataService {
     const cubiculos = this.db.CUBICULOS || [];
     return relations.map(r => {
       const c = cubiculos.find(cb => cb.cubiculo_id === r.cubiculo_id);
-      return c ? { cubiculo_id: c.cubiculo_id, codigo: c.codigo, nivel: c.nivel, observaciones: c.observaciones } : { cubiculo_id: r.cubiculo_id, codigo: r.cubiculo_id };
+      return {
+        cubiculo_id: r.cubiculo_id,
+        codigo: c ? c.codigo : r.cubiculo_id,
+        nivel: c ? c.nivel : '',
+        nombre: r.nombre_local || (c ? c.nombre_local : '') || '',
+        actividad: r.actividad_comercial || (c ? c.actividad_comercial : '') || '',
+        observaciones: c ? c.observaciones : ''
+      };
     });
   }
 
@@ -190,7 +203,12 @@ class DataService {
     });
 
     const assigned = [];
-    for (const rawCode of cubiculoIds) {
+    for (const item of cubiculoIds) {
+      if (!item) continue;
+      const rawCode = typeof item === 'object' ? item.codigo : item;
+      const nombreLocal = typeof item === 'object' ? (item.nombre || item.nombre_local || '') : '';
+      const actividadComercial = typeof item === 'object' ? (item.actividad || item.actividad_comercial || '') : '';
+
       if (!rawCode || !String(rawCode).trim()) continue;
       const cleanCode = String(rawCode).trim().toUpperCase();
 
@@ -206,24 +224,32 @@ class DataService {
         cub = {
           cubiculo_id: `CUB-${cleanCode}`,
           codigo: cleanCode,
+          nombre_local: nombreLocal,
+          actividad_comercial: actividadComercial,
           estado: 'Ocupado',
           observaciones: 'Registrado por usuario'
         };
         this.db.CUBICULOS.push(cub);
       } else {
         cub.estado = 'Ocupado';
+        if (nombreLocal) cub.nombre_local = nombreLocal;
+        if (actividadComercial) cub.actividad_comercial = actividadComercial;
       }
 
       // Verificar si ya existe relación
-      const existing = this.db.USUARIO_CUBICULO.find(r => r.user_id === userId && r.cubiculo_id === cub.cubiculo_id);
+      let existing = this.db.USUARIO_CUBICULO.find(r => r.user_id === userId && r.cubiculo_id === cub.cubiculo_id);
       if (existing) {
         existing.estado = 'Activo';
+        if (nombreLocal) existing.nombre_local = nombreLocal;
+        if (actividadComercial) existing.actividad_comercial = actividadComercial;
       } else {
         const relId = `UC-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
         this.db.USUARIO_CUBICULO.push({
           id: relId,
           user_id: userId,
           cubiculo_id: cub.cubiculo_id,
+          nombre_local: nombreLocal,
+          actividad_comercial: actividadComercial,
           fecha_asignacion: now,
           estado: 'Activo'
         });

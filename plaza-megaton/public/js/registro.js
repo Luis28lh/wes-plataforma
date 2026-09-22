@@ -1,5 +1,55 @@
 // Controlador del Formulario de Registro QR - Plaza Megatón
-// Casillas dinámicas vacías y opcionales para cubículos (C1, C2, C3...)
+// Soporte para entrada manual de cubículos, apilados uno debajo del otro,
+// con casillas opcionales de "Nombre del local" y "Actividad comercial".
+
+let catalogCubiculos = [];
+
+async function loadCubiculosCatalog() {
+  const datalist = document.getElementById('catalog-cubiculos-list');
+  if (!datalist) return;
+
+  if (App.isStaticHost()) {
+    let local = JSON.parse(localStorage.getItem('pm_cubiculos') || '[]');
+    if (local.length === 0) {
+      local = Array.from({ length: 30 }, (_, i) => {
+        const num = String(i + 1).padStart(3, '0');
+        return {
+          cubiculo_id: `CUB-${num}`,
+          codigo: `C-${num}`,
+          estado: 'Disponible',
+          observaciones: 'Nivel 1'
+        };
+      });
+      localStorage.setItem('pm_cubiculos', JSON.stringify(local));
+    }
+    catalogCubiculos = local;
+    renderCatalogDatalist(local);
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/catalog/cubiculos');
+    const data = await res.json();
+    if (data.success && data.cubiculos) {
+      catalogCubiculos = data.cubiculos;
+      renderCatalogDatalist(data.cubiculos);
+    }
+  } catch (err) {
+    console.warn('No se pudo cargar catálogo remoto, usando base local:', err);
+  }
+}
+
+function renderCatalogDatalist(list) {
+  const datalist = document.getElementById('catalog-cubiculos-list');
+  if (!datalist) return;
+  datalist.innerHTML = '';
+  list.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.codigo;
+    opt.textContent = `${c.codigo} (${c.estado || 'Disponible'})`;
+    datalist.appendChild(opt);
+  });
+}
 
 function initCubiculosDynamicFields() {
   const container = document.getElementById('cubiculos-inputs-container');
@@ -7,7 +57,7 @@ function initCubiculosDynamicFields() {
   if (!container) return;
 
   container.innerHTML = '';
-  // Inicializar con 1 casilla vacía
+  // Inicializar con 1 bloque de cubículo vacío
   addCubiculoInputRow();
 
   if (addBtn) {
@@ -15,51 +65,108 @@ function initCubiculosDynamicFields() {
       addCubiculoInputRow();
     };
   }
+
+  loadCubiculosCatalog();
 }
 
-function addCubiculoInputRow(initialValue = '') {
+function addCubiculoInputRow(initialData = {}) {
   const container = document.getElementById('cubiculos-inputs-container');
   if (!container) return;
 
-  const currentCount = container.querySelectorAll('.cubiculo-input-row').length;
+  const currentCount = container.querySelectorAll('.cubiculo-card-block').length;
   const nextNum = currentCount + 1;
-  const exampleText = nextNum === 1 ? 'Ej: C1 o C-001' : `Ej: C${nextNum}`;
+  const exampleCode = nextNum === 1 ? 'Ej: C1 o C-001' : `Ej: C${nextNum}`;
 
-  const row = document.createElement('div');
-  row.className = 'cubiculo-input-row';
-  row.innerHTML = `
-    <span class="cubiculo-row-badge">${nextNum}</span>
-    <input 
-      type="text" 
-      class="form-input cubiculo-item-input" 
-      placeholder="${exampleText}" 
-      value="${initialValue}" 
-      style="text-transform: uppercase; font-weight: 700; font-size: 16px; letter-spacing: 0.5px;"
-      autocomplete="off"
-    >
-    <button type="button" class="btn-remove-cubiculo" title="Eliminar este cubículo">✕</button>
+  const initialCode = typeof initialData === 'object' ? (initialData.codigo || '') : String(initialData || '');
+  const initialName = typeof initialData === 'object' ? (initialData.nombre || initialData.nombre_local || '') : '';
+  const initialActivity = typeof initialData === 'object' ? (initialData.actividad || initialData.actividad_comercial || '') : '';
+
+  const block = document.createElement('div');
+  block.className = 'cubiculo-card-block';
+  block.innerHTML = `
+    <div class="cubiculo-card-header">
+      <div class="cubiculo-card-title">
+        <span class="cubiculo-row-badge">${nextNum}</span>
+        <span>Cubículo o Local #${nextNum}</span>
+      </div>
+      <button type="button" class="btn-remove-cubiculo-block" title="Quitar este cubículo">
+        ✕ Quitar
+      </button>
+    </div>
+
+    <!-- Campo 1: Número / Código de Cubículo (Manual o de Lista) -->
+    <div class="cubiculo-field-group">
+      <label class="cubiculo-field-label">
+        <span>Número del Cubículo o Local</span>
+        <span class="cubiculo-field-opt">Escribe a mano o selecciona</span>
+      </label>
+      <input 
+        type="text" 
+        class="form-input cubiculo-item-code" 
+        placeholder="${exampleCode}" 
+        value="${initialCode}" 
+        list="catalog-cubiculos-list"
+        style="text-transform: uppercase; font-weight: 700; font-size: 15px; letter-spacing: 0.5px;"
+        autocomplete="off"
+      >
+    </div>
+
+    <!-- Campo 2: Nombre del Cubículo o Local (Opcional) -->
+    <div class="cubiculo-field-group">
+      <label class="cubiculo-field-label">
+        <span>Nombre o Referencia del Local</span>
+        <span class="cubiculo-field-opt">(Opcional)</span>
+      </label>
+      <input 
+        type="text" 
+        class="form-input cubiculo-item-name" 
+        placeholder="Ej: Taller Eléctrico Pérez, Modas Laura..." 
+        value="${initialName}" 
+        autocomplete="off"
+      >
+    </div>
+
+    <!-- Campo 3: Actividad Comercial (Opcional) -->
+    <div class="cubiculo-field-group">
+      <label class="cubiculo-field-label">
+        <span>Actividad comercial</span>
+        <span class="cubiculo-field-opt">(Opcional)</span>
+      </label>
+      <input 
+        type="text" 
+        class="form-input cubiculo-item-activity" 
+        placeholder="Ej: Reparación de celulares, Venta de ropa..." 
+        value="${initialActivity}" 
+        list="actividad-comercial-list"
+        autocomplete="off"
+      >
+    </div>
   `;
 
-  // Manejar eliminación de fila
-  const removeBtn = row.querySelector('.btn-remove-cubiculo');
+  // Manejar eliminación de bloque
+  const removeBtn = block.querySelector('.btn-remove-cubiculo-block');
   removeBtn.onclick = () => {
-    const totalRows = container.querySelectorAll('.cubiculo-input-row').length;
-    if (totalRows > 1) {
-      row.remove();
+    const totalBlocks = container.querySelectorAll('.cubiculo-card-block').length;
+    if (totalBlocks > 1) {
+      block.remove();
       renumberCubiculoRows();
     } else {
-      // Si es la única casilla, solo limpiar el texto
-      const input = row.querySelector('.cubiculo-item-input');
-      if (input) input.value = '';
+      // Si es el único bloque, limpiar sus inputs
+      const codeInput = block.querySelector('.cubiculo-item-code');
+      const nameInput = block.querySelector('.cubiculo-item-name');
+      const actInput = block.querySelector('.cubiculo-item-activity');
+      if (codeInput) codeInput.value = '';
+      if (nameInput) nameInput.value = '';
+      if (actInput) actInput.value = '';
     }
   };
 
-  container.appendChild(row);
+  container.appendChild(block);
 
-  // Si no es la primera, enfocar el nuevo campo
+  // Si no es el primero, enfocar el campo de código
   if (nextNum > 1) {
-    const newInput = row.querySelector('.cubiculo-item-input');
-    if (newInput) newInput.focus();
+    const newCodeInput = block.querySelector('.cubiculo-item-code');
+    if (newCodeInput) newCodeInput.focus();
   }
 }
 
@@ -67,14 +174,16 @@ function renumberCubiculoRows() {
   const container = document.getElementById('cubiculos-inputs-container');
   if (!container) return;
 
-  const rows = container.querySelectorAll('.cubiculo-input-row');
-  rows.forEach((row, index) => {
-    const badge = row.querySelector('.cubiculo-row-badge');
-    const input = row.querySelector('.cubiculo-item-input');
+  const blocks = container.querySelectorAll('.cubiculo-card-block');
+  blocks.forEach((block, index) => {
+    const badge = block.querySelector('.cubiculo-row-badge');
+    const titleSpan = block.querySelector('.cubiculo-card-title span:last-child');
+    const codeInput = block.querySelector('.cubiculo-item-code');
     const num = index + 1;
     if (badge) badge.innerText = num;
-    if (input && !input.value) {
-      input.placeholder = num === 1 ? 'Ej: C1 o C-001' : `Ej: C${num}`;
+    if (titleSpan) titleSpan.innerText = `Cubículo o Local #${num}`;
+    if (codeInput && !codeInput.value) {
+      codeInput.placeholder = num === 1 ? 'Ej: C1 o C-001' : `Ej: C${num}`;
     }
   });
 }
@@ -83,12 +192,30 @@ function getEnteredCubiculos() {
   const container = document.getElementById('cubiculos-inputs-container');
   if (!container) return [];
 
-  const inputs = container.querySelectorAll('.cubiculo-item-input');
+  const blocks = container.querySelectorAll('.cubiculo-card-block');
   const list = [];
-  inputs.forEach(input => {
-    const val = input.value.trim().toUpperCase();
-    if (val && !list.includes(val)) {
-      list.push(val);
+  blocks.forEach(block => {
+    const codeInput = block.querySelector('.cubiculo-item-code');
+    const nameInput = block.querySelector('.cubiculo-item-name');
+    const actInput = block.querySelector('.cubiculo-item-activity');
+
+    const codigo = codeInput ? codeInput.value.trim().toUpperCase() : '';
+    const nombre = nameInput ? nameInput.value.trim() : '';
+    const actividad = actInput ? actInput.value.trim() : '';
+
+    if (codigo) {
+      list.push({
+        codigo,
+        nombre: nombre || '',
+        actividad: actividad || ''
+      });
+    } else if (nombre || actividad) {
+      // Si colocó nombre o actividad sin código específico
+      list.push({
+        codigo: 'SIN-NUMERO',
+        nombre: nombre || '',
+        actividad: actividad || ''
+      });
     }
   });
   return list;
@@ -134,16 +261,21 @@ async function handleRegistroSubmit(event) {
 
       // Actualizar cubículos en catálogo local
       const catalog = JSON.parse(localStorage.getItem('pm_cubiculos') || '[]');
-      cubiculosArr.forEach(cod => {
+      cubiculosArr.forEach(cItem => {
+        const cod = cItem.codigo;
         let existing = catalog.find(c => c.codigo.toUpperCase() === cod.toUpperCase());
         if (existing) {
           existing.estado = 'Ocupado';
+          if (cItem.nombre) existing.nombre_local = cItem.nombre;
+          if (cItem.actividad) existing.actividad_comercial = cItem.actividad;
         } else {
           catalog.push({
             cubiculo_id: 'CUB-' + cod,
             codigo: cod,
+            nombre_local: cItem.nombre || '',
+            actividad_comercial: cItem.actividad || '',
             estado: 'Ocupado',
-            observaciones: 'Ingresado por inquilino'
+            observaciones: 'Ingresado por usuario'
           });
         }
       });
@@ -214,7 +346,22 @@ function showSuccessScreen({ nombre, email, cubiculos, previewUrl }) {
   formBox.style.display = 'none';
   successBox.style.display = 'block';
 
-  document.getElementById('success-cubiculos').innerText = Array.isArray(cubiculos) ? cubiculos.join(', ') : cubiculos;
+  let formattedCubs = 'Pendiente de asignar';
+  if (Array.isArray(cubiculos) && cubiculos.length > 0) {
+    formattedCubs = cubiculos.map(c => {
+      if (typeof c === 'object' && c !== null) {
+        const parts = [c.codigo];
+        if (c.nombre) parts.push(`"${c.nombre}"`);
+        if (c.actividad) parts.push(`(${c.actividad})`);
+        return parts.join(' ');
+      }
+      return String(c);
+    }).join(', ');
+  } else if (typeof cubiculos === 'string') {
+    formattedCubs = cubiculos;
+  }
+
+  document.getElementById('success-cubiculos').innerText = formattedCubs;
   document.getElementById('success-email-dest').innerText = email;
 
   if (previewUrl) {
@@ -249,13 +396,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (emailInput) emailInput.value = session.user.email || '';
     if (telInput) telInput.value = session.user.telefono || '';
 
-    // Si ya tenía cubículos, poblar las casillas
+    // Si ya tenía cubículos, poblar los bloques
     if (session.user.cubiculos && session.user.cubiculos.length > 0) {
       const container = document.getElementById('cubiculos-inputs-container');
       container.innerHTML = '';
       session.user.cubiculos.forEach(c => {
-        const cod = typeof c === 'object' ? c.codigo : c;
-        addCubiculoInputRow(cod);
+        addCubiculoInputRow(c);
       });
     }
   }

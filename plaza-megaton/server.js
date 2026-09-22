@@ -89,10 +89,23 @@ app.post('/api/usuarios/registro', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Debe ingresar un correo electrónico válido.' });
     }
 
-    // Cubículos ahora es opcional: el usuario puede ingresar C1, luego C2, o dejarlo vacío
-    const cubiculosList = Array.isArray(cubiculos)
-      ? cubiculos.map(c => String(c).trim()).filter(Boolean)
-      : (cubiculos && String(cubiculos).trim() ? [String(cubiculos).trim()] : []);
+    // Cubículos es opcional: puede ser array de strings o de objetos { codigo, nombre, actividad }
+    let cubiculosList = [];
+    if (Array.isArray(cubiculos)) {
+      cubiculosList = cubiculos.map(c => {
+        if (typeof c === 'object' && c !== null) {
+          const cod = String(c.codigo || '').trim().toUpperCase();
+          const nom = String(c.nombre || c.nombre_local || '').trim();
+          const act = String(c.actividad || c.actividad_comercial || '').trim();
+          return cod ? { codigo: cod, nombre: nom, actividad: act } : null;
+        } else if (c && String(c).trim()) {
+          return { codigo: String(c).trim().toUpperCase(), nombre: '', actividad: '' };
+        }
+        return null;
+      }).filter(Boolean);
+    } else if (cubiculos && String(cubiculos).trim()) {
+      cubiculosList = [{ codigo: String(cubiculos).trim().toUpperCase(), nombre: '', actividad: '' }];
+    }
 
     const cleanEmail = email.trim().toLowerCase();
     let user = await dataService.getUsuarioByEmail(cleanEmail);

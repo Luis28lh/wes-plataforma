@@ -32,9 +32,15 @@ function initPagosForm() {
       } else {
         cubs.forEach(c => {
           const cod = typeof c === 'object' ? c.codigo : c;
+          const nom = typeof c === 'object' ? (c.nombre || c.nombre_local || '') : '';
+          const act = typeof c === 'object' ? (c.actividad || c.actividad_comercial || '') : '';
           const opt = document.createElement('option');
           opt.value = cod;
-          opt.textContent = `Cubículo ${cod}`;
+          let label = `Cubículo ${cod}`;
+          if (nom || act) {
+            label += ` — ${nom ? nom : ''}${act ? (nom ? ` (${act})` : act) : ''}`;
+          }
+          opt.textContent = label;
           cubSelect.appendChild(opt);
         });
       }

@@ -77,28 +77,42 @@
           >
         </div>
 
-        <!-- Cubículos o Locales Dinámicos (Opcional) -->
+        <!-- Cubículos o Locales Dinámicos (Uno debajo del otro) -->
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
             <label class="form-label" style="margin-bottom: 0;">
               Cubículo(s) o Local(es) <span class="opt">(Opcional)</span>
             </label>
-            <span style="font-size: 11px; color: var(--primary-red); font-weight: 600;">Escribe los que tengas a mano</span>
+            <span style="font-size: 11px; color: var(--primary-red); font-weight: 700;">Manual o de la lista</span>
           </div>
           
-          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4;">
-            Ingresa tu cubículo (ej: <strong>C1</strong>). Presiona <strong>"+ Agregar otro cubículo"</strong> si tienes más de uno (ej: <strong>C2</strong>, <strong>C3</strong>...), o déjalo vacío si aún no tienes asignado.
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.45;">
+            Ingresa tu número de cubículo (ej: <strong>C1</strong>). Si tienes varios, agrégalos <strong>uno debajo del otro</strong>. Puedes incluir de forma opcional el <strong>nombre del local</strong> y su <strong>actividad comercial</strong> para referenciarlos con claridad.
           </div>
 
-          <!-- Contenedor de Casillas Dinámicas -->
-          <div id="cubiculos-inputs-container" style="display: flex; flex-direction: column; gap: 10px;">
-            <!-- La primera casilla se inicializa vacía -->
+          <!-- Contenedor de Bloques Dinámicos de Cubículos -->
+          <div id="cubiculos-inputs-container" style="display: flex; flex-direction: column; gap: 14px;">
+            <!-- Renderizado dinámico desde registro.js -->
           </div>
 
-          <!-- Botón para añadir más casillas -->
-          <button type="button" id="btn-add-cubiculo" class="btn-secondary" style="margin-top: 10px; min-height: 44px; border: 1.5px dashed #CBD5E1; color: var(--text-main); font-weight: 700;">
-            ➕ Agregar otro cubículo (ej: C2, C3...)
+          <!-- Botón para añadir más cubículos -->
+          <button type="button" id="btn-add-cubiculo" class="btn-secondary" style="margin-top: 12px; min-height: 46px; border: 1.5px dashed #CBD5E1; color: var(--text-main); font-weight: 700; width: 100%;">
+            ➕ Agregar otro cubículo (si tienes varios)
           </button>
+
+          <!-- Datalists para sugerencias y autocompletado rápido -->
+          <datalist id="catalog-cubiculos-list"></datalist>
+          <datalist id="actividad-comercial-list">
+            <option value="Reparación de celulares y computadoras">
+            <option value="Venta de accesorios móviles y tecnología">
+            <option value="Venta de ropa y calzado">
+            <option value="Salón de belleza / Barbería / Uñas">
+            <option value="Cafetería / Comida rápida / Bebidas">
+            <option value="Oficina de servicios / Asesoría / Legal">
+            <option value="Electrónica y electrodomésticos">
+            <option value="Joyería y variedades">
+            <option value="Almacén / Depósito de mercancía">
+          </datalist>
         </div>
 
         <!-- Botón de Envío -->

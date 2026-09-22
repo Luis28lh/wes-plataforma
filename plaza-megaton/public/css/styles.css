@@ -309,20 +309,50 @@ body {
   min-height: 100px;
 }
 
-/* Filas dinámicas para agregar cubículos */
-.cubiculo-input-row {
+/* Bloques dinámicos tipo tarjeta para cubículos (uno debajo del otro) */
+.cubiculo-card-block {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.cubiculo-card-block:focus-within {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.08);
+}
+
+.cubiculo-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px dashed #E2E8F0;
+  padding-bottom: 8px;
+  margin-bottom: 2px;
+}
+
+.cubiculo-card-title {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
 }
 
 .cubiculo-row-badge {
   background-color: var(--primary-light);
   color: var(--primary-dark);
   font-weight: 800;
-  font-size: 13px;
-  width: 32px;
-  height: 32px;
+  font-size: 12px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -331,26 +361,45 @@ body {
   border: 1px solid #FECACA;
 }
 
-.btn-remove-cubiculo {
-  background: #FEE2E2;
-  color: #B91C1C;
-  border: 1px solid #FECACA;
-  width: 42px;
-  height: 48px;
-  border-radius: var(--radius-md);
-  font-size: 16px;
+.btn-remove-cubiculo-block {
+  background: #FFF1F2;
+  color: #BE123C;
+  border: 1px solid #FECDD3;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  gap: 4px;
   transition: all 0.15s ease;
 }
 
-.btn-remove-cubiculo:hover {
-  background: #DC2626;
+.btn-remove-cubiculo-block:hover {
+  background: #BE123C;
   color: #FFFFFF;
+}
+
+.cubiculo-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cubiculo-field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cubiculo-field-opt {
+  font-size: 11px;
+  color: #64748B;
+  font-weight: 400;
 }
 
 /* Selector múltiple de cubículos (Chips táctiles) */
