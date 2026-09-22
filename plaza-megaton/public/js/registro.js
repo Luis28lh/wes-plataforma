@@ -1,86 +1,97 @@
 // Controlador del Formulario de Registro QR - Plaza Megatón
-let catalogCubiculos = [];
-let selectedCubiculos = new Set();
+// Casillas dinámicas vacías y opcionales para cubículos (C1, C2, C3...)
 
-async function loadCubiculosCatalog() {
-  const container = document.getElementById('cubiculos-selector');
-  if (!container) return;
-
-  try {
-    container.innerHTML = '<div style="padding:14px; text-align:center; color:#64748B; font-size:13px;">Cargando catálogo de cubículos...</div>';
-
-    if (App.isStaticHost()) {
-      // Entorno estático (GitHub Pages)
-      catalogCubiculos = JSON.parse(localStorage.getItem('pm_cubiculos') || '[]');
-      renderCubiculosGrid();
-      return;
-    }
-
-    const res = await fetch('/api/catalog/cubiculos');
-    const data = await res.json();
-
-    if (data.success && data.cubiculos) {
-      catalogCubiculos = data.cubiculos;
-      renderCubiculosGrid();
-    } else {
-      catalogCubiculos = JSON.parse(localStorage.getItem('pm_cubiculos') || '[]');
-      renderCubiculosGrid();
-    }
-  } catch (err) {
-    console.warn('Fallback a catálogo local:', err);
-    catalogCubiculos = JSON.parse(localStorage.getItem('pm_cubiculos') || '[]');
-    renderCubiculosGrid();
-  }
-}
-
-function renderCubiculosGrid() {
-  const container = document.getElementById('cubiculos-selector');
+function initCubiculosDynamicFields() {
+  const container = document.getElementById('cubiculos-inputs-container');
+  const addBtn = document.getElementById('btn-add-cubiculo');
   if (!container) return;
 
   container.innerHTML = '';
+  // Inicializar con 1 casilla vacía
+  addCubiculoInputRow();
 
-  catalogCubiculos.forEach(cub => {
-    const chip = document.createElement('div');
-    const isOccupied = cub.estado === 'Ocupado';
-    const isSelected = selectedCubiculos.has(cub.codigo);
-
-    chip.className = `cub-chip ${isSelected ? 'selected' : ''} ${isOccupied ? 'occupied' : ''}`;
-    chip.innerHTML = `
-      <div>${cub.codigo}</div>
-      <div style="font-size:10px; font-weight:normal; opacity:0.8;">${cub.estado}</div>
-    `;
-
-    chip.onclick = () => {
-      if (selectedCubiculos.has(cub.codigo)) {
-        selectedCubiculos.delete(cub.codigo);
-        chip.classList.remove('selected');
-      } else {
-        selectedCubiculos.add(cub.codigo);
-        chip.classList.add('selected');
-      }
-      updateSelectedSummary();
+  if (addBtn) {
+    addBtn.onclick = () => {
+      addCubiculoInputRow();
     };
-
-    container.appendChild(chip);
-  });
-
-  updateSelectedSummary();
+  }
 }
 
-function updateSelectedSummary() {
-  const summaryEl = document.getElementById('selected-cubiculos-summary');
-  if (!summaryEl) return;
+function addCubiculoInputRow(initialValue = '') {
+  const container = document.getElementById('cubiculos-inputs-container');
+  if (!container) return;
 
-  if (selectedCubiculos.size === 0) {
-    summaryEl.innerHTML = '<span style="color:#64748B; font-size:13px;">Ningún cubículo seleccionado (toca uno o varios)</span>';
-  } else {
-    const list = Array.from(selectedCubiculos).join(', ');
-    summaryEl.innerHTML = `
-      <div style="font-size:13px; font-weight:700; color:#B71C1C;">
-        Cubículo(s) seleccionado(s): <span style="background:#FEE2E2; padding:3px 8px; border-radius:6px;">${list}</span>
-      </div>
-    `;
+  const currentCount = container.querySelectorAll('.cubiculo-input-row').length;
+  const nextNum = currentCount + 1;
+  const exampleText = nextNum === 1 ? 'Ej: C1 o C-001' : `Ej: C${nextNum}`;
+
+  const row = document.createElement('div');
+  row.className = 'cubiculo-input-row';
+  row.innerHTML = `
+    <span class="cubiculo-row-badge">${nextNum}</span>
+    <input 
+      type="text" 
+      class="form-input cubiculo-item-input" 
+      placeholder="${exampleText}" 
+      value="${initialValue}" 
+      style="text-transform: uppercase; font-weight: 700; font-size: 16px; letter-spacing: 0.5px;"
+      autocomplete="off"
+    >
+    <button type="button" class="btn-remove-cubiculo" title="Eliminar este cubículo">✕</button>
+  `;
+
+  // Manejar eliminación de fila
+  const removeBtn = row.querySelector('.btn-remove-cubiculo');
+  removeBtn.onclick = () => {
+    const totalRows = container.querySelectorAll('.cubiculo-input-row').length;
+    if (totalRows > 1) {
+      row.remove();
+      renumberCubiculoRows();
+    } else {
+      // Si es la única casilla, solo limpiar el texto
+      const input = row.querySelector('.cubiculo-item-input');
+      if (input) input.value = '';
+    }
+  };
+
+  container.appendChild(row);
+
+  // Si no es la primera, enfocar el nuevo campo
+  if (nextNum > 1) {
+    const newInput = row.querySelector('.cubiculo-item-input');
+    if (newInput) newInput.focus();
   }
+}
+
+function renumberCubiculoRows() {
+  const container = document.getElementById('cubiculos-inputs-container');
+  if (!container) return;
+
+  const rows = container.querySelectorAll('.cubiculo-input-row');
+  rows.forEach((row, index) => {
+    const badge = row.querySelector('.cubiculo-row-badge');
+    const input = row.querySelector('.cubiculo-item-input');
+    const num = index + 1;
+    if (badge) badge.innerText = num;
+    if (input && !input.value) {
+      input.placeholder = num === 1 ? 'Ej: C1 o C-001' : `Ej: C${num}`;
+    }
+  });
+}
+
+function getEnteredCubiculos() {
+  const container = document.getElementById('cubiculos-inputs-container');
+  if (!container) return [];
+
+  const inputs = container.querySelectorAll('.cubiculo-item-input');
+  const list = [];
+  inputs.forEach(input => {
+    const val = input.value.trim().toUpperCase();
+    if (val && !list.includes(val)) {
+      list.push(val);
+    }
+  });
+  return list;
 }
 
 async function handleRegistroSubmit(event) {
@@ -90,6 +101,7 @@ async function handleRegistroSubmit(event) {
   const nombre = document.getElementById('reg-nombre').value.trim();
   const email = document.getElementById('reg-email').value.trim();
   const telefono = document.getElementById('reg-telefono').value.trim();
+  const cubiculosArr = getEnteredCubiculos();
 
   if (!nombre) {
     App.showToast('Por favor escribe tu nombre completo.', 'error');
@@ -99,17 +111,11 @@ async function handleRegistroSubmit(event) {
     App.showToast('Por favor ingresa un correo electrónico válido.', 'error');
     return;
   }
-  if (selectedCubiculos.size === 0) {
-    App.showToast('Debes seleccionar al menos un cubículo/local.', 'error');
-    return;
-  }
 
   submitBtn.disabled = true;
   submitBtn.innerHTML = '⏳ Procesando registro...';
 
-  const cubiculosArr = Array.from(selectedCubiculos);
-
-  // Si corre en GitHub Pages
+  // Entorno estático (GitHub Pages)
   if (App.isStaticHost()) {
     setTimeout(() => {
       const userId = App.getNextSequence('US');
@@ -126,25 +132,36 @@ async function handleRegistroSubmit(event) {
       users.push(newUser);
       localStorage.setItem('pm_usuarios', JSON.stringify(users));
 
-      // Actualizar cubículos a Ocupado
-      catalogCubiculos.forEach(c => {
-        if (cubiculosArr.includes(c.codigo)) c.estado = 'Ocupado';
+      // Actualizar cubículos en catálogo local
+      const catalog = JSON.parse(localStorage.getItem('pm_cubiculos') || '[]');
+      cubiculosArr.forEach(cod => {
+        let existing = catalog.find(c => c.codigo.toUpperCase() === cod.toUpperCase());
+        if (existing) {
+          existing.estado = 'Ocupado';
+        } else {
+          catalog.push({
+            cubiculo_id: 'CUB-' + cod,
+            codigo: cod,
+            estado: 'Ocupado',
+            observaciones: 'Ingresado por inquilino'
+          });
+        }
       });
-      localStorage.setItem('pm_cubiculos', JSON.stringify(catalogCubiculos));
+      localStorage.setItem('pm_cubiculos', JSON.stringify(catalog));
 
-      // Guardar sesión
       App.setSession(newUser, 'token_static_' + Date.now());
 
       showSuccessScreen({
         nombre,
         email,
-        cubiculos: cubiculosArr,
+        cubiculos: cubiculosArr.length > 0 ? cubiculosArr : ['Pendiente de asignar'],
         previewUrl: null
       });
     }, 600);
     return;
   }
 
+  // Backend Node.js
   try {
     const payload = {
       nombre,
@@ -168,7 +185,7 @@ async function handleRegistroSubmit(event) {
       showSuccessScreen({
         nombre,
         email,
-        cubiculos: data.cubiculosAsignados,
+        cubiculos: (data.cubiculosAsignados && data.cubiculosAsignados.length > 0) ? data.cubiculosAsignados : (cubiculosArr.length > 0 ? cubiculosArr : ['Pendiente de asignar']),
         previewUrl: data.emailPreviewUrl
       });
     } else {
@@ -178,11 +195,15 @@ async function handleRegistroSubmit(event) {
     }
   } catch (err) {
     console.warn('Error conectando a backend, guardando en store local:', err);
-    // Fallback elegante
     const userId = App.getNextSequence('US');
     const newUser = { user_id: userId, nombre, email, telefono, cubiculos: cubiculosArr, estado: 'Activo' };
     App.setSession(newUser, 'offline_' + Date.now());
-    showSuccessScreen({ nombre, email, cubiculos: cubiculosArr, previewUrl: null });
+    showSuccessScreen({
+      nombre,
+      email,
+      cubiculos: cubiculosArr.length > 0 ? cubiculosArr : ['Pendiente de asignar'],
+      previewUrl: null
+    });
   }
 }
 
@@ -212,7 +233,7 @@ function showSuccessScreen({ nombre, email, cubiculos, previewUrl }) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadCubiculosCatalog();
+  initCubiculosDynamicFields();
 
   const form = document.getElementById('form-registro');
   if (form) {
@@ -227,5 +248,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nameInput) nameInput.value = session.user.nombre || '';
     if (emailInput) emailInput.value = session.user.email || '';
     if (telInput) telInput.value = session.user.telefono || '';
+
+    // Si ya tenía cubículos, poblar las casillas
+    if (session.user.cubiculos && session.user.cubiculos.length > 0) {
+      const container = document.getElementById('cubiculos-inputs-container');
+      container.innerHTML = '';
+      session.user.cubiculos.forEach(c => {
+        const cod = typeof c === 'object' ? c.codigo : c;
+        addCubiculoInputRow(cod);
+      });
+    }
   }
 });

@@ -77,18 +77,28 @@
           >
         </div>
 
-        <!-- Selector de Cubículos -->
+        <!-- Cubículos o Locales Dinámicos (Opcional) -->
         <div class="form-group">
-          <label class="form-label">
-            Cubículo(s) o Local(es) <span class="req">*</span>
-            <span class="opt">(Puedes seleccionar uno o varios)</span>
-          </label>
-          
-          <div id="selected-cubiculos-summary" style="margin-bottom: 8px;"></div>
-          
-          <div id="cubiculos-selector" class="cubiculos-selector-grid">
-            <!-- Renderizado dinámico desde la API -->
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+            <label class="form-label" style="margin-bottom: 0;">
+              Cubículo(s) o Local(es) <span class="opt">(Opcional)</span>
+            </label>
+            <span style="font-size: 11px; color: var(--primary-red); font-weight: 600;">Escribe los que tengas a mano</span>
           </div>
+          
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4;">
+            Ingresa tu cubículo (ej: <strong>C1</strong>). Presiona <strong>"+ Agregar otro cubículo"</strong> si tienes más de uno (ej: <strong>C2</strong>, <strong>C3</strong>...), o déjalo vacío si aún no tienes asignado.
+          </div>
+
+          <!-- Contenedor de Casillas Dinámicas -->
+          <div id="cubiculos-inputs-container" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- La primera casilla se inicializa vacía -->
+          </div>
+
+          <!-- Botón para añadir más casillas -->
+          <button type="button" id="btn-add-cubiculo" class="btn-secondary" style="margin-top: 10px; min-height: 44px; border: 1.5px dashed #CBD5E1; color: var(--text-main); font-weight: 700;">
+            ➕ Agregar otro cubículo (ej: C2, C3...)
+          </button>
         </div>
 
         <!-- Botón de Envío -->

@@ -183,15 +183,36 @@ class DataService {
 
   async assignCubiculosToUser(userId, cubiculoIds) {
     if (!this.db.USUARIO_CUBICULO) this.db.USUARIO_CUBICULO = [];
+    if (!this.db.CUBICULOS) this.db.CUBICULOS = [];
+
     const now = new Date().toLocaleDateString('es-DO', {
       day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Santo_Domingo'
     });
 
     const assigned = [];
-    for (const cId of cubiculoIds) {
-      // Buscar cubículo por ID o por Código (ej. "CUB-001" o "C-001")
-      const cub = (this.db.CUBICULOS || []).find(c => c.cubiculo_id === cId || c.codigo.toUpperCase() === cId.toUpperCase());
-      if (!cub) continue;
+    for (const rawCode of cubiculoIds) {
+      if (!rawCode || !String(rawCode).trim()) continue;
+      const cleanCode = String(rawCode).trim().toUpperCase();
+
+      // Buscar por ID, código exacto o código alfanumérico (ej: "C1" hace match con "C-001" o se crea)
+      let cub = this.db.CUBICULOS.find(c => 
+        c.cubiculo_id.toUpperCase() === cleanCode || 
+        c.codigo.toUpperCase() === cleanCode ||
+        c.codigo.toUpperCase().replace(/[^A-Z0-9]/g, '') === cleanCode.replace(/[^A-Z0-9]/g, '')
+      );
+
+      if (!cub) {
+        // Crear nuevo cubículo en el catálogo si fue especificado por el usuario
+        cub = {
+          cubiculo_id: `CUB-${cleanCode}`,
+          codigo: cleanCode,
+          estado: 'Ocupado',
+          observaciones: 'Registrado por usuario'
+        };
+        this.db.CUBICULOS.push(cub);
+      } else {
+        cub.estado = 'Ocupado';
+      }
 
       // Verificar si ya existe relación
       const existing = this.db.USUARIO_CUBICULO.find(r => r.user_id === userId && r.cubiculo_id === cub.cubiculo_id);
@@ -208,14 +229,12 @@ class DataService {
         });
       }
 
-      // Actualizar estado del cubículo a Ocupado
-      cub.estado = 'Ocupado';
       assigned.push(cub.codigo);
     }
 
     this.persist();
 
-    if (this.googleBridge) {
+    if (this.googleBridge && assigned.length > 0) {
       this.googleBridge.syncAsignaciones(userId, assigned).catch(err => console.error('[GoogleBridge Error]', err));
     }
 

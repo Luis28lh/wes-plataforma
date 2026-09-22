@@ -309,6 +309,50 @@ body {
   min-height: 100px;
 }
 
+/* Filas dinámicas para agregar cubículos */
+.cubiculo-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cubiculo-row-badge {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+  font-weight: 800;
+  font-size: 13px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid #FECACA;
+}
+
+.btn-remove-cubiculo {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+  width: 42px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.btn-remove-cubiculo:hover {
+  background: #DC2626;
+  color: #FFFFFF;
+}
+
 /* Selector múltiple de cubículos (Chips táctiles) */
 .cubiculos-selector-grid {
   display: grid;

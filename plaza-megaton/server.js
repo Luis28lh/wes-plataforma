@@ -88,9 +88,11 @@ app.post('/api/usuarios/registro', async (req, res) => {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       return res.status(400).json({ success: false, error: 'Debe ingresar un correo electrónico válido.' });
     }
-    if (!cubiculos || !Array.isArray(cubiculos) || cubiculos.length === 0) {
-      return res.status(400).json({ success: false, error: 'Debe seleccionar al menos un cubículo/local.' });
-    }
+
+    // Cubículos ahora es opcional: el usuario puede ingresar C1, luego C2, o dejarlo vacío
+    const cubiculosList = Array.isArray(cubiculos)
+      ? cubiculos.map(c => String(c).trim()).filter(Boolean)
+      : (cubiculos && String(cubiculos).trim() ? [String(cubiculos).trim()] : []);
 
     const cleanEmail = email.trim().toLowerCase();
     let user = await dataService.getUsuarioByEmail(cleanEmail);
@@ -105,21 +107,23 @@ app.post('/api/usuarios/registro', async (req, res) => {
         estado: 'Activo'
       });
     } else {
-      // Actualizar nombre o teléfono si venían actualizados
       await dataService.updateUsuario(user.user_id, {
         nombre: nombre.trim(),
         telefono: telefono ? telefono.trim() : user.telefono
       });
     }
 
-    // Asociar cubículos seleccionados
-    const assignedCodes = await dataService.assignCubiculosToUser(user.user_id, cubiculos);
+    // Asociar cubículos indicados (si colocó alguno)
+    let assignedCodes = [];
+    if (cubiculosList.length > 0) {
+      assignedCodes = await dataService.assignCubiculosToUser(user.user_id, cubiculosList);
+    }
 
     // Despachar correo de bienvenida
     const mailResult = await emailService.sendWelcomeEmail({
       nombre: user.nombre,
       email: user.email,
-      cubiculoCodigos: assignedCodes
+      cubiculoCodigos: assignedCodes.length > 0 ? assignedCodes : ['Pendiente de asignar']
     });
 
     // Crear sesión automática para que el usuario navegue sin trabas
