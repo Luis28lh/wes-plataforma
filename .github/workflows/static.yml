@@ -27,10 +27,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Prepare combined site
+        run: |
+          mkdir -p _site
+          cp -r ./proyecto-wes/* _site/
+          mkdir -p _site/plaza-megaton
+          cp -r ./plaza-megaton/public/* _site/plaza-megaton/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './proyecto-wes'
+          path: '_site'
 
       - name: Deploy to GitHub Pages
         id: deployment
