@@ -60,7 +60,11 @@ Plataforma móvil-first para gestión de cubículos, registro QR, solicitudes/re
   npm install
   node server.js
   ```
-* **Acceso:** `http://localhost:3007/` y `/admin.html` (PIN: `megaton2026`)
+* **Acceso Local:** `http://localhost:3007/` y `/admin.html` (PIN: `megaton2026`)
+* **🌐 Acceso Público en Vivo (GitHub Pages):**
+  - **Portal General:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/index.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/index.html)
+  - **Formulario QR Directo:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/registro.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/registro.html)
+  - **Panel Administrativo:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/admin.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/admin.html) *(PIN: `megaton2026`)*
 
 ---
 

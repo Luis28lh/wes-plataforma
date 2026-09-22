@@ -9,6 +9,15 @@ Diseñada para registrar propietarios e inquilinos mediante código QR, gestiona
 ## 🌐 Estándar Mandatorio: Publicación Remota y Versionado Continuo
 > **Política Operativa:** Todo desarrollo completado se envía de forma inmediata al repositorio remoto en GitHub (`Luis28lh`) y se publica en Internet para permitir acceso, pruebas y operación móvil continua desde el exterior (Android, iPhone, tablet o PC) sin restricciones de red local.
 
+### 🔗 Enlaces Públicos en Vivo (Acceso Móvil / Remoto)
+* 🏠 **Portal de Inicio:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/index.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/index.html)
+* 📱 **Formulario QR Directo:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/registro.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/registro.html)
+* 🛠️ **Solicitudes y Reclamaciones:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/solicitudes.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/solicitudes.html)
+* 💳 **Reporte de Pagos:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/pagos.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/pagos.html)
+* 📋 **Mis Solicitudes:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/mis-solicitudes.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/mis-solicitudes.html)
+* 💰 **Mis Pagos:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/mis-pagos.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/mis-pagos.html)
+* 💼 **Panel Administrativo:** [https://luis28lh.github.io/wes-plataforma/plaza-megaton/admin.html](https://luis28lh.github.io/wes-plataforma/plaza-megaton/admin.html) *(PIN: `megaton2026`)*
+
 ---
 
 ## 🚀 Características Principales
