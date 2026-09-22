@@ -127,7 +127,8 @@ class EmailService {
   /**
    * 1. Correo automático de Bienvenida post-registro
    */
-  async sendWelcomeEmail({ nombre, email, cubiculoCodigos }) {
+  async sendWelcomeEmail({ nombre, email, cubiculoCodigos, userId, portalUrl }) {
+    const finalPortalUrl = portalUrl || 'https://luis28lh.github.io/wes-plataforma/plaza-megaton/index.html';
     const cubiculosStr = Array.isArray(cubiculoCodigos)
       ? cubiculoCodigos.map(c => {
           if (typeof c === 'object' && c !== null) {
@@ -139,29 +140,58 @@ class EmailService {
           return String(c);
         }).join(', ')
       : cubiculoCodigos;
-    const subject = 'Bienvenido a Plaza Megatón';
+
+    const subject = '🎉 ¡Felicitaciones! Te confirmamos como Miembro de Plaza Megatón';
 
     const htmlBody = `
-      <p>Hola, <strong>${nombre}</strong>:</p>
-      <p>Gracias por confirmar tus datos en nuestro <strong>Sistema de Gestión de Plaza Megatón</strong>.</p>
-      
-      <div class="info-box">
-        <p><strong>Cubículo(s) asociado(s):</strong></p>
-        <p style="font-size: 16px; font-weight: 700; color: #B71C1C;">${cubiculosStr}</p>
+      <div style="text-align: center; margin-bottom: 22px;">
+        <span style="background: #FEE2E2; color: #991B1B; font-weight: 800; font-size: 12px; padding: 4px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.5px;">
+          Confirmación Oficial de Membresía
+        </span>
+        <h2 style="font-size: 24px; font-weight: 900; color: #0F172A; margin: 12px 0 4px;">¡Felicitaciones, ${nombre}!</h2>
+        <p style="font-size: 15px; color: #475569; margin: 0;">
+          Te confirmamos y felicitamos oficialmente como <strong>Miembro de la Plaza Megatón</strong>.
+        </p>
       </div>
 
-      <p>A través de esta plataforma digital podrás:</p>
-      <ul>
-        <li>Realizar solicitudes y reclamaciones de mantenimiento con fotos de evidencia.</li>
-        <li>Registrar y consultar tus pagos subiendo tus comprobantes bancarios.</li>
-        <li>Hacer seguimiento en tiempo real al estado de cada trámite.</li>
+      <div class="info-box" style="background: #FFF5F5; border-left: 4px solid #D32F2F; padding: 16px; border-radius: 8px; margin: 20px 0;">
+        <p style="margin: 0 0 4px; font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase;">Código Oficial de Miembro:</p>
+        <p style="margin: 0 0 12px; font-size: 22px; font-weight: 900; color: #D32F2F;">${userId || 'REGISTRADO'}</p>
+        
+        <p style="margin: 0 0 4px; font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase;">Cubículo(s) o Local(es) Vinculado(s):</p>
+        <p style="margin: 0; font-size: 15px; font-weight: 800; color: #0F172A; line-height: 1.5;">${cubiculosStr}</p>
+      </div>
+
+      <p style="font-size: 14px; color: #334155; line-height: 1.6;">
+        Tus datos han sido registrados con éxito en nuestra base de datos. Como miembro oficial, tienes acceso a los siguientes servicios digitales:
+      </p>
+      <ul style="font-size: 14px; color: #334155; line-height: 1.8; padding-left: 20px;">
+        <li><strong>Reportar solicitudes y reclamaciones:</strong> Con fotos de evidencia y seguimiento en tiempo real (código <code>CL-xxx</code>).</li>
+        <li><strong>Registrar y conciliar pagos:</strong> Subiendo comprobantes bancarios o vouchers con confirmación oficial (código <code>PG-xxx</code>).</li>
+        <li><strong>Historial transparente y permanente:</strong> Disponible 24/7 desde tu teléfono celular sin contraseñas difíciles.</li>
       </ul>
 
-      <p>Gracias por formar parte de Plaza Megatón.</p>
-      <p style="margin-top: 24px;">Atentamente,<br><strong>Administración Plaza Megatón</strong></p>
+      <p style="font-size: 14px; color: #334155; margin-top: 18px;">
+        ¡Enhorabuena por ser parte fundamental de la comunidad de Plaza Megatón! Puedes acceder a la plataforma principal en cualquier momento desde el siguiente enlace:
+      </p>
+
+      <!-- Botón de Acceso Directo a la Plataforma Principal -->
+      <div style="text-align: center; margin: 26px 0;">
+        <a href="${finalPortalUrl}" target="_blank" style="background: #D32F2F; color: #FFFFFF; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-weight: 800; font-size: 15px; display: inline-block; box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);">
+          👉 Entrar a la Plataforma Principal
+        </a>
+        <div style="margin-top: 8px; font-size: 12px; color: #64748B;">
+          Enlace directo: <a href="${finalPortalUrl}" style="color: #D32F2F; word-break: break-all;">${finalPortalUrl}</a>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #E2E8F0; font-size: 13px; color: #64748B;">
+        Atentamente,<br>
+        <strong>Consejo de Administración — Plaza Megatón</strong>
+      </div>
     `;
 
-    const text = `Hola, ${nombre}:\n\nGracias por confirmar tus datos en nuestro Sistema de Gestión de Plaza Megatón.\nHemos registrado correctamente tu información y los siguientes cubículos asociados:\n${cubiculosStr}\n\nA través de esta plataforma podrás realizar solicitudes, reclamaciones y registrar tus pagos.\n\nGracias por formar parte de Plaza Megatón.\n\nAdministración\nPlaza Megatón`;
+    const text = `¡Felicitaciones, ${nombre}!\n\nTe confirmamos y felicitamos oficialmente como Miembro de la Plaza Megatón.\n\nCódigo Oficial: ${userId || 'REGISTRADO'}\nCubículo(s) o Local(es) vinculado(s): ${cubiculosStr}\n\nTus datos han sido registrados en nuestro sistema inmobiliario.\n\nAccede a la plataforma principal en:\n${finalPortalUrl}\n\n¡Enhorabuena por formar parte de Plaza Megatón!\n\nAtentamente,\nConsejo de Administración — Plaza Megatón`;
 
     return this.sendMail({
       to: email,

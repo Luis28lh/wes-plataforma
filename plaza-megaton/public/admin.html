@@ -289,6 +289,53 @@
           </div>
           <div id="config-form-container"></div>
         </div>
+
+        <!-- Tarjeta de Integración con Google Drive y Google Sheets -->
+        <div class="card-box" style="margin-top: 20px;">
+          <div class="card-box-header">
+            <h2 class="card-title">☁️ Base de Datos en Google Drive y Google Sheets</h2>
+            <p class="card-subtitle">Sincronización en tiempo real con la carpeta "PLAZA MEGATÓN" y la base de datos "PLAZA_MEGATON_DATABASE".</p>
+          </div>
+
+          <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 18px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <span style="font-weight: 800; font-size: 14px; color: #0F172A;">📁 Carpeta en Google Drive:</span>
+                <span style="background: #FEE2E2; color: #991B1B; font-weight: 800; padding: 2px 8px; border-radius: 6px; font-size: 13px;">PLAZA MEGATÓN</span>
+              </div>
+              <div id="google-conn-status">
+                <span style="background: #E2E8F0; color: #475569; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px;">⚪ No verificado</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label class="form-label" style="font-size: 12px;">URL de la Aplicación Web (Google Apps Script):</label>
+              <input type="url" id="input-google-script-url" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" class="btn-sm btn-sm-primary" onclick="testGoogleConnection()">
+                🧪 Probar Conexión con Google Drive
+              </button>
+              <button type="button" class="btn-sm btn-sm-outline" onclick="syncAllToGoogle()">
+                🔄 Sincronizar Todo a Google Sheets Ahora
+              </button>
+            </div>
+            
+            <div id="google-test-result" style="margin-top: 12px; font-size: 13px; display: none;"></div>
+          </div>
+
+          <!-- Instrucciones de 1 Minuto para Activar Google Drive -->
+          <div style="font-size: 13px; color: #475569; line-height: 1.6; border-top: 1px dashed #CBD5E1; padding-top: 14px;">
+            <strong>¿Cómo activar tu base de datos en Google Drive en 1 minuto?</strong>
+            <ol style="margin: 8px 0 0; padding-left: 20px;">
+              <li>Abre tu Google Drive (drive.google.com) y crea una hoja de cálculo llamada: <strong>PLAZA_MEGATON_DATABASE</strong>.</li>
+              <li>Entra a <strong>Extensiones &gt; Apps Script</strong> y pega el código del archivo <code>Code.gs</code>.</li>
+              <li>Ejecuta la función <strong>inicializarBaseDeDatos</strong> (crea la carpeta "PLAZA MEGATÓN", las tablas y subcarpetas).</li>
+              <li>Haz clic en <strong>Implementar &gt; Nueva implementación</strong> (Tipo: "Aplicación web", Acceso: "Cualquier persona") y pega aquí la URL generada.</li>
+            </ol>
+          </div>
+        </div>
       </section>
 
     </main>

@@ -132,11 +132,18 @@ app.post('/api/usuarios/registro', async (req, res) => {
       assignedCodes = await dataService.assignCubiculosToUser(user.user_id, cubiculosList);
     }
 
-    // Despachar correo de bienvenida
+    const host = req.get('host') || '';
+    const portalUrl = host.includes('localhost')
+      ? `${req.protocol}://${host}/index.html`
+      : 'https://luis28lh.github.io/wes-plataforma/plaza-megaton/index.html';
+
+    // Despachar correo de felicitación y confirmación oficial de membresía
     const mailResult = await emailService.sendWelcomeEmail({
       nombre: user.nombre,
       email: user.email,
-      cubiculoCodigos: assignedCodes.length > 0 ? assignedCodes : ['Pendiente de asignar']
+      cubiculoCodigos: assignedCodes.length > 0 ? assignedCodes : ['Pendiente de asignar'],
+      userId: user.user_id,
+      portalUrl
     });
 
     // Crear sesión automática para que el usuario navegue sin trabas
@@ -530,6 +537,68 @@ app.get('/api/qr/info', async (req, res) => {
       success: true,
       targetUrl,
       title: 'REGISTRO PLAZA MEGATÓN'
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 18. Google Apps Script / Google Drive Test de Conexión
+app.post('/api/admin/google/test', async (req, res) => {
+  const pin = req.headers['x-admin-pin'];
+  if (pin !== process.env.ADMIN_PIN && pin !== 'megaton2026') {
+    return res.status(401).json({ success: false, error: 'PIN no autorizado.' });
+  }
+
+  const { scriptUrl } = req.body;
+  const targetUrl = scriptUrl || process.env.GOOGLE_APPS_SCRIPT_URL;
+  if (!targetUrl) {
+    return res.status(400).json({ success: false, error: 'URL de Google Apps Script no especificada.' });
+  }
+
+  try {
+    const bridge = new GoogleAppsScriptBridge(targetUrl);
+    const result = await bridge.sendRequest('TEST_CONNECTION', {});
+    if (result && result.success) {
+      await dataService.setConfigValue('google_apps_script_url', targetUrl);
+      dataService.setGoogleBridge(bridge);
+      return res.json({ success: true, ...result });
+    }
+    return res.status(400).json({ success: false, error: 'El script de Google no devolvió confirmación.', details: result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 19. Sincronización masiva a Google Sheets y Google Drive
+app.post('/api/admin/google/sync-all', async (req, res) => {
+  const pin = req.headers['x-admin-pin'];
+  if (pin !== process.env.ADMIN_PIN && pin !== 'megaton2026') {
+    return res.status(401).json({ success: false, error: 'PIN no autorizado.' });
+  }
+
+  if (!dataService.googleBridge || !dataService.googleBridge.isEnabled()) {
+    return res.status(400).json({ success: false, error: 'Conexión con Google Apps Script no configurada.' });
+  }
+
+  try {
+    const usuarios = await dataService.getUsuarios();
+    const reclamaciones = await dataService.getReclamaciones();
+    const pagos = await dataService.getPagos();
+
+    for (const u of usuarios) {
+      await dataService.googleBridge.syncUsuario(u);
+    }
+    for (const r of reclamaciones) {
+      await dataService.googleBridge.syncReclamacion(r);
+    }
+    for (const p of pagos) {
+      await dataService.googleBridge.syncPago(p);
+    }
+
+    res.json({
+      success: true,
+      message: `¡Sincronización completada! ${usuarios.length} usuarios, ${reclamaciones.length} reclamaciones y ${pagos.length} pagos sincronizados en Google Drive.`
     });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

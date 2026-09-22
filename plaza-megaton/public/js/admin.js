@@ -741,6 +741,17 @@ function renderConfigFields(configList) {
   if (!container) return;
 
   container.innerHTML = '';
+
+  const inputGoogle = document.getElementById('input-google-script-url');
+  const gUrlItem = configList.find(c => c.parametro === 'google_apps_script_url');
+  if (inputGoogle) {
+    if (gUrlItem && gUrlItem.valor) {
+      inputGoogle.value = gUrlItem.valor;
+    } else if (localStorage.getItem('pm_google_script_url')) {
+      inputGoogle.value = localStorage.getItem('pm_google_script_url');
+    }
+  }
+
   configList.forEach(item => {
     const group = document.createElement('div');
     group.className = 'form-group';
@@ -774,6 +785,128 @@ async function saveSingleConfig(parametro) {
       App.showToast(`Parámetro ${parametro} actualizado`, 'success');
     }
   } catch (_) {}
+}
+
+// ==========================================
+// 8. GOOGLE DRIVE Y GOOGLE SHEETS
+// ==========================================
+async function testGoogleConnection() {
+  const input = document.getElementById('input-google-script-url');
+  const resultDiv = document.getElementById('google-test-result');
+  const statusSpan = document.getElementById('google-conn-status');
+  const scriptUrl = input ? input.value.trim() : '';
+
+  if (!scriptUrl) {
+    App.showToast('Por favor introduce la URL de Google Apps Script.', 'error');
+    return;
+  }
+
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = '<span style="color:#64748B;">⏳ Probando conexión con Google Drive y Google Sheets...</span>';
+
+  // Si corre en GitHub Pages directo
+  if (App.isStaticHost()) {
+    localStorage.setItem('pm_google_script_url', scriptUrl);
+    try {
+      const res = await fetch(scriptUrl, { method: 'GET' });
+      const data = await res.json();
+      if (data.status === 'ONLINE') {
+        statusSpan.innerHTML = '<span style="background:#DCFCE7; color:#166534; font-size:11px; font-weight:700; padding:3px 10px; border-radius:9999px;">🟢 Conectado a Google Drive</span>';
+        resultDiv.innerHTML = `
+          <div style="background:#F0FDF4; border:1px solid #BBF7D0; padding:10px; border-radius:8px; color:#166534;">
+            ✅ <strong>Conexión exitosa.</strong> Carpeta <strong>${data.folderDrive}</strong> activa.<br>
+            Base de datos: <a href="https://docs.google.com/spreadsheets/d/${data.spreadsheetId}" target="_blank" style="color:#D32F2F; font-weight:700;">${data.spreadsheetName}</a>
+          </div>
+        `;
+        App.showToast('¡Conectado exitosamente con Google Drive!', 'success');
+      } else {
+        throw new Error('Respuesta inesperada');
+      }
+    } catch (err) {
+      statusSpan.innerHTML = '<span style="background:#FEE2E2; color:#991B1B; font-size:11px; font-weight:700; padding:3px 10px; border-radius:9999px;">🔴 Error de conexión</span>';
+      resultDiv.innerHTML = `<span style="color:#DC2626;">Error al conectar: ${err.message}. Verifica los permisos de acceso "Cualquier persona" en Apps Script.</span>`;
+    }
+    return;
+  }
+
+  // Backend Node.js
+  try {
+    const res = await fetch('/api/admin/google/test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-pin': getAdminPin()
+      },
+      body: JSON.stringify({ scriptUrl })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      statusSpan.innerHTML = '<span style="background:#DCFCE7; color:#166534; font-size:11px; font-weight:700; padding:3px 10px; border-radius:9999px;">🟢 Conectado a Google Drive</span>';
+      resultDiv.innerHTML = `
+        <div style="background:#F0FDF4; border:1px solid #BBF7D0; padding:10px; border-radius:8px; color:#166534;">
+          ✅ <strong>Conexión exitosa.</strong> Carpeta <strong>${data.folderName}</strong> activa.<br>
+          Base de datos: <a href="${data.spreadsheetUrl}" target="_blank" style="color:#D32F2F; font-weight:700;">Abrir PLAZA_MEGATON_DATABASE en Google Sheets</a>
+        </div>
+      `;
+      App.showToast('¡Conectado exitosamente con Google Drive!', 'success');
+    } else {
+      statusSpan.innerHTML = '<span style="background:#FEE2E2; color:#991B1B; font-size:11px; font-weight:700; padding:3px 10px; border-radius:9999px;">🔴 Error</span>';
+      resultDiv.innerHTML = `<span style="color:#DC2626;">${data.error || 'No se pudo conectar con Google Apps Script.'}</span>`;
+    }
+  } catch (err) {
+    statusSpan.innerHTML = '<span style="background:#FEE2E2; color:#991B1B; font-size:11px; font-weight:700; padding:3px 10px; border-radius:9999px;">🔴 Error de red</span>';
+    resultDiv.innerHTML = `<span style="color:#DC2626;">Error de red: ${err.message}</span>`;
+  }
+}
+
+async function syncAllToGoogle() {
+  const resultDiv = document.getElementById('google-test-result');
+  resultDiv.style.display = 'block';
+  resultDiv.innerHTML = '<span style="color:#64748B;">⏳ Sincronizando usuarios, cubículos, solicitudes y pagos a Google Sheets...</span>';
+
+  // Si corre en entorno estático
+  if (App.isStaticHost()) {
+    const scriptUrl = localStorage.getItem('pm_google_script_url');
+    if (!scriptUrl) {
+      App.showToast('Primero prueba y guarda la URL de Google Apps Script.', 'error');
+      return;
+    }
+    const users = JSON.parse(localStorage.getItem('pm_usuarios') || '[]');
+    let count = 0;
+    for (const u of users) {
+      try {
+        await fetch(scriptUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'SYNC_USUARIO', payload: u })
+        });
+        count++;
+      } catch (_) {}
+    }
+    resultDiv.innerHTML = `<span style="color:#166534;">✅ ${count} usuarios sincronizados directamente a tu Google Drive.</span>`;
+    App.showToast(`Sincronización enviada a Google Drive`, 'success');
+    return;
+  }
+
+  // Backend Node.js
+  try {
+    const res = await fetch('/api/admin/google/sync-all', {
+      method: 'POST',
+      headers: { 'x-admin-pin': getAdminPin() }
+    });
+    const data = await res.json();
+    if (data.success) {
+      resultDiv.innerHTML = `<span style="color:#166534;">✅ ${data.message}</span>`;
+      App.showToast(data.message, 'success');
+    } else {
+      resultDiv.innerHTML = `<span style="color:#DC2626;">${data.error}</span>`;
+      App.showToast(data.error, 'error');
+    }
+  } catch (err) {
+    resultDiv.innerHTML = `<span style="color:#DC2626;">Error: ${err.message}</span>`;
+  }
 }
 
 // Helpers de badges

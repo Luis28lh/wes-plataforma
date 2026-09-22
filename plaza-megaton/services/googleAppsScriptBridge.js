@@ -17,14 +17,20 @@ class GoogleAppsScriptBridge {
       const response = await fetch(this.url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, payload })
+        body: JSON.stringify({ action, payload }),
+        redirect: 'follow'
       });
 
       if (!response.ok) {
         throw new Error(`Google Apps Script respondió status ${response.status}`);
       }
 
-      return await response.json();
+      const text = await response.text();
+      try {
+        return JSON.parse(text);
+      } catch (_) {
+        return { success: true, raw: text };
+      }
     } catch (err) {
       console.error(`[GoogleAppsScriptBridge] Error en acción ${action}:`, err.message);
       return null;

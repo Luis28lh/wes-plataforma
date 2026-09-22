@@ -283,6 +283,24 @@ async function handleRegistroSubmit(event) {
 
       App.setSession(newUser, 'token_static_' + Date.now());
 
+      // Sincronizar con Google Drive / Sheets si está configurado
+      const scriptUrl = localStorage.getItem('pm_google_script_url');
+      if (scriptUrl) {
+        const portalUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
+        fetch(scriptUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'SYNC_USUARIO',
+            payload: {
+              ...newUser,
+              portalUrl
+            }
+          })
+        }).catch(err => console.warn('Sync a Google Apps Script:', err));
+      }
+
       showSuccessScreen({
         nombre,
         email,

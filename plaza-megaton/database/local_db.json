@@ -241,6 +241,14 @@
       "actividad_comercial": "Venta de ropa",
       "estado": "Ocupado",
       "observaciones": "Registrado por usuario"
+    },
+    {
+      "cubiculo_id": "CUB-C20",
+      "codigo": "C20",
+      "nombre_local": "Electrónica Sánchez",
+      "actividad_comercial": "Reparación de celulares",
+      "estado": "Ocupado",
+      "observaciones": "Registrado por usuario"
     }
   ],
   "USUARIOS": [
@@ -289,6 +297,14 @@
       "nombre": "Don Fernando",
       "email": "fernando@megatest.com",
       "telefono": "809-555-8899",
+      "fecha_registro": "22/09/2026",
+      "estado": "Activo"
+    },
+    {
+      "user_id": "US-007",
+      "nombre": "Roberto Sánchez",
+      "email": "roberto.sanchez@test.com",
+      "telefono": "8095551234",
       "fecha_registro": "22/09/2026",
       "estado": "Activo"
     }
@@ -362,6 +378,15 @@
       "cubiculo_id": "CUB-C11",
       "nombre_local": "Boutique Alfa",
       "actividad_comercial": "Venta de ropa",
+      "fecha_asignacion": "22/09/2026",
+      "estado": "Activo"
+    },
+    {
+      "id": "UC-1790112854806-681",
+      "user_id": "US-007",
+      "cubiculo_id": "CUB-C20",
+      "nombre_local": "Electrónica Sánchez",
+      "actividad_comercial": "Reparación de celulares",
       "fecha_asignacion": "22/09/2026",
       "estado": "Activo"
     }
@@ -592,7 +617,7 @@
     },
     {
       "parametro": "ultimo_codigo_usuario",
-      "valor": "US-006"
+      "valor": "US-007"
     },
     {
       "parametro": "ultimo_codigo_reclamacion",
