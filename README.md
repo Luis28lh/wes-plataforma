@@ -5,6 +5,13 @@ Este repositorio de trabajo contiene los proyectos desarrollados de manera modul
 
 ---
 
+## 🌐 Estándar Mandatorio: Publicación Remota y Versionado Continuo (Política Mobile-First)
+> **Principio de Disponibilidad Remota:** Dado que la supervisión, administración y pruebas operativas se realizan frecuentemente de forma remota o desde dispositivos móviles (fuera de la red local):
+> 1. **Versionado Inmediato a GitHub:** Todo desarrollo, módulo funcional o cambio realizado debe consolidarse de inmediato en Git y enviarse (`git push`) al repositorio remoto en GitHub (`Luis28lh`).
+> 2. **Publicación y Acceso desde Fuera:** Cada proyecto debe desplegarse y mantenerse accesible mediante una URL pública oficial (GitHub Pages / Google Apps Script Web App / Cloud Hosting), permitiendo al usuario abrirlo, probarlo e interactuar desde su teléfono celular o computadora desde cualquier lugar del mundo sin depender de `localhost`.
+
+---
+
 ## 📁 Estructura del Espacio de Trabajo
 
 ```
