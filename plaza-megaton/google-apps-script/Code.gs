@@ -1,6 +1,6 @@
 /**
  * SISTEMA DE GESTIÓN – PLAZA MEGATÓN
- * Google Apps Script v2.0 — Base de Datos en Google Drive y Google Sheets
+ * Google Apps Script v2.1 — Base de Datos en Google Drive y Google Sheets
  * 
  * Funcionalidades automáticas:
  * 1. Carpeta raíz en Google Drive: "PLAZA MEGATÓN"
@@ -9,37 +9,62 @@
  *    - "01 - RECLAMACIONES"
  *    - "02 - PAGOS"
  *    - "03 - COPIAS DE SEGURIDAD"
- * 4. Pestañas / Tablas estructuradas con formato corporativo rojo.
+ * 4. Pestañas / Tablas estructuradas con formato corporativo rojo (#D32F2F).
  * 5. Envío automático de correo de felicitación y confirmación como miembro
  *    de Plaza Megatón con enlace directo a la plataforma principal.
- * 
- * GUÍA RÁPIDA DE INSTALACIÓN:
- * 1. Abre Google Drive (drive.google.com).
- * 2. Crea una Hoja de Cálculo de Google llamada: PLAZA_MEGATON_DATABASE
- * 3. Ve al menú superior: Extensiones > Apps Script
- * 4. Borra todo el código que aparezca y pega este archivo completo.
- * 5. Selecciona la función "inicializarBaseDeDatos" en el menú desplegable y presiona "Ejecutar".
- *    (Concede los permisos habituales de Google Drive y Gmail una sola vez).
- * 6. Haz clic en "Implementar" (arriba a la derecha) > "Nueva implementación".
- *    - Tipo: "Aplicación web"
- *    - Ejecutar como: "Yo" (tu cuenta de Google)
- *    - Quién tiene acceso: "Cualquier persona" (Anyone)
- * 7. Copia la URL de la aplicación web generada (termina en /exec) y pégala en tu archivo .env
- *    o en el Panel de Administración de Plaza Megatón.
+ * 6. Conexión bidireccional mediante Webhook HTTP GET y POST para sincronización
+ *    en tiempo real desde el servidor local y GitHub Pages.
  */
 
 var FOLDER_NAME = 'PLAZA MEGATÓN';
 var DATABASE_NAME = 'PLAZA_MEGATON_DATABASE';
+var DATABASE_SPREADSHEET_ID = '1_pHnJkeyVTbVfXacVOFIsKDYb3vaP-EBepc3tm3CQKY';
+var ROOT_FOLDER_ID = '1CUUpP7K2roI8cemURppsB5QyPm6WAgpY';
 var DEFAULT_PORTAL_URL = 'https://luis28lh.github.io/wes-plataforma/plaza-megaton/index.html';
+
+/**
+ * Obtiene la referencia a la hoja de cálculo de Plaza Megatón
+ */
+function getMegatonSpreadsheet() {
+  var ss = null;
+  try {
+    ss = SpreadsheetApp.getActiveSpreadsheet();
+  } catch(e) {}
+  if (!ss && typeof DATABASE_SPREADSHEET_ID !== 'undefined' && DATABASE_SPREADSHEET_ID) {
+    try {
+      ss = SpreadsheetApp.openById(DATABASE_SPREADSHEET_ID);
+    } catch(e) {}
+  }
+  if (!ss) {
+    try {
+      var files = DriveApp.getFilesByName(DATABASE_NAME);
+      if (files.hasNext()) {
+        ss = SpreadsheetApp.open(files.next());
+      }
+    } catch(e) {}
+  }
+  return ss;
+}
 
 /**
  * Inicializa la carpeta en Google Drive, la base de datos y todas las tablas
  */
 function inicializarBaseDeDatos() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getMegatonSpreadsheet();
+  if (!ss) {
+    throw new Error('No se pudo encontrar o abrir la hoja de cálculo ' + DATABASE_NAME);
+  }
 
   // 1. Obtener o crear la carpeta "PLAZA MEGATÓN" en Google Drive
-  var rootFolder = obtenerOCrearCarpetaDrive(FOLDER_NAME);
+  var rootFolder = null;
+  if (typeof ROOT_FOLDER_ID !== 'undefined' && ROOT_FOLDER_ID) {
+    try {
+      rootFolder = DriveApp.getFolderById(ROOT_FOLDER_ID);
+    } catch(e) {}
+  }
+  if (!rootFolder) {
+    rootFolder = obtenerOCrearCarpetaDrive(FOLDER_NAME);
+  }
 
   // 2. Mover la hoja de cálculo a la carpeta "PLAZA MEGATÓN" si no está dentro
   moverArchivoAFolder(ss.getId(), rootFolder);
@@ -97,7 +122,7 @@ function inicializarBaseDeDatos() {
 
   // 5. Precargar catálogo de cubículos si la pestaña CUBICULOS está vacía
   var sheetCub = ss.getSheetByName('CUBICULOS');
-  if (sheetCub.getLastRow() <= 1) {
+  if (sheetCub && sheetCub.getLastRow() <= 1) {
     var cubData = [];
     for (var i = 1; i <= 30; i++) {
       var cod = 'C-' + (i < 10 ? '00' + i : (i < 100 ? '0' + i : i));
@@ -117,6 +142,13 @@ function inicializarBaseDeDatos() {
   Logger.log('Carpeta en Google Drive: ' + rootFolder.getName() + ' (ID: ' + rootFolder.getId() + ')');
   Logger.log('Spreadsheet: ' + ss.getName() + ' (URL: ' + ss.getUrl() + ')');
   Logger.log('========================================================');
+
+  return {
+    success: true,
+    folderId: rootFolder.getId(),
+    spreadsheetId: ss.getId(),
+    tables: ss.getSheets().map(function(s) { return s.getName(); })
+  };
 }
 
 /**
@@ -139,27 +171,44 @@ function obtenerOCrearSubcarpeta(parentFolder, nombre) {
  * Auxiliar: Mueve un archivo a una carpeta específica
  */
 function moverArchivoAFolder(fileId, targetFolder) {
-  var file = DriveApp.getFileById(fileId);
-  var parents = file.getParents();
-  var alreadyIn = false;
-  while (parents.hasNext()) {
-    var p = parents.next();
-    if (p.getId() === targetFolder.getId()) {
-      alreadyIn = true;
-      break;
-    }
-  }
-  if (!alreadyIn) {
-    targetFolder.addFile(file);
-    // Remover de la raíz si aplica
-    var oldParents = file.getParents();
-    while (oldParents.hasNext()) {
-      var op = oldParents.next();
-      if (op.getId() !== targetFolder.getId()) {
-        op.removeFile(file);
+  try {
+    var file = DriveApp.getFileById(fileId);
+    var parents = file.getParents();
+    var alreadyIn = false;
+    while (parents.hasNext()) {
+      var p = parents.next();
+      if (p.getId() === targetFolder.getId()) {
+        alreadyIn = true;
+        break;
       }
     }
+    if (!alreadyIn) {
+      targetFolder.addFile(file);
+      var oldParents = file.getParents();
+      while (oldParents.hasNext()) {
+        var op = oldParents.next();
+        if (op.getId() !== targetFolder.getId()) {
+          op.removeFile(file);
+        }
+      }
+    }
+  } catch(e) {
+    Logger.log('Aviso al mover archivo a carpeta: ' + e.toString());
   }
+}
+
+/**
+ * Auxiliar: Retorna o inicializa una hoja por nombre
+ */
+function obtenerHoja(nombreHoja) {
+  var ss = getMegatonSpreadsheet();
+  if (!ss) return null;
+  var sheet = ss.getSheetByName(nombreHoja);
+  if (!sheet) {
+    inicializarBaseDeDatos();
+    sheet = ss.getSheetByName(nombreHoja);
+  }
+  return sheet;
 }
 
 /**
@@ -170,13 +219,17 @@ function doPost(e) {
     var contents = JSON.parse(e.postData.contents);
     var action = contents.action;
     var payload = contents.payload || {};
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var ss = getMegatonSpreadsheet();
+
+    if (!ss) {
+      return responseJSON({ success: false, error: 'No se pudo acceder al Spreadsheet de Plaza Megatón' });
+    }
 
     // 1. SINCRONIZAR USUARIO Y ENVIAR CORREO DE FELICITACIÓN
     if (action === 'SYNC_USUARIO') {
-      var sheetUser = ss.getSheetByName('USUARIOS');
-      var sheetUC = ss.getSheetByName('USUARIO_CUBICULO');
-      var sheetCub = ss.getSheetByName('CUBICULOS');
+      var sheetUser = ss.getSheetByName('USUARIOS') || obtenerHoja('USUARIOS');
+      var sheetUC = ss.getSheetByName('USUARIO_CUBICULO') || obtenerHoja('USUARIO_CUBICULO');
+      var sheetCub = ss.getSheetByName('CUBICULOS') || obtenerHoja('CUBICULOS');
 
       var cubList = Array.isArray(payload.cubiculos) ? payload.cubiculos : [];
       var cubFormattedStr = Array.isArray(payload.cubiculosFormatted) 
@@ -243,7 +296,7 @@ function doPost(e) {
 
     // 2. SINCRONIZAR RECLAMACIÓN
     if (action === 'SYNC_RECLAMACION') {
-      var sheetRec = ss.getSheetByName('RECLAMACIONES');
+      var sheetRec = ss.getSheetByName('RECLAMACIONES') || obtenerHoja('RECLAMACIONES');
       sheetRec.appendRow([
         payload.codigo,
         payload.fecha,
@@ -265,7 +318,7 @@ function doPost(e) {
 
     // 3. SINCRONIZAR PAGO
     if (action === 'SYNC_PAGO') {
-      var sheetPag = ss.getSheetByName('PAGOS');
+      var sheetPag = ss.getSheetByName('PAGOS') || obtenerHoja('PAGOS');
       sheetPag.appendRow([
         payload.codigo,
         payload.fecha_registro,
@@ -289,7 +342,7 @@ function doPost(e) {
     // 4. TEST DE CONEXIÓN
     if (action === 'TEST_CONNECTION') {
       var rootFolders = DriveApp.getFoldersByName(FOLDER_NAME);
-      var folderId = rootFolders.hasNext() ? rootFolders.next().getId() : '';
+      var folderId = rootFolders.hasNext() ? rootFolders.next().getId() : ROOT_FOLDER_ID;
       return responseJSON({
         success: true,
         message: 'Conexión activa con Google Drive y Google Sheets',
@@ -299,7 +352,7 @@ function doPost(e) {
       });
     }
 
-    return responseJSON({ success: false, error: 'Acción no soportada' });
+    return responseJSON({ success: false, error: 'Acción no soportada: ' + action });
   } catch (err) {
     return responseJSON({ success: false, error: err.toString() });
   }
@@ -371,7 +424,8 @@ function enviarCorreoFelicitacion(nombre, email, cubiculosStr, userId, portalUrl
  * Auxiliar: Registra en la pestaña HISTORIAL
  */
 function registrarHistorial(tipoDoc, codDoc, usuario, accion, ant, nuevo, obs) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getMegatonSpreadsheet();
+  if (!ss) return;
   var sheet = ss.getSheetByName('HISTORIAL');
   if (!sheet) return;
   var now = new Date();
@@ -392,21 +446,32 @@ function registrarHistorial(tipoDoc, codDoc, usuario, accion, ant, nuevo, obs) {
 }
 
 /**
- * Endpoint GET para comprobar estado
+ * Endpoint GET para comprobar estado o inicializar tablas
  */
 function doGet(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : 'STATUS';
+
+  if (action === 'INITIALIZE') {
+    var initResult = inicializarBaseDeDatos();
+    return responseJSON({
+      success: true,
+      message: 'Base de datos inicializada correctamente en Google Drive',
+      initResult: initResult
+    });
+  }
+
+  var ss = getMegatonSpreadsheet();
   var rootFolders = DriveApp.getFoldersByName(FOLDER_NAME);
-  var folderId = rootFolders.hasNext() ? rootFolders.next().getId() : '';
+  var folderId = rootFolders.hasNext() ? rootFolders.next().getId() : ROOT_FOLDER_ID;
 
   return responseJSON({
     status: 'ONLINE',
     plaza: 'PLAZA MEGATÓN',
     folderDrive: FOLDER_NAME,
     folderId: folderId,
-    spreadsheetName: ss.getName(),
-    spreadsheetId: ss.getId(),
-    tables: ss.getSheets().map(function(s) { return s.getName(); })
+    spreadsheetName: ss ? ss.getName() : DATABASE_NAME,
+    spreadsheetId: ss ? ss.getId() : DATABASE_SPREADSHEET_ID,
+    tables: ss ? ss.getSheets().map(function(s) { return s.getName(); }) : []
   });
 }
 
@@ -414,4 +479,3 @@ function responseJSON(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }
-

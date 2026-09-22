@@ -744,11 +744,15 @@ function renderConfigFields(configList) {
 
   const inputGoogle = document.getElementById('input-google-script-url');
   const gUrlItem = configList.find(c => c.parametro === 'google_apps_script_url');
+  const DEFAULT_DEPLOYED_URL = 'https://script.google.com/macros/s/AKfycbzhIZ4dMGMyX4ZQgZrBnwegGHjPJC9U_9sw7jRcUVHVB2MGp9sLluZBi3wYN5bZICX0/exec';
   if (inputGoogle) {
     if (gUrlItem && gUrlItem.valor) {
       inputGoogle.value = gUrlItem.valor;
     } else if (localStorage.getItem('pm_google_script_url')) {
       inputGoogle.value = localStorage.getItem('pm_google_script_url');
+    } else {
+      inputGoogle.value = DEFAULT_DEPLOYED_URL;
+      localStorage.setItem('pm_google_script_url', DEFAULT_DEPLOYED_URL);
     }
   }
 

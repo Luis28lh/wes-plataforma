@@ -297,20 +297,37 @@
             <p class="card-subtitle">Sincronización en tiempo real con la carpeta "PLAZA MEGATÓN" y la base de datos "PLAZA_MEGATON_DATABASE".</p>
           </div>
 
+          <!-- GOOGLE DRIVE & SHEETS DATABASE -->
           <div style="background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 18px; margin-bottom: 16px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
               <div>
                 <span style="font-weight: 800; font-size: 14px; color: #0F172A;">📁 Carpeta en Google Drive:</span>
                 <span style="background: #FEE2E2; color: #991B1B; font-weight: 800; padding: 2px 8px; border-radius: 6px; font-size: 13px;">PLAZA MEGATÓN</span>
               </div>
               <div id="google-conn-status">
-                <span style="background: #E2E8F0; color: #475569; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px;">⚪ No verificado</span>
+                <span style="background: #DCFCE7; color: #166534; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 9999px;">🟢 Recursos Creados en Google Drive</span>
               </div>
             </div>
 
+            <!-- Accesos Rápidos a Recursos en Google Drive -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px;">
+              <a href="https://drive.google.com/drive/folders/1CUUpP7K2roI8cemURppsB5QyPm6WAgpY" target="_blank" style="text-decoration:none; display:flex; align-items:center; gap:8px; padding:10px 12px; background:#FFFFFF; border:1px solid #CBD5E1; border-radius:8px; font-size:12px; font-weight:700; color:#1E293B;">
+                <span style="font-size:16px;">📁</span>
+                <span>Carpeta <strong>PLAZA MEGATÓN</strong></span>
+              </a>
+              <a href="https://docs.google.com/spreadsheets/d/1_pHnJkeyVTbVfXacVOFIsKDYb3vaP-EBepc3tm3CQKY/edit" target="_blank" style="text-decoration:none; display:flex; align-items:center; gap:8px; padding:10px 12px; background:#FFFFFF; border:1px solid #CBD5E1; border-radius:8px; font-size:12px; font-weight:700; color:#1E293B;">
+                <span style="font-size:16px;">📊</span>
+                <span>Base de Datos <strong>Google Sheets</strong></span>
+              </a>
+              <a href="https://script.google.com/macros/d/1OtHXUEogeQaQIXUa9C8kQKm8EXqBo4Mlo7Zn3S7P6MyeWXg3fpRf6Z0B/edit" target="_blank" style="text-decoration:none; display:flex; align-items:center; gap:8px; padding:10px 12px; background:#FFFFFF; border:1px solid #CBD5E1; border-radius:8px; font-size:12px; font-weight:700; color:#1E293B;">
+                <span style="font-size:16px;">⚡</span>
+                <span>Editor <strong>Apps Script</strong></span>
+              </a>
+            </div>
+
             <div class="form-group" style="margin-bottom: 12px;">
-              <label class="form-label" style="font-size: 12px;">URL de la Aplicación Web (Google Apps Script):</label>
-              <input type="url" id="input-google-script-url" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
+              <label class="form-label" style="font-size: 12px;">URL de la Aplicación Web (Google Apps Script Webhook):</label>
+              <input type="url" id="input-google-script-url" class="form-input" value="https://script.google.com/macros/s/AKfycbzhIZ4dMGMyX4ZQgZrBnwegGHjPJC9U_9sw7jRcUVHVB2MGp9sLluZBi3wYN5bZICX0/exec" placeholder="https://script.google.com/macros/s/.../exec">
             </div>
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -325,15 +342,16 @@
             <div id="google-test-result" style="margin-top: 12px; font-size: 13px; display: none;"></div>
           </div>
 
-          <!-- Instrucciones de 1 Minuto para Activar Google Drive -->
+          <!-- Estado y Confirmación del Proceso -->
           <div style="font-size: 13px; color: #475569; line-height: 1.6; border-top: 1px dashed #CBD5E1; padding-top: 14px;">
-            <strong>¿Cómo activar tu base de datos en Google Drive en 1 minuto?</strong>
-            <ol style="margin: 8px 0 0; padding-left: 20px;">
-              <li>Abre tu Google Drive (drive.google.com) y crea una hoja de cálculo llamada: <strong>PLAZA_MEGATON_DATABASE</strong>.</li>
-              <li>Entra a <strong>Extensiones &gt; Apps Script</strong> y pega el código del archivo <code>Code.gs</code>.</li>
-              <li>Ejecuta la función <strong>inicializarBaseDeDatos</strong> (crea la carpeta "PLAZA MEGATÓN", las tablas y subcarpetas).</li>
-              <li>Haz clic en <strong>Implementar &gt; Nueva implementación</strong> (Tipo: "Aplicación web", Acceso: "Cualquier persona") y pega aquí la URL generada.</li>
-            </ol>
+            <strong>Estado del proceso automático en Google Drive:</strong>
+            <ul style="margin: 8px 0 0; padding-left: 20px;">
+              <li>✅ Carpeta <strong>PLAZA MEGATÓN</strong> creada en tu cuenta de Google Drive.</li>
+              <li>✅ Subcarpetas <code>01 - RECLAMACIONES</code>, <code>02 - PAGOS</code> y <code>03 - COPIAS DE SEGURIDAD</code> generadas.</li>
+              <li>✅ Hoja <strong>PLAZA_MEGATON_DATABASE</strong> creada dentro de la carpeta.</li>
+              <li>✅ Proyecto y Web App de Apps Script publicado y vinculado a la plataforma.</li>
+              <li>👉 <em>Paso único de autorización de Google:</em> Abre el <a href="https://script.google.com/macros/d/1OtHXUEogeQaQIXUa9C8kQKm8EXqBo4Mlo7Zn3S7P6MyeWXg3fpRf6Z0B/edit" target="_blank" style="color:#D32F2F; font-weight:700;">Editor Apps Script</a>, presiona <strong>Ejecutar</strong> en la función <code>inicializarBaseDeDatos</code> y pulsa <strong>Revisar permisos &gt; Permitir</strong> para conceder acceso a tu cuenta.</li>
+            </ul>
           </div>
         </div>
       </section>
