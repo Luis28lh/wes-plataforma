@@ -9,10 +9,18 @@ Este repositorio de trabajo contiene los proyectos desarrollados de manera modul
 
 ```
 TALLER WEB/
+├── plaza-megaton/                          <-- Proyecto 3: Sistema de Gestión – Plaza Megatón
+│   ├── server.js                           (Servidor local - Puerto 3007)
+│   ├── public/                             (Portal público, registro QR y admin)
+│   ├── database/                           (Catálogo maestro y persistencia)
+│   ├── services/                           (Patrón repositorio, Google Drive/Sheets y correo)
+│   ├── google-apps-script/                 (Script desplegable para Google Sheets)
+│   └── README.md                           (Documentación completa de Plaza Megatón)
+│
 ├── proyecto-wes/                           <-- Proyecto 1: Plataforma Web WES
 │   ├── index.html                          (Portal público de clientes)
 │   ├── admin.html                          (Portal administrativo autónomo)
-│   ├── server.js                           (Servidor local - Puerto 3000)
+│   ├── server.js                           (Servidor local - Puerto 3006)
 │   ├── assets/                             (Recursos multimedia corporativos)
 │   ├── js/                                 (Lógica de catálogo, cotizaciones y soporte)
 │   ├── backend/                            (Google Apps Script y despliegue)
@@ -22,7 +30,7 @@ TALLER WEB/
 │   ├── index.html                          (Portal web del asistente AIR)
 │   ├── css/styles.css                      (Estilos en paleta de grises neutros)
 │   ├── js/app.js                           (Web Audio API, ingesta IA, minutas, PDF y Chat)
-│   ├── server.js                           (Servidor local - Puerto 3001)
+│   ├── server.js                           (Servidor local - Puerto 3005)
 │   └── assets/icons/logo-buho.jpg          (Ícono de software del búho centinela)
 │
 ├── docs/                                   <-- Guías y estándares técnicos
@@ -36,7 +44,20 @@ TALLER WEB/
 
 ## 🚀 Proyectos Disponibles
 
-### 1. [Proyecto WES](./proyecto-wes/) — Warn Electrical Services, SRL
+### 1. [Plaza Megatón](./plaza-megaton/) — Sistema de Gestión Inmobiliaria
+Plataforma móvil-first para gestión de cubículos, registro QR, solicitudes/reclamaciones (CL-xxx), pagos (PG-xxx), notificaciones automáticas por correo y panel administrativo (/admin).
+* **Carpeta:** `plaza-megaton/`
+* **Ejecución local:**
+  ```powershell
+  cd "plaza-megaton"
+  npm install
+  node server.js
+  ```
+* **Acceso:** `http://localhost:3007/` y `/admin.html` (PIN: `megaton2026`)
+
+---
+
+### 2. [Proyecto WES](./proyecto-wes/) — Warn Electrical Services, SRL
 Plataforma empresarial de comercio electrónico, catálogo de soluciones eléctricas/seguridad y portal administrativo desacoplado.
 * **Carpeta:** `proyecto-wes/`
 * **Ejecución local:**
@@ -48,7 +69,7 @@ Plataforma empresarial de comercio electrónico, catálogo de soluciones eléctr
 
 ---
 
-### 2. [Asistente de Reuniones](./asistente-reuniones/) — AIR (Assistant for Intelligent Records)
+### 3. [Asistente de Reuniones](./asistente-reuniones/) — AIR (Assistant for Intelligent Records)
 Sistema web para grabación ambiental en tiempo real, carga de audios, transcripción y generación automática de minutas, actas formales y matrices de acuerdos con IA (Gemini).
 * **Carpeta:** `asistente-reuniones/`
 * **Identidad Visual:** Diseño minimalista y ejecutivo con **paleta de grises neutros** (Slate / Zinc) y el **búho centinela como ícono sutil de software**.
