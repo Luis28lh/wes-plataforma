@@ -295,14 +295,19 @@ function renderProducts() {
         </a>
       `;
 
+    const manualFeat = (product.features || []).find(f => typeof f === 'string' && f.startsWith('manual_url:'));
+    const manualUrl = product.manualUrl || (manualFeat ? manualFeat.replace('manual_url:', '') : null);
+
+    const visibleFeatures = (product.features || []).filter(f => typeof f === 'string' && !f.startsWith('manual_url:'));
+
     return `
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
-        <div class="relative h-56 bg-slate-100 overflow-hidden">
-          <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+        <div class="relative h-56 bg-white flex items-center justify-center p-3 border-b border-slate-100 overflow-hidden">
+          <img src="${product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500" loading="lazy">
           <span class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${availClass} backdrop-blur-sm shadow-sm">
             ${product.availability}
           </span>
-          <span class="absolute top-3 right-3 text-xs font-bold px-2 py-1 bg-white/90 text-wes-blue rounded-md shadow-sm">
+          <span class="absolute top-3 right-3 text-xs font-bold px-2 py-1 bg-slate-900/80 text-white rounded-md shadow-sm">
             ${product.brand}
           </span>
         </div>
@@ -315,13 +320,22 @@ function renderProducts() {
           <p class="text-xs text-slate-600 mt-2 line-clamp-2">${product.description}</p>
           
           <div class="mt-3 pt-3 border-t border-slate-100 space-y-1">
-            ${(product.features || []).slice(0, 3).map(feat => `
+            ${visibleFeatures.slice(0, 3).map(feat => `
               <div class="flex items-start text-xs text-slate-600">
                 <i class="fas fa-check text-wes-gold mr-1.5 mt-0.5 text-[10px]"></i>
                 <span class="line-clamp-1">${feat}</span>
               </div>
             `).join('')}
           </div>
+
+          ${manualUrl ? `
+            <div class="mt-3">
+              <a href="${manualUrl}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-3 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition">
+                <i class="fas fa-file-pdf text-red-600"></i>
+                <span>Descargar Manual Técnico (PDF)</span>
+              </a>
+            </div>
+          ` : ''}
 
           <div class="mt-auto pt-4 flex items-center justify-between">
             <div>

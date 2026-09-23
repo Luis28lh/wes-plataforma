@@ -285,6 +285,9 @@ CREATE POLICY "Publico puede ver categorias activas" ON public.categorias
 CREATE POLICY "Publico puede ver productos activos" ON public.productos
     FOR SELECT USING (activo = TRUE);
 
+CREATE POLICY "Permitir sincronizar catalogo de productos" ON public.productos
+    FOR ALL USING (TRUE) WITH CHECK (TRUE);
+
 CREATE POLICY "Publico puede consultar feature flags" ON public.feature_flags
     FOR SELECT USING (TRUE);
 

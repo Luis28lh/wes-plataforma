@@ -98,6 +98,7 @@ const WesDB = (function() {
               category: p.categoria_id,
               description: p.descripcion,
               features: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
+              manualUrl: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
               price: Number(p.precio),
               availability: p.disponibilidad,
               stock: p.stock,

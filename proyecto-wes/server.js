@@ -19,8 +19,73 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon'
 };
 
+let OdooSyncEngine = null;
+try {
+  OdooSyncEngine = require('./scripts/odoo_sync_engine');
+} catch (e) {
+  console.warn('OdooSyncEngine no disponible:', e.message);
+}
+
 const server = http.createServer((req, res) => {
+  // Manejo de CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   let reqUrl = req.url.split('?')[0];
+
+  // API Odoo: Resumen de categorías
+  if (reqUrl === '/api/odoo/summary' && req.method === 'GET') {
+    if (!OdooSyncEngine) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Motor de sincronización no inicializado' }));
+      return;
+    }
+    OdooSyncEngine.getCategorySummary()
+      .then(summary => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, summary }));
+      })
+      .catch(err => {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      });
+    return;
+  }
+
+  // API Odoo: Ejecutar Sincronización
+  if (reqUrl === '/api/odoo/sync' && req.method === 'POST') {
+    if (!OdooSyncEngine) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Motor de sincronización no inicializado' }));
+      return;
+    }
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', async () => {
+      try {
+        const payload = body ? JSON.parse(body) : {};
+        const result = await OdooSyncEngine.sync({
+          selectedCategoryIds: payload.selectedCategoryIds || [7, 10, 4, 6, 5, 8, 28, 15, 23, 17],
+          onlyInStock: payload.onlyInStock !== false,
+          limit: payload.limit || 150
+        });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result));
+      } catch (err) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+    });
+    return;
+  }
+
   if (reqUrl === '/' || reqUrl === '') {
     reqUrl = '/index.html';
   } else if (reqUrl === '/admin' || reqUrl === '/admin/') {

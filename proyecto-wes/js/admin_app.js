@@ -2164,8 +2164,210 @@ const AdminApp = {
             </div>
           </form>
         </div>
+
+        <!-- Panel 4: Sincronización Odoo ERP (Solo Lectura) -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="border-b border-slate-200 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 font-brand flex items-center space-x-2">
+                <i class="fas fa-boxes text-purple-600"></i>
+                <span>Sincronización de Inventario Odoo ERP</span>
+                <span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded-md">Solo Lectura</span>
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">Importa y actualiza stock, precios, imágenes con fondo blanco y manuales técnicos CAME.</p>
+            </div>
+            <div id="odoo-sync-status-badge">
+              <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full flex items-center">
+                <i class="fas fa-check-circle mr-1 text-emerald-600"></i> Conexión Odoo Lista
+              </span>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs text-slate-600 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-700">Instancia ERP:</span>
+              <span class="font-mono text-slate-600">https://odoo.warnelectricalservices.com</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-700">Base de Datos:</span>
+              <span class="font-mono text-slate-600">odoo-warnelectricalservices-com (Prod)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-700">Protocolo de Seguridad:</span>
+              <span class="text-emerald-700 font-semibold"><i class="fas fa-shield-alt mr-1"></i> Modo Solo Lectura (Sin modificaciones en Odoo)</span>
+            </div>
+          </div>
+
+          <form onsubmit="AdminApp.handleOdooSync(event)" class="space-y-4 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-2">Categorías autorizadas para sincronizar a la web:</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="7" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Cámaras y Videovigilancia</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="10" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Inversores de Energía</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="4" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Baterías Ciclo Profundo</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="6" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Cables Eléctricos</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="5" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Cable UTP / Redes</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="8" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Conectores y Terminales</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="28" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Accesorios Eléctricos</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="15" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Alarmas y Control Acceso</span>
+                </label>
+                <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer bg-white">
+                  <input type="checkbox" name="odooCat" value="17" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-medium text-slate-800">Automatización / Motores CAME</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1 border-t border-slate-100">
+              <div class="space-y-1">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                  <input type="checkbox" id="odoo-sync-stock-only" checked class="rounded text-wes-blue focus:ring-wes-blue">
+                  <span class="font-semibold text-slate-700">Sincronizar solo productos con existencia física (Stock > 0)</span>
+                </label>
+                <div class="text-[11px] text-slate-500">
+                  <i class="fas fa-magic text-purple-600 mr-1"></i> Asigna fotos nítidas con fondo blanco y vincula manuales PDF (como CAME).
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <button type="button" onclick="AdminApp.handleOdooTestConnection()" id="btn-odoo-test" class="px-4 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-xs transition flex items-center space-x-1.5">
+                  <i class="fas fa-stethoscope text-slate-500"></i>
+                  <span>Probar Conexión</span>
+                </button>
+                <button type="submit" id="btn-odoo-sync" class="px-5 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-xl text-xs transition shadow flex items-center space-x-1.5">
+                  <i class="fas fa-sync-alt text-amber-300"></i>
+                  <span>Sincronizar Catálogo Ahora</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Progreso en Tiempo Real -->
+            <div id="odoo-sync-progress-box" class="hidden bg-purple-50 border border-purple-200 rounded-xl p-3.5 space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold text-purple-900">
+                <span id="odoo-progress-title"><i class="fas fa-spinner fa-spin mr-1.5 text-purple-600"></i> Sincronizando con Odoo...</span>
+                <span id="odoo-progress-pct">0%</span>
+              </div>
+              <div class="w-full bg-purple-200 rounded-full h-2 overflow-hidden">
+                <div id="odoo-progress-bar" class="bg-purple-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+              </div>
+              <div id="odoo-progress-log" class="text-[11px] font-mono text-purple-800 truncate">Iniciando lectura segura...</div>
+            </div>
+          </form>
+        </div>
       </div>
     `;
+  },
+
+  async handleOdooTestConnection() {
+    const btn = document.getElementById('btn-odoo-test');
+    if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Probando...';
+    try {
+      const resp = await fetch('/api/odoo/summary');
+      if (!resp.ok) {
+        throw new Error('Error al conectar con servidor local WES / Odoo');
+      }
+      const data = await resp.json();
+      if (data.success && data.summary) {
+        const total = data.summary.reduce((acc, c) => acc + c.total, 0);
+        const inStock = data.summary.reduce((acc, c) => acc + c.inStock, 0);
+        showToast(`Conexión con Odoo EXITOSA. ${total} productos detectados (${inStock} con stock).`, 'success');
+      } else {
+        throw new Error(data.error || 'Respuesta inválida');
+      }
+    } catch (err) {
+      showToast('Fallo al conectar con Odoo: ' + err.message, 'error');
+    } finally {
+      if (btn) btn.innerHTML = '<i class="fas fa-stethoscope text-slate-500"></i> <span>Probar Conexión</span>';
+    }
+  },
+
+  async handleOdooSync(e) {
+    e.preventDefault();
+    if (!PermissionsManager.checkOrAlert('ajustes', 'configurar')) return;
+
+    const checkboxes = document.querySelectorAll('input[name="odooCat"]:checked');
+    const selectedIds = Array.from(checkboxes).map(c => Number(c.value));
+    if (selectedIds.length === 0) {
+      showToast('Selecciona al menos una categoría para sincronizar.', 'warning');
+      return;
+    }
+
+    const onlyInStock = document.getElementById('odoo-sync-stock-only')?.checked ?? true;
+    const progressBox = document.getElementById('odoo-sync-progress-box');
+    const progressBar = document.getElementById('odoo-progress-bar');
+    const progressPct = document.getElementById('odoo-progress-pct');
+    const progressLog = document.getElementById('odoo-progress-log');
+    const btnSync = document.getElementById('btn-odoo-sync');
+
+    if (progressBox) progressBox.classList.remove('hidden');
+    if (progressBar) progressBar.style.width = '15%';
+    if (progressPct) progressPct.textContent = '15%';
+    if (progressLog) progressLog.textContent = 'Conectando a Odoo en modo Solo Lectura...';
+    if (btnSync) btnSync.disabled = true;
+
+    try {
+      if (progressBar) progressBar.style.width = '45%';
+      if (progressPct) progressPct.textContent = '45%';
+      if (progressLog) progressLog.textContent = 'Consultando catálogo de categorías y productos autorizados...';
+
+      const resp = await fetch('/api/odoo/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          selectedCategoryIds: selectedIds,
+          onlyInStock: onlyInStock,
+          limit: 200
+        })
+      });
+
+      const result = await resp.json();
+      if (!resp.ok || !result.success) {
+        throw new Error(result.error || 'Error durante la sincronización');
+      }
+
+      if (progressBar) progressBar.style.width = '100%';
+      if (progressPct) progressPct.textContent = '100%';
+      if (progressLog) progressLog.textContent = `¡Finalizado! ${result.totalSynced} productos sincronizados con éxito.`;
+
+      showToast(`¡Sincronización Odoo Exitosa! ${result.totalSynced} productos actualizados.`, 'success');
+
+      if (result.products && result.products.length > 0 && typeof StorageService !== 'undefined') {
+        StorageService.saveProducts(result.products);
+      }
+
+      setTimeout(() => {
+        if (progressBox) progressBox.classList.add('hidden');
+        if (btnSync) btnSync.disabled = false;
+        this.renderAjustes();
+      }, 3500);
+    } catch (err) {
+      if (progressLog) progressLog.textContent = 'Error: ' + err.message;
+      if (btnSync) btnSync.disabled = false;
+      showToast('Error en la sincronización: ' + err.message, 'error');
+    }
   },
 
   handleSaveDatabaseCredentials(e) {
