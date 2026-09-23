@@ -6,8 +6,9 @@
 const DEFAULT_ADMIN_USERS = [
   {
     id: 'USR-001',
-    name: 'Lic. Propietario WES',
-    email: 'wes.inform@gmail.com',
+    name: 'Luis Miguel Lizardo (Propietario WES)',
+    email: 'ing.lmlh@gmail.com',
+    secondaryEmail: 'wes.inform@gmail.com',
     username: 'propietario',
     passwordHash: 'Wes2026!',
     role: 'propietario',
@@ -227,7 +228,10 @@ const AdminAuth = {
     const users = this.getUsers();
     const user = users.find(u => 
       u.status === 'activo' && 
-      (u.email.toLowerCase() === cleanId || u.username.toLowerCase() === cleanId)
+      (u.email.toLowerCase() === cleanId || 
+       (u.secondaryEmail && u.secondaryEmail.toLowerCase() === cleanId) || 
+       u.username.toLowerCase() === cleanId ||
+       (cleanId === 'ing.lmlh@gmail.com' && (u.username === 'propietario' || u.username === 'admin')))
     );
 
     if (!user || user.passwordHash !== password) {
