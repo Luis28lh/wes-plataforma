@@ -1,0 +1,27 @@
+name: Sincronización Automática Odoo WES
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * *' # Sincronizar diariamente a las 6:00 AM UTC
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar Repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Ejecutar Sincronización Solo Lectura
+        run: |
+          cd proyecto-wes
+          node scripts/sync_odoo.js
+          node scripts/export_odoo_to_sql.js
