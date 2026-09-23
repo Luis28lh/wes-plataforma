@@ -8,9 +8,12 @@ const WesDB = (function() {
   const STORAGE_KEY_URL = 'wes_supabase_url';
   const STORAGE_KEY_ANON = 'wes_supabase_anon_key';
 
+  const DEFAULT_SUPABASE_URL = 'https://tzvuloziazkbcfdwzzff.supabase.co';
+  const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6dnVsb3ppYXprYmNmZHd6emZmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxNjQxNDMsImV4cCI6MjEwNTc0MDE0M30.ibLWFcEh--IsMYE5fjxm2SiaFPTprQs9gJm_eorI2mY';
+
   // Configuración predeterminada o almacenada en el navegador
-  let supabaseUrl = localStorage.getItem(STORAGE_KEY_URL) || '';
-  let supabaseAnonKey = localStorage.getItem(STORAGE_KEY_ANON) || '';
+  let supabaseUrl = localStorage.getItem(STORAGE_KEY_URL) || DEFAULT_SUPABASE_URL;
+  let supabaseAnonKey = localStorage.getItem(STORAGE_KEY_ANON) || DEFAULT_SUPABASE_ANON_KEY;
   let client = null;
 
   function initClient() {
@@ -24,6 +27,17 @@ const WesDB = (function() {
       }
     }
     return false;
+  }
+
+  function generateUUID() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   }
 
   // Inicializar al cargar
@@ -105,10 +119,14 @@ const WesDB = (function() {
     createQuote: async function(quoteData) {
       if (this.isConfigured()) {
         try {
-          // 1. Registrar o recuperar cliente
-          const { data: cliente, error: cliError } = await client
+          const clienteId = generateUUID();
+          const cotizacionId = generateUUID();
+
+          // 1. Registrar cliente en PostgreSQL
+          const { error: cliError } = await client
             .from('clientes')
             .insert([{
+              id: clienteId,
               nombre: quoteData.clientName,
               empresa: quoteData.company || null,
               rnc_cedula: quoteData.taxId || null,
@@ -116,34 +134,32 @@ const WesDB = (function() {
               email: quoteData.email,
               ciudad: quoteData.city || 'Moca',
               direccion: quoteData.address || null
-            }])
-            .select()
-            .single();
+            }]);
 
           if (cliError) throw cliError;
 
           // 2. Registrar cabecera de cotización
-          const { data: cotizacion, error: cotError } = await client
+          const { error: cotError } = await client
             .from('cotizaciones')
             .insert([{
+              id: cotizacionId,
               codigo_cotizacion: quoteData.id,
-              cliente_id: cliente.id,
+              cliente_id: clienteId,
               subtotal: quoteData.subtotal,
               itbis: quoteData.tax,
               total: quoteData.total,
               estado: 'pendiente',
               notas_cliente: quoteData.notes || ''
-            }])
-            .select()
-            .single();
+            }]);
 
           if (cotError) throw cotError;
 
           // 3. Registrar detalles
           if (quoteData.items && quoteData.items.length > 0) {
             const detalles = quoteData.items.map(item => ({
-              cotizacion_id: cotizacion.id,
-              producto_id: item.id.startsWith('prod-') ? item.id : null,
+              id: generateUUID(),
+              cotizacion_id: cotizacionId,
+              producto_id: (item.id && String(item.id).startsWith('prod-')) ? item.id : null,
               nombre_producto: item.name,
               codigo_producto: item.code || '',
               precio_unitario: item.price,
@@ -159,7 +175,7 @@ const WesDB = (function() {
           }
 
           console.log('[WesDB] Cotización guardada en PostgreSQL:', quoteData.id);
-          return { success: true, id: quoteData.id, pgId: cotizacion.id };
+          return { success: true, id: quoteData.id, pgId: cotizacionId };
         } catch (err) {
           console.warn('[WesDB] Error en createQuote PG, persistiendo localmente:', err);
         }
@@ -178,35 +194,36 @@ const WesDB = (function() {
     createSupportTicket: async function(ticketData, fileAttachments = []) {
       if (this.isConfigured()) {
         try {
+          const clienteId = generateUUID();
+          const ticketId = generateUUID();
+
           // 1. Registrar cliente
-          const { data: cliente, error: cliError } = await client
+          const { error: cliError } = await client
             .from('clientes')
             .insert([{
+              id: clienteId,
               nombre: ticketData.name,
               telefono: ticketData.phone,
               email: ticketData.email,
               ciudad: 'Moca',
               direccion: ticketData.location
-            }])
-            .select()
-            .single();
+            }]);
 
           if (cliError) throw cliError;
 
           // 2. Insertar ticket
-          const { data: ticket, error: tktError } = await client
+          const { error: tktError } = await client
             .from('tickets_soporte')
             .insert([{
+              id: ticketId,
               codigo_ticket: ticketData.ticketCode,
-              cliente_id: cliente.id,
+              cliente_id: clienteId,
               tipo_servicio: ticketData.serviceType,
               direccion_servicio: ticketData.location,
               descripcion_problema: ticketData.description,
               estado: 'abierto',
               prioridad: 'media'
-            }])
-            .select()
-            .single();
+            }]);
 
           if (tktError) throw tktError;
 
@@ -235,7 +252,8 @@ const WesDB = (function() {
                 await client
                   .from('ticket_evidencias')
                   .insert([{
-                    ticket_id: ticket.id,
+                    id: generateUUID(),
+                    ticket_id: ticketId,
                     archivo_url: publicUrlData.publicUrl,
                     nombre_original: file.name,
                     tipo_mime: file.type,
