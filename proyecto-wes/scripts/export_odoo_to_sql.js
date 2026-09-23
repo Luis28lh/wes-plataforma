@@ -9,7 +9,7 @@ async function exportSQL() {
   const result = await OdooSyncEngine.sync({
     selectedCategoryIds: [7, 10, 4, 6, 5, 8, 28, 15, 23, 17],
     onlyInStock: true,
-    limit: 200
+    limit: 500
   });
 
   console.log(`Generando seed_odoo_products.sql para ${result.products.length} productos...`);
@@ -20,16 +20,9 @@ async function exportSQL() {
   sql += `-- Total productos: ${result.products.length}\n`;
   sql += '-- ============================================================================\n\n';
 
-  // Habilitar política de sincronización por si no existe
-  sql += 'DO $$\n';
-  sql += 'BEGIN\n';
-  sql += '  IF NOT EXISTS (\n';
-  sql += '    SELECT 1 FROM pg_policies WHERE tablename = \'productos\' AND policyname = \'Permitir sincronizar catalogo de productos\'\n';
-  sql += '  ) THEN\n';
-  sql += '    CREATE POLICY "Permitir sincronizar catalogo de productos" ON public.productos FOR ALL USING (TRUE) WITH CHECK (TRUE);\n';
-  sql += '  END IF;\n';
-  sql += 'END\n';
-  sql += '$$;\n\n';
+  // Habilitar política de sincronización para que el API y web puedan sincronizar
+  sql += 'DROP POLICY IF EXISTS "Permitir sincronizar catalogo de productos" ON public.productos;\n';
+  sql += 'CREATE POLICY "Permitir sincronizar catalogo de productos" ON public.productos FOR ALL TO PUBLIC USING (TRUE) WITH CHECK (TRUE);\n\n';
 
   sql += 'INSERT INTO public.productos (id, codigo, nombre, marca, categoria_id, descripcion, caracteristicas, precio, stock, imagen_url, activo, destacado)\nVALUES\n';
 
