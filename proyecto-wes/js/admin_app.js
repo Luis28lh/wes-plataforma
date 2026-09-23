@@ -347,9 +347,9 @@ const AdminApp = {
   renderDashboard(container) {
     const quotes = JSON.parse(localStorage.getItem('wes_quotes') || '[]');
     const support = JSON.parse(localStorage.getItem('wes_support_tickets') || '[]');
-    const products = (window.WES_CATALOG_STATE && window.WES_CATALOG_STATE.products) 
-      ? window.WES_CATALOG_STATE.products 
-      : JSON.parse(localStorage.getItem('wes_custom_products') || '[]');
+    const products = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
     const contacts = JSON.parse(localStorage.getItem('wes_contact_messages') || '[]');
 
     const pendingQuotes = quotes.filter(q => q.status === 'Pendiente' || !q.status).length;
@@ -1358,27 +1358,63 @@ const AdminApp = {
   // ========================================================================
   // VISTA: CATÁLOGO DE PRODUCTOS
   // ========================================================================
+  // ========================================================================
+  // VISTA: GESTIÓN DE PRODUCTOS E INVENTARIO
+  // ========================================================================
   renderProductos(container) {
-    const products = (window.WES_CATALOG_STATE && window.WES_CATALOG_STATE.products)
-      ? window.WES_CATALOG_STATE.products
-      : JSON.parse(localStorage.getItem('wes_custom_products') || '[]');
+    const products = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+
+    // Extraer categorías dinámicas
+    const categories = ['Todas', ...new Set(products.map(p => p.category || p.categoria_id).filter(Boolean))];
+    this.selectedAdminProductCat = this.selectedAdminProductCat || 'Todas';
 
     const filtered = products.filter(p => {
-      return !this.searchQuery ||
-        (p.name && p.name.toLowerCase().includes(this.searchQuery)) ||
-        (p.code && p.code.toLowerCase().includes(this.searchQuery)) ||
-        (p.brand && p.brand.toLowerCase().includes(this.searchQuery)) ||
-        (p.category && p.category.toLowerCase().includes(this.searchQuery));
+      const q = (this.searchQuery || '').toLowerCase();
+      const matchSearch = !q ||
+        ((p.name || p.nombre || '').toLowerCase().includes(q)) ||
+        ((p.code || p.codigo || '').toLowerCase().includes(q)) ||
+        ((p.brand || p.marca || '').toLowerCase().includes(q)) ||
+        ((p.category || p.categoria_id || '').toLowerCase().includes(q));
+
+      const pCat = p.category || p.categoria_id || '';
+      const matchCat = this.selectedAdminProductCat === 'Todas' || pCat === this.selectedAdminProductCat;
+
+      return matchSearch && matchCat;
     });
+
+    // Paginación (25 productos por página para navegación fluida)
+    this.productPage = this.productPage || 1;
+    const perPage = 25;
+    const totalPages = Math.ceil(filtered.length / perPage) || 1;
+    if (this.productPage > totalPages) this.productPage = totalPages;
+    if (this.productPage < 1) this.productPage = 1;
+
+    const startIdx = (this.productPage - 1) * perPage;
+    const paginated = filtered.slice(startIdx, startIdx + perPage);
 
     container.innerHTML = `
       <div class="space-y-4">
         <!-- Barra de Control -->
         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div class="text-xs text-slate-500 font-medium">
-            Total en catálogo: <strong class="text-slate-800">${products.length} productos</strong>
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <div class="text-xs text-slate-500 font-medium">
+              Total en catálogo: <strong class="text-slate-800">${products.length} productos</strong>
+              <span class="inline-flex items-center ml-2 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                <i class="fas fa-check-circle mr-1"></i> Sincronizados Odoo ERP
+              </span>
+            </div>
           </div>
-          <div class="flex items-center space-x-2">
+
+          <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end">
+            <!-- Filtro de Categoría -->
+            <select onchange="AdminApp.filterProductCategory(this.value)" class="text-xs p-2 border border-slate-300 rounded-xl bg-slate-50 font-medium">
+              ${categories.map(c => `
+                <option value="${c}" ${this.selectedAdminProductCat === c ? 'selected' : ''}>${c}</option>
+              `).join('')}
+            </select>
+
             <button onclick="AdminApp.openProductModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
               <i class="fas fa-plus"></i>
               <span>Crear Producto</span>
@@ -1386,55 +1422,126 @@ const AdminApp = {
           </div>
         </div>
 
-        <!-- Tabla -->
+        <!-- Tabla de Productos -->
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
               <thead>
                 <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
                   <th class="p-3.5">Foto</th>
-                  <th class="p-3.5">Código / Marca</th>
-                  <th class="p-3.5">Nombre</th>
+                  <th class="p-3.5">Código SKU / Marca</th>
+                  <th class="p-3.5">Nombre de la Solución</th>
                   <th class="p-3.5">Categoría</th>
-                  <th class="p-3.5">Precio Ref.</th>
-                  <th class="p-3.5">Disponibilidad</th>
+                  <th class="p-3.5">Precio Ref. (DOP)</th>
+                  <th class="p-3.5">Existencia / Stock</th>
+                  <th class="p-3.5">Manual Técnico</th>
                   <th class="p-3.5 text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                ${filtered.map(p => `
-                  <tr class="hover:bg-slate-50/80 transition">
-                    <td class="p-3.5">
-                      <img src="${p.image}" alt="${p.name}" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
-                    </td>
-                    <td class="p-3.5">
-                      <div class="font-mono font-bold text-wes-blue">${p.code}</div>
-                      <div class="text-[11px] text-slate-400 uppercase">${p.brand}</div>
-                    </td>
-                    <td class="p-3.5 font-bold text-slate-800 max-w-xs">${p.name}</td>
-                    <td class="p-3.5 text-slate-600">${p.category}</td>
-                    <td class="p-3.5 font-bold text-slate-900">RD$ ${(p.price || 0).toLocaleString('es-DO')}</td>
-                    <td class="p-3.5">
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold ${p.availability === 'Disponible' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                        ${p.availability}
-                      </span>
-                    </td>
-                    <td class="p-3.5 text-right space-x-1 whitespace-nowrap">
-                      <button onclick="AdminApp.openProductModal(${p.id})" class="p-2 text-slate-600 hover:text-wes-blue hover:bg-slate-100 rounded-lg transition" title="Editar">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button onclick="AdminApp.deleteProduct(${p.id})" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Eliminar">
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
+                ${paginated.length === 0 ? `
+                  <tr>
+                    <td colspan="8" class="p-8 text-center text-slate-400">
+                      <i class="fas fa-box-open text-3xl mb-2 block text-slate-300"></i>
+                      No se encontraron productos que coincidan con la búsqueda.
                     </td>
                   </tr>
-                `).join('')}
+                ` : paginated.map(p => {
+                  const img = p.image || p.imagen_url || 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80';
+                  const code = p.code || p.codigo || 'S/C';
+                  const name = p.name || p.nombre || 'Producto sin nombre';
+                  const brand = p.brand || p.marca || 'WES';
+                  const category = p.category || p.categoria_id || 'General';
+                  const price = p.price || p.precio || 0;
+                  const stock = p.stock !== undefined ? p.stock : (p.availability === 'Disponible' ? 1 : 0);
+                  const isAvailable = stock > 0 || p.availability === 'Disponible' || p.disponibilidad === 'Disponible';
+                  const manualUrl = p.manual_url || p.manualUrl;
+                  const safeId = (typeof p.id === 'string') ? `'${p.id}'` : p.id;
+
+                  return `
+                    <tr class="hover:bg-slate-50/80 transition">
+                      <td class="p-3.5">
+                        <button type="button" onclick="AdminApp.viewSupportPhoto('${img}', '${code}')" class="block w-12 h-12 bg-white rounded-lg border border-slate-200 p-1 hover:border-wes-blue transition group">
+                          <img src="${img}" alt="${name}" class="w-full h-full object-contain group-hover:scale-105 transition" loading="lazy">
+                        </button>
+                      </td>
+                      <td class="p-3.5">
+                        <div class="font-mono font-bold text-wes-blue">${code}</div>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-white uppercase">${brand}</span>
+                      </td>
+                      <td class="p-3.5 font-bold text-slate-800 max-w-xs">
+                        <div class="line-clamp-2">${name}</div>
+                      </td>
+                      <td class="p-3.5">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-medium bg-slate-100 text-slate-700">
+                          ${category}
+                        </span>
+                      </td>
+                      <td class="p-3.5 font-bold text-slate-900 whitespace-nowrap">
+                        RD$ ${price.toLocaleString('es-DO', { minimumFractionDigits: 2 })}
+                      </td>
+                      <td class="p-3.5 whitespace-nowrap">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold ${isAvailable ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                          <i class="fas ${isAvailable ? 'fa-check' : 'fa-times'} mr-1"></i>
+                          ${stock} en inventario
+                        </span>
+                      </td>
+                      <td class="p-3.5 whitespace-nowrap">
+                        ${manualUrl ? `
+                          <a href="${manualUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1 px-2 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-[11px] font-bold transition">
+                            <i class="fas fa-file-pdf text-red-600"></i>
+                            <span>Manual CAME</span>
+                          </a>
+                        ` : `
+                          <span class="text-slate-300 text-[11px] italic">N/A</span>
+                        `}
+                      </td>
+                      <td class="p-3.5 text-right space-x-1 whitespace-nowrap">
+                        <button onclick="AdminApp.openProductModal(${safeId})" class="p-2 text-slate-600 hover:text-wes-blue hover:bg-slate-100 rounded-lg transition" title="Editar">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="AdminApp.deleteProduct(${safeId})" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Eliminar">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
               </tbody>
             </table>
+          </div>
+
+          <!-- Paginación -->
+          <div class="p-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+            <div>
+              Mostrando <strong class="text-slate-800">${filtered.length === 0 ? 0 : startIdx + 1}</strong> a <strong class="text-slate-800">${Math.min(startIdx + perPage, filtered.length)}</strong> de <strong class="text-slate-800">${filtered.length}</strong> productos
+            </div>
+            ${totalPages > 1 ? `
+              <div class="flex items-center space-x-1">
+                <button onclick="AdminApp.setProductPage(${this.productPage - 1})" ${this.productPage <= 1 ? 'disabled' : ''} class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition">
+                  <i class="fas fa-chevron-left mr-1"></i> Anterior
+                </button>
+                <span class="px-3 py-1.5 font-bold text-slate-700">Página ${this.productPage} de ${totalPages}</span>
+                <button onclick="AdminApp.setProductPage(${this.productPage + 1})" ${this.productPage >= totalPages ? 'disabled' : ''} class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium transition">
+                  Siguiente <i class="fas fa-chevron-right ml-1"></i>
+                </button>
+              </div>
+            ` : ''}
           </div>
         </div>
       </div>
     `;
+  },
+
+  filterProductCategory(cat) {
+    this.selectedAdminProductCat = cat;
+    this.productPage = 1;
+    this.refreshCurrentView();
+  },
+
+  setProductPage(page) {
+    this.productPage = page;
+    this.refreshCurrentView();
   },
 
   openProductModal(productId = null) {
@@ -1451,20 +1558,21 @@ const AdminApp = {
 
     if (productId) {
       title.textContent = 'Editar Solución / Producto';
-      const products = (window.WES_CATALOG_STATE && window.WES_CATALOG_STATE.products)
-        ? window.WES_CATALOG_STATE.products
-        : JSON.parse(localStorage.getItem('wes_custom_products') || '[]');
-      const product = products.find(p => p.id === productId);
+      const products = (typeof StorageService !== 'undefined')
+        ? StorageService.getProducts()
+        : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+      const product = products.find(p => String(p.id) === String(productId));
       if (product) {
-        form.name.value = product.name || '';
-        form.code.value = product.code || '';
-        form.brand.value = product.brand || '';
-        form.category.value = product.category || '';
-        form.price.value = product.price || 0;
-        form.availability.value = product.availability || 'Disponible';
-        form.image.value = product.image || '';
-        form.description.value = product.description || '';
-        form.features.value = (product.features || []).join('\n');
+        form.name.value = product.name || product.nombre || '';
+        form.code.value = product.code || product.codigo || '';
+        form.brand.value = product.brand || product.marca || '';
+        form.category.value = product.category || product.categoria_id || '';
+        form.price.value = product.price || product.precio || 0;
+        form.availability.value = product.availability || product.disponibilidad || 'Disponible';
+        form.image.value = product.image || product.imagen_url || '';
+        form.description.value = product.description || product.descripcion || '';
+        const feats = product.features || product.caracteristicas || [];
+        form.features.value = feats.join('\n');
       }
     } else {
       title.textContent = 'Nuevo Producto en Catálogo';
@@ -1481,30 +1589,61 @@ const AdminApp = {
   handleProductSave(e) {
     e.preventDefault();
     const form = e.target;
-    const id = form.productId.value ? parseInt(form.productId.value, 10) : null;
-    const action = id ? 'editar' : 'crear';
+    const rawId = form.productId.value ? form.productId.value : null;
+    const action = rawId ? 'editar' : 'crear';
 
     if (!PermissionsManager.checkOrAlert('productos', action)) return;
 
+    const name = form.name.value.trim();
+    const code = form.code.value.trim();
+    const brand = form.brand.value.trim();
+    const category = form.category.value.trim();
+    const price = parseFloat(form.price.value) || 0;
+    const availability = form.availability.value;
+    const image = form.image.value.trim();
+    const description = form.description.value.trim();
+    const features = form.features.value.split('\n').map(f => f.trim()).filter(Boolean);
+
     const productData = {
-      id: id || Date.now(),
-      name: form.name.value.trim(),
-      code: form.code.value.trim(),
-      brand: form.brand.value.trim(),
-      category: form.category.value.trim(),
-      price: parseFloat(form.price.value) || 0,
-      availability: form.availability.value,
-      image: form.image.value.trim(),
-      description: form.description.value.trim(),
-      features: form.features.value.split('\n').map(f => f.trim()).filter(Boolean)
+      id: rawId || `custom-${Date.now()}`,
+      name: name,
+      nombre: name,
+      code: code,
+      codigo: code,
+      brand: brand,
+      marca: brand,
+      category: category,
+      categoria_id: category,
+      price: price,
+      precio: price,
+      availability: availability,
+      disponibilidad: availability,
+      stock: availability === 'Disponible' ? 10 : 0,
+      image: image,
+      imagen_url: image,
+      description: description,
+      descripcion: description,
+      features: features,
+      caracteristicas: features,
+      active: true,
+      activo: true
     };
 
-    let products = JSON.parse(localStorage.getItem('wes_custom_products') || '[]');
-    if (id) {
-      const idx = products.findIndex(p => p.id === id);
-      if (idx !== -1) products[idx] = productData;
+    let products = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+
+    if (rawId) {
+      const idx = products.findIndex(p => String(p.id) === String(rawId));
+      if (idx !== -1) {
+        products[idx] = Object.assign({}, products[idx], productData);
+      }
     } else {
-      products.push(productData);
+      products.unshift(productData);
+    }
+
+    if (typeof StorageService !== 'undefined') {
+      StorageService.saveProducts(products);
     }
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
 
@@ -1531,9 +1670,16 @@ const AdminApp = {
 
     if (!confirm('¿Estás seguro de que deseas eliminar este producto del catálogo?')) return;
 
-    let products = JSON.parse(localStorage.getItem('wes_custom_products') || '[]');
-    const target = products.find(p => p.id === productId);
-    products = products.filter(p => p.id !== productId);
+    let products = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+
+    const target = products.find(p => String(p.id) === String(productId));
+    products = products.filter(p => String(p.id) !== String(productId));
+
+    if (typeof StorageService !== 'undefined') {
+      StorageService.saveProducts(products);
+    }
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
 
     if (window.WES_CATALOG_STATE) {
@@ -1544,7 +1690,7 @@ const AdminApp = {
       window.AuditLog.log({
         module: 'productos',
         action: 'eliminar_producto',
-        description: `Eliminación del producto: ${target ? target.name : productId}`,
+        description: `Eliminación del producto: ${target ? (target.name || target.nombre) : productId}`,
         oldValue: target
       });
     }

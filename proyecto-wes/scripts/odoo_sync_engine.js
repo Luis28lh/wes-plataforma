@@ -122,7 +122,21 @@ function jsonrpc(url, service, method, args) {
 // Inserción / Upsert en PostgreSQL Supabase vía REST API
 function supabaseUpsertProducts(products) {
   return new Promise((resolve, reject) => {
-    const payload = JSON.stringify(products);
+    const dbRows = products.map(p => ({
+      id: p.id,
+      codigo: p.codigo,
+      nombre: p.nombre,
+      marca: p.marca,
+      categoria_id: p.categoria_id,
+      descripcion: p.descripcion,
+      caracteristicas: p.caracteristicas,
+      precio: p.precio,
+      stock: p.stock,
+      imagen_url: p.imagen_url,
+      activo: p.activo,
+      destacado: p.destacado
+    }));
+    const payload = JSON.stringify(dbRows);
     const req = https.request({
       hostname: 'tzvuloziazkbcfdwzzff.supabase.co',
       port: 443,
@@ -343,21 +357,52 @@ const OdooSyncEngine = {
         caracteristicas.push(`manual_url:${manualUrl}`);
       }
 
+      const CATEGORY_NAMES = {
+        'camaras': 'Cámaras de Seguridad',
+        'acceso': 'Controles de Acceso',
+        'cerraduras': 'Cerraduras Inteligentes',
+        'alarmas': 'Alarmas y Sensores',
+        'redes': 'Redes y Conectividad',
+        'energia': 'Energía y Respaldo',
+        'cables': 'Accesorios de Instalación',
+        'automatizacion': 'Automatización y Domótica'
+      };
+      const categoryName = CATEGORY_NAMES[categoryId] || 'Cámaras de Seguridad';
+      const desc = (p.description_sale && p.description_sale.trim()) ? p.description_sale.trim() : `Equipo profesional ${brand} distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.`;
+      const isAvailable = stock > 0 ? 'Disponible' : 'Agotado';
+
       return {
         id: `odoo-${p.id}`,
+        // Propiedades en español (PostgreSQL y Supabase)
         codigo: cleanCode,
         nombre: p.name.trim(),
         marca: brand,
         categoria_id: categoryId,
-        descripcion: (p.description_sale && p.description_sale.trim()) ? p.description_sale.trim() : `Equipo profesional ${brand} distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.`,
+        descripcion: desc,
         caracteristicas: caracteristicas,
         precio: price > 0 ? price : 500.00,
         moneda: 'DOP',
-        disponibilidad: stock > 0 ? 'Disponible' : 'Agotado',
+        disponibilidad: isAvailable,
         stock: stock,
         imagen_url: whiteBgImg,
         destacado: stock > 10,
-        activo: true
+        activo: true,
+        manual_url: manualUrl,
+
+        // Propiedades estándar (Frontend WES y Tienda)
+        code: cleanCode,
+        name: p.name.trim(),
+        brand: brand,
+        category: categoryName,
+        price: price > 0 ? price : 500.00,
+        currency: 'DOP',
+        availability: isAvailable,
+        image: whiteBgImg,
+        description: desc,
+        features: caracteristicas,
+        manualUrl: manualUrl,
+        featured: stock > 10,
+        active: true
       };
     });
 

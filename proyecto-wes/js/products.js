@@ -1,5 +1,5 @@
-// Base de datos inicial de productos de Warn Electrical Services, SRL (WES)
-// Sincronizado desde Odoo ERP en modo Solo Lectura
+// Base de datos de productos de Warn Electrical Services, SRL (WES)
+// Sincronizado desde Odoo ERP en modo Solo Lectura con soporte bilingüe de propiedades
 const INITIAL_PRODUCTS = [
   {
     "id": "odoo-96",
@@ -11,15 +11,33 @@ const INITIAL_PRODUCTS = [
     "caracteristicas": [
       "Código SKU / Odoo: 122",
       "Categoría ERP: Baterías",
-      "Disponibilidad: 6 unidades en inventario físico"
+      "Disponibilidad: 5 unidades en inventario físico"
     ],
     "precio": 794.6,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
-    "stock": 6,
+    "stock": 5,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "122",
+    "name": "BATERIA 12V-4A",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 794.6,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 122",
+      "Categoría ERP: Baterías",
+      "Disponibilidad: 5 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-97",
@@ -39,7 +57,25 @@ const INITIAL_PRODUCTS = [
     "stock": 4,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "123",
+    "name": "BATERIA 12V-7A",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 1173.55,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 123",
+      "Categoría ERP: Baterías",
+      "Disponibilidad: 4 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-125",
@@ -59,7 +95,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "503",
+    "name": "SOLUCION P/ BATERIA",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 181.8,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 503",
+      "Categoría ERP: Baterías",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-127",
@@ -79,7 +133,25 @@ const INITIAL_PRODUCTS = [
     "stock": 144,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1667",
+    "name": "TERMINAL 50-10 P/BATERIA",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 35.14,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1667",
+      "Categoría ERP: Baterías",
+      "Disponibilidad: 144 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-160",
@@ -99,7 +171,25 @@ const INITIAL_PRODUCTS = [
     "stock": 10,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2983",
+    "name": "BTC NOBILE NEGRO TOMA UTP RJ45",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 601.5,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2983",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 10 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-162",
@@ -121,7 +211,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1598,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3088",
+    "name": "CABLE UTP CAT6 EXTERIOR DAHUA",
+    "brand": "Dahua",
+    "category": "Accesorios de Instalación",
+    "price": 11.73,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3088",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 1598 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-170",
@@ -143,7 +253,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1300,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "1536",
+    "name": "CABLE UTP DAHUA CAT 5 BLANCO",
+    "brand": "Dahua",
+    "category": "Accesorios de Instalación",
+    "price": 23,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1536",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 1300 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-171",
@@ -165,7 +295,27 @@ const INITIAL_PRODUCTS = [
     "stock": 191,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "2362",
+    "name": "CABLE UTP DAHUA CAT 6 AZUL",
+    "brand": "Dahua",
+    "category": "Accesorios de Instalación",
+    "price": 30.15,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2362",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 191 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-173",
@@ -187,7 +337,27 @@ const INITIAL_PRODUCTS = [
     "stock": 59,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "2949",
+    "name": "CABLE UTP DAHUA CAT 6 GRIS",
+    "brand": "Dahua",
+    "category": "Accesorios de Instalación",
+    "price": 41.23,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2949",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 59 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-175",
@@ -207,7 +377,25 @@ const INITIAL_PRODUCTS = [
     "stock": 305,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2487",
+    "name": "CABLE UTP FERTEC CAT6 EXTERIOR DOUBLE",
+    "brand": "Fertec",
+    "category": "Accesorios de Instalación",
+    "price": 13.66,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2487",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 305 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-177",
@@ -227,7 +415,25 @@ const INITIAL_PRODUCTS = [
     "stock": 873,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "252",
+    "name": "CABLE UTP LEVITON CAT 6 AZUL",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 46.11,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 252",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 873 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-178",
@@ -247,7 +453,25 @@ const INITIAL_PRODUCTS = [
     "stock": 108,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1839",
+    "name": "CABLE UTP LEVINTON CAT 6 GRIS",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 13.06,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1839",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 108 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-181",
@@ -267,7 +491,25 @@ const INITIAL_PRODUCTS = [
     "stock": 158,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2051",
+    "name": "CABLE UTP PANDUIT PANNET CAT 6 AZUL",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 53.56,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2051",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 158 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-184",
@@ -287,7 +529,25 @@ const INITIAL_PRODUCTS = [
     "stock": 14,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2811",
+    "name": "PATCH CORD UTP 1M CAT 6",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 135.57,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2811",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 14 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-185",
@@ -307,7 +567,25 @@ const INITIAL_PRODUCTS = [
     "stock": 7,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2813",
+    "name": "PATCH CORD UTP 2M CAT 6",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 197.62,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2813",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 7 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-187",
@@ -329,7 +607,27 @@ const INITIAL_PRODUCTS = [
     "stock": 27,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3108",
+    "name": "PATCH CORD UTP CAR 6 1M DAHUA",
+    "brand": "Dahua",
+    "category": "Accesorios de Instalación",
+    "price": 152.38,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3108",
+      "Categoría ERP: Cable UTP",
+      "Disponibilidad: 27 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-1751",
@@ -351,7 +649,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
+    "code": "553",
+    "name": "INVERSOR PROSTEC 1.2KW UPS 12V DC 120AC ALU.",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 9100,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 553",
+      "Categoría ERP: Inversores",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_inversores_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-1776",
@@ -373,7 +691,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
+    "code": "3883",
+    "name": "INVERSOR WAVE-SWG 3.6KG/24VDC SENOIDAL/WIFI 120V",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 33739.98,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3883",
+      "Categoría ERP: Inversores",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_inversores_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-5976",
@@ -393,7 +731,25 @@ const INITIAL_PRODUCTS = [
     "stock": 12,
     "imagen_url": "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4509",
+    "name": "BASE P/ TUBO LED 2-PIN 40W",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 20.83,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4509",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 12 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5980",
@@ -405,15 +761,33 @@ const INITIAL_PRODUCTS = [
     "caracteristicas": [
       "Código SKU / Odoo: 215",
       "Categoría ERP: Cables eléctricos",
-      "Disponibilidad: 1340 unidades en inventario físico"
+      "Disponibilidad: 1290 unidades en inventario físico"
     ],
     "precio": 25.07,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
-    "stock": 1340,
+    "stock": 1290,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "215",
+    "name": "CABLE 18/4 MULTI FIBRA GENESIS",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 25.07,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 215",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1290 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5981",
@@ -425,15 +799,33 @@ const INITIAL_PRODUCTS = [
     "caracteristicas": [
       "Código SKU / Odoo: 1629",
       "Categoría ERP: Cables eléctricos",
-      "Disponibilidad: 1062 unidades en inventario físico"
+      "Disponibilidad: 562 unidades en inventario físico"
     ],
     "precio": 9.39,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
-    "stock": 1062,
+    "stock": 562,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1629",
+    "name": "CABLE 22/2 GENESIS",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 9.39,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1629",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 562 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5983",
@@ -453,7 +845,25 @@ const INITIAL_PRODUCTS = [
     "stock": 5080,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1836",
+    "name": "CABLE 22/4 GENESIS MULTIFIBRA",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 11.24,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1836",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 5080 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5984",
@@ -473,7 +883,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2114,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "217",
+    "name": "CABLE 22/4 GENESIS SOLIDO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 9.99,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 217",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2114 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5985",
@@ -493,7 +921,25 @@ const INITIAL_PRODUCTS = [
     "stock": 534,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4164",
+    "name": "CABLE 22/4 MULTIFIBRA ESEENET",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 5.79,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4164",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 534 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5988",
@@ -513,7 +959,25 @@ const INITIAL_PRODUCTS = [
     "stock": 127,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1870",
+    "name": "CABLE ALTO VOLTAJE ENGOMADO P/CERCO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 31.54,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1870",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 127 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5990",
@@ -533,7 +997,25 @@ const INITIAL_PRODUCTS = [
     "stock": 33,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "196",
+    "name": "CABLE BATERIA #2",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 228.94,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 196",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 33 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5991",
@@ -553,7 +1035,25 @@ const INITIAL_PRODUCTS = [
     "stock": 5,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2150",
+    "name": "CABLE BATERIA #2/0",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 427.2,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2150",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 5 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-5993",
@@ -573,7 +1073,25 @@ const INITIAL_PRODUCTS = [
     "stock": 14,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "197",
+    "name": "CABLE BATERIA #4",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 139.3,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 197",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 14 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5994",
@@ -593,7 +1111,25 @@ const INITIAL_PRODUCTS = [
     "stock": 183,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4530",
+    "name": "CABLE CAT 6 EXTERIOR FASTCABLE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 50.27,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4530",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 183 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-5995",
@@ -613,7 +1149,25 @@ const INITIAL_PRODUCTS = [
     "stock": 8332,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "198",
+    "name": "CABLE COAXIAL",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 3.75,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 198",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 8332 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6002",
@@ -633,7 +1187,25 @@ const INITIAL_PRODUCTS = [
     "stock": 12,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1813",
+    "name": "CABLE DE GOMA #10/2",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 37.53,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1813",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 12 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6003",
@@ -653,7 +1225,25 @@ const INITIAL_PRODUCTS = [
     "stock": 142,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2090",
+    "name": "CABLE DE GOMA #10/3",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 65.65,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2090",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 142 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6004",
@@ -673,7 +1263,25 @@ const INITIAL_PRODUCTS = [
     "stock": 5,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1859",
+    "name": "CABLE DE GOMA #10/4",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 103.46,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1859",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 5 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6005",
@@ -693,7 +1301,25 @@ const INITIAL_PRODUCTS = [
     "stock": 419,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "200",
+    "name": "CABLE DE GOMA #12/2",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 32.2,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 200",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 419 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6006",
@@ -713,7 +1339,25 @@ const INITIAL_PRODUCTS = [
     "stock": 211,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "201",
+    "name": "CABLE DE GOMA #12/3",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 57.33,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 201",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 211 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6007",
@@ -733,7 +1377,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3130,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "202",
+    "name": "CABLE DE GOMA #14/2",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 21.29,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 202",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 3130 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6008",
@@ -753,7 +1415,25 @@ const INITIAL_PRODUCTS = [
     "stock": 177,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "203",
+    "name": "CABLE DE GOMA #14/3",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 32.65,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 203",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 177 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6012",
@@ -773,7 +1453,25 @@ const INITIAL_PRODUCTS = [
     "stock": 100,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3038",
+    "name": "CABLE DE GOMA #8/4",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 174.11,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3038",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 100 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6016",
@@ -793,7 +1491,25 @@ const INITIAL_PRODUCTS = [
     "stock": 45,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "204",
+    "name": "CABLE DE VINIL #12/2",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 48.66,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 204",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 45 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6017",
@@ -813,7 +1529,25 @@ const INITIAL_PRODUCTS = [
     "stock": 595,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "205",
+    "name": "CABLE DE VINIL #12/3",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 54.74,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 205",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 595 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6018",
@@ -833,7 +1567,25 @@ const INITIAL_PRODUCTS = [
     "stock": 377,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "206",
+    "name": "CABLE DE VINIL #14/2",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 33.21,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 206",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 377 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6019",
@@ -853,7 +1605,25 @@ const INITIAL_PRODUCTS = [
     "stock": 579,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "207",
+    "name": "CABLE DE VINIL 14/3",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 40.55,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 207",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 579 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6021",
@@ -873,7 +1643,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1358,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "209",
+    "name": "CABLE DUPLEX #14",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 14.07,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 209",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1358 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6036",
@@ -893,7 +1681,25 @@ const INITIAL_PRODUCTS = [
     "stock": 103,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2679",
+    "name": "CABLE ELEC PHELP D #10 AZUL",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 22.83,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2679",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 103 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6037",
@@ -913,7 +1719,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1419,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "224",
+    "name": "CABLE ELEC PHELP D #10 BLANCO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 20.53,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 224",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1419 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6038",
@@ -933,7 +1757,25 @@ const INITIAL_PRODUCTS = [
     "stock": 817,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "225",
+    "name": "CABLE ELEC PHELP D #10 NEGRO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 21.18,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 225",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 817 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6039",
@@ -953,7 +1795,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1312,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "226",
+    "name": "CABLE ELEC PHELP D #10 ROJO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 22.83,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 226",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1312 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6040",
@@ -973,7 +1833,25 @@ const INITIAL_PRODUCTS = [
     "stock": 336,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1736",
+    "name": "CABLE ELEC PHELP D #10 VERDE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 20.36,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1736",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 336 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6041",
@@ -993,7 +1871,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1000,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "227",
+    "name": "CABLE ELEC PHELP D #12 AMARILLO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 16.64,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 227",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1000 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6042",
@@ -1013,7 +1909,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1007,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "228",
+    "name": "CABLE ELEC PHELP D #12 AZUL",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 15.25,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 228",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1007 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6043",
@@ -1033,7 +1947,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2492,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "229",
+    "name": "CABLE ELEC PHELP D #12 BLANCO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 15.28,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 229",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2492 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6044",
@@ -1053,7 +1985,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1257,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "230",
+    "name": "CABLE ELEC PHELP D #12 NEGRO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 13.57,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 230",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1257 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6046",
@@ -1073,7 +2023,25 @@ const INITIAL_PRODUCTS = [
     "stock": 266,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "232",
+    "name": "CABLE ELEC PHELP D #12 VERDE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 13.27,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 232",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 266 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6048",
@@ -1093,7 +2061,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1554,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "234",
+    "name": "CABLE ELEC PHELP D #14 AZUL",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 10.24,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 234",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1554 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6049",
@@ -1113,7 +2099,25 @@ const INITIAL_PRODUCTS = [
     "stock": 406,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "235",
+    "name": "CABLE ELEC PHELP D #14 BLANCO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 10.67,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 235",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 406 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6050",
@@ -1133,7 +2137,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1369,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "236",
+    "name": "CABLE ELEC PHELP D #14 NEGRO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 9.68,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 236",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1369 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6052",
@@ -1153,7 +2175,25 @@ const INITIAL_PRODUCTS = [
     "stock": 492,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "238",
+    "name": "CABLE ELEC PHELP D #14 VERDE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 10.34,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 238",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 492 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6064",
@@ -1173,7 +2213,25 @@ const INITIAL_PRODUCTS = [
     "stock": 811,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "239",
+    "name": "CABLE ELEC PHELP D #6 BLANCO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 58.2,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 239",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 811 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6065",
@@ -1193,7 +2251,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1099,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "240",
+    "name": "CABLE ELEC PHELP D #6 NEGRO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 58.2,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 240",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1099 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6066",
@@ -1213,7 +2289,25 @@ const INITIAL_PRODUCTS = [
     "stock": 334,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1742",
+    "name": "CABLE ELEC PHELP D #6 ROJO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 63.05,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1742",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 334 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6067",
@@ -1233,7 +2327,25 @@ const INITIAL_PRODUCTS = [
     "stock": 485,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "241",
+    "name": "CABLE ELEC PHELP D #6 VERDE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 58.2,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 241",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 485 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6068",
@@ -1253,7 +2365,25 @@ const INITIAL_PRODUCTS = [
     "stock": 604,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "242",
+    "name": "CABLE ELEC PHELP D #8 BLANCO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 39.68,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 242",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 604 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6069",
@@ -1273,7 +2403,25 @@ const INITIAL_PRODUCTS = [
     "stock": 39,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2677",
+    "name": "CABLE ELEC PHELP D #8 GRIS",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 33.62,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2677",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 39 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6070",
@@ -1293,7 +2441,25 @@ const INITIAL_PRODUCTS = [
     "stock": 305,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "243",
+    "name": "CABLE ELEC PHELP D #8 NEGRO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 37.64,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 243",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 305 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6071",
@@ -1313,7 +2479,25 @@ const INITIAL_PRODUCTS = [
     "stock": 172,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "244",
+    "name": "CABLE ELEC PHELP D #8 ROJO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 38.28,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 244",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 172 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6072",
@@ -1333,7 +2517,25 @@ const INITIAL_PRODUCTS = [
     "stock": 351,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "245",
+    "name": "CABLE ELEC PHELP D #8 VERDE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 38.9,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 245",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 351 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6079",
@@ -1353,7 +2555,25 @@ const INITIAL_PRODUCTS = [
     "stock": 7,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "246",
+    "name": "CABLE HDMI 15FT",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 267.1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 246",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 7 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6081",
@@ -1373,7 +2593,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "213",
+    "name": "CABLE HDMI 25 FT",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 840,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 213",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6083",
@@ -1393,7 +2631,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "247",
+    "name": "CABLE HDMI 6FT",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 156.09,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 247",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6094",
@@ -1413,7 +2669,25 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3425",
+    "name": "CABLE VGA 6 FT F1 MONITOR",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 133,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3425",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 6 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6096",
@@ -1433,7 +2707,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "256",
+    "name": "CABLE VGA MYO 50FT MONITOR",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 1208.25,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 256",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6102",
@@ -1453,7 +2745,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3669",
+    "name": "DETECTOR DE CABLES ELECTRICOS",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 1547,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3669",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6105",
@@ -1473,7 +2783,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2383",
+    "name": "EXPANSOR DE 8 ZONAS CABLEADO PS NEO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 2508.4,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2383",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6109",
@@ -1493,7 +2821,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1544",
+    "name": "FLEJADORA CABLE TIE ACERO INOX",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 8101.09,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1544",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6130",
@@ -1513,7 +2859,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1501",
+    "name": "ORGANIZADOR CABLE 1.1/8",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 418.6,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1501",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6132",
@@ -1533,7 +2897,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3819",
+    "name": "ORGANIZADOR DE CABLE 30MM X 2M",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 558.6,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3819",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6137",
@@ -1553,7 +2935,25 @@ const INITIAL_PRODUCTS = [
     "stock": 18,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "643",
+    "name": "PERCHA P/ACOM TENSOR CABLE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 97.21,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 643",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 18 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6139",
@@ -1573,7 +2973,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "667",
+    "name": "PORTA FUSIBLE P/CABLE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 27,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 667",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6143",
@@ -1593,7 +3011,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "758",
+    "name": "SIERRA HUECO MAKITA 1 3/4\" MAKITA ( TUBO 1 1/2\")",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 656.1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 758",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6145",
@@ -1613,7 +3049,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "760",
+    "name": "SIERRA HUECO MAKITA METAL 2 1/4\" MAKITA ( TUBO 2\")",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 674.7,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 760",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6151",
@@ -1633,7 +3087,25 @@ const INITIAL_PRODUCTS = [
     "stock": 34,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "812",
+    "name": "TAPON PLAS.1-1/2X1-1/2 P/ TUBO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 11.7,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 812",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 34 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6152",
@@ -1653,7 +3125,25 @@ const INITIAL_PRODUCTS = [
     "stock": 160,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2428",
+    "name": "TARUGO PLAST SHEETRROCK AUTOROCABLE 40MM",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 5.13,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2428",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 160 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6153",
@@ -1673,7 +3163,25 @@ const INITIAL_PRODUCTS = [
     "stock": 92,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1103",
+    "name": "TERMINAL P/CABLE COAXIAL GENERICO METAL",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 25.19,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1103",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 92 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6154",
@@ -1693,7 +3201,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2073",
+    "name": "TUBO 2'' HG",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 3500,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2073",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6155",
@@ -1704,7 +3230,7 @@ const INITIAL_PRODUCTS = [
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "Código SKU / Odoo: 898",
-      "Categoría ERP: Cables el��ctricos",
+      "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 7 unidades en inventario físico"
     ],
     "precio": 780,
@@ -1713,7 +3239,25 @@ const INITIAL_PRODUCTS = [
     "stock": 7,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "898",
+    "name": "TUBO EMT 1\"X10` AMERICANO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 780,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 898",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 7 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6156",
@@ -1733,7 +3277,25 @@ const INITIAL_PRODUCTS = [
     "stock": 25,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2504",
+    "name": "TUBO EMT 1\"X10` GENERICO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 499.68,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2504",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 25 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6158",
@@ -1753,7 +3315,25 @@ const INITIAL_PRODUCTS = [
     "stock": 44,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2506",
+    "name": "TUBO EMT 1/2\"X10` GENERICO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 281.98,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2506",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 44 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6165",
@@ -1773,7 +3353,25 @@ const INITIAL_PRODUCTS = [
     "stock": 25,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2505",
+    "name": "TUBO EMT 3/4\"X10` GENERICO",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 240.55,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2505",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 25 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6169",
@@ -1793,7 +3391,25 @@ const INITIAL_PRODUCTS = [
     "stock": 15,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "909",
+    "name": "TUBO LED 24\" 9W 6500K",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 409,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 909",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 15 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6171",
@@ -1813,7 +3429,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1761",
+    "name": "TUBO LED 18W NEVADO 6500K",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 300.16,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1761",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6172",
@@ -1833,7 +3467,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3189",
+    "name": "TUBO LED 18W SILVANIA 6500K",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 313.5,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3189",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6173",
@@ -1853,7 +3505,25 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1364",
+    "name": "TUBO LED 24\" 4100K",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 332.05,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1364",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 6 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6176",
@@ -1873,7 +3543,25 @@ const INITIAL_PRODUCTS = [
     "stock": 14,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "910",
+    "name": "TUBO LED 48\" 18W 4100K",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 399.6,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 910",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 14 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6178",
@@ -1893,7 +3581,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2334",
+    "name": "TUBO LED SYLVANIA 24'' 9 W BLAN.",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 164.7,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2334",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6182",
@@ -1913,7 +3619,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3461",
+    "name": "TUBO LUMINOSO DE TRES LADOS 7X120CM45W BL",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 1580.5,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3461",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6183",
@@ -1933,7 +3657,25 @@ const INITIAL_PRODUCTS = [
     "stock": 47,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "904",
+    "name": "TUBO PVC 1\"X19` SDR26",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 316.54,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 904",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 47 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6184",
@@ -1953,7 +3695,25 @@ const INITIAL_PRODUCTS = [
     "stock": 33,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "905",
+    "name": "TUBO PVC 1/2\"X19` SDR26",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 123.4,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 905",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 33 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6534",
@@ -1973,7 +3733,25 @@ const INITIAL_PRODUCTS = [
     "stock": 491,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4142",
+    "name": "CONECTOR HEMBRA",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 18.03,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4142",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 491 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6535",
@@ -1993,7 +3771,25 @@ const INITIAL_PRODUCTS = [
     "stock": 163,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4141",
+    "name": "CONECTOR MACHO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 18.03,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4141",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 163 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6545",
@@ -2005,15 +3801,33 @@ const INITIAL_PRODUCTS = [
     "caracteristicas": [
       "Código SKU / Odoo: 365",
       "Categoría ERP: Conectores",
-      "Disponibilidad: 626 unidades en inventario físico"
+      "Disponibilidad: 526 unidades en inventario físico"
     ],
     "precio": 8.64,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
-    "stock": 626,
+    "stock": 526,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "365",
+    "name": "CONECTOR B AZUL / BLANCO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 8.64,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 365",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 526 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6546",
@@ -2033,7 +3847,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2698",
+    "name": "CONECTOR B.V 2/1",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 182.98,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2698",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6550",
@@ -2053,7 +3885,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "367",
+    "name": "CONECTOR BX 1/2``RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 32.78,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 367",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6551",
@@ -2073,7 +3923,25 @@ const INITIAL_PRODUCTS = [
     "stock": 48,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "368",
+    "name": "CONECTOR BX 1`` RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 32.74,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 368",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 48 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6552",
@@ -2093,7 +3961,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4286",
+    "name": "CONECTOR BX 1-1/2``RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 200.1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4286",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6553",
@@ -2113,7 +3999,25 @@ const INITIAL_PRODUCTS = [
     "stock": 9,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "369",
+    "name": "CONECTOR BX 3/4`` RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 43.49,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 369",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 9 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6559",
@@ -2133,7 +4037,25 @@ const INITIAL_PRODUCTS = [
     "stock": 39,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3484",
+    "name": "CONECTOR EMPALME 2/0 COBRE",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 329.13,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3484",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 39 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6560",
@@ -2153,7 +4075,25 @@ const INITIAL_PRODUCTS = [
     "stock": 20,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4641",
+    "name": "CONECTOR EMPALME #12",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 20.02,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4641",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 20 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6563",
@@ -2173,7 +4113,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4626",
+    "name": "CONECTOR EMPALME COLOR GEN",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 561.68,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4626",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6564",
@@ -2193,7 +4151,25 @@ const INITIAL_PRODUCTS = [
     "stock": 129,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "371",
+    "name": "CONECTOR EMT 1",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 34.04,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 371",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 129 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6565",
@@ -2213,7 +4189,25 @@ const INITIAL_PRODUCTS = [
     "stock": 114,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "372",
+    "name": "CONECTOR EMT 1/2",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 18.28,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 372",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 114 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6566",
@@ -2233,7 +4227,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "373",
+    "name": "CONECTOR EMT 1-1/2",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 98.86,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 373",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6567",
@@ -2253,7 +4265,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "374",
+    "name": "CONECTOR EMT 2",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 111.43,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 374",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6568",
@@ -2273,7 +4303,25 @@ const INITIAL_PRODUCTS = [
     "stock": 23,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "375",
+    "name": "CONECTOR EMT 3/4",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 29,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 375",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 23 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6569",
@@ -2293,7 +4341,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "376",
+    "name": "CONECTOR EMT 3``",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 291.6,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 376",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6571",
@@ -2313,7 +4379,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2663",
+    "name": "CONECTOR GAL.HUB 1",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 357.12,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2663",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6574",
@@ -2333,7 +4417,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2664",
+    "name": "CONECTOR GAL.HUB 2",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 933.8,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2664",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6575",
@@ -2353,7 +4455,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3844",
+    "name": "CONECTOR GAL.HUB IMC 3/4",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 146.98,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3844",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6578",
@@ -2373,7 +4493,25 @@ const INITIAL_PRODUCTS = [
     "stock": 26,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "377",
+    "name": "CONECTOR LQT 1\" CURVO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 121.71,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 377",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 26 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6579",
@@ -2393,7 +4531,25 @@ const INITIAL_PRODUCTS = [
     "stock": 26,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2389",
+    "name": "CONECTOR LQT 1\" CURVO METALICO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 121.1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2389",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 26 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6580",
@@ -2413,7 +4569,25 @@ const INITIAL_PRODUCTS = [
     "stock": 23,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "378",
+    "name": "CONECTOR LQT 1\" RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 94.45,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 378",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 23 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6581",
@@ -2433,7 +4607,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "386",
+    "name": "CONECTOR LQT 1\"RECTO METAL",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 133.65,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 386",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6582",
@@ -2453,7 +4645,25 @@ const INITIAL_PRODUCTS = [
     "stock": 34,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "379",
+    "name": "CONECTOR LQT 1/2 RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 19.11,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 379",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 34 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6583",
@@ -2473,7 +4683,25 @@ const INITIAL_PRODUCTS = [
     "stock": 26,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "380",
+    "name": "CONECTOR LQT 1/2\" CURVO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 105,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 380",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 26 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6584",
@@ -2493,7 +4721,25 @@ const INITIAL_PRODUCTS = [
     "stock": 10,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1750",
+    "name": "CONECTOR LQT 1/2\" CURVO METAL",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 56.06,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1750",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 10 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6585",
@@ -2513,7 +4759,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "388",
+    "name": "CONECTOR LQT 1-1/2\" RECTO METAL",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 416.56,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 388",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6586",
@@ -2533,7 +4797,25 @@ const INITIAL_PRODUCTS = [
     "stock": 16,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "381",
+    "name": "CONECTOR LQT 1-1/2`` RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 147.84,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 381",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 16 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6587",
@@ -2553,7 +4835,25 @@ const INITIAL_PRODUCTS = [
     "stock": 4,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "382",
+    "name": "CONECTOR LQT 1-1/2``CURVO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 378,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 382",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 4 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6590",
@@ -2573,7 +4873,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "383",
+    "name": "CONECTOR LQT 2`` RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 241.27,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 383",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6591",
@@ -2593,7 +4911,25 @@ const INITIAL_PRODUCTS = [
     "stock": 14,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "384",
+    "name": "CONECTOR LQT 3/4 CURVO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 156.25,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 384",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 14 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6592",
@@ -2613,7 +4949,25 @@ const INITIAL_PRODUCTS = [
     "stock": 63,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "385",
+    "name": "CONECTOR LQT 3/4 RECTO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 59.16,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 385",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 63 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6593",
@@ -2633,7 +4987,25 @@ const INITIAL_PRODUCTS = [
     "stock": 20,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "387",
+    "name": "CONECTOR LQT 3/4 RECTO METAL",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 67.37,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 387",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 20 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6598",
@@ -2653,7 +5025,25 @@ const INITIAL_PRODUCTS = [
     "stock": 57,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4348",
+    "name": "CONECTOR P/ CABLE PG 21",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 96.33,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4348",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 57 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6600",
@@ -2673,7 +5063,25 @@ const INITIAL_PRODUCTS = [
     "stock": 80,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "392",
+    "name": "CONECTOR P/ CABLE 1 PG 25",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 30,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 392",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 80 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6601",
@@ -2693,7 +5101,25 @@ const INITIAL_PRODUCTS = [
     "stock": 115,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "394",
+    "name": "CONECTOR P/ CABLE 1/2 PG13.5",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 27.43,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 394",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 115 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6602",
@@ -2713,7 +5139,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "393",
+    "name": "CONECTOR P/ CABLE 3/4 PG19",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 21.1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 393",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6603",
@@ -2733,7 +5177,25 @@ const INITIAL_PRODUCTS = [
     "stock": 44,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2903",
+    "name": "CONECTOR P/ CABLE 3/8 PG 7",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 36.63,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2903",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 44 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6606",
@@ -2753,7 +5215,25 @@ const INITIAL_PRODUCTS = [
     "stock": 10,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4216",
+    "name": "CONECTOR P/ CABLE PG 9",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 35.52,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4216",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 10 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6613",
@@ -2773,7 +5253,25 @@ const INITIAL_PRODUCTS = [
     "stock": 4,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "397",
+    "name": "CONECTOR P/ VARILLA TIERRA 5/8",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 79.66,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 397",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 4 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6615",
@@ -2793,7 +5291,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4424",
+    "name": "CONECTOR P/BARRAS 25MM",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 610.18,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4424",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6618",
@@ -2813,7 +5329,25 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1175",
+    "name": "CONECTOR PLAS P/ CABLE DE GOMA",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 19.36,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1175",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 6 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6620",
@@ -2833,7 +5367,25 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "399",
+    "name": "CONECTOR PULPO 4 SALIDA",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 83.53,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 399",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 6 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6621",
@@ -2853,7 +5405,25 @@ const INITIAL_PRODUCTS = [
     "stock": 8,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2031",
+    "name": "CONECTOR PULPO 8 SALIDA",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 141.74,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2031",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 8 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6623",
@@ -2873,7 +5443,25 @@ const INITIAL_PRODUCTS = [
     "stock": 92,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3167",
+    "name": "CONECTOR RJ11 TELEFONO",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 2.46,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3167",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 92 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6624",
@@ -2893,7 +5481,25 @@ const INITIAL_PRODUCTS = [
     "stock": 666,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "400",
+    "name": "CONECTOR RJ45",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 13.71,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 400",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 666 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6625",
@@ -2913,7 +5519,25 @@ const INITIAL_PRODUCTS = [
     "stock": 189,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2778",
+    "name": "CONECTOR RJ45 CAT5E",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 4.92,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2778",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 189 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6627",
@@ -2933,7 +5557,25 @@ const INITIAL_PRODUCTS = [
     "stock": 40,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3813",
+    "name": "CONECTOR SENCILLO #4 2/0 TRIPLE",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 134.66,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3813",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 40 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6628",
@@ -2953,7 +5595,25 @@ const INITIAL_PRODUCTS = [
     "stock": 5,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2857",
+    "name": "CONECTOR SILLA 1/0",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 124.79,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2857",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 5 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6635",
@@ -2973,7 +5633,25 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2817",
+    "name": "CONECTOR SILLA DOBLE 250 MCM",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 400.78,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2817",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 6 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6636",
@@ -2993,7 +5671,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1047",
+    "name": "CONECTOR SILLA N.2",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 26.05,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1047",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-6639",
@@ -3013,7 +5709,25 @@ const INITIAL_PRODUCTS = [
     "stock": 30,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "403",
+    "name": "CONECTOR UF 1/2",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 21.61,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 403",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 30 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6640",
@@ -3033,7 +5747,25 @@ const INITIAL_PRODUCTS = [
     "stock": 70,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "404",
+    "name": "CONECTOR UF 3/4",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 30.66,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 404",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 70 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-6644",
@@ -3053,7 +5785,25 @@ const INITIAL_PRODUCTS = [
     "stock": 10,
     "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "1950",
+    "name": "JUEGO DE CONECTORES 35MM2 SCHNEIDER",
+    "brand": "WES",
+    "category": "Redes y Conectividad",
+    "price": 201.95,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1950",
+      "Categoría ERP: Conectores",
+      "Disponibilidad: 10 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18254",
@@ -3075,7 +5825,27 @@ const INITIAL_PRODUCTS = [
     "stock": 7,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "113 - DH-PFA130-E",
+    "name": "BASE DAHUA P/CAMARA DH-PFA130-E",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1065.62,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 113 - DH-PFA130-E",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 7 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18256",
@@ -3097,7 +5867,27 @@ const INITIAL_PRODUCTS = [
     "stock": 20,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "2110 - DH-PFA13A-E",
+    "name": "BASE DAHUA P/CAMARA DOMO DH-PFA13A-A",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 683.42,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2110 - DH-PFA13A-E",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 20 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-18257",
@@ -3119,7 +5909,27 @@ const INITIAL_PRODUCTS = [
     "stock": 19,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "4356",
+    "name": "BASE DAHUA P/CAMARA C/TAPA PFA134",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 496.73,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4356",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 19 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-18261",
@@ -3139,7 +5949,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4245",
+    "name": "BASE P/CAMARA MONTURA PARED IPC32X",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 1478.54,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4245",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18263",
@@ -3159,7 +5987,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3076",
+    "name": "CAMARA 2MPX CRUISER PAN TILT P/EXTERIOR IMOU",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 5090.04,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3076",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18265",
@@ -3179,7 +6025,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3098",
+    "name": "CAMARA 2MPX VERSA FULL-COLOR, WIFI SPEA",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 3024.46,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3098",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18271",
@@ -3201,7 +6065,27 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "4320",
+    "name": "CAMARA BULEET DAHUA 5MPX COOPER SDL 2.8MM",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 2146.86,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4320",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 2 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18273",
@@ -3223,7 +6107,27 @@ const INITIAL_PRODUCTS = [
     "stock": 8,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "995 - DH-HAC-B1A21N",
+    "name": "CAMARA BULLET 2MPX- DAHUA 1080P COOPER- B1A21N PLASTICA",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1201.2,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 995 - DH-HAC-B1A21N",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 8 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18274",
@@ -3243,7 +6147,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4447",
+    "name": "CAMARA BULLET 3MPX IMOU WIFI",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 4137.24,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4447",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18275",
@@ -3265,7 +6187,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "1827",
+    "name": "CAMARA BULLET DAHUA 2 MPX-2.8MM FULL COLOR HDCVI",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1266.72,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1827",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18277",
@@ -3287,7 +6229,27 @@ const INITIAL_PRODUCTS = [
     "stock": 17,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3722",
+    "name": "CAMARA BULLET DAHUA 2MPX COOPER SDL 2.8MM",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 750,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3722",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 17 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-18282",
@@ -3309,7 +6271,27 @@ const INITIAL_PRODUCTS = [
     "stock": 9,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "2491",
+    "name": "CAMARA BULLET DAHUA IP 2MPX",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 3363,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2491",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 9 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18288",
@@ -3331,7 +6313,27 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3044",
+    "name": "CAMARA BULLET DAHUA IP 5MPX 2.8 MM WIZSENSE SLD",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 8185.66,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3044",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 3 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18291",
@@ -3351,7 +6353,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2029",
+    "name": "CAMARA BULLET FERTEC IP 2MPX 3.6MM-ALARMA",
+    "brand": "Fertec",
+    "category": "Cámaras de Seguridad",
+    "price": 5040,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2029",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18296",
@@ -3373,7 +6393,27 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "code": "3946",
+    "name": "CAMARA BULLET HIKVISION 2MPX COLORVU HIBRID SDL IP67 C/MIC",
+    "brand": "Hikvision",
+    "category": "Cámaras de Seguridad",
+    "price": 4296.91,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3946",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 3 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18297",
@@ -3395,7 +6435,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "code": "3943",
+    "name": "CAMARA BULLET HIKVISION 4MPX COLORVU SDL IP67 C/MIC",
+    "brand": "Hikvision",
+    "category": "Cámaras de Seguridad",
+    "price": 5930.68,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3943",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18308",
@@ -3415,7 +6475,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2563",
+    "name": "CAMARA BULLET IP 4MPX 2.8MM IR30M IP67",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 6438,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2563",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18316",
@@ -3435,7 +6513,25 @@ const INITIAL_PRODUCTS = [
     "stock": 8,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3223-270883",
+    "name": "CAMARA CRUISER 3MPX CON BOMBILLA WIFI UHD",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 2692.76,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3223-270883",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 8 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18320",
@@ -3455,7 +6551,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3225",
+    "name": "CAMARA CRUISER RANGER DUAL 8MPX WIFI INTERIOR",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 4115.71,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3225",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18322",
@@ -3477,7 +6591,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3936",
+    "name": "CAMARA CUBO 3MPX WIFI SERIE CUBE DAHUA",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 2415.84,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3936",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18323",
@@ -3497,7 +6631,25 @@ const INITIAL_PRODUCTS = [
     "stock": 5,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4561",
+    "name": "CAMARA DOMO IP 2MPX SLD SERIE 1 C/AUDIO",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 3134.55,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4561",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 5 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18324",
@@ -3519,7 +6671,27 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3920 - DH-HAC-T1A21N",
+    "name": "CAMARA DOMO 1080P COOPER 2MPX PLASTICA DAHUA",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1001.62,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3920 - DH-HAC-T1A21N",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 6 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18325",
@@ -3541,7 +6713,27 @@ const INITIAL_PRODUCTS = [
     "stock": 4,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "1869",
+    "name": "CAMARA DOMO DAHUA 1080P C/ MICROFONO HDCVI",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 4059.97,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1869",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 4 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18326",
@@ -3563,7 +6755,27 @@ const INITIAL_PRODUCTS = [
     "stock": 10,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "1021",
+    "name": "CAMARA DOMO DAHUA 1080P COOPER 2.8MM PLAST",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1031.06,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1021",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 10 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18328",
@@ -3585,7 +6797,27 @@ const INITIAL_PRODUCTS = [
     "stock": 64,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3721 - DH-HAC-T1A21N-U-IL-A",
+    "name": "CAMARA DOMO DAHUA 2MPX COOPER SDL 2.8MM",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 750,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3721 - DH-HAC-T1A21N-U-IL-A",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 64 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-18329",
@@ -3607,7 +6839,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "1826",
+    "name": "CAMARA DOMO DAHUA 2MPX-2.8MM FULL COLOR HDCVI",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1654.65,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1826",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18333",
@@ -3629,7 +6881,27 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "299 - 5H0967APAL41789",
+    "name": "CAMARA DOMO DAHUA C/ MICROFONO HDCVI",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1230.16,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 299 - 5H0967APAL41789",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 6 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18334",
@@ -3651,7 +6923,27 @@ const INITIAL_PRODUCTS = [
     "stock": 7,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "1407 - DH-HAC-HDW1200MN",
+    "name": "CAMARA DOMO DAHUA HDCVI 2.8MM IR30M",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 2256.01,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1407 - DH-HAC-HDW1200MN",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 7 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18338",
@@ -3673,7 +6965,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3589",
+    "name": "CAMARA DOMO DAHUA IP 4MPX 2.8 MM WIZSENSE SLD",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 3904.5,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3589",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18340",
@@ -3695,7 +7007,27 @@ const INITIAL_PRODUCTS = [
     "stock": 5,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "2319",
+    "name": "CAMARA DOMO DAHUA IP 4MPX PRO WIZCOLOR DAHUA",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 6555.4,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2319",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 5 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18341",
@@ -3717,7 +7049,27 @@ const INITIAL_PRODUCTS = [
     "stock": 4,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "4676",
+    "name": "CAMARA DOMO DAHUA IP 4MPX SMART DUAL LIGHT",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 4285.13,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4676",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 4 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18349",
@@ -3739,7 +7091,27 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "code": "2036",
+    "name": "CAMARA DOMO HIKVISION C/ MICROFONO 5MPX",
+    "brand": "Hikvision",
+    "category": "Cámaras de Seguridad",
+    "price": 4200,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2036",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 3 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18351",
@@ -3761,7 +7133,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "code": "300",
+    "name": "CAMARA DOMO HIKVISION IP4MPX 2.8MM",
+    "brand": "Hikvision",
+    "category": "Cámaras de Seguridad",
+    "price": 5171.4,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 300",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18358",
@@ -3783,7 +7175,27 @@ const INITIAL_PRODUCTS = [
     "stock": 20,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3711 - DH-IPC-HDW1239V-A-IL",
+    "name": "CAMARA DOMO IP 2MP 2.8MM DAHUA SDL",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 3214.66,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3711 - DH-IPC-HDW1239V-A-IL",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 20 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-18359",
@@ -3803,7 +7215,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4211",
+    "name": "CAMARA DOMO IP 2MPX PRO WIZCOLOR",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 5740,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4211",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18369",
@@ -3825,7 +7255,27 @@ const INITIAL_PRODUCTS = [
     "stock": 10,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "2565 -",
+    "name": "CAMARA DOMO IP DAHUA 2 MPX 2.8MM IP67 IK10 IR30",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 5718.69,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2565 -",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 10 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18376",
@@ -3847,7 +7297,27 @@ const INITIAL_PRODUCTS = [
     "stock": 9,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "1939 - HD-HAC-T2A11N",
+    "name": "CAMARA DOMO/BULLET DAHUA 2.8MM 720P",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1691,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1939 - HD-HAC-T2A11N",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 9 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18377",
@@ -3869,7 +7339,27 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "2215",
+    "name": "CAMARA FISHEYE DAHUA HDCVI 5MPX WDR STARLIGHT",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 6608,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2215",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18380",
@@ -3889,7 +7379,25 @@ const INITIAL_PRODUCTS = [
     "stock": 12,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4691",
+    "name": "CAMARA IP 4MPX DOMO IK10 SERIE 1",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 4968.35,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4691",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 12 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-18381",
@@ -3911,7 +7419,27 @@ const INITIAL_PRODUCTS = [
     "stock": 10,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3460",
+    "name": "CAMARA IP BULLET 4MP 2.8MM ENTRY FULLCOLOR M DAHUA",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 5081.67,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3460",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 10 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18383",
@@ -3933,7 +7461,27 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "4635",
+    "name": "CAMARA IP DOMO 2MP 2.8MM DAHUA IR30",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 2929.02,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4635",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 3 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18384",
@@ -3955,7 +7503,27 @@ const INITIAL_PRODUCTS = [
     "stock": 8,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "3449",
+    "name": "CAMARA IP DOMO 2MP 2.8MM ENTRY DAHUA IK10",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 3506.09,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3449",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 8 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18393",
@@ -3975,7 +7543,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3077",
+    "name": "CAMARA PT CRUISER 2 5MPX FULL-COLOR P/EX",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 5040.15,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3077",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18394",
@@ -3995,7 +7581,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3061 - IPC-S2EN-3R1S",
+    "name": "CAMARA IMOU PT RANGER PRO 2 WIFI 3MPX MICRO SD",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 2477.03,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3061 - IPC-S2EN-3R1S",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18397",
@@ -4015,7 +7619,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2169",
+    "name": "CAMARA TIPO BOMBILLO WIFI MIC + ADIO + LUZ",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 2814,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2169",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18398",
@@ -4037,7 +7659,27 @@ const INITIAL_PRODUCTS = [
     "stock": 4,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "code": "3945",
+    "name": "CAMARA TURRET 2MPX COLORVU C/MIC IP67 HIKVISION",
+    "brand": "Hikvision",
+    "category": "Cámaras de Seguridad",
+    "price": 6624.58,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3945",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 4 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18399",
@@ -4057,7 +7699,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3947",
+    "name": "CAMARA TURRET 4MPX COLORVU HIBRID LIGHT IP67 C/MIC",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 4725.85,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3947",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18402",
@@ -4077,7 +7737,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2216",
+    "name": "CAMARA WIFI EZVIZ 1080P FIJA",
+    "brand": "EZVIZ",
+    "category": "Cámaras de Seguridad",
+    "price": 2310,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional EZVIZ distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2216",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18403",
@@ -4097,7 +7775,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2217",
+    "name": "CAMARA WIFI EZVIZ PTZ INTERIOR",
+    "brand": "EZVIZ",
+    "category": "Cámaras de Seguridad",
+    "price": 2380,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional EZVIZ distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2217",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18407",
@@ -4117,7 +7813,25 @@ const INITIAL_PRODUCTS = [
     "stock": 9,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "398",
+    "name": "CONECTOR POE P/ CAMARA IP",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 421.89,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 398",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 9 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18410",
@@ -4137,7 +7851,25 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "490",
+    "name": "FUENTE 12V 3A P/ CAMARA",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 748.33,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 490",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 6 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18413",
@@ -4157,7 +7889,25 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "4623",
+    "name": "LETRERO P/CAMARAS",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 346.92,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4623",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 3 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18416",
@@ -4177,7 +7927,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "2268",
+    "name": "SENSOR MOV + CAMARA DSC PG9934PI INALAMBRICO",
+    "brand": "WES",
+    "category": "Cámaras de Seguridad",
+    "price": 8815.72,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2268",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-21415",
@@ -4199,7 +7967,27 @@ const INITIAL_PRODUCTS = [
     "stock": 9,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "2629",
+    "name": "MEMORIA MICRO SD 32GB CLASE 10 DAHUA",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 325,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2629",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 9 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-27936",
@@ -4219,7 +8007,25 @@ const INITIAL_PRODUCTS = [
     "stock": 16,
     "imagen_url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3745",
+    "name": "ALAMBRE DE ACOMETIDA 6/3 COBRE",
+    "brand": "WES",
+    "category": "Accesorios de Instalación",
+    "price": 333.42,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3745",
+      "Categoría ERP: Cables eléctricos",
+      "Disponibilidad: 16 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-34064",
@@ -4239,7 +8045,25 @@ const INITIAL_PRODUCTS = [
     "stock": 4,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "ODOO-34064",
+    "name": "MINI UPS V2",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: ODOO-34064",
+      "Categoría ERP: Baterías",
+      "Disponibilidad: 4 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-34077",
@@ -4261,7 +8085,27 @@ const INITIAL_PRODUCTS = [
     "stock": 30,
     "imagen_url": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "code": "ODOO-34077",
+    "name": "PATCH CORD DAHUA CAT6 1FT",
+    "brand": "Dahua",
+    "category": "Cámaras de Seguridad",
+    "price": 1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: ODOO-34077",
+      "Categoría ERP: Camaras y Videovigilancia",
+      "Disponibilidad: 30 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
+    ],
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-34079",
@@ -4281,7 +8125,25 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "3-18-4683",
+    "name": "CAJA DE BREAKER 24 CIRC EMP",
+    "brand": "WES",
+    "category": "Controles de Acceso",
+    "price": 1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3-18-4683",
+      "Categoría ERP: Accesorios Electricos",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-34095",
@@ -4301,7 +8163,25 @@ const INITIAL_PRODUCTS = [
     "stock": 19,
     "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "destacado": true,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "ODOO-34095",
+    "name": "TERMINAL  OJO #2",
+    "brand": "WES",
+    "category": "Energía y Respaldo",
+    "price": 125,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: ODOO-34095",
+      "Categoría ERP: Baterías",
+      "Disponibilidad: 19 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": true,
+    "active": true
   },
   {
     "id": "odoo-34096",
@@ -4321,7 +8201,25 @@ const INITIAL_PRODUCTS = [
     "stock": 4,
     "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "ODOO-34096",
+    "name": "CAJA BREAKER EMP 24 CIRCUITOS CISMA",
+    "brand": "WES",
+    "category": "Controles de Acceso",
+    "price": 500,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: ODOO-34096",
+      "Categoría ERP: Accesorios Electricos",
+      "Disponibilidad: 4 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-34127",
@@ -4341,7 +8239,25 @@ const INITIAL_PRODUCTS = [
     "stock": 1,
     "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "ODOO-34127",
+    "name": "CONTACTOR 110V 9A",
+    "brand": "WES",
+    "category": "Controles de Acceso",
+    "price": 1,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: ODOO-34127",
+      "Categoría ERP: Accesorios Electricos",
+      "Disponibilidad: 1 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-34195",
@@ -4353,15 +8269,33 @@ const INITIAL_PRODUCTS = [
     "caracteristicas": [
       "Código SKU / Odoo: FTL-BR600U",
       "Categoría ERP: Alarmas y Control de Acceso",
-      "Disponibilidad: 4 unidades en inventario físico"
+      "Disponibilidad: 2 unidades en inventario físico"
     ],
     "precio": 900,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
-    "stock": 4,
+    "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": null,
+    "code": "FTL-BR600U",
+    "name": "BRACKET DE PIVOTE P/PUERTA DE CRISTAL FERTEC",
+    "brand": "Fertec",
+    "category": "Controles de Acceso",
+    "price": 900,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: FTL-BR600U",
+      "Categoría ERP: Alarmas y Control de Acceso",
+      "Disponibilidad: 2 unidades en inventario físico"
+    ],
+    "manualUrl": null,
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-28119",
@@ -4383,7 +8317,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "2399",
+    "name": "BASE MOTOR OPERADOR CAME 1000KG",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 1275,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2399",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-31568",
@@ -4405,7 +8359,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "code": "415",
+    "name": "CONTROL OPERADOR CAME",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 1765.65,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 415",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-31569",
@@ -4427,7 +8401,27 @@ const INITIAL_PRODUCTS = [
     "stock": 3,
     "imagen_url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "code": "4385",
+    "name": "CONTROL OPERADOR CAME 2 BOTONES CAME",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 1807.5,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4385",
+      "Categoría ERP: Otros",
+      "Disponibilidad: 3 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-31570",
@@ -4449,7 +8443,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "code": "1183",
+    "name": "CONTROL OPERADOR CAME DIGITAL AZUL 4 BOTONES",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 1674,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1183",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-31571",
@@ -4471,7 +8485,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "code": "1757",
+    "name": "CONTROL OPERADOR CAME DIGITAL AZUL COPIA",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 1395,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1757",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-31572",
@@ -4493,7 +8527,27 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "code": "3152",
+    "name": "CONTROL OPERADOR CAME DIGITAL NEGRO 4 BOTONES",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 1827,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3152",
+      "Categoría ERP: Otros",
+      "Disponibilidad: 2 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-33659",
@@ -4515,7 +8569,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "4303",
+    "name": "FINAL DE CARRERA CAME",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 2100,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4303",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-33665",
@@ -4537,7 +8611,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "1373",
+    "name": "FOTOCELDA CAME ORIGINAL",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 6608,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1373",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18519",
@@ -4559,7 +8653,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "2920",
+    "name": "INSPECCION Y CONFIGURACION DE MOTOR CAME.",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 500,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2920",
+      "Categoría ERP: Mano de Obra",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-21467",
@@ -4581,7 +8695,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "3797",
+    "name": "MOTOR 2000KG CAME",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 500,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3797",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-21468",
@@ -4603,7 +8737,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "1390",
+    "name": "MOTOR CAME 1000KG USO INTENSIVO",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 41330.76,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1390",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-21469",
@@ -4625,7 +8779,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf",
+    "code": "603",
+    "name": "MOTOR CAME 1800KG",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 66216,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 603",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-21470",
@@ -4647,7 +8821,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "2009",
+    "name": "MOTOR CAME 600KG USO INTENSIVO",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 32735.08,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 2009",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-21471",
@@ -4669,7 +8863,27 @@ const INITIAL_PRODUCTS = [
     "stock": 2,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "604",
+    "name": "MOTOR CAME 800KG",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 37445.26,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 604",
+      "Categoría ERP: Otros",
+      "Disponibilidad: 2 unidades en inventario físico",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-21472",
@@ -4691,7 +8905,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "1765",
+    "name": "MOTOR CAME 800KG REFULL",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 15000,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1765",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-34115",
@@ -4713,7 +8947,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "COSTO VEF.",
+    "name": "PORTEZUELA DESBLOQUEO MOTOR CAME BX 800KG",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 4239.96,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: COSTO VEF.",
+      "Categoría ERP: Automatización y Domotica",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-25184",
@@ -4735,7 +8989,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "1919",
+    "name": "RELAY 12VDC 10A P/ MOTOR CAME",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 270,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1919",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-25186",
@@ -4757,7 +9031,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "1884",
+    "name": "RELAY 24VDC 5A 8 PIN 1CONTAC P/CAME",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 504.74,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 1884",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-18539",
@@ -4779,7 +9073,27 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "code": "3210",
+    "name": "REPARACION DE TARJETA DE MOTOR CAME 1000KG",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 500,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 3210",
+      "Categoría ERP: Mano de Obra",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "featured": false,
+    "active": true
   },
   {
     "id": "odoo-26418",
@@ -4801,149 +9115,108 @@ const INITIAL_PRODUCTS = [
     "stock": 0,
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
-    "activo": true
+    "activo": true,
+    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf",
+    "code": "4016",
+    "name": "TARJETA MOTOR CAME 1800KG ZBX CAME DIGITAL",
+    "brand": "CAME",
+    "category": "Controles de Acceso",
+    "price": 19430.2,
+    "currency": "DOP",
+    "availability": "Agotado",
+    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "features": [
+      "Código SKU / Odoo: 4016",
+      "Categoría ERP: Otros",
+      "Disponibilidad: Disponible bajo pedido",
+      "Manual de Instalación disponible",
+      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf"
+    ],
+    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf",
+    "featured": false,
+    "active": true
   }
 ];
 
-// Almacenamiento local para permitir gestión dinámica desde el panel admin
+// Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = "wes_products_v3";
+    const versionKey = 'wes_products_v4';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
+      localStorage.setItem('wes_custom_products', JSON.stringify(INITIAL_PRODUCTS));
       return INITIAL_PRODUCTS;
     }
     try {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed) || parsed.length === 0 || !parsed[0].name) {
+        localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
+        localStorage.setItem('wes_custom_products', JSON.stringify(INITIAL_PRODUCTS));
+        return INITIAL_PRODUCTS;
+      }
+      return parsed;
     } catch (e) {
       return INITIAL_PRODUCTS;
     }
   },
 
   saveProducts: function(products) {
-    localStorage.setItem("wes_products_v3", JSON.stringify(products));
+    localStorage.setItem('wes_products_v4', JSON.stringify(products));
+    localStorage.setItem('wes_custom_products', JSON.stringify(products));
+    if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
+      window.WES_CATALOG_STATE.products = products;
+    }
   },
 
   getQuotes: function() {
-    const saved = localStorage.getItem("wes_quotes");
+    const saved = localStorage.getItem('wes_quotes');
     if (!saved) {
-      const sampleQuotes = [
-        {
-          id: "COT-2026-0001",
-          date: "2026-09-18 14:32",
-          clientName: "Ing. Carlos Mendoza",
-          company: "Coopcibao Moca",
-          taxId: "1-01-23456-7",
-          phone: "809-578-2200",
-          whatsapp: "809-578-2200",
-          email: "cmendoza@coopcibao.com.do",
-          city: "Moca, Espaillat",
-          clientType: "Empresarial",
-          contactMethod: "WhatsApp",
-          items: [
-            { name: "Cámara IP Domo 4 MP Ultra HD", code: "CAM-IP-4MP-001", quantity: 4, price: 4850 },
-            { name: "Grabador de Video NVR 8 Canales 4K PoE", code: "NVR-4K-08P-001", quantity: 1, price: 13500 },
-            { name: "Bobina Cable UTP Cat6 100% Cobre Exterior 305m", code: "CAB-CAT6-EXT-305", quantity: 1, price: 8900 }
-          ],
-          totalEstimated: 41800,
-          comments: "Requerimos cotización formal para el área de bóveda y recepción.",
-          status: "En revisión",
-          internalNotes: "Contactado por WhatsApp. Preparando propuesta formal con instalación."
-        }
-      ];
-      localStorage.setItem("wes_quotes", JSON.stringify(sampleQuotes));
-      return sampleQuotes;
-    }
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
       return [];
     }
+    try { return JSON.parse(saved); } catch (e) { return []; }
   },
 
   saveQuotes: function(quotes) {
-    localStorage.setItem("wes_quotes", JSON.stringify(quotes));
+    localStorage.setItem('wes_quotes', JSON.stringify(quotes));
   },
 
   getSupportTickets: function() {
-    const saved = localStorage.getItem("wes_support_tickets");
-    if (!saved) {
-      const sampleTickets = [
-        {
-          id: "SOP-2026-0001",
-          date: "2026-09-19 08:45",
-          clientName: "Dra. Carmen Santos",
-          company: "Farmacia Naraly",
-          phone: "809-578-9844",
-          whatsapp: "809-578-9844",
-          email: "csantos@farmacianaraly.com",
-          address: "Calle Independencia esq. Rosario, Moca",
-          orderNumber: "FAC-8921",
-          productSystem: "Sistema de 8 Cámaras CCTV",
-          category: "Cámara sin imagen",
-          priority: "Media",
-          description: "La cámara que enfoca la caja registradora número 2 muestra pantalla negra desde ayer en la tarde. Los conectores parecen firmes.",
-          preferredTime: "Mañana (8:00 AM - 12:00 PM)",
-          contactMethod: "Llamada telefónica",
-          images: [
-            "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=400&q=80"
-          ],
-          status: "Visita programada",
-          internalNotes: "Técnico Juan Rodríguez asignado para inspección hoy a las 11:30 AM."
-        }
-      ];
-      localStorage.setItem("wes_support_tickets", JSON.stringify(sampleTickets));
-      return sampleTickets;
-    }
-    try {
-      return JSON.parse(saved);
-    } catch (e) {
-      return [];
-    }
+    const saved = localStorage.getItem('wes_support_tickets');
+    if (!saved) { return []; }
+    try { return JSON.parse(saved); } catch (e) { return []; }
   },
 
   saveSupportTickets: function(tickets) {
-    localStorage.setItem("wes_support_tickets", JSON.stringify(tickets));
+    localStorage.setItem('wes_support_tickets', JSON.stringify(tickets));
   },
 
   getCompanySettings: function() {
-    const defaultSettings = {
-      name: "Warn Electrical Services, SRL (WES)",
-      slogan: "Tecnología, seguridad y soporte a tu alcance",
-      rnc: "1-31-89326-4",
-      address: "Autopista Ramón Cáceres, Plaza Megatone, Moca, Provincia Espaillat, República Dominicana",
-      phone: "(849) 207-5474",
-      whatsapp: "18492075474",
-      whatsappDisplay: "(849) 207-5474",
-      emailGeneral: "wes.inform@gmail.com",
-      emailSupport: "wes.inform@gmail.com",
-      scheduleWeek: "Lunes a Viernes: 7:30 AM – 6:00 PM (Almuerzo 12:00 PM – 2:00 PM)",
-      scheduleSat: "Sábados: 8:00 AM – 1:00 PM",
-      instagram: "@wes.inform",
-      facebook: "Warn Electrical Services SRL",
-      mapsUrl: "https://maps.app.goo.gl/KMosxdkCGwXxqFjC9",
-      googleMapsEmbed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3761.644026857189!2d-70.53322972412808!3d19.387725481881775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eb1d15627d6e5d1%3A0x6786e017c4c3a285!2sWES!5e0!3m2!1ses!2sdo!4v1710000000000!5m2!1ses!2sdo"
+    const saved = localStorage.getItem('wes_company_settings');
+    const defaults = {
+      phone: '(849) 207-5474',
+      whatsapp: '18492075474',
+      whatsappDisplay: '(849) 207-5474',
+      emailGeneral: 'wes.inform@gmail.com',
+      emailSupport: 'wes.inform@gmail.com',
+      address: 'Autopista Ramón Cáceres, Plaza Megatone, Moca, Rep. Dom.',
+      scheduleWeek: 'Lun - Vie: 8:00 AM - 6:00 PM',
+      scheduleSat: 'Sábados: 8:00 AM - 12:00 PM'
     };
-    const saved = localStorage.getItem("wes_company_settings");
-    if (!saved) {
-      localStorage.setItem("wes_company_settings", JSON.stringify(defaultSettings));
-      return defaultSettings;
-    }
-    try {
-      const parsed = JSON.parse(saved);
-      // Forzar actualización si tenía el número anterior
-      if (!parsed.phone || parsed.phone.includes("578-4320")) {
-        localStorage.setItem("wes_company_settings", JSON.stringify(defaultSettings));
-        return defaultSettings;
-      }
-      return parsed;
-    } catch (e) {
-      return defaultSettings;
-    }
+    if (!saved) return defaults;
+    try { return Object.assign({}, defaults, JSON.parse(saved)); } catch (e) { return defaults; }
   },
 
   saveCompanySettings: function(settings) {
-    localStorage.setItem("wes_company_settings", JSON.stringify(settings));
+    localStorage.setItem('wes_company_settings', JSON.stringify(settings));
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.INITIAL_PRODUCTS = INITIAL_PRODUCTS;
+  window.StorageService = StorageService;
+}
+if (typeof module !== 'undefined') {
+  module.exports = { INITIAL_PRODUCTS, StorageService };
+}
