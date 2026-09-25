@@ -302,7 +302,7 @@ function renderProducts() {
 
     return `
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
-        <div class="relative h-56 bg-white flex items-center justify-center p-3 border-b border-slate-100 overflow-hidden">
+        <div onclick="openProductDetailModal('${product.id}')" class="relative h-56 bg-white flex items-center justify-center p-3 border-b border-slate-100 overflow-hidden cursor-pointer">
           <img src="${product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500" loading="lazy">
           <span class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${availClass} backdrop-blur-sm shadow-sm">
             ${product.availability}
@@ -314,7 +314,7 @@ function renderProducts() {
         
         <div class="p-5 flex-1 flex flex-col">
           <div class="text-xs font-mono text-slate-500 mb-1 font-semibold">${product.code}</div>
-          <h3 class="font-bold text-slate-900 text-base leading-snug line-clamp-2 hover:text-wes-blue transition">
+          <h3 onclick="openProductDetailModal('${product.id}')" class="font-bold text-slate-900 text-base leading-snug line-clamp-2 hover:text-wes-blue transition cursor-pointer">
             ${product.name}
           </h3>
           <p class="text-xs text-slate-600 mt-2 line-clamp-2">${product.description}</p>
@@ -328,8 +328,14 @@ function renderProducts() {
             `).join('')}
           </div>
 
+          <!-- Botón de Vista Rápida Estilo Alibaba -->
+          <button type="button" onclick="openProductDetailModal('${product.id}')" class="mt-3 w-full py-1.5 px-3 bg-slate-100 hover:bg-wes-blue hover:text-white text-slate-700 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition">
+            <i class="fas fa-images text-wes-gold"></i>
+            <span>Ver fotos multi-ángulo & opiniones</span>
+          </button>
+
           ${manualUrl ? `
-            <div class="mt-3">
+            <div class="mt-2">
               <a href="${manualUrl}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-3 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition">
                 <i class="fas fa-file-pdf text-red-600"></i>
                 <span>Descargar Manual Técnico (PDF)</span>
@@ -1154,4 +1160,345 @@ function showToast(message, type = 'info') {
     toast.classList.add('opacity-0', 'translate-y-2');
     setTimeout(() => toast.remove(), 300);
   }, 4000);
+}
+
+// ============================================================================
+// SISTEMA DE DETALLE DE PRODUCTO ESTILO ALIBABA (MULTI-ÁNGULO, ATRIBUTOS Y RESEÑAS)
+// ============================================================================
+
+window.currentDetailProductId = null;
+
+/**
+ * Abre el modal interactivo de detalle de producto estilo Alibaba.
+ * Carga galería multi-ángulo, atributos clave tabulados y sistema de opiniones.
+ * @param {string} productId - Identificador del producto (ej. 'odoo-21471')
+ */
+function openProductDetailModal(productId) {
+  const products = StorageService.getProducts();
+  const product = products.find(p => p.id === productId || p.code === productId || p.codigo === productId);
+  if (!product) {
+    showToast('Producto no encontrado.', 'warning');
+    return;
+  }
+
+  window.currentDetailProductId = product.id;
+
+  // 1. Textos y badges básicos
+  const brandBadge = document.getElementById('detail-brand-badge');
+  if (brandBadge) brandBadge.textContent = product.brand || 'WES';
+
+  const skuBadge = document.getElementById('detail-sku-badge');
+  if (skuBadge) skuBadge.textContent = `SKU: ${product.code || product.codigo || ''}`;
+
+  const catBadge = document.getElementById('detail-category-badge');
+  if (catBadge) catBadge.textContent = product.category || 'Seguridad Electrónica';
+
+  const titleEl = document.getElementById('detail-product-title');
+  if (titleEl) titleEl.textContent = product.name || product.nombre;
+
+  const priceEl = document.getElementById('detail-product-price');
+  if (priceEl) {
+    priceEl.textContent = `RD$ ${(product.price || product.precio || 0).toLocaleString()}`;
+  }
+
+  const stockBadge = document.getElementById('detail-stock-badge');
+  if (stockBadge) {
+    const stockQty = product.stock || 2;
+    stockBadge.innerHTML = `<i class="fas fa-check-circle mr-1"></i>En Inventario Físico (${stockQty} uds)`;
+  }
+
+  const descEl = document.getElementById('detail-product-description');
+  if (descEl) descEl.textContent = product.description || product.descripcion || '';
+
+  // WhatsApp botón
+  const waBtn = document.getElementById('detail-wa-btn');
+  if (waBtn) {
+    const waPhone = AppState.settings?.whatsapp || '18492075474';
+    const waText = encodeURIComponent(`Hola WES, deseo consultar disponibilidad y asesoría sobre: ${product.name} (Código: ${product.code})`);
+    waBtn.href = `https://wa.me/${waPhone}?text=${waText}`;
+  }
+
+  // 2. Galería de Fotos Multi-Ángulo (Estilo Alibaba)
+  const defaultGallery = [
+    {
+      url: product.image || product.imagen_url,
+      title: 'Vista Frontal y Desbloqueo',
+      badge: 'Principal',
+      caption: 'Motor CAME 800KG con base y engranaje de tracción'
+    }
+  ];
+  const gallery = (product.gallery_images && product.gallery_images.length > 0) ? product.gallery_images : defaultGallery;
+
+  const mainImage = document.getElementById('detail-main-image');
+  const imageBadge = document.getElementById('detail-image-badge');
+  if (mainImage && gallery[0]) {
+    mainImage.src = gallery[0].url;
+    mainImage.alt = gallery[0].title;
+    if (imageBadge) imageBadge.textContent = gallery[0].badge || gallery[0].title;
+  }
+
+  const thumbsContainer = document.getElementById('detail-thumbnails-container');
+  if (thumbsContainer) {
+    thumbsContainer.innerHTML = gallery.map((item, idx) => `
+      <button type="button" onclick="selectDetailGalleryImage('${item.url}', '${item.badge || item.title}', this)"
+        class="gallery-thumb-btn relative rounded-xl border-2 ${idx === 0 ? 'border-wes-blue ring-2 ring-wes-blue/20' : 'border-slate-200 hover:border-wes-blue'} p-1.5 bg-white transition duration-200 text-left overflow-hidden group">
+        <div class="h-16 w-full flex items-center justify-center overflow-hidden rounded-lg bg-slate-50">
+          <img src="${item.url}" alt="${item.title}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition">
+        </div>
+        <div class="text-[9px] font-bold text-slate-700 truncate mt-1 text-center">${item.badge || `Foto ${idx + 1}`}</div>
+      </button>
+    `).join('');
+  }
+
+  // 3. Características Principales (Key Attributes estilo Alibaba)
+  const keyAttrsGrid = document.getElementById('detail-key-attributes-grid');
+  if (keyAttrsGrid) {
+    const attrs = product.key_attributes || {
+      "Capacidad": "800 kg (hasta 14 metros)",
+      "Alimentación": "CA 230V / 50-60 Hz",
+      "Material Chasis": "Aleación de aluminio inyectado a presión",
+      "Ciclo de Trabajo": "Uso intensivo residencial / comercial",
+      "Fuerza de Empuje": "800 N",
+      "Velocidad": "10.5 m/min",
+      "Protección": "IP54 (resistente a lluvia y polvo)",
+      "Garantía WES": "2 años con certificación oficial CAME"
+    };
+
+    keyAttrsGrid.innerHTML = Object.entries(attrs).map(([key, value]) => `
+      <div class="p-3 bg-white border border-slate-200/80 rounded-xl">
+        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">${key}</div>
+        <div class="text-xs font-bold text-slate-800 mt-0.5">${value}</div>
+      </div>
+    `).join('');
+  }
+
+  // 4. Manual de Instalación
+  const manualFeat = (product.features || []).find(f => typeof f === 'string' && f.startsWith('manual_url:'));
+  const manualUrl = product.manualUrl || (manualFeat ? manualFeat.replace('manual_url:', '') : null);
+  const manualBtn = document.getElementById('detail-download-manual-btn');
+  if (manualBtn) {
+    if (manualUrl) {
+      manualBtn.href = manualUrl;
+      manualBtn.classList.remove('hidden');
+    } else {
+      manualBtn.href = '#';
+      manualBtn.classList.add('hidden');
+    }
+  }
+
+  // 5. Cargar Reseñas y Métricas de Calidad
+  switchDetailTab('specs');
+  loadAndRenderProductReviews(product.id);
+
+  // Mostrar modal
+  const modal = document.getElementById('product-detail-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  }
+}
+
+/**
+ * Cierra el modal de detalle de producto.
+ */
+function closeProductDetailModal() {
+  const modal = document.getElementById('product-detail-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+  }
+}
+
+/**
+ * Cambia la imagen principal de la galería al hacer clic en una miniatura.
+ */
+function selectDetailGalleryImage(url, badgeText, btnEl) {
+  const mainImage = document.getElementById('detail-main-image');
+  const badgeEl = document.getElementById('detail-image-badge');
+  if (mainImage) mainImage.src = url;
+  if (badgeEl) badgeEl.textContent = badgeText;
+
+  document.querySelectorAll('.gallery-thumb-btn').forEach(btn => {
+    btn.classList.remove('border-wes-blue', 'ring-2', 'ring-wes-blue/20');
+    btn.classList.add('border-slate-200');
+  });
+
+  if (btnEl) {
+    btnEl.classList.remove('border-slate-200');
+    btnEl.classList.add('border-wes-blue', 'ring-2', 'ring-wes-blue/20');
+  }
+}
+
+/**
+ * Alterna entre pestañas en el modal de detalle ('specs', 'manual', 'reviews').
+ */
+function switchDetailTab(tab) {
+  const tabs = ['specs', 'manual', 'reviews'];
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tab-btn-${t}`);
+    const content = document.getElementById(`tab-content-${t}`);
+    if (btn && content) {
+      if (t === tab) {
+        btn.className = 'px-4 py-2 font-bold text-xs rounded-xl transition bg-wes-blue text-white shadow-sm';
+        content.classList.remove('hidden');
+      } else {
+        btn.className = 'px-4 py-2 font-bold text-xs rounded-xl transition text-slate-600 hover:bg-slate-100';
+        content.classList.add('hidden');
+      }
+    }
+  });
+}
+
+/**
+ * Carga y renderiza las reseñas y métricas de calidad (3 pilares: producto, envío, servicio).
+ */
+async function loadAndRenderProductReviews(productId) {
+  let reviews = [];
+  try {
+    if (window.WesDB && typeof window.WesDB.getReviews === 'function') {
+      reviews = await window.WesDB.getReviews(productId);
+    } else {
+      reviews = StorageService.getProductReviews(productId);
+    }
+  } catch (err) {
+    reviews = StorageService.getProductReviews(productId);
+  }
+
+  // Actualizar badges de conteo
+  const countEls = [document.getElementById('detail-reviews-count'), document.getElementById('tab-reviews-badge')];
+  countEls.forEach(el => { if (el) el.textContent = reviews.length; });
+
+  if (reviews.length === 0) {
+    const listEl = document.getElementById('detail-reviews-list');
+    if (listEl) {
+      listEl.innerHTML = `
+        <div class="text-center py-6 bg-slate-50 rounded-xl text-slate-400 text-xs">
+          Aún no hay reseñas registradas para este producto. ¡Sé el primero en valorar!
+        </div>
+      `;
+    }
+    return;
+  }
+
+  // Calcular promedios
+  let sumProd = 0, sumShip = 0, sumServ = 0, sumGlobal = 0;
+  reviews.forEach(r => {
+    sumProd += (r.productQuality || 5.0);
+    sumShip += (r.shippingQuality || 5.0);
+    sumServ += (r.serviceQuality || 5.0);
+    sumGlobal += (r.rating || 5.0);
+  });
+
+  const avgProd = (sumProd / reviews.length).toFixed(1);
+  const avgShip = (sumShip / reviews.length).toFixed(1);
+  const avgServ = (sumServ / reviews.length).toFixed(1);
+  const avgGlobal = (sumGlobal / reviews.length).toFixed(1);
+
+  const globalEl = document.getElementById('metric-global-score');
+  if (globalEl) globalEl.textContent = avgGlobal;
+
+  const prodEl = document.getElementById('metric-product-score');
+  if (prodEl) prodEl.textContent = `${avgProd} / 5.0`;
+
+  const shipEl = document.getElementById('metric-shipping-score');
+  if (shipEl) shipEl.textContent = `${avgShip} / 5.0`;
+
+  const servEl = document.getElementById('metric-service-score');
+  if (servEl) servEl.textContent = `${avgServ} / 5.0`;
+
+  const ratingText = document.getElementById('detail-rating-text');
+  if (ratingText) ratingText.textContent = `${avgGlobal} / 5.0`;
+
+  // Renderizar tarjetas de reseñas
+  const listEl = document.getElementById('detail-reviews-list');
+  if (listEl) {
+    listEl.innerHTML = reviews.map(r => `
+      <div class="p-4 bg-slate-50/70 border border-slate-200/80 rounded-2xl space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-full bg-wes-blue text-white font-bold text-xs flex items-center justify-center">
+              ${(r.author || 'C').charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div class="text-xs font-bold text-slate-800 flex items-center space-x-1.5">
+                <span>${r.author}</span>
+                ${r.verified ? '<span class="text-[10px] px-1.5 py-0.2 bg-emerald-100 text-emerald-700 font-bold rounded-full">Compra verificada</span>' : ''}
+              </div>
+              <div class="text-[10px] text-slate-400">${r.location || 'Moca, Rep. Dom.'} • ${r.date || 'Reciente'}</div>
+            </div>
+          </div>
+          <div class="flex text-amber-400 text-xs">
+            ${Array.from({ length: Math.round(r.rating || 5) }).map(() => '<i class="fas fa-star"></i>').join('')}
+          </div>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed italic">"${r.comment}"</p>
+        <div class="flex flex-wrap gap-2 pt-1 border-t border-slate-200/50 text-[10px] text-slate-500">
+          <span>Calidad: <strong>${r.productQuality || 5.0}★</strong></span>
+          <span>•</span>
+          <span>Envío: <strong>${r.shippingQuality || 5.0}★</strong></span>
+          <span>•</span>
+          <span>Servicio WES: <strong>${r.serviceQuality || 5.0}★</strong></span>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+/**
+ * Procesa el envío de una nueva reseña de cliente desde el formulario modal.
+ */
+async function handleReviewSubmit(e) {
+  e.preventDefault();
+  if (!window.currentDetailProductId) return;
+
+  const author = document.getElementById('review-author')?.value.trim();
+  const location = document.getElementById('review-location')?.value.trim() || 'Moca, Rep. Dom.';
+  const productQuality = parseFloat(document.getElementById('review-product-quality')?.value || '5');
+  const shippingQuality = parseFloat(document.getElementById('review-shipping-quality')?.value || '5');
+  const serviceQuality = parseFloat(document.getElementById('review-service-quality')?.value || '5');
+  const comment = document.getElementById('review-comment')?.value.trim();
+
+  if (!author || !comment) {
+    showToast('Por favor completa tu nombre y comentario.', 'warning');
+    return;
+  }
+
+  const overallRating = parseFloat(((productQuality + shippingQuality + serviceQuality) / 3).toFixed(1));
+
+  const reviewPayload = {
+    productId: window.currentDetailProductId,
+    author: author,
+    location: location,
+    rating: overallRating,
+    productQuality: productQuality,
+    shippingQuality: shippingQuality,
+    serviceQuality: serviceQuality,
+    comment: comment,
+    verified: true
+  };
+
+  try {
+    if (window.WesDB && typeof window.WesDB.createReview === 'function') {
+      await window.WesDB.createReview(reviewPayload);
+    } else {
+      StorageService.saveProductReview(Object.assign({ id: 'loc-' + Date.now(), date: 'Hoy' }, reviewPayload));
+    }
+
+    showToast('¡Gracias! Tu reseña ha sido publicada con éxito.', 'success');
+    document.getElementById('product-review-form')?.reset();
+    await loadAndRenderProductReviews(window.currentDetailProductId);
+  } catch (err) {
+    console.error('Error al guardar reseña:', err);
+    showToast('No se pudo guardar la reseña. Intenta de nuevo.', 'error');
+  }
+}
+
+/**
+ * Agrega el producto actual en vista de detalle a la lista de cotización.
+ */
+function addCurrentDetailToQuote() {
+  if (window.currentDetailProductId) {
+    addToQuote(window.currentDetailProductId);
+    showToast('Producto añadido a la cotización.', 'success');
+  }
 }

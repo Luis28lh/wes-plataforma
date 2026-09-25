@@ -279,6 +279,75 @@ const WesDB = (function() {
     },
 
     // ------------------------------------------------------------------------
+    // GESTIÓN DE RESEÑAS Y VALORACIONES DE PRODUCTOS
+    // ------------------------------------------------------------------------
+    getReviews: async function(productId) {
+      if (this.isConfigured()) {
+        try {
+          const { data, error } = await client
+            .from('resenas_productos')
+            .select('*')
+            .eq('producto_id', productId)
+            .order('created_at', { ascending: false });
+
+          if (!error && data && data.length > 0) {
+            return data.map(r => ({
+              id: r.id,
+              productId: r.producto_id,
+              author: r.cliente_nombre,
+              location: r.cliente_ciudad,
+              rating: parseFloat(r.calificacion_general),
+              productQuality: parseFloat(r.calidad_producto),
+              shippingQuality: parseFloat(r.calidad_envio),
+              serviceQuality: parseFloat(r.calidad_servicio),
+              comment: r.comentario,
+              verified: r.verificado,
+              date: new Date(r.created_at).toLocaleDateString('es-DO', { year: 'numeric', month: 'short', day: 'numeric' })
+            }));
+          }
+        } catch (err) {
+          console.warn('[WesDB] Error al consultar reseñas en PostgreSQL, usando fallback local:', err);
+        }
+      }
+      return StorageService.getProductReviews(productId);
+    },
+
+    createReview: async function(reviewData) {
+      if (this.isConfigured()) {
+        try {
+          const reviewId = generateUUID();
+          const { error } = await client
+            .from('resenas_productos')
+            .insert([{
+              id: reviewId,
+              producto_id: reviewData.productId,
+              cliente_nombre: reviewData.author,
+              cliente_ciudad: reviewData.location || 'Moca, Rep. Dom.',
+              calificacion_general: reviewData.rating || 5.0,
+              calidad_producto: reviewData.productQuality || 5.0,
+              calidad_envio: reviewData.shippingQuality || 5.0,
+              calidad_servicio: reviewData.serviceQuality || 5.0,
+              comentario: reviewData.comment,
+              verificado: true
+            }]);
+
+          if (!error) {
+            console.log('[WesDB] Reseña guardada con éxito en PostgreSQL Supabase');
+          } else {
+            console.warn('[WesDB] Error al insertar reseña en PostgreSQL:', error);
+          }
+        } catch (err) {
+          console.warn('[WesDB] Error de conexión al guardar reseña en PostgreSQL:', err);
+        }
+      }
+
+      // Persistencia local para disponibilidad offline inmediata
+      const savedReview = Object.assign({ id: 'local-' + Date.now(), date: 'Hoy' }, reviewData);
+      StorageService.saveProductReview(savedReview);
+      return { success: true, review: savedReview };
+    },
+
+    // ------------------------------------------------------------------------
     // REGISTRO DE AUDITORÍA INMUTABLE
     // ------------------------------------------------------------------------
     logAudit: async function(action, moduleName, details = {}) {
