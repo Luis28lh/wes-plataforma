@@ -69,28 +69,6 @@
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-wes-gold selection:text-wes-dark">
 
   <!-- ========================================================= -->
-  <!-- BARRA SUPERIOR DE INFORMACIÓN Y ACCESO PRIVADO            -->
-  <!-- ========================================================= -->
-  <div class="bg-wes-dark text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
-      <div class="flex items-center space-x-4">
-        <span class="flex items-center"><i class="fas fa-map-marker-alt text-wes-gold mr-1.5"></i> Autopista Ramón Cáceres, Plaza Megatone, Moca, Rep. Dom.</span>
-        <span class="hidden sm:inline text-slate-600">|</span>
-        <span class="hidden sm:flex items-center"><i class="fas fa-clock text-wes-gold mr-1.5"></i> Lun - Vie: 7:30 AM - 6:00 PM</span>
-      </div>
-      <div class="flex items-center space-x-4">
-        <a href="tel:8492075474" class="hover:text-wes-gold transition flex items-center">
-          <i class="fas fa-phone-alt text-wes-gold mr-1.5"></i> <span class="company-phone">(849) 207-5474</span>
-        </a>
-        <span class="text-slate-600">|</span>
-        <a href="mailto:wes.inform@gmail.com" class="hover:text-wes-gold transition flex items-center">
-          <i class="fas fa-envelope text-wes-gold mr-1.5"></i> <span>wes.inform@gmail.com</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================= -->
   <!-- NAVEGACIÓN PRINCIPAL (STICKY NAVBAR)                      -->
   <!-- ========================================================= -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all duration-300">
@@ -123,19 +101,10 @@
 
         <!-- Botones de Acción Rápida -->
         <div class="flex items-center space-x-2 sm:space-x-3">
-          <!-- Carrito de Cotización -->
-          <button onclick="openQuoteModal()" class="relative p-2.5 sm:px-4 sm:py-2 bg-slate-100 hover:bg-slate-200 text-wes-blue rounded-xl flex items-center space-x-2 transition">
-            <i class="fas fa-file-invoice text-base"></i>
-            <span class="hidden sm:inline text-xs font-bold">Cotizador</span>
-            <span class="cart-count-badge hidden absolute -top-1.5 -right-1.5 bg-wes-gold text-wes-dark font-extrabold text-[11px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-              0
-            </span>
-          </button>
-
-          <!-- Botón WhatsApp -->
-          <a href="https://wa.me/18492075474" target="_blank" class="hidden sm:flex items-center space-x-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm hover:shadow-emerald-600/20">
+          <!-- Botón WhatsApp Directo -->
+          <a href="https://wa.me/18492075474" target="_blank" class="flex items-center space-x-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm hover:shadow-emerald-600/20">
             <i class="fab fa-whatsapp text-sm"></i>
-            <span>WhatsApp</span>
+            <span class="hidden sm:inline">WhatsApp</span>
           </a>
 
           <!-- Botón Menú Móvil (Hamburger) -->
@@ -1313,9 +1282,11 @@
   <!-- ========================================================= -->
   <footer class="bg-wes-dark text-slate-400 text-xs py-14 border-t border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+      <!-- Grid de 4 Columnas del Footer -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         
-        <div class="md:col-span-2 space-y-4">
+        <!-- Columna 1: Identidad Corporativa y Redes Sociales -->
+        <div class="space-y-4">
           <div class="flex items-center space-x-3">
             <img src="assets/logo-buho.jpg" alt="Logo WES Búho" class="h-10 w-10 rounded-xl object-cover ring-1 ring-wes-gold/50 shadow-md shrink-0">
             <img src="assets/logo-wes.png" alt="WES" class="h-10 w-auto">
@@ -1324,18 +1295,19 @@
               <span class="text-[11px] text-wes-gold">Tecnología, seguridad y soporte a tu alcance</span>
             </div>
           </div>
-          <p class="text-xs text-slate-400 max-w-md leading-relaxed">
+          <p class="text-xs text-slate-400 leading-relaxed">
             Empresa incorporada por el Decreto No. 326-06. Dedicada a la venta, instalación y soporte técnico de sistemas de videovigilancia, controles de acceso, cerraduras inteligentes y automatización en la Provincia Espaillat.
           </p>
           <div class="flex space-x-3 text-slate-400">
-            <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-wes-blue hover:text-white flex items-center justify-center transition"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://instagram.com/wes.inform" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-wes-blue hover:text-white flex items-center justify-center transition" title="Instagram @wes.inform"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/18492075474" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition" title="WhatsApp (849) 207-5474"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-wes-blue hover:text-white flex items-center justify-center transition" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com/wes.inform" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-wes-blue hover:text-white flex items-center justify-center transition" title="Instagram @wes.inform" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/18492075474" target="_blank" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition" title="WhatsApp (849) 207-5474" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
 
+        <!-- Columna 2: Enlaces Rápidos de Navegación -->
         <div>
-          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4">Enlaces Rápidos</h4>
+          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4 border-b border-slate-800 pb-2">Enlaces Rápidos</h4>
           <ul class="space-y-2">
             <li><a href="#inicio" class="hover:text-white transition">Inicio</a></li>
             <li><a href="#nosotros" class="hover:text-white transition">Nuestra Empresa</a></li>
@@ -1347,15 +1319,49 @@
           </ul>
         </div>
 
+        <!-- Columna 3: Ubicación, Contacto y Horarios (Reubicado desde el encabezado superior) -->
         <div>
-          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4">Políticas y Legal</h4>
+          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4 border-b border-slate-800 pb-2">Contacto & Sede</h4>
+          <ul class="space-y-3">
+            <li class="flex items-start space-x-2.5">
+              <i class="fas fa-map-marker-alt text-wes-gold mt-1 shrink-0"></i>
+              <span class="company-address text-slate-300 leading-snug">Autopista Ramón Cáceres, Plaza Megatone, Moca, Rep. Dom.</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <i class="fas fa-phone-alt text-wes-gold shrink-0"></i>
+              <a href="tel:8492075474" class="hover:text-white transition company-phone text-slate-300 font-semibold">(849) 207-5474</a>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <i class="fab fa-whatsapp text-emerald-400 shrink-0"></i>
+              <a href="https://wa.me/18492075474" target="_blank" class="hover:text-white transition company-whatsapp text-emerald-400 font-semibold">(849) 207-5474</a>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <i class="fas fa-envelope text-wes-gold shrink-0"></i>
+              <a href="mailto:wes.inform@gmail.com" class="hover:text-white transition company-email-general text-slate-300 truncate">wes.inform@gmail.com</a>
+            </li>
+            <li class="pt-2 border-t border-slate-800/80">
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-clock text-wes-gold mt-1 shrink-0"></i>
+                <div class="text-[11px] leading-tight">
+                  <p class="text-slate-300 company-schedule-week font-medium">Lun - Vie: 7:30 AM – 6:00 PM</p>
+                  <p class="text-slate-500 company-schedule-sat">Sáb: 8:00 AM – 1:00 PM</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna 4: Políticas y Cumplimiento Legal -->
+        <div>
+          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4 border-b border-slate-800 pb-2">Políticas y Legal</h4>
           <ul class="space-y-2">
             <li><button onclick="openPolicyModal('privacy')" class="hover:text-white transition text-left">Política de Privacidad</button></li>
             <li><button onclick="openPolicyModal('terms')" class="hover:text-white transition text-left">Términos y Condiciones</button></li>
             <li><a href="#contacto" class="hover:text-white transition text-left text-slate-400">Atención al Cliente</a></li>
           </ul>
           <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
-            RNC: 1-31-89326-4
+            <span class="block text-slate-400 font-semibold mb-0.5">Identificación Tributaria</span>
+            <span>RNC: 1-31-89326-4</span>
           </div>
         </div>
 
