@@ -298,7 +298,9 @@ function renderProducts() {
     const manualFeat = (product.features || []).find(f => typeof f === 'string' && f.startsWith('manual_url:'));
     const manualUrl = product.manualUrl || (manualFeat ? manualFeat.replace('manual_url:', '') : null);
 
-    const visibleFeatures = (product.features || []).filter(f => typeof f === 'string' && !f.startsWith('manual_url:'));
+    const visibleFeatures = (product.features || [])
+      .filter(f => typeof f === 'string' && !f.startsWith('manual_url:'))
+      .map(f => f.replace(/Código SKU \/ Odoo:/gi, 'SKU:').replace(/\/ Odoo/gi, ''));
 
     return `
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
@@ -1274,7 +1276,7 @@ function openProductDetailModal(productId) {
 
   // 4. Manual de Instalación
   const manualFeat = (product.features || []).find(f => typeof f === 'string' && f.startsWith('manual_url:'));
-  const manualUrl = product.manualUrl || (manualFeat ? manualFeat.replace('manual_url:', '') : null);
+  let manualUrl = product.manualUrl || product.manual_url || (manualFeat ? manualFeat.replace('manual_url:', '') : null);
   const manualBtn = document.getElementById('detail-download-manual-btn');
   if (manualBtn) {
     if (manualUrl) {
@@ -1284,6 +1286,16 @@ function openProductDetailModal(productId) {
       manualBtn.href = '#';
       manualBtn.classList.add('hidden');
     }
+  }
+
+  // Consulta asíncrona de manual en base de datos si existe registro oficial
+  if (window.WesDB && typeof window.WesDB.getManual === 'function') {
+    window.WesDB.getManual(product.id, product.code || product.codigo).then(dbManual => {
+      if (dbManual && dbManual.archivo_url && manualBtn) {
+        manualBtn.href = dbManual.archivo_url;
+        manualBtn.classList.remove('hidden');
+      }
+    }).catch(() => {});
   }
 
   // 5. Cargar Reseñas y Métricas de Calidad

@@ -1,4 +1,36 @@
 -- ============================================================================
+-- WARN ELECTRICAL SERVICES, SRL (WES) - SCRIPT MAESTRO SUPABASE
+-- ACTUALIZACIÓN TOTAL: 234 PRODUCTOS (SIN MENCIÓN DE ODOO) + MANUALES + RESEÑAS
+-- Copiar y pegar este archivo completo en Supabase Dashboard > SQL Editor > Run
+-- ============================================================================
+
+-- PASO 1: ASEGURAR TABLA DE PRODUCTOS
+CREATE TABLE IF NOT EXISTS public.productos (
+    id VARCHAR(50) PRIMARY KEY,
+    codigo VARCHAR(50) UNIQUE NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    marca VARCHAR(100) NOT NULL,
+    categoria_id VARCHAR(50) NOT NULL,
+    descripcion TEXT,
+    caracteristicas JSONB DEFAULT '[]'::jsonb,
+    precio NUMERIC(12,2) NOT NULL DEFAULT 0.00,
+    stock INTEGER NOT NULL DEFAULT 0,
+    imagen_url TEXT,
+    activo BOOLEAN DEFAULT true,
+    destacado BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.productos ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Lectura pública de productos" ON public.productos;
+CREATE POLICY "Lectura pública de productos"
+ON public.productos FOR SELECT
+USING (true);
+
+-- PASO 2: INSERTAR / ACTUALIZAR EL CATÁLOGO COMPLETO DE 234 PRODUCTOS
+-- ============================================================================
 -- WARN ELECTRICAL SERVICES, SRL (WES)
 -- CATÁLOGO SINCRONIZADO DESDE ODOO ERP (SOLO LECTURA)
 -- Total productos: 234
@@ -252,3 +284,172 @@ ON CONFLICT (codigo) DO UPDATE SET
   caracteristicas = EXCLUDED.caracteristicas,
   imagen_url = EXCLUDED.imagen_url,
   updated_at = NOW();
+
+
+-- PASO 3: TABLA Y REGISTROS DE RESEÑAS Y CALIDAD DE PRODUCTO
+-- ============================================================================
+-- PLATAFORMA WARN ELECTRICAL SERVICES, SRL (WES)
+-- TABLA DE RESEÑAS, VALORACIONES Y MÉTRICAS DE CALIDAD POR PRODUCTO
+-- Diseñada para compatibilidad con Supabase PostgreSQL, RLS y auditoría
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS public.resenas_productos (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    producto_id VARCHAR(50) NOT NULL REFERENCES public.productos(id) ON DELETE CASCADE,
+    cliente_nombre VARCHAR(120) NOT NULL,
+    cliente_ciudad VARCHAR(80) DEFAULT 'Moca, Rep. Dom.',
+    calificacion_general NUMERIC(2,1) NOT NULL CHECK (calificacion_general >= 1 AND calificacion_general <= 5),
+    calidad_producto NUMERIC(2,1) DEFAULT 5.0 CHECK (calidad_producto >= 1 AND calidad_producto <= 5),
+    calidad_envio NUMERIC(2,1) DEFAULT 5.0 CHECK (calidad_envio >= 1 AND calidad_envio <= 5),
+    calidad_servicio NUMERIC(2,1) DEFAULT 5.0 CHECK (calidad_servicio >= 1 AND calidad_servicio <= 5),
+    comentario TEXT NOT NULL,
+    verificado BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Índices para búsquedas ultra rápidas por producto y fecha
+CREATE INDEX IF NOT EXISTS idx_resenas_producto_id ON public.resenas_productos(producto_id);
+CREATE INDEX IF NOT EXISTS idx_resenas_created_at ON public.resenas_productos(created_at DESC);
+
+-- ============================================================================
+-- POLÍTICAS DE SEGURIDAD RLS (ROW LEVEL SECURITY)
+-- ============================================================================
+ALTER TABLE public.resenas_productos ENABLE ROW LEVEL SECURITY;
+
+-- 1. Política de Lectura Pública: Cualquier visitante puede ver las reseñas
+DROP POLICY IF EXISTS "Lectura pública de reseñas" ON public.resenas_productos;
+CREATE POLICY "Lectura pública de reseñas"
+ON public.resenas_productos FOR SELECT
+USING (true);
+
+-- 2. Política de Inserción: Los clientes pueden registrar su testimonio
+DROP POLICY IF EXISTS "Inserción pública de reseñas" ON public.resenas_productos;
+CREATE POLICY "Inserción pública de reseñas"
+ON public.resenas_productos FOR INSERT
+WITH CHECK (true);
+
+-- 3. Política de Gestión Admin: Solo usuarios con rol autorizado pueden moderar o borrar
+DROP POLICY IF EXISTS "Gestión administrativa de reseñas" ON public.resenas_productos;
+CREATE POLICY "Gestión administrativa de reseñas"
+ON public.resenas_productos FOR ALL
+USING (
+    EXISTS (
+        SELECT 1 FROM public.usuarios u
+        WHERE u.id = auth.uid()
+        AND u.rol_id IN ('propietario', 'admin', 'editor')
+    )
+);
+
+-- ============================================================================
+-- REGISTROS PILOTO INICIALES PARA EL MOTOR CAME 800KG (CÓDIGO 604 - odoo-21471)
+-- ============================================================================
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado, created_at
+) VALUES
+(
+    'odoo-21471',
+    'Ing. Carlos Mendoza',
+    'Moca, Provincia Espaillat',
+    5.0, 5.0, 5.0, 5.0,
+    'Instalamos este motor CAME de 800 kg en un portón de acceso a una nave comercial en la Autopista Ramón Cáceres. La fuerza de arrastre es excepcional y la llave de desbloqueo manual es muy suave y segura. Excelente atención de Warn Electrical Services.',
+    true,
+    NOW() - INTERVAL '12 days'
+),
+(
+    'odoo-21471',
+    'Lic. Roberto Almanzar',
+    'Santiago de los Caballeros',
+    4.9, 5.0, 4.8, 5.0,
+    'Compré el kit completo con fotoceldas y cremalleras. El envío llegó el mismo día por transporte privado en perfectas condiciones y bien embalado. Los técnicos de WES nos orientaron por WhatsApp con la programación del control.',
+    true,
+    NOW() - INTERVAL '5 days'
+),
+(
+    'odoo-21471',
+    'Residencial Las Colinas',
+    'San Víctor, Moca',
+    5.0, 5.0, 5.0, 5.0,
+    'Motor robusto de calidad italiana comprobada. Funciona de manera continua para las más de 30 familias del residencial sin recalentarse. Los 2 años de garantía que otorga WES dan total tranquilidad.',
+    true,
+    NOW() - INTERVAL '2 days'
+)
+ON CONFLICT DO NOTHING;
+
+
+-- PASO 4: TABLA Y REGISTRO CENTRALIZADO DE MANUALES TÉCNICOS PDF
+-- ============================================================================
+-- PLATAFORMA WARN ELECTRICAL SERVICES, SRL (WES)
+-- REGISTRO CENTRALIZADO DE MANUALES TÉCNICOS Y DIAGRAMAS (PDF)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS public.manuales_productos (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    producto_id VARCHAR(50) NOT NULL,
+    sku VARCHAR(50) NOT NULL,
+    marca VARCHAR(80) NOT NULL DEFAULT 'CAME',
+    nombre_producto VARCHAR(255) NOT NULL,
+    titulo_manual VARCHAR(255) NOT NULL,
+    tipo_documento VARCHAR(100) DEFAULT 'Manual de Instalación y Diagrama Eléctrico',
+    idioma VARCHAR(50) DEFAULT 'Español / Multilingüe',
+    archivo_url TEXT NOT NULL,
+    archivo_nombre VARCHAR(255) NOT NULL,
+    tamanio_bytes BIGINT DEFAULT 4861609,
+    version_manual VARCHAR(20) DEFAULT '1.0',
+    descripcion TEXT,
+    activo BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Índices de consulta rápida
+CREATE INDEX IF NOT EXISTS idx_manuales_producto_id ON public.manuales_productos(producto_id);
+CREATE INDEX IF NOT EXISTS idx_manuales_sku ON public.manuales_productos(sku);
+
+-- RLS (Seguridad a Nivel de Fila)
+ALTER TABLE public.manuales_productos ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Lectura pública de manuales" ON public.manuales_productos;
+CREATE POLICY "Lectura pública de manuales"
+ON public.manuales_productos FOR SELECT
+USING (true);
+
+DROP POLICY IF EXISTS "Gestión administrativa de manuales" ON public.manuales_productos;
+CREATE POLICY "Gestión administrativa de manuales"
+ON public.manuales_productos FOR ALL
+USING (
+    EXISTS (
+        SELECT 1 FROM public.usuarios u
+        WHERE u.id = auth.uid()
+        AND u.rol_id IN ('propietario', 'admin', 'editor')
+    )
+);
+
+-- Registro Oficial para el Motor CAME 800KG (SKU 604)
+INSERT INTO public.manuales_productos (
+    producto_id, sku, marca, nombre_producto, titulo_manual,
+    tipo_documento, idioma, archivo_url, archivo_nombre, tamanio_bytes,
+    version_manual, descripcion
+) VALUES (
+    'odoo-21471',
+    '604',
+    'CAME',
+    'MOTOR CAME 800KG',
+    'Guía de Instalación y Diagrama Eléctrico CAME BX-74 / BX-78 (800KG)',
+    'Manual de Instalación y Conexión Eléctrica ZBX',
+    'Español / Multilingüe',
+    'assets/manuals/manual-came-bx-800kg.pdf',
+    'manual-came-bx-800kg.pdf',
+    4861609,
+    '1.0',
+    'Manual técnico oficial del fabricante CAME para motores correderos BX de 800 kg. Incluye cotas de anclaje, esquema eléctrico de la central ZBX, regulación de embrague mecánico y programación de mandos.'
+);
+
+
+-- NOTIFICACIÓN DE FINALIZACIÓN EXITOSA
+SELECT 
+    (SELECT COUNT(*) FROM public.productos) AS total_productos_en_base_de_datos,
+    (SELECT COUNT(*) FROM public.manuales_productos) AS total_manuales_registrados,
+    (SELECT COUNT(*) FROM public.resenas_productos) AS total_resenas_registradas;

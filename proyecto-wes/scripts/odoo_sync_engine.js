@@ -53,8 +53,8 @@ const WHITE_BG_IMAGES = {
 // Diccionario de Manuales Técnicos Oficiales en PDF (CAME, Inversores, Dahua)
 const OFFICIAL_MANUALS = {
   // Motores CAME
-  'CAME': 'https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf',
-  'CAME_BX': 'https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf',
+  'CAME': 'assets/manuals/manual-came-bx-800kg.pdf',
+  'CAME_BX': 'assets/manuals/manual-came-bx-800kg.pdf',
   'CAME_BK': 'https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf',
   'CAME_ATI': 'https://www.came.com/global/sites/default/files/2021-04/FA00067M04.pdf',
   'CAME_CONTROL': 'https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf',
@@ -348,7 +348,7 @@ const OdooSyncEngine = {
       const price = Number(Number(p.list_price || 0).toFixed(2));
 
       const caracteristicas = [
-        `Código SKU / Odoo: ${cleanCode}`,
+        `SKU: ${cleanCode}`,
         `Categoría ERP: ${odooCatName || 'General'}`,
         `Disponibilidad: ${stock > 0 ? stock + ' unidades en inventario físico' : 'Disponible bajo pedido'}`
       ];

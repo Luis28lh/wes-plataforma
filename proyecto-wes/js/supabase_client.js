@@ -348,6 +348,36 @@ const WesDB = (function() {
     },
 
     // ------------------------------------------------------------------------
+    // GESTIÓN DE MANUALES TÉCNICOS PDF
+    // ------------------------------------------------------------------------
+    getManual: async function(productId, sku) {
+      if (this.isConfigured()) {
+        try {
+          const query = client
+            .from('manuales_productos')
+            .select('*')
+            .eq('activo', true);
+
+          if (productId && sku) {
+            query.or(`producto_id.eq.${productId},sku.eq.${sku}`);
+          } else if (productId) {
+            query.eq('producto_id', productId);
+          } else if (sku) {
+            query.eq('sku', sku);
+          }
+
+          const { data, error } = await query.limit(1);
+          if (!error && data && data.length > 0) {
+            return data[0];
+          }
+        } catch (err) {
+          console.warn('[WesDB] Error al consultar manuales en PostgreSQL:', err);
+        }
+      }
+      return null;
+    },
+
+    // ------------------------------------------------------------------------
     // REGISTRO DE AUDITORÍA INMUTABLE
     // ------------------------------------------------------------------------
     logAudit: async function(action, moduleName, details = {}) {

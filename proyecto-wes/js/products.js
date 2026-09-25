@@ -9,7 +9,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 122",
+      "SKU: 122",
       "Categoría ERP: Baterías",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -31,7 +31,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 122",
+      "SKU: 122",
       "Categoría ERP: Baterías",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -47,7 +47,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 123",
+      "SKU: 123",
       "Categoría ERP: Baterías",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -69,7 +69,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 123",
+      "SKU: 123",
       "Categoría ERP: Baterías",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -85,7 +85,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 503",
+      "SKU: 503",
       "Categoría ERP: Baterías",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -107,7 +107,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 503",
+      "SKU: 503",
       "Categoría ERP: Baterías",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -123,7 +123,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1667",
+      "SKU: 1667",
       "Categoría ERP: Baterías",
       "Disponibilidad: 144 unidades en inventario físico"
     ],
@@ -145,7 +145,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1667",
+      "SKU: 1667",
       "Categoría ERP: Baterías",
       "Disponibilidad: 144 unidades en inventario físico"
     ],
@@ -161,7 +161,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2983",
+      "SKU: 2983",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 10 unidades en inventario físico"
     ],
@@ -183,7 +183,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2983",
+      "SKU: 2983",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 10 unidades en inventario físico"
     ],
@@ -199,7 +199,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3088",
+      "SKU: 3088",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 1598 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -223,7 +223,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3088",
+      "SKU: 3088",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 1598 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -241,7 +241,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1536",
+      "SKU: 1536",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 1300 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -265,7 +265,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1536",
+      "SKU: 1536",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 1300 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -283,7 +283,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2362",
+      "SKU: 2362",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 191 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -307,7 +307,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2362",
+      "SKU: 2362",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 191 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -325,7 +325,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2949",
+      "SKU: 2949",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 59 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -349,7 +349,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2949",
+      "SKU: 2949",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 59 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -367,7 +367,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2487",
+      "SKU: 2487",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 305 unidades en inventario físico"
     ],
@@ -389,7 +389,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2487",
+      "SKU: 2487",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 305 unidades en inventario físico"
     ],
@@ -405,7 +405,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 252",
+      "SKU: 252",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 873 unidades en inventario físico"
     ],
@@ -427,7 +427,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 252",
+      "SKU: 252",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 873 unidades en inventario físico"
     ],
@@ -443,7 +443,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1839",
+      "SKU: 1839",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 108 unidades en inventario físico"
     ],
@@ -465,7 +465,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1839",
+      "SKU: 1839",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 108 unidades en inventario físico"
     ],
@@ -481,7 +481,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2051",
+      "SKU: 2051",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 158 unidades en inventario físico"
     ],
@@ -503,7 +503,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2051",
+      "SKU: 2051",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 158 unidades en inventario físico"
     ],
@@ -519,7 +519,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2811",
+      "SKU: 2811",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 14 unidades en inventario físico"
     ],
@@ -541,7 +541,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2811",
+      "SKU: 2811",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 14 unidades en inventario físico"
     ],
@@ -557,7 +557,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2813",
+      "SKU: 2813",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 7 unidades en inventario físico"
     ],
@@ -579,7 +579,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2813",
+      "SKU: 2813",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 7 unidades en inventario físico"
     ],
@@ -595,7 +595,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3108",
+      "SKU: 3108",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 27 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -619,7 +619,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3108",
+      "SKU: 3108",
       "Categoría ERP: Cable UTP",
       "Disponibilidad: 27 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -637,7 +637,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 553",
+      "SKU: 553",
       "Categoría ERP: Inversores",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -661,7 +661,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 553",
+      "SKU: 553",
       "Categoría ERP: Inversores",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -679,7 +679,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3883",
+      "SKU: 3883",
       "Categoría ERP: Inversores",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -703,7 +703,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3883",
+      "SKU: 3883",
       "Categoría ERP: Inversores",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -721,7 +721,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4509",
+      "SKU: 4509",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 12 unidades en inventario físico"
     ],
@@ -743,7 +743,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4509",
+      "SKU: 4509",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 12 unidades en inventario físico"
     ],
@@ -759,7 +759,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 215",
+      "SKU: 215",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1290 unidades en inventario físico"
     ],
@@ -781,7 +781,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 215",
+      "SKU: 215",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1290 unidades en inventario físico"
     ],
@@ -797,7 +797,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1629",
+      "SKU: 1629",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 562 unidades en inventario físico"
     ],
@@ -819,7 +819,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1629",
+      "SKU: 1629",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 562 unidades en inventario físico"
     ],
@@ -835,7 +835,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1836",
+      "SKU: 1836",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 5080 unidades en inventario físico"
     ],
@@ -857,7 +857,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1836",
+      "SKU: 1836",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 5080 unidades en inventario físico"
     ],
@@ -873,7 +873,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 217",
+      "SKU: 217",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2114 unidades en inventario físico"
     ],
@@ -895,7 +895,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 217",
+      "SKU: 217",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2114 unidades en inventario físico"
     ],
@@ -911,7 +911,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4164",
+      "SKU: 4164",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 534 unidades en inventario físico"
     ],
@@ -933,7 +933,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4164",
+      "SKU: 4164",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 534 unidades en inventario físico"
     ],
@@ -949,7 +949,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1870",
+      "SKU: 1870",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 127 unidades en inventario físico"
     ],
@@ -971,7 +971,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1870",
+      "SKU: 1870",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 127 unidades en inventario físico"
     ],
@@ -987,7 +987,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 196",
+      "SKU: 196",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 33 unidades en inventario físico"
     ],
@@ -1009,7 +1009,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 196",
+      "SKU: 196",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 33 unidades en inventario físico"
     ],
@@ -1025,7 +1025,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2150",
+      "SKU: 2150",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -1047,7 +1047,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2150",
+      "SKU: 2150",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -1063,7 +1063,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 197",
+      "SKU: 197",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 14 unidades en inventario físico"
     ],
@@ -1085,7 +1085,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 197",
+      "SKU: 197",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 14 unidades en inventario físico"
     ],
@@ -1101,7 +1101,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4530",
+      "SKU: 4530",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 183 unidades en inventario físico"
     ],
@@ -1123,7 +1123,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4530",
+      "SKU: 4530",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 183 unidades en inventario físico"
     ],
@@ -1139,7 +1139,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 198",
+      "SKU: 198",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 8332 unidades en inventario físico"
     ],
@@ -1161,7 +1161,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 198",
+      "SKU: 198",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 8332 unidades en inventario físico"
     ],
@@ -1177,7 +1177,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1813",
+      "SKU: 1813",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 12 unidades en inventario físico"
     ],
@@ -1199,7 +1199,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1813",
+      "SKU: 1813",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 12 unidades en inventario físico"
     ],
@@ -1215,7 +1215,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2090",
+      "SKU: 2090",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 142 unidades en inventario físico"
     ],
@@ -1237,7 +1237,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2090",
+      "SKU: 2090",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 142 unidades en inventario físico"
     ],
@@ -1253,7 +1253,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1859",
+      "SKU: 1859",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -1275,7 +1275,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1859",
+      "SKU: 1859",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -1291,7 +1291,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 200",
+      "SKU: 200",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 419 unidades en inventario físico"
     ],
@@ -1313,7 +1313,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 200",
+      "SKU: 200",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 419 unidades en inventario físico"
     ],
@@ -1329,7 +1329,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 201",
+      "SKU: 201",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 211 unidades en inventario físico"
     ],
@@ -1351,7 +1351,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 201",
+      "SKU: 201",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 211 unidades en inventario físico"
     ],
@@ -1367,7 +1367,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 202",
+      "SKU: 202",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 3130 unidades en inventario físico"
     ],
@@ -1389,7 +1389,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 202",
+      "SKU: 202",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 3130 unidades en inventario físico"
     ],
@@ -1405,7 +1405,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 203",
+      "SKU: 203",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 177 unidades en inventario físico"
     ],
@@ -1427,7 +1427,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 203",
+      "SKU: 203",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 177 unidades en inventario físico"
     ],
@@ -1443,7 +1443,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3038",
+      "SKU: 3038",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 100 unidades en inventario físico"
     ],
@@ -1465,7 +1465,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3038",
+      "SKU: 3038",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 100 unidades en inventario físico"
     ],
@@ -1481,7 +1481,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 204",
+      "SKU: 204",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 45 unidades en inventario físico"
     ],
@@ -1503,7 +1503,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 204",
+      "SKU: 204",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 45 unidades en inventario físico"
     ],
@@ -1519,7 +1519,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 205",
+      "SKU: 205",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 595 unidades en inventario físico"
     ],
@@ -1541,7 +1541,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 205",
+      "SKU: 205",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 595 unidades en inventario físico"
     ],
@@ -1557,7 +1557,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 206",
+      "SKU: 206",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 377 unidades en inventario físico"
     ],
@@ -1579,7 +1579,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 206",
+      "SKU: 206",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 377 unidades en inventario físico"
     ],
@@ -1595,7 +1595,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 207",
+      "SKU: 207",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 579 unidades en inventario físico"
     ],
@@ -1617,7 +1617,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 207",
+      "SKU: 207",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 579 unidades en inventario físico"
     ],
@@ -1633,7 +1633,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 209",
+      "SKU: 209",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1358 unidades en inventario físico"
     ],
@@ -1655,7 +1655,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 209",
+      "SKU: 209",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1358 unidades en inventario físico"
     ],
@@ -1671,7 +1671,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2679",
+      "SKU: 2679",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 103 unidades en inventario físico"
     ],
@@ -1693,7 +1693,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2679",
+      "SKU: 2679",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 103 unidades en inventario físico"
     ],
@@ -1709,7 +1709,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 224",
+      "SKU: 224",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1419 unidades en inventario físico"
     ],
@@ -1731,7 +1731,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 224",
+      "SKU: 224",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1419 unidades en inventario físico"
     ],
@@ -1747,7 +1747,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 225",
+      "SKU: 225",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 817 unidades en inventario físico"
     ],
@@ -1769,7 +1769,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 225",
+      "SKU: 225",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 817 unidades en inventario físico"
     ],
@@ -1785,7 +1785,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 226",
+      "SKU: 226",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1312 unidades en inventario físico"
     ],
@@ -1807,7 +1807,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 226",
+      "SKU: 226",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1312 unidades en inventario físico"
     ],
@@ -1823,7 +1823,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1736",
+      "SKU: 1736",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 336 unidades en inventario físico"
     ],
@@ -1845,7 +1845,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1736",
+      "SKU: 1736",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 336 unidades en inventario físico"
     ],
@@ -1861,7 +1861,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 227",
+      "SKU: 227",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1000 unidades en inventario físico"
     ],
@@ -1883,7 +1883,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 227",
+      "SKU: 227",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1000 unidades en inventario físico"
     ],
@@ -1899,7 +1899,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 228",
+      "SKU: 228",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1007 unidades en inventario físico"
     ],
@@ -1921,7 +1921,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 228",
+      "SKU: 228",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1007 unidades en inventario físico"
     ],
@@ -1937,7 +1937,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 229",
+      "SKU: 229",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2492 unidades en inventario físico"
     ],
@@ -1959,7 +1959,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 229",
+      "SKU: 229",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2492 unidades en inventario físico"
     ],
@@ -1975,7 +1975,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 230",
+      "SKU: 230",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1257 unidades en inventario físico"
     ],
@@ -1997,7 +1997,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 230",
+      "SKU: 230",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1257 unidades en inventario físico"
     ],
@@ -2013,7 +2013,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 232",
+      "SKU: 232",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 266 unidades en inventario físico"
     ],
@@ -2035,7 +2035,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 232",
+      "SKU: 232",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 266 unidades en inventario físico"
     ],
@@ -2051,7 +2051,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 234",
+      "SKU: 234",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1554 unidades en inventario físico"
     ],
@@ -2073,7 +2073,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 234",
+      "SKU: 234",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1554 unidades en inventario físico"
     ],
@@ -2089,7 +2089,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 235",
+      "SKU: 235",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 406 unidades en inventario físico"
     ],
@@ -2111,7 +2111,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 235",
+      "SKU: 235",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 406 unidades en inventario físico"
     ],
@@ -2127,7 +2127,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 236",
+      "SKU: 236",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1369 unidades en inventario físico"
     ],
@@ -2149,7 +2149,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 236",
+      "SKU: 236",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1369 unidades en inventario físico"
     ],
@@ -2165,7 +2165,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 238",
+      "SKU: 238",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 492 unidades en inventario físico"
     ],
@@ -2187,7 +2187,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 238",
+      "SKU: 238",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 492 unidades en inventario físico"
     ],
@@ -2203,7 +2203,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 239",
+      "SKU: 239",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 811 unidades en inventario físico"
     ],
@@ -2225,7 +2225,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 239",
+      "SKU: 239",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 811 unidades en inventario físico"
     ],
@@ -2241,7 +2241,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 240",
+      "SKU: 240",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1099 unidades en inventario físico"
     ],
@@ -2263,7 +2263,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 240",
+      "SKU: 240",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1099 unidades en inventario físico"
     ],
@@ -2279,7 +2279,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1742",
+      "SKU: 1742",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 334 unidades en inventario físico"
     ],
@@ -2301,7 +2301,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1742",
+      "SKU: 1742",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 334 unidades en inventario físico"
     ],
@@ -2317,7 +2317,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 241",
+      "SKU: 241",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 485 unidades en inventario físico"
     ],
@@ -2339,7 +2339,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 241",
+      "SKU: 241",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 485 unidades en inventario físico"
     ],
@@ -2355,7 +2355,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 242",
+      "SKU: 242",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 604 unidades en inventario físico"
     ],
@@ -2377,7 +2377,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 242",
+      "SKU: 242",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 604 unidades en inventario físico"
     ],
@@ -2393,7 +2393,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2677",
+      "SKU: 2677",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 39 unidades en inventario físico"
     ],
@@ -2415,7 +2415,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2677",
+      "SKU: 2677",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 39 unidades en inventario físico"
     ],
@@ -2431,7 +2431,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 243",
+      "SKU: 243",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 305 unidades en inventario físico"
     ],
@@ -2453,7 +2453,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 243",
+      "SKU: 243",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 305 unidades en inventario físico"
     ],
@@ -2469,7 +2469,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 244",
+      "SKU: 244",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 172 unidades en inventario físico"
     ],
@@ -2491,7 +2491,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 244",
+      "SKU: 244",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 172 unidades en inventario físico"
     ],
@@ -2507,7 +2507,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 245",
+      "SKU: 245",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 351 unidades en inventario físico"
     ],
@@ -2529,7 +2529,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 245",
+      "SKU: 245",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 351 unidades en inventario físico"
     ],
@@ -2545,7 +2545,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 246",
+      "SKU: 246",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 7 unidades en inventario físico"
     ],
@@ -2567,7 +2567,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 246",
+      "SKU: 246",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 7 unidades en inventario físico"
     ],
@@ -2583,7 +2583,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 213",
+      "SKU: 213",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2605,7 +2605,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 213",
+      "SKU: 213",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2621,7 +2621,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 247",
+      "SKU: 247",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2643,7 +2643,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 247",
+      "SKU: 247",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2659,7 +2659,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3425",
+      "SKU: 3425",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -2681,7 +2681,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3425",
+      "SKU: 3425",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -2697,7 +2697,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 256",
+      "SKU: 256",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2719,7 +2719,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 256",
+      "SKU: 256",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2735,7 +2735,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3669",
+      "SKU: 3669",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2757,7 +2757,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3669",
+      "SKU: 3669",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2773,7 +2773,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2383",
+      "SKU: 2383",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -2795,7 +2795,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2383",
+      "SKU: 2383",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -2811,7 +2811,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1544",
+      "SKU: 1544",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2833,7 +2833,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1544",
+      "SKU: 1544",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -2849,7 +2849,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1501",
+      "SKU: 1501",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -2871,7 +2871,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1501",
+      "SKU: 1501",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -2887,7 +2887,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3819",
+      "SKU: 3819",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -2909,7 +2909,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3819",
+      "SKU: 3819",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -2925,7 +2925,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 643",
+      "SKU: 643",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 18 unidades en inventario físico"
     ],
@@ -2947,7 +2947,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 643",
+      "SKU: 643",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 18 unidades en inventario físico"
     ],
@@ -2963,7 +2963,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 667",
+      "SKU: 667",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -2985,7 +2985,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 667",
+      "SKU: 667",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3001,7 +3001,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 758",
+      "SKU: 758",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -3023,7 +3023,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 758",
+      "SKU: 758",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -3039,7 +3039,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 760",
+      "SKU: 760",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3061,7 +3061,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 760",
+      "SKU: 760",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3077,7 +3077,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 812",
+      "SKU: 812",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 34 unidades en inventario físico"
     ],
@@ -3099,7 +3099,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 812",
+      "SKU: 812",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 34 unidades en inventario físico"
     ],
@@ -3115,7 +3115,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2428",
+      "SKU: 2428",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 160 unidades en inventario físico"
     ],
@@ -3137,7 +3137,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2428",
+      "SKU: 2428",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 160 unidades en inventario físico"
     ],
@@ -3153,7 +3153,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1103",
+      "SKU: 1103",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 92 unidades en inventario físico"
     ],
@@ -3175,7 +3175,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1103",
+      "SKU: 1103",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 92 unidades en inventario físico"
     ],
@@ -3191,7 +3191,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2073",
+      "SKU: 2073",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3213,7 +3213,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2073",
+      "SKU: 2073",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3229,7 +3229,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 898",
+      "SKU: 898",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 7 unidades en inventario físico"
     ],
@@ -3251,7 +3251,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 898",
+      "SKU: 898",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 7 unidades en inventario físico"
     ],
@@ -3267,7 +3267,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2504",
+      "SKU: 2504",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 25 unidades en inventario físico"
     ],
@@ -3289,7 +3289,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2504",
+      "SKU: 2504",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 25 unidades en inventario físico"
     ],
@@ -3305,7 +3305,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2506",
+      "SKU: 2506",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 44 unidades en inventario físico"
     ],
@@ -3327,7 +3327,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2506",
+      "SKU: 2506",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 44 unidades en inventario físico"
     ],
@@ -3343,7 +3343,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2505",
+      "SKU: 2505",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 25 unidades en inventario físico"
     ],
@@ -3365,7 +3365,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2505",
+      "SKU: 2505",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 25 unidades en inventario físico"
     ],
@@ -3381,7 +3381,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 909",
+      "SKU: 909",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 15 unidades en inventario físico"
     ],
@@ -3403,7 +3403,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 909",
+      "SKU: 909",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 15 unidades en inventario físico"
     ],
@@ -3419,7 +3419,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1761",
+      "SKU: 1761",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -3441,7 +3441,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1761",
+      "SKU: 1761",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -3457,7 +3457,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3189",
+      "SKU: 3189",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -3479,7 +3479,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3189",
+      "SKU: 3189",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -3495,7 +3495,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1364",
+      "SKU: 1364",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -3517,7 +3517,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1364",
+      "SKU: 1364",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -3533,7 +3533,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 910",
+      "SKU: 910",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 14 unidades en inventario físico"
     ],
@@ -3555,7 +3555,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 910",
+      "SKU: 910",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 14 unidades en inventario físico"
     ],
@@ -3571,7 +3571,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2334",
+      "SKU: 2334",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3593,7 +3593,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2334",
+      "SKU: 2334",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3609,7 +3609,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3461",
+      "SKU: 3461",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -3631,7 +3631,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3461",
+      "SKU: 3461",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -3647,7 +3647,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 904",
+      "SKU: 904",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 47 unidades en inventario físico"
     ],
@@ -3669,7 +3669,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 904",
+      "SKU: 904",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 47 unidades en inventario físico"
     ],
@@ -3685,7 +3685,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 905",
+      "SKU: 905",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 33 unidades en inventario físico"
     ],
@@ -3707,7 +3707,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 905",
+      "SKU: 905",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 33 unidades en inventario físico"
     ],
@@ -3723,7 +3723,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4142",
+      "SKU: 4142",
       "Categoría ERP: Conectores",
       "Disponibilidad: 491 unidades en inventario físico"
     ],
@@ -3745,7 +3745,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4142",
+      "SKU: 4142",
       "Categoría ERP: Conectores",
       "Disponibilidad: 491 unidades en inventario físico"
     ],
@@ -3761,7 +3761,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4141",
+      "SKU: 4141",
       "Categoría ERP: Conectores",
       "Disponibilidad: 163 unidades en inventario físico"
     ],
@@ -3783,7 +3783,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4141",
+      "SKU: 4141",
       "Categoría ERP: Conectores",
       "Disponibilidad: 163 unidades en inventario físico"
     ],
@@ -3799,7 +3799,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 365",
+      "SKU: 365",
       "Categoría ERP: Conectores",
       "Disponibilidad: 526 unidades en inventario físico"
     ],
@@ -3821,7 +3821,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 365",
+      "SKU: 365",
       "Categoría ERP: Conectores",
       "Disponibilidad: 526 unidades en inventario físico"
     ],
@@ -3837,7 +3837,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2698",
+      "SKU: 2698",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -3859,7 +3859,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2698",
+      "SKU: 2698",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -3875,7 +3875,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 367",
+      "SKU: 367",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3897,7 +3897,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 367",
+      "SKU: 367",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3913,7 +3913,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 368",
+      "SKU: 368",
       "Categoría ERP: Conectores",
       "Disponibilidad: 48 unidades en inventario físico"
     ],
@@ -3935,7 +3935,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 368",
+      "SKU: 368",
       "Categoría ERP: Conectores",
       "Disponibilidad: 48 unidades en inventario físico"
     ],
@@ -3951,7 +3951,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4286",
+      "SKU: 4286",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3973,7 +3973,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4286",
+      "SKU: 4286",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -3989,7 +3989,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 369",
+      "SKU: 369",
       "Categoría ERP: Conectores",
       "Disponibilidad: 9 unidades en inventario físico"
     ],
@@ -4011,7 +4011,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 369",
+      "SKU: 369",
       "Categoría ERP: Conectores",
       "Disponibilidad: 9 unidades en inventario físico"
     ],
@@ -4027,7 +4027,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3484",
+      "SKU: 3484",
       "Categoría ERP: Conectores",
       "Disponibilidad: 39 unidades en inventario físico"
     ],
@@ -4049,7 +4049,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3484",
+      "SKU: 3484",
       "Categoría ERP: Conectores",
       "Disponibilidad: 39 unidades en inventario físico"
     ],
@@ -4065,7 +4065,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4641",
+      "SKU: 4641",
       "Categoría ERP: Conectores",
       "Disponibilidad: 20 unidades en inventario físico"
     ],
@@ -4087,7 +4087,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4641",
+      "SKU: 4641",
       "Categoría ERP: Conectores",
       "Disponibilidad: 20 unidades en inventario físico"
     ],
@@ -4103,7 +4103,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4626",
+      "SKU: 4626",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4125,7 +4125,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4626",
+      "SKU: 4626",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4141,7 +4141,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 371",
+      "SKU: 371",
       "Categoría ERP: Conectores",
       "Disponibilidad: 129 unidades en inventario físico"
     ],
@@ -4163,7 +4163,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 371",
+      "SKU: 371",
       "Categoría ERP: Conectores",
       "Disponibilidad: 129 unidades en inventario físico"
     ],
@@ -4179,7 +4179,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 372",
+      "SKU: 372",
       "Categoría ERP: Conectores",
       "Disponibilidad: 114 unidades en inventario físico"
     ],
@@ -4201,7 +4201,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 372",
+      "SKU: 372",
       "Categoría ERP: Conectores",
       "Disponibilidad: 114 unidades en inventario físico"
     ],
@@ -4217,7 +4217,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 373",
+      "SKU: 373",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -4239,7 +4239,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 373",
+      "SKU: 373",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -4255,7 +4255,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 374",
+      "SKU: 374",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4277,7 +4277,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 374",
+      "SKU: 374",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4293,7 +4293,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 375",
+      "SKU: 375",
       "Categoría ERP: Conectores",
       "Disponibilidad: 23 unidades en inventario físico"
     ],
@@ -4315,7 +4315,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 375",
+      "SKU: 375",
       "Categoría ERP: Conectores",
       "Disponibilidad: 23 unidades en inventario físico"
     ],
@@ -4331,7 +4331,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 376",
+      "SKU: 376",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4353,7 +4353,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 376",
+      "SKU: 376",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4369,7 +4369,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2663",
+      "SKU: 2663",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4391,7 +4391,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2663",
+      "SKU: 2663",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4407,7 +4407,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2664",
+      "SKU: 2664",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -4429,7 +4429,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2664",
+      "SKU: 2664",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -4445,7 +4445,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3844",
+      "SKU: 3844",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4467,7 +4467,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3844",
+      "SKU: 3844",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4483,7 +4483,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 377",
+      "SKU: 377",
       "Categoría ERP: Conectores",
       "Disponibilidad: 26 unidades en inventario físico"
     ],
@@ -4505,7 +4505,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 377",
+      "SKU: 377",
       "Categoría ERP: Conectores",
       "Disponibilidad: 26 unidades en inventario físico"
     ],
@@ -4521,7 +4521,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2389",
+      "SKU: 2389",
       "Categoría ERP: Conectores",
       "Disponibilidad: 26 unidades en inventario físico"
     ],
@@ -4543,7 +4543,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2389",
+      "SKU: 2389",
       "Categoría ERP: Conectores",
       "Disponibilidad: 26 unidades en inventario físico"
     ],
@@ -4559,7 +4559,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 378",
+      "SKU: 378",
       "Categoría ERP: Conectores",
       "Disponibilidad: 23 unidades en inventario físico"
     ],
@@ -4581,7 +4581,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 378",
+      "SKU: 378",
       "Categoría ERP: Conectores",
       "Disponibilidad: 23 unidades en inventario físico"
     ],
@@ -4597,7 +4597,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 386",
+      "SKU: 386",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4619,7 +4619,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 386",
+      "SKU: 386",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4635,7 +4635,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 379",
+      "SKU: 379",
       "Categoría ERP: Conectores",
       "Disponibilidad: 34 unidades en inventario físico"
     ],
@@ -4657,7 +4657,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 379",
+      "SKU: 379",
       "Categoría ERP: Conectores",
       "Disponibilidad: 34 unidades en inventario físico"
     ],
@@ -4673,7 +4673,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 380",
+      "SKU: 380",
       "Categoría ERP: Conectores",
       "Disponibilidad: 26 unidades en inventario físico"
     ],
@@ -4695,7 +4695,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 380",
+      "SKU: 380",
       "Categoría ERP: Conectores",
       "Disponibilidad: 26 unidades en inventario físico"
     ],
@@ -4711,7 +4711,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1750",
+      "SKU: 1750",
       "Categoría ERP: Conectores",
       "Disponibilidad: 10 unidades en inventario físico"
     ],
@@ -4733,7 +4733,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1750",
+      "SKU: 1750",
       "Categoría ERP: Conectores",
       "Disponibilidad: 10 unidades en inventario físico"
     ],
@@ -4749,7 +4749,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 388",
+      "SKU: 388",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4771,7 +4771,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 388",
+      "SKU: 388",
       "Categoría ERP: Conectores",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -4787,7 +4787,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 381",
+      "SKU: 381",
       "Categoría ERP: Conectores",
       "Disponibilidad: 16 unidades en inventario físico"
     ],
@@ -4809,7 +4809,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 381",
+      "SKU: 381",
       "Categoría ERP: Conectores",
       "Disponibilidad: 16 unidades en inventario físico"
     ],
@@ -4825,7 +4825,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 382",
+      "SKU: 382",
       "Categoría ERP: Conectores",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -4847,7 +4847,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 382",
+      "SKU: 382",
       "Categoría ERP: Conectores",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -4863,7 +4863,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 383",
+      "SKU: 383",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -4885,7 +4885,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 383",
+      "SKU: 383",
       "Categoría ERP: Conectores",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -4901,7 +4901,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 384",
+      "SKU: 384",
       "Categoría ERP: Conectores",
       "Disponibilidad: 14 unidades en inventario físico"
     ],
@@ -4923,7 +4923,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 384",
+      "SKU: 384",
       "Categoría ERP: Conectores",
       "Disponibilidad: 14 unidades en inventario físico"
     ],
@@ -4939,7 +4939,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 385",
+      "SKU: 385",
       "Categoría ERP: Conectores",
       "Disponibilidad: 63 unidades en inventario físico"
     ],
@@ -4961,7 +4961,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 385",
+      "SKU: 385",
       "Categoría ERP: Conectores",
       "Disponibilidad: 63 unidades en inventario físico"
     ],
@@ -4977,7 +4977,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 387",
+      "SKU: 387",
       "Categoría ERP: Conectores",
       "Disponibilidad: 20 unidades en inventario físico"
     ],
@@ -4999,7 +4999,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 387",
+      "SKU: 387",
       "Categoría ERP: Conectores",
       "Disponibilidad: 20 unidades en inventario físico"
     ],
@@ -5015,7 +5015,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4348",
+      "SKU: 4348",
       "Categoría ERP: Conectores",
       "Disponibilidad: 57 unidades en inventario físico"
     ],
@@ -5037,7 +5037,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4348",
+      "SKU: 4348",
       "Categoría ERP: Conectores",
       "Disponibilidad: 57 unidades en inventario físico"
     ],
@@ -5053,7 +5053,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 392",
+      "SKU: 392",
       "Categoría ERP: Conectores",
       "Disponibilidad: 80 unidades en inventario físico"
     ],
@@ -5075,7 +5075,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 392",
+      "SKU: 392",
       "Categoría ERP: Conectores",
       "Disponibilidad: 80 unidades en inventario físico"
     ],
@@ -5091,7 +5091,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 394",
+      "SKU: 394",
       "Categoría ERP: Conectores",
       "Disponibilidad: 115 unidades en inventario físico"
     ],
@@ -5113,7 +5113,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 394",
+      "SKU: 394",
       "Categoría ERP: Conectores",
       "Disponibilidad: 115 unidades en inventario físico"
     ],
@@ -5129,7 +5129,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 393",
+      "SKU: 393",
       "Categoría ERP: Conectores",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -5151,7 +5151,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 393",
+      "SKU: 393",
       "Categoría ERP: Conectores",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -5167,7 +5167,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2903",
+      "SKU: 2903",
       "Categoría ERP: Conectores",
       "Disponibilidad: 44 unidades en inventario físico"
     ],
@@ -5189,7 +5189,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2903",
+      "SKU: 2903",
       "Categoría ERP: Conectores",
       "Disponibilidad: 44 unidades en inventario físico"
     ],
@@ -5205,7 +5205,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4216",
+      "SKU: 4216",
       "Categoría ERP: Conectores",
       "Disponibilidad: 10 unidades en inventario físico"
     ],
@@ -5227,7 +5227,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4216",
+      "SKU: 4216",
       "Categoría ERP: Conectores",
       "Disponibilidad: 10 unidades en inventario físico"
     ],
@@ -5243,7 +5243,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 397",
+      "SKU: 397",
       "Categoría ERP: Conectores",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -5265,7 +5265,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 397",
+      "SKU: 397",
       "Categoría ERP: Conectores",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -5281,7 +5281,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4424",
+      "SKU: 4424",
       "Categoría ERP: Conectores",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -5303,7 +5303,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4424",
+      "SKU: 4424",
       "Categoría ERP: Conectores",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -5319,7 +5319,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1175",
+      "SKU: 1175",
       "Categoría ERP: Conectores",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -5341,7 +5341,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1175",
+      "SKU: 1175",
       "Categoría ERP: Conectores",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -5357,7 +5357,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 399",
+      "SKU: 399",
       "Categoría ERP: Conectores",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -5379,7 +5379,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 399",
+      "SKU: 399",
       "Categoría ERP: Conectores",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -5395,7 +5395,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2031",
+      "SKU: 2031",
       "Categoría ERP: Conectores",
       "Disponibilidad: 8 unidades en inventario físico"
     ],
@@ -5417,7 +5417,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2031",
+      "SKU: 2031",
       "Categoría ERP: Conectores",
       "Disponibilidad: 8 unidades en inventario físico"
     ],
@@ -5433,7 +5433,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3167",
+      "SKU: 3167",
       "Categoría ERP: Conectores",
       "Disponibilidad: 92 unidades en inventario físico"
     ],
@@ -5455,7 +5455,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3167",
+      "SKU: 3167",
       "Categoría ERP: Conectores",
       "Disponibilidad: 92 unidades en inventario físico"
     ],
@@ -5471,7 +5471,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 400",
+      "SKU: 400",
       "Categoría ERP: Conectores",
       "Disponibilidad: 666 unidades en inventario físico"
     ],
@@ -5493,7 +5493,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 400",
+      "SKU: 400",
       "Categoría ERP: Conectores",
       "Disponibilidad: 666 unidades en inventario físico"
     ],
@@ -5509,7 +5509,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2778",
+      "SKU: 2778",
       "Categoría ERP: Conectores",
       "Disponibilidad: 189 unidades en inventario físico"
     ],
@@ -5531,7 +5531,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2778",
+      "SKU: 2778",
       "Categoría ERP: Conectores",
       "Disponibilidad: 189 unidades en inventario físico"
     ],
@@ -5547,7 +5547,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3813",
+      "SKU: 3813",
       "Categoría ERP: Conectores",
       "Disponibilidad: 40 unidades en inventario físico"
     ],
@@ -5569,7 +5569,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3813",
+      "SKU: 3813",
       "Categoría ERP: Conectores",
       "Disponibilidad: 40 unidades en inventario físico"
     ],
@@ -5585,7 +5585,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2857",
+      "SKU: 2857",
       "Categoría ERP: Conectores",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -5607,7 +5607,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2857",
+      "SKU: 2857",
       "Categoría ERP: Conectores",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -5623,7 +5623,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2817",
+      "SKU: 2817",
       "Categoría ERP: Conectores",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -5645,7 +5645,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2817",
+      "SKU: 2817",
       "Categoría ERP: Conectores",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -5661,7 +5661,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1047",
+      "SKU: 1047",
       "Categoría ERP: Conectores",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -5683,7 +5683,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1047",
+      "SKU: 1047",
       "Categoría ERP: Conectores",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -5699,7 +5699,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 403",
+      "SKU: 403",
       "Categoría ERP: Conectores",
       "Disponibilidad: 30 unidades en inventario físico"
     ],
@@ -5721,7 +5721,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 403",
+      "SKU: 403",
       "Categoría ERP: Conectores",
       "Disponibilidad: 30 unidades en inventario físico"
     ],
@@ -5737,7 +5737,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 404",
+      "SKU: 404",
       "Categoría ERP: Conectores",
       "Disponibilidad: 70 unidades en inventario físico"
     ],
@@ -5759,7 +5759,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 404",
+      "SKU: 404",
       "Categoría ERP: Conectores",
       "Disponibilidad: 70 unidades en inventario físico"
     ],
@@ -5775,7 +5775,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1950",
+      "SKU: 1950",
       "Categoría ERP: Conectores",
       "Disponibilidad: 10 unidades en inventario físico"
     ],
@@ -5797,7 +5797,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1950",
+      "SKU: 1950",
       "Categoría ERP: Conectores",
       "Disponibilidad: 10 unidades en inventario físico"
     ],
@@ -5813,7 +5813,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 113 - DH-PFA130-E",
+      "SKU: 113 - DH-PFA130-E",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 7 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -5837,7 +5837,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 113 - DH-PFA130-E",
+      "SKU: 113 - DH-PFA130-E",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 7 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -5855,7 +5855,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2110 - DH-PFA13A-E",
+      "SKU: 2110 - DH-PFA13A-E",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 20 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -5879,7 +5879,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2110 - DH-PFA13A-E",
+      "SKU: 2110 - DH-PFA13A-E",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 20 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -5897,7 +5897,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4356",
+      "SKU: 4356",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 19 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -5921,7 +5921,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4356",
+      "SKU: 4356",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 19 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -5939,7 +5939,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4245",
+      "SKU: 4245",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -5961,7 +5961,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4245",
+      "SKU: 4245",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -5977,7 +5977,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3076",
+      "SKU: 3076",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -5999,7 +5999,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3076",
+      "SKU: 3076",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6015,7 +6015,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3098",
+      "SKU: 3098",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6037,7 +6037,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3098",
+      "SKU: 3098",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6053,7 +6053,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4320",
+      "SKU: 4320",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6077,7 +6077,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4320",
+      "SKU: 4320",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6095,7 +6095,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 995 - DH-HAC-B1A21N",
+      "SKU: 995 - DH-HAC-B1A21N",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 8 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6119,7 +6119,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 995 - DH-HAC-B1A21N",
+      "SKU: 995 - DH-HAC-B1A21N",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 8 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6137,7 +6137,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4447",
+      "SKU: 4447",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -6159,7 +6159,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4447",
+      "SKU: 4447",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -6175,7 +6175,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1827",
+      "SKU: 1827",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6199,7 +6199,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1827",
+      "SKU: 1827",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6217,7 +6217,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3722",
+      "SKU: 3722",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 17 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6241,7 +6241,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3722",
+      "SKU: 3722",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 17 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6259,7 +6259,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2491",
+      "SKU: 2491",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 9 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6283,7 +6283,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2491",
+      "SKU: 2491",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 9 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6301,7 +6301,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3044",
+      "SKU: 3044",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6325,7 +6325,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3044",
+      "SKU: 3044",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6343,7 +6343,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2029",
+      "SKU: 2029",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6365,7 +6365,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2029",
+      "SKU: 2029",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6381,7 +6381,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3946",
+      "SKU: 3946",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6405,7 +6405,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3946",
+      "SKU: 3946",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6423,7 +6423,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3943",
+      "SKU: 3943",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6447,7 +6447,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3943",
+      "SKU: 3943",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6465,7 +6465,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2563",
+      "SKU: 2563",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6487,7 +6487,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2563",
+      "SKU: 2563",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6503,7 +6503,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3223-270883",
+      "SKU: 3223-270883",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 8 unidades en inventario físico"
     ],
@@ -6525,7 +6525,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3223-270883",
+      "SKU: 3223-270883",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 8 unidades en inventario físico"
     ],
@@ -6541,7 +6541,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3225",
+      "SKU: 3225",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6563,7 +6563,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3225",
+      "SKU: 3225",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -6579,7 +6579,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3936",
+      "SKU: 3936",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6603,7 +6603,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3936",
+      "SKU: 3936",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6621,7 +6621,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4561",
+      "SKU: 4561",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -6643,7 +6643,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4561",
+      "SKU: 4561",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 5 unidades en inventario físico"
     ],
@@ -6659,7 +6659,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3920 - DH-HAC-T1A21N",
+      "SKU: 3920 - DH-HAC-T1A21N",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 6 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6683,7 +6683,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3920 - DH-HAC-T1A21N",
+      "SKU: 3920 - DH-HAC-T1A21N",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 6 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6701,7 +6701,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1869",
+      "SKU: 1869",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 4 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6725,7 +6725,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1869",
+      "SKU: 1869",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 4 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6743,7 +6743,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1021",
+      "SKU: 1021",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 10 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6767,7 +6767,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1021",
+      "SKU: 1021",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 10 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6785,7 +6785,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3721 - DH-HAC-T1A21N-U-IL-A",
+      "SKU: 3721 - DH-HAC-T1A21N-U-IL-A",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 64 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6809,7 +6809,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3721 - DH-HAC-T1A21N-U-IL-A",
+      "SKU: 3721 - DH-HAC-T1A21N-U-IL-A",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 64 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6827,7 +6827,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1826",
+      "SKU: 1826",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6851,7 +6851,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1826",
+      "SKU: 1826",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6869,7 +6869,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 299 - 5H0967APAL41789",
+      "SKU: 299 - 5H0967APAL41789",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 6 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6893,7 +6893,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 299 - 5H0967APAL41789",
+      "SKU: 299 - 5H0967APAL41789",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 6 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6911,7 +6911,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1407 - DH-HAC-HDW1200MN",
+      "SKU: 1407 - DH-HAC-HDW1200MN",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 7 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6935,7 +6935,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1407 - DH-HAC-HDW1200MN",
+      "SKU: 1407 - DH-HAC-HDW1200MN",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 7 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6953,7 +6953,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3589",
+      "SKU: 3589",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6977,7 +6977,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3589",
+      "SKU: 3589",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -6995,7 +6995,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2319",
+      "SKU: 2319",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 5 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7019,7 +7019,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2319",
+      "SKU: 2319",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 5 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7037,7 +7037,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4676",
+      "SKU: 4676",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 4 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7061,7 +7061,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4676",
+      "SKU: 4676",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 4 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7079,7 +7079,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2036",
+      "SKU: 2036",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7103,7 +7103,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2036",
+      "SKU: 2036",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7121,7 +7121,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 300",
+      "SKU: 300",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7145,7 +7145,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 300",
+      "SKU: 300",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7163,7 +7163,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3711 - DH-IPC-HDW1239V-A-IL",
+      "SKU: 3711 - DH-IPC-HDW1239V-A-IL",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 20 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7187,7 +7187,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3711 - DH-IPC-HDW1239V-A-IL",
+      "SKU: 3711 - DH-IPC-HDW1239V-A-IL",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 20 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7205,7 +7205,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4211",
+      "SKU: 4211",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -7227,7 +7227,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4211",
+      "SKU: 4211",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -7243,7 +7243,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2565 -",
+      "SKU: 2565 -",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 10 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7267,7 +7267,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2565 -",
+      "SKU: 2565 -",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 10 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7285,7 +7285,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1939 - HD-HAC-T2A11N",
+      "SKU: 1939 - HD-HAC-T2A11N",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 9 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7309,7 +7309,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1939 - HD-HAC-T2A11N",
+      "SKU: 1939 - HD-HAC-T2A11N",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 9 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7327,7 +7327,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2215",
+      "SKU: 2215",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7351,7 +7351,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2215",
+      "SKU: 2215",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7369,7 +7369,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4691",
+      "SKU: 4691",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 12 unidades en inventario físico"
     ],
@@ -7391,7 +7391,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4691",
+      "SKU: 4691",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 12 unidades en inventario físico"
     ],
@@ -7407,7 +7407,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3460",
+      "SKU: 3460",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 10 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7431,7 +7431,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3460",
+      "SKU: 3460",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 10 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7449,7 +7449,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4635",
+      "SKU: 4635",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7473,7 +7473,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4635",
+      "SKU: 4635",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7491,7 +7491,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3449",
+      "SKU: 3449",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 8 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7515,7 +7515,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3449",
+      "SKU: 3449",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 8 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7533,7 +7533,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3077",
+      "SKU: 3077",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -7555,7 +7555,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3077",
+      "SKU: 3077",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -7571,7 +7571,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3061 - IPC-S2EN-3R1S",
+      "SKU: 3061 - IPC-S2EN-3R1S",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -7593,7 +7593,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3061 - IPC-S2EN-3R1S",
+      "SKU: 3061 - IPC-S2EN-3R1S",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -7609,7 +7609,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2169",
+      "SKU: 2169",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -7631,7 +7631,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2169",
+      "SKU: 2169",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -7647,7 +7647,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3945",
+      "SKU: 3945",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 4 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7671,7 +7671,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Hikvision distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3945",
+      "SKU: 3945",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 4 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7689,7 +7689,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3947",
+      "SKU: 3947",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -7711,7 +7711,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3947",
+      "SKU: 3947",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -7727,7 +7727,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional EZVIZ distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2216",
+      "SKU: 2216",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -7749,7 +7749,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional EZVIZ distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2216",
+      "SKU: 2216",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -7765,7 +7765,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional EZVIZ distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2217",
+      "SKU: 2217",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -7787,7 +7787,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional EZVIZ distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2217",
+      "SKU: 2217",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -7803,7 +7803,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 398",
+      "SKU: 398",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 9 unidades en inventario físico"
     ],
@@ -7825,7 +7825,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 398",
+      "SKU: 398",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 9 unidades en inventario físico"
     ],
@@ -7841,7 +7841,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 490",
+      "SKU: 490",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -7863,7 +7863,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 490",
+      "SKU: 490",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 6 unidades en inventario físico"
     ],
@@ -7879,7 +7879,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4623",
+      "SKU: 4623",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -7901,7 +7901,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4623",
+      "SKU: 4623",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 3 unidades en inventario físico"
     ],
@@ -7917,7 +7917,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2268",
+      "SKU: 2268",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -7939,7 +7939,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2268",
+      "SKU: 2268",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -7955,7 +7955,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2629",
+      "SKU: 2629",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 9 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7979,7 +7979,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2629",
+      "SKU: 2629",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 9 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -7997,7 +7997,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "cables",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3745",
+      "SKU: 3745",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 16 unidades en inventario físico"
     ],
@@ -8019,7 +8019,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3745",
+      "SKU: 3745",
       "Categoría ERP: Cables eléctricos",
       "Disponibilidad: 16 unidades en inventario físico"
     ],
@@ -8035,7 +8035,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: ODOO-34064",
+      "SKU: ODOO-34064",
       "Categoría ERP: Baterías",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -8057,7 +8057,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: ODOO-34064",
+      "SKU: ODOO-34064",
       "Categoría ERP: Baterías",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -8073,7 +8073,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "camaras",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: ODOO-34077",
+      "SKU: ODOO-34077",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 30 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -8097,7 +8097,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1549100156-427908b98e1f?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: ODOO-34077",
+      "SKU: ODOO-34077",
       "Categoría ERP: Camaras y Videovigilancia",
       "Disponibilidad: 30 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -8115,7 +8115,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3-18-4683",
+      "SKU: 3-18-4683",
       "Categoría ERP: Accesorios Electricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -8137,7 +8137,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3-18-4683",
+      "SKU: 3-18-4683",
       "Categoría ERP: Accesorios Electricos",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -8153,7 +8153,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "energia",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: ODOO-34095",
+      "SKU: ODOO-34095",
       "Categoría ERP: Baterías",
       "Disponibilidad: 19 unidades en inventario físico"
     ],
@@ -8175,7 +8175,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: ODOO-34095",
+      "SKU: ODOO-34095",
       "Categoría ERP: Baterías",
       "Disponibilidad: 19 unidades en inventario físico"
     ],
@@ -8191,7 +8191,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: ODOO-34096",
+      "SKU: ODOO-34096",
       "Categoría ERP: Accesorios Electricos",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -8213,7 +8213,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: ODOO-34096",
+      "SKU: ODOO-34096",
       "Categoría ERP: Accesorios Electricos",
       "Disponibilidad: 4 unidades en inventario físico"
     ],
@@ -8229,7 +8229,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: ODOO-34127",
+      "SKU: ODOO-34127",
       "Categoría ERP: Accesorios Electricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -8251,7 +8251,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: ODOO-34127",
+      "SKU: ODOO-34127",
       "Categoría ERP: Accesorios Electricos",
       "Disponibilidad: 1 unidades en inventario físico"
     ],
@@ -8267,7 +8267,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: FTL-BR600U",
+      "SKU: FTL-BR600U",
       "Categoría ERP: Alarmas y Control de Acceso",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -8289,7 +8289,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: FTL-BR600U",
+      "SKU: FTL-BR600U",
       "Categoría ERP: Alarmas y Control de Acceso",
       "Disponibilidad: 2 unidades en inventario físico"
     ],
@@ -8305,11 +8305,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2399",
+      "SKU: 2399",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 1275,
     "moneda": "DOP",
@@ -8318,7 +8318,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "2399",
     "name": "BASE MOTOR OPERADOR CAME 1000KG",
     "brand": "CAME",
@@ -8329,13 +8329,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2399",
+      "SKU: 2399",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -8347,7 +8347,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 415",
+      "SKU: 415",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -8371,7 +8371,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 415",
+      "SKU: 415",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -8389,7 +8389,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4385",
+      "SKU: 4385",
       "Categoría ERP: Otros",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -8413,7 +8413,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4385",
+      "SKU: 4385",
       "Categoría ERP: Otros",
       "Disponibilidad: 3 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -8431,7 +8431,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1183",
+      "SKU: 1183",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -8455,7 +8455,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1183",
+      "SKU: 1183",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -8473,7 +8473,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1757",
+      "SKU: 1757",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -8497,7 +8497,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1757",
+      "SKU: 1757",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -8515,7 +8515,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3152",
+      "SKU: 3152",
       "Categoría ERP: Otros",
       "Disponibilidad: 2 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -8539,7 +8539,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3152",
+      "SKU: 3152",
       "Categoría ERP: Otros",
       "Disponibilidad: 2 unidades en inventario físico",
       "Manual de Instalación disponible",
@@ -8557,11 +8557,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4303",
+      "SKU: 4303",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 2100,
     "moneda": "DOP",
@@ -8570,7 +8570,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "4303",
     "name": "FINAL DE CARRERA CAME",
     "brand": "CAME",
@@ -8581,13 +8581,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4303",
+      "SKU: 4303",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -8599,11 +8599,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1373",
+      "SKU: 1373",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 6608,
     "moneda": "DOP",
@@ -8612,7 +8612,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1373",
     "name": "FOTOCELDA CAME ORIGINAL",
     "brand": "CAME",
@@ -8623,13 +8623,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1373",
+      "SKU: 1373",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -8641,11 +8641,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2920",
+      "SKU: 2920",
       "Categoría ERP: Mano de Obra",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 500,
     "moneda": "DOP",
@@ -8654,7 +8654,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "2920",
     "name": "INSPECCION Y CONFIGURACION DE MOTOR CAME.",
     "brand": "CAME",
@@ -8665,13 +8665,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2920",
+      "SKU: 2920",
       "Categoría ERP: Mano de Obra",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -8683,11 +8683,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3797",
+      "SKU: 3797",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 500,
     "moneda": "DOP",
@@ -8696,7 +8696,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "3797",
     "name": "MOTOR 2000KG CAME",
     "brand": "CAME",
@@ -8707,13 +8707,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3797",
+      "SKU: 3797",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -8725,11 +8725,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1390",
+      "SKU: 1390",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 41330.76,
     "moneda": "DOP",
@@ -8738,7 +8738,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1390",
     "name": "MOTOR CAME 1000KG USO INTENSIVO",
     "brand": "CAME",
@@ -8749,13 +8749,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1390",
+      "SKU: 1390",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -8767,7 +8767,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 603",
+      "SKU: 603",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -8791,7 +8791,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 603",
+      "SKU: 603",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -8809,11 +8809,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 2009",
+      "SKU: 2009",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 32735.08,
     "moneda": "DOP",
@@ -8822,7 +8822,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "2009",
     "name": "MOTOR CAME 600KG USO INTENSIVO",
     "brand": "CAME",
@@ -8833,13 +8833,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 2009",
+      "SKU: 2009",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -8851,7 +8851,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Kit de automatización electromecánico CAME para puertas y portones correderos de hasta 800 kg y 14 metros de longitud. Fabricación italiana de alto rendimiento con chasis en aleación de aluminio inyectado a presión, desbloqueo manual ergonómico y cuadro de mando ZBX.",
     "caracteristicas": [
-      "Código SKU / Odoo: 604",
+      "SKU: 604",
       "Capacidad de arrastre: 800 kg / Longitud máx: 14 metros",
       "Alimentación: CA 230V / 50-60 Hz",
       "Chasis: Aleación de aluminio inyectado anticorrosión",
@@ -8860,7 +8860,7 @@ const INITIAL_PRODUCTS = [
       "Disponibilidad: 2 unidades en inventario físico",
       "Garantía WES: 2 años con certificación de origen",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 37445.26,
     "moneda": "DOP",
@@ -8869,7 +8869,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "destacado": true,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "gallery_images": [
       {
         "url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
@@ -8916,7 +8916,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "description": "Kit de automatización electromecánico CAME para puertas y portones correderos de hasta 800 kg y 14 metros de longitud. Fabricación italiana de alto rendimiento con chasis en aleación de aluminio inyectado a presión, desbloqueo manual ergonómico y cuadro de mando ZBX.",
     "features": [
-      "Código SKU / Odoo: 604",
+      "SKU: 604",
       "Capacidad de arrastre: 800 kg / Longitud máx: 14 metros",
       "Alimentación: CA 230V / 50-60 Hz",
       "Chasis: Aleación de aluminio inyectado anticorrosión",
@@ -8925,9 +8925,9 @@ const INITIAL_PRODUCTS = [
       "Disponibilidad: 2 unidades en inventario físico",
       "Garantía WES: 2 años con certificación de origen",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": true,
     "active": true
   },
@@ -8939,11 +8939,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1765",
+      "SKU: 1765",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 15000,
     "moneda": "DOP",
@@ -8952,7 +8952,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1765",
     "name": "MOTOR CAME 800KG REFULL",
     "brand": "CAME",
@@ -8963,13 +8963,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1765",
+      "SKU: 1765",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -8981,11 +8981,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: COSTO VEF.",
+      "SKU: COSTO VEF.",
       "Categoría ERP: Automatización y Domotica",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 4239.96,
     "moneda": "DOP",
@@ -8994,7 +8994,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "COSTO VEF.",
     "name": "PORTEZUELA DESBLOQUEO MOTOR CAME BX 800KG",
     "brand": "CAME",
@@ -9005,13 +9005,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: COSTO VEF.",
+      "SKU: COSTO VEF.",
       "Categoría ERP: Automatización y Domotica",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -9023,11 +9023,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1919",
+      "SKU: 1919",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 270,
     "moneda": "DOP",
@@ -9036,7 +9036,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1919",
     "name": "RELAY 12VDC 10A P/ MOTOR CAME",
     "brand": "CAME",
@@ -9047,13 +9047,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1919",
+      "SKU: 1919",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -9065,11 +9065,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 1884",
+      "SKU: 1884",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 504.74,
     "moneda": "DOP",
@@ -9078,7 +9078,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1884",
     "name": "RELAY 24VDC 5A 8 PIN 1CONTAC P/CAME",
     "brand": "CAME",
@@ -9089,13 +9089,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 1884",
+      "SKU: 1884",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -9107,11 +9107,11 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 3210",
+      "SKU: 3210",
       "Categoría ERP: Mano de Obra",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "precio": 500,
     "moneda": "DOP",
@@ -9120,7 +9120,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "destacado": false,
     "activo": true,
-    "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "3210",
     "name": "REPARACION DE TARJETA DE MOTOR CAME 1000KG",
     "brand": "CAME",
@@ -9131,13 +9131,13 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 3210",
+      "SKU: 3210",
       "Categoría ERP: Mano de Obra",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf"
+      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01128M04.pdf",
+    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true
   },
@@ -9149,7 +9149,7 @@ const INITIAL_PRODUCTS = [
     "categoria_id": "acceso",
     "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
-      "Código SKU / Odoo: 4016",
+      "SKU: 4016",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -9173,7 +9173,7 @@ const INITIAL_PRODUCTS = [
     "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
     "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "features": [
-      "Código SKU / Odoo: 4016",
+      "SKU: 4016",
       "Categoría ERP: Otros",
       "Disponibilidad: Disponible bajo pedido",
       "Manual de Instalación disponible",
@@ -9188,7 +9188,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v5';
+    const versionKey = 'wes_products_v6_catalog';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
