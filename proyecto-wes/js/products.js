@@ -8878,19 +8878,22 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-21468",
     "codigo": "1390",
-    "nombre": "MOTOR CAME 1000KG USO INTENSIVO (BK-1000)",
+    "nombre": "MOTOR CAME 1000KG USO INTENSIVO (BXV10AGS)",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Operador de alto rendimiento CAME para puertas y portones corredizos de hasta 1,000 kg y 20 metros. Diseño robusto preparado para entradas de condominios y accesos residenciales con tráfico continuo, desbloqueo manual protegido con llave y cuadro ZBX.",
+    "descripcion": "Motorreductor electromecánico CAME BXV10AGS / 001USU0030 para cancelas y portones correderos de hasta 1,000 kg y 20 metros de longitud. Diseño estilizado, ligero y ultrarresistente con tecnología de motor a 24V CC y Encoder incorporado en la central de control: detección continua de obstáculos con parada y reversa automática de marcha. Cuadro electrónico con display digital de programación para hasta 250 usuarios individuales.",
     "caracteristicas": [
       "SKU: 1390",
-      "Capacidad: 1,000 kg / Longitud máx: 20 metros",
-      "Alimentación: CA 230V / 50-60 Hz",
-      "Fuerza de empuje: 1,000 N / Velocidad: 11 m/min",
-      "Ciclo de trabajo: Uso intensivo para condominios",
-      "Protección: IP54 resistente a intemperie",
+      "Modelo oficial: CAME BXV10AGS / 001USU0030 (1000KG)",
+      "Capacidad máxima: 1,000 kg / Longitud máx: 20 metros",
+      "Alimentación: 110V - 120V CA / Motor: 24V CC con tecnología Encoder",
+      "Sistema de seguridad Encoder: Detección de obstáculos con reversa automática",
+      "Potencia Máx: 400 W / Fuerza de empuje: 1,000 N",
+      "Velocidad de maniobra: 11 m/min",
+      "Memoria interna: Hasta 250 usuarios independientes",
+      "Grado de protección: IP44 para intemperie / Color: Gris Grafito RAL 7024",
       "Disponibilidad: 1 unidad en inventario físico WES",
-      "Garantía WES: 2 años oficial CAME",
+      "Garantía WES: 2 años con certificación de origen CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
@@ -8898,28 +8901,31 @@ const INITIAL_PRODUCTS = [
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 1,
-    "imagen_url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "imagen_url": "assets/came-bxv1000kg.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1390",
-    "name": "MOTOR CAME 1000KG USO INTENSIVO (BK-1000)",
+    "name": "MOTOR CAME 1000KG USO INTENSIVO (BXV10AGS)",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 41330.76,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-    "description": "Operador de alto rendimiento CAME para puertas y portones corredizos de hasta 1,000 kg y 20 metros. Diseño robusto preparado para entradas de condominios y accesos residenciales con tráfico continuo, desbloqueo manual protegido con llave y cuadro ZBX.",
+    "image": "assets/came-bxv1000kg.jpg",
+    "description": "Motorreductor electromecánico CAME BXV10AGS / 001USU0030 para cancelas y portones correderos de hasta 1,000 kg y 20 metros de longitud. Diseño estilizado, ligero y ultrarresistente con tecnología de motor a 24V CC y Encoder incorporado en la central de control: detección continua de obstáculos con parada y reversa automática de marcha. Cuadro electrónico con display digital de programación para hasta 250 usuarios individuales.",
     "features": [
       "SKU: 1390",
-      "Capacidad: 1,000 kg / Longitud máx: 20 metros",
-      "Alimentación: CA 230V / 50-60 Hz",
-      "Fuerza de empuje: 1,000 N / Velocidad: 11 m/min",
-      "Ciclo de trabajo: Uso intensivo para condominios",
-      "Protección: IP54 resistente a intemperie",
+      "Modelo oficial: CAME BXV10AGS / 001USU0030 (1000KG)",
+      "Capacidad máxima: 1,000 kg / Longitud máx: 20 metros",
+      "Alimentación: 110V - 120V CA / Motor: 24V CC con tecnología Encoder",
+      "Sistema de seguridad Encoder: Detección de obstáculos con reversa automática",
+      "Potencia Máx: 400 W / Fuerza de empuje: 1,000 N",
+      "Velocidad de maniobra: 11 m/min",
+      "Memoria interna: Hasta 250 usuarios independientes",
+      "Grado de protección: IP44 para intemperie / Color: Gris Grafito RAL 7024",
       "Disponibilidad: 1 unidad en inventario físico WES",
-      "Garantía WES: 2 años oficial CAME",
+      "Garantía WES: 2 años con certificación de origen CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
@@ -8928,38 +8934,42 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "gallery_images": [
       {
-        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-        "title": "Operador CAME 1000KG",
+        "url": "assets/came-bxv1000kg.jpg",
+        "title": "CAME BXV10AGS 1000KG con Encoder",
         "badge": "Principal",
-        "caption": "Motorreductor de alto tonelaje para 1000 kg"
+        "caption": "Motorreductor CAME BXV 1000kg con vista frontal de desbloqueo, piñón trasero y tecnología Encoder anti-aplastamiento"
       },
       {
-        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
-        "title": "Kit Completo con Fotoceldas",
-        "badge": "Kit Completo",
-        "caption": "Incluye controles remotos, receptor y sensores de seguridad"
+        "url": "https://fscompras.com/wp-content/uploads/2019/02/BXV10RGS-002.jpg",
+        "title": "Chasis Compacto BXV RAL 7024",
+        "badge": "Chasis Frontal",
+        "caption": "Diseño ergonómico CAME BXV serie 1000kg en acabado gris grafito RAL 7024"
+      },
+      {
+        "url": "https://fscompras.com/wp-content/uploads/2019/02/BXV04RGS-004.jpg",
+        "title": "Piñón de Arrastre y Final de Carrera",
+        "badge": "Mecanismo Trasero",
+        "caption": "Engranaje módulo 4 en acero templado con resorte sensible de final de carrera"
       },
       {
         "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
-        "title": "Electrónica Cuadro ZBX",
+        "title": "Electrónica con Display Digital",
         "badge": "Electrónica",
-        "caption": "Placa digital con embrague electrónico y bornes protegidos"
-      },
-      {
-        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
-        "title": "Portón de Tránsito Continuo",
-        "badge": "En Operación",
-        "caption": "Instalación en condominio residencial con portón pesado"
+        "caption": "Tarjeta digital con display de programación, terminales separadas y memoria para 250 usuarios"
       }
     ],
     "key_attributes": {
-      "Capacidad": "1,000 kg (hasta 20 metros)",
-      "Alimentación": "CA 230V / 50-60 Hz",
+      "Capacidad Máxima": "1,000 kg (hasta 20 metros de longitud)",
+      "Alimentación Eléctrica": "110V - 120V CA (50/60 Hz)",
+      "Alimentación del Motor": "24V CC (Alta seguridad con Encoder)",
+      "Potencia Máxima": "400 W",
       "Fuerza de Empuje": "1,000 N",
-      "Velocidad": "11 m/min",
-      "Ciclo de Trabajo": "Uso intensivo continuo",
-      "Protección": "IP54",
-      "Garantía WES": "2 años oficial CAME"
+      "Velocidad de Maniobra": "11 metros por minuto",
+      "Sistema de Seguridad": "Encoder integrado: parada y reversa automática ante obstáculos",
+      "Memoria de Usuarios": "Hasta 250 mandos independientes",
+      "Grado de Protección": "IP44 / Aislamiento Clase I",
+      "Color Chasis": "Gris Grafito RAL 7024",
+      "Garantía WES": "2 años oficial certificada CAME"
     }
   },
   {
@@ -9833,7 +9843,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v8_catalog';
+    const versionKey = 'wes_products_v9_catalog';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
@@ -9854,7 +9864,7 @@ const StorageService = {
   },
 
   saveProducts: function(products) {
-    localStorage.setItem('wes_products_v8_catalog', JSON.stringify(products));
+    localStorage.setItem('wes_products_v9_catalog', JSON.stringify(products));
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
     if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;
@@ -10155,7 +10165,7 @@ const StorageService = {
   }
 ];
 
-    const saved = localStorage.getItem('wes_product_reviews');
+    const saved = typeof localStorage !== 'undefined' ? localStorage.getItem('wes_product_reviews') : null;
     let allReviews = defaultReviews;
     if (saved) {
       try {
@@ -10171,13 +10181,15 @@ const StorageService = {
   },
 
   saveProductReview: function(review) {
-    const saved = localStorage.getItem('wes_product_reviews');
+    const saved = typeof localStorage !== 'undefined' ? localStorage.getItem('wes_product_reviews') : null;
     let reviews = [];
     if (saved) {
       try { reviews = JSON.parse(saved); } catch (e) { reviews = []; }
     }
     reviews.unshift(review);
-    localStorage.setItem('wes_product_reviews', JSON.stringify(reviews));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('wes_product_reviews', JSON.stringify(reviews));
+    }
   }
 };
 
