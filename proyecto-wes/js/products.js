@@ -8548,79 +8548,86 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-31572",
     "codigo": "3152",
-    "nombre": "CONTROL OPERADOR CAME DIGITAL NEGRO 4 BOTONES (TOP-434EE)",
+    "nombre": "CONTROL OPERADOR CAME 4 BOTONES ROLLING CODE (TOP44RBN)",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Mando a distancia CAME TOP-434EE de 4 canales en acabado negro mate. Permite controlar hasta 4 automatismos independientes (portón vehicular, puerta peatonal, luces o segundo acceso) con un solo control portátil.",
+    "descripcion": "Mando a distancia de última generación CAME 806TS-0270 TOP44RBN de 4 canales y frecuencia 433.92 MHz. Equipado con tecnología Rolling Code de alta seguridad que evita la clonación o interceptación de señal. Dispone de 4 botones configurables para hasta 4 automatizaciones distintas (portón corredero, puerta de garaje, barrera vehicular o iluminación exterior). Permite configuración tradicional por radiofrecuencia o escaneando el código QR exclusivo desde la app oficial CAME SetUp.",
     "caracteristicas": [
       "SKU: 3152",
-      "Frecuencia: 433.92 MHz",
-      "Canales: 4 canales independientes para 4 accesos",
+      "Modelo oficial: CAME 806TS-0270 TOP44RBN",
+      "Frecuencia: 433.92 MHz Rolling Code (anticlonación de alta seguridad)",
+      "Canales: 4 canales independientes para 4 accesos o automatismos",
+      "Configuración: Tradicional o vía App CAME SetUp con código QR",
+      "Batería: Pila de litio CR2032 de larga duración incluida",
       "Disponibilidad: 2 unidades en inventario físico WES",
-      "Baterías de litio de larga duración incluidas"
+      "Garantía WES: 1 año oficial CAME"
     ],
     "precio": 1850,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 2,
-    "imagen_url": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
+    "imagen_url": "assets/came-top44rbn-front.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
     "code": "3152",
-    "name": "CONTROL OPERADOR CAME DIGITAL NEGRO 4 BOTONES (TOP-434EE)",
+    "name": "CONTROL OPERADOR CAME 4 BOTONES ROLLING CODE (TOP44RBN)",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 1850,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
-    "description": "Mando a distancia CAME TOP-434EE de 4 canales en acabado negro mate. Permite controlar hasta 4 automatismos independientes (portón vehicular, puerta peatonal, luces o segundo acceso) con un solo control portátil.",
+    "image": "assets/came-top44rbn-front.jpg",
+    "description": "Mando a distancia de última generación CAME 806TS-0270 TOP44RBN de 4 canales y frecuencia 433.92 MHz. Equipado con tecnología Rolling Code de alta seguridad que evita la clonación o interceptación de señal. Dispone de 4 botones configurables para hasta 4 automatizaciones distintas (portón corredero, puerta de garaje, barrera vehicular o iluminación exterior). Permite configuración tradicional por radiofrecuencia o escaneando el código QR exclusivo desde la app oficial CAME SetUp.",
     "features": [
       "SKU: 3152",
-      "Frecuencia: 433.92 MHz",
-      "Canales: 4 canales independientes para 4 accesos",
+      "Modelo oficial: CAME 806TS-0270 TOP44RBN",
+      "Frecuencia: 433.92 MHz Rolling Code (anticlonación de alta seguridad)",
+      "Canales: 4 canales independientes para 4 accesos o automatismos",
+      "Configuración: Tradicional o vía App CAME SetUp con código QR",
+      "Batería: Pila de litio CR2032 de larga duración incluida",
       "Disponibilidad: 2 unidades en inventario físico WES",
-      "Baterías de litio de larga duración incluidas"
+      "Garantía WES: 1 año oficial CAME"
     ],
     "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
     "featured": false,
     "active": true,
     "gallery_images": [
       {
-        "url": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
-        "title": "Control 4 Canales Negro Mate",
+        "url": "assets/came-top44rbn-front.jpg",
+        "title": "Control CAME TOP44RBN 4 Canales Negro/Azul",
         "badge": "Principal",
-        "caption": "Mando a distancia cuatricanal original CAME TOP-434EE"
+        "caption": "Transmisor CAME TOP44RBN (806TS-0270) de 4 canales con tecnología Rolling Code 433.92 MHz"
       },
       {
-        "url": "https://sc04.alicdn.com/kf/Ha748ef69fe6645d8942fc8eca0b67f2bf.jpg",
-        "title": "Vista Posterior y Anilla de Llavero",
-        "badge": "Reverso",
-        "caption": "Estructura ergonómica con tapa deslizante para anilla de llavero"
+        "url": "assets/came-top44rbn-angle.jpg",
+        "title": "Vista en Perspectiva y Pulsadores",
+        "badge": "Diseño Ergonómico",
+        "caption": "Carcasa antichoque con pulsadores táctiles de alta precisión y acabado bitono negro y azul"
       },
       {
-        "url": "https://sc04.alicdn.com/kf/H0a0faa14ec7d43b18056c52269fa23ddr.jpg",
-        "title": "Placa Transmisora de 4 Canales",
-        "badge": "Electrónica",
-        "caption": "Circuito de radiofrecuencia de alta estabilidad con batería de litio"
+        "url": "assets/came-top44rbn-back.jpg",
+        "title": "Compartimiento de Batería y Código QR",
+        "badge": "Configuración",
+        "caption": "Apertura fácil para batería CR2032 y configuración instantánea vía app CAME SetUp por QR"
       },
       {
         "url": "https://sc04.alicdn.com/kf/H51686ffca7394e2c943add335f01f36cJ.jpg",
-        "title": "Control Multiacceso Portátil",
-        "badge": "En Uso",
-        "caption": "Controla portón vehicular, puerta peatonal y luces con un solo mando"
+        "title": "Control Portátil en Mano",
+        "badge": "En Operación",
+        "caption": "Alcance extendido de 50 a 150 metros para control simultáneo de portón, garage y accesos"
       }
     ],
     "key_attributes": {
-      "Frecuencia": "433.92 MHz",
+      "Frecuencia de Radio": "433.92 MHz",
+      "Tipo de Codificación": "Rolling Code (código dinámico anticlonación)",
       "Número de Canales": "4 canales independientes",
-      "Codificación": "Autoaprendizaje código fijo",
-      "Baterías": "2 x CR2016 Litio 3V",
-      "Color": "Negro mate con tacto suave",
-      "Alcance": "50 a 150 metros",
-      "Compatibilidad": "Receptores CAME AF43S, RE432 y operadores automáticos",
-      "Garantía WES": "1 año oficial WES"
+      "Modelo Oficial": "CAME TOP44RBN (Código 806TS-0270)",
+      "Batería": "1 x Pila de litio CR2032 3V (incluida)",
+      "Programación": "Autoaprendizaje o mediante App CAME SetUp vía código QR",
+      "Alcance": "50 a 150 metros en campo abierto",
+      "Color": "Bitono Negro / Azul con pulsadores reforzados",
+      "Garantía WES": "1 año oficial certificada"
     }
   },
   {
@@ -9843,7 +9850,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v9_catalog';
+    const versionKey = 'wes_products_v10_catalog';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
@@ -9864,7 +9871,7 @@ const StorageService = {
   },
 
   saveProducts: function(products) {
-    localStorage.setItem('wes_products_v9_catalog', JSON.stringify(products));
+    localStorage.setItem('wes_products_v10_catalog', JSON.stringify(products));
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
     if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;
