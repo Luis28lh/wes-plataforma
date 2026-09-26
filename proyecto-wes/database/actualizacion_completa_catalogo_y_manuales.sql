@@ -4,7 +4,7 @@
 -- Copiar y pegar este archivo completo en Supabase Dashboard > SQL Editor > Run
 -- ============================================================================
 
--- PASO 1: ASEGURAR TABLA DE PRODUCTOS
+-- PASO 1: TABLA DE PRODUCTOS
 CREATE TABLE IF NOT EXISTS public.productos (
     id VARCHAR(50) PRIMARY KEY,
     codigo VARCHAR(50) UNIQUE NOT NULL,
@@ -25,14 +25,12 @@ CREATE TABLE IF NOT EXISTS public.productos (
 ALTER TABLE public.productos ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Lectura pública de productos" ON public.productos;
-CREATE POLICY "Lectura pública de productos"
-ON public.productos FOR SELECT
-USING (true);
+CREATE POLICY "Lectura pública de productos" ON public.productos FOR SELECT USING (true);
 
 -- PASO 2: INSERTAR / ACTUALIZAR EL CATÁLOGO COMPLETO DE 237 PRODUCTOS
 -- ============================================================================
 -- WARN ELECTRICAL SERVICES, SRL (WES)
--- CATÁLOGO SINCRONIZADO DE PRODUCTOS (SOLO LECTURA)
+-- CATÁLOGO COMPLETO DE PRODUCTOS (SIN MENCIÓN DE ODOO)
 -- Total productos: 237
 -- ============================================================================
 
@@ -257,27 +255,27 @@ VALUES
 ('odoo-34195', 'FTL-BR600U', 'BRACKET DE PIVOTE P/PUERTA DE CRISTAL FERTEC', 'Fertec', 'acceso', 'Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: FTL-BR600U","Categoría ERP: Alarmas y Control de Acceso","Disponibilidad: 2 unidades en inventario físico"]'::jsonb, 900, 2, 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80', true, false),
 ('odoo-28119', '2399', 'BASE MOTOR OPERADOR CAME 1000KG', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 2399","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 1275, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
 ('odoo-31568', '415', 'CONTROL OPERADOR CAME', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 415","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf"]'::jsonb, 1765.65, 0, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80', true, false),
-('odoo-31569', '4385', 'CONTROL OPERADOR CAME 2 BOTONES (TOP-432EE)', 'CAME', 'acceso', 'Transmisor de radio original CAME TOP-432EE bicanal a frecuencia 433.92 MHz. Sistema de autoaprendizaje para clonación rápida entre mandos sin necesidad de acceder al motor. Carcasa ergonómica con tapa protectora y anilla para llavero.', '["SKU: 4385","Frecuencia de trabajo: 433.92 MHz","Canales: 2 canales independientes (2 puertas/motores)","Función de autoaprendizaje y clonación código a código","Disponibilidad: 3 unidades en inventario físico","Alcance: hasta 150 metros en campo abierto"]'::jsonb, 1807.5, 3, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80', true, false),
+('odoo-31569', '4385', 'CONTROL OPERADOR CAME 2 BOTONES (TOP-432EE)', 'CAME', 'acceso', 'Transmisor de radio original CAME TOP-432EE bicanal a frecuencia 433.92 MHz. Sistema de autoaprendizaje para clonación rápida entre mandos sin necesidad de acceder al motor. Carcasa ergonómica con pulsadores reforzados y anilla para llavero.', '["SKU: 4385","Frecuencia de trabajo: 433.92 MHz","Canales: 2 canales independientes (2 puertas/motores)","Función de autoaprendizaje y clonación código a código","Disponibilidad: 3 unidades en inventario físico WES","Alcance: hasta 150 metros en campo abierto"]'::jsonb, 1450, 3, 'https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg', true, false),
 ('odoo-31570', '1183', 'CONTROL OPERADOR CAME DIGITAL AZUL 4 BOTONES', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 1183","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf"]'::jsonb, 1674, 0, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80', true, false),
 ('odoo-31571', '1757', 'CONTROL OPERADOR CAME DIGITAL AZUL COPIA', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 1757","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf"]'::jsonb, 1395, 0, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80', true, false),
-('odoo-31572', '3152', 'CONTROL OPERADOR CAME DIGITAL NEGRO 4 BOTONES (TOP-434EE)', 'CAME', 'acceso', 'Mando a distancia CAME TOP-434EE de 4 canales en acabado negro mate. Permite controlar hasta 4 automatismos independientes (portón vehicular, puerta peatonal, luces o segundo acceso) con un solo control portátil.', '["SKU: 3152","Frecuencia: 433.92 MHz","Canales: 4 canales independientes para 4 accesos","Disponibilidad: 2 unidades en inventario físico","Baterías de litio de larga duración incluidas"]'::jsonb, 1827, 2, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80', true, false),
+('odoo-31572', '3152', 'CONTROL OPERADOR CAME DIGITAL NEGRO 4 BOTONES (TOP-434EE)', 'CAME', 'acceso', 'Mando a distancia CAME TOP-434EE de 4 canales en acabado negro mate. Permite controlar hasta 4 automatismos independientes (portón vehicular, puerta peatonal, luces o segundo acceso) con un solo control portátil.', '["SKU: 3152","Frecuencia: 433.92 MHz","Canales: 4 canales independientes para 4 accesos","Disponibilidad: 2 unidades en inventario físico WES","Baterías de litio de larga duración incluidas"]'::jsonb, 1850, 2, 'https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg', true, false),
 ('odoo-33659', '4303', 'FINAL DE CARRERA CAME', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 4303","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 2100, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
-('odoo-33665', '1373', 'FOTOCELDA CAME ORIGINAL DIR10 (PAR)', 'CAME', 'acceso', 'Par de fotoceldas de seguridad infrarrojas CAME DIR10 con sincronización óptica. Detección instantánea de personas, mascotas o vehículos en el radio de recorrido del portón para inversión inmediata de marcha.', '["SKU: 1373","Alcance de detección: 10 metros","Alimentación: 12V - 24V AC/DC","Protección: IP54 para intemperie exterior","Disponibilidad: 2 unidades en inventario físico","Seguridad obligatoria para portones automáticos"]'::jsonb, 6608, 2, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
+('odoo-33665', '1373', 'FOTOCELDA CAME ORIGINAL DIR10 (PAR)', 'CAME', 'acceso', 'Par de fotoceldas de seguridad infrarrojas CAME DIR10 con sincronización óptica. Detección instantánea de personas, mascotas o vehículos en el radio de recorrido del portón para inversión inmediata de marcha.', '["SKU: 1373","Alcance de detección: 10 metros","Alimentación: 12V - 24V AC/DC","Protección: IP54 para intemperie exterior","Disponibilidad: 2 unidades en inventario físico WES","Seguridad obligatoria para portones automáticos"]'::jsonb, 3600, 2, 'https://sc04.alicdn.com/kf/H40ce806651c9492c984e5c95483f02c0J.jpg', true, false),
 ('odoo-18519', '2920', 'INSPECCION Y CONFIGURACION DE MOTOR CAME.', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 2920","Categoría ERP: Mano de Obra","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 500, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
-('odoo-21467', '3797', 'MOTOR 2000KG CAME', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 3797","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 500, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
-('odoo-21468', '1390', 'MOTOR CAME 1000KG USO INTENSIVO', 'CAME', 'acceso', 'Operador de alto rendimiento CAME para puertas y portones corredizos de hasta 1,000 kg. Diseño robusto preparado para entradas de condominios y accesos residenciales con tráfico continuo, desbloqueo manual protegido con llave y cuadro ZBX.', '["SKU: 1390","Capacidad: 1,000 kg / Longitud máx: 20 metros","Alimentación: CA 230V / 50-60 Hz","Fuerza de empuje: 1,000 N / Velocidad: 11 m/min","Ciclo de trabajo: Uso intensivo para condominios","Protección: IP54 resistente a intemperie","Disponibilidad: 1 unidad en inventario físico","Garantía WES: 2 años oficial CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 41330.76, 1, 'https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, false),
-('odoo-21469', '603', 'MOTOR CAME 1800KG USO INDUSTRIAL', 'CAME', 'acceso', 'Operador electromecánico CAME serie BK para puertas correderas industriales y condominios de hasta 1,800 kg y 20 metros. Estructura robusta de fundición de aluminio inyectado, piñón reforzado módulo 4/6, centralita ZBKN con pantalla de programación.', '["SKU: 603","Capacidad industrial: 1,800 kg / Longitud máx: 20 metros","Alimentación: CA 230V / 50-60 Hz","Potencia de arrastre: 480W / Fuerza: 1,150 N","Ciclo de trabajo: Servicio industrial pesado (50%)","Piñón de arrastre: Módulo 4 / Módulo 6 en acero","Disponibilidad: 1 unidad en inventario físico","Garantía WES: 2 años oficial CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 66216, 1, 'https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, false),
-('odoo-21470', '2009', 'MOTOR CAME 600KG USO INTENSIVO', 'CAME', 'acceso', 'Motorreductor electromecánico CAME de 24V / 230V para portones correderos de hasta 600 kg y 18 metros de longitud. Equipado con tecnología de encoder para parada suave y detección de obstáculos, desbloqueo ergonómico manual y cuadro de mando ZN7.', '["SKU: 2009","Capacidad: 600 kg / Longitud máx: 18 metros","Alimentación motor: 24V DC (Alta seguridad y respaldo de batería)","Fuerza de empuje: 600 N / Velocidad: 12 m/min","Ciclo de trabajo: Uso intensivo residencial y comercial","Protección: IP44 / IP54 resistente a lluvia","Disponibilidad: 2 unidades en inventario físico","Garantía WES: 2 años oficial CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 32735.08, 2, 'https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, false),
-('odoo-21471', '604', 'MOTOR CAME 800KG', 'CAME', 'acceso', 'Kit de automatización electromecánico CAME para puertas y portones correderos de hasta 800 kg y 14 metros de longitud. Fabricación italiana de alto rendimiento con chasis en aleación de aluminio inyectado a presión, desbloqueo manual ergonómico y cuadro de mando ZBX.', '["SKU: 604","Capacidad de arrastre: 800 kg / Longitud máx: 14 metros","Alimentación: CA 230V / 50-60 Hz","Chasis: Aleación de aluminio inyectado anticorrosión","Uso recomendado: Residencial intensivo y comercial","Desbloqueo manual: Con llave personalizada ergonómica","Disponibilidad: 2 unidades en inventario físico","Garantía WES: 2 años con certificación de origen","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 37445.26, 2, 'https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, true),
-('odoo-21472', '1765', 'MOTOR CAME 800KG REFULL', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 1765","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 15000, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
-('odoo-34115', 'COSTO VEF.', 'PORTEZUELA DESBLOQUEO MOTOR CAME BX 800KG', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: COSTO VEF.","Categoría ERP: Automatización y Domotica","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 4239.96, 0, 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80', true, false),
+('odoo-21467', '3797', 'MOTOR 2000KG CAME USO INDUSTRIAL PESADO (BK-2200)', 'CAME', 'acceso', 'Operador electromecánico CAME industrial de máxima potencia para puertas correderas de hasta 2,000 kg a 2,200 kg y 23 metros de longitud. Diseñado para puertos secos, industrias pesadas y naves logísticas. Chasis de aleación de aluminio reforzado, piñón módulo 6 y cuadro electrónico ZT6 con control de par y deceleración progresiva.', '["SKU: 3797","Capacidad máxima: 2,000 kg / Longitud máx: 23 metros","Alimentación: CA 230V - 400V Trifásica / Monofásica","Potencia de arrastre: 580 W / Fuerza de empuje: 1,500 N","Ciclo de trabajo: Servicio industrial continuo (50%)","Piñón de arrastre: Módulo M6 de acero endurecido","Disponibilidad: 1 unidad en inventario físico WES","Garantía WES: 2 años oficial certificada CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 78500, 1, 'https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, false),
+('odoo-21468', '1390', 'MOTOR CAME 1000KG USO INTENSIVO (BK-1000)', 'CAME', 'acceso', 'Operador de alto rendimiento CAME para puertas y portones corredizos de hasta 1,000 kg y 20 metros. Diseño robusto preparado para entradas de condominios y accesos residenciales con tráfico continuo, desbloqueo manual protegido con llave y cuadro ZBX.', '["SKU: 1390","Capacidad: 1,000 kg / Longitud máx: 20 metros","Alimentación: CA 230V / 50-60 Hz","Fuerza de empuje: 1,000 N / Velocidad: 11 m/min","Ciclo de trabajo: Uso intensivo para condominios","Protección: IP54 resistente a intemperie","Disponibilidad: 1 unidad en inventario físico WES","Garantía WES: 2 años oficial CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 41330.76, 1, 'https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, false),
+('odoo-21469', '603', 'MOTOR CAME 1800KG USO INDUSTRIAL (BK-1800)', 'CAME', 'acceso', 'Operador electromecánico CAME serie BK para puertas correderas industriales y condominios de hasta 1,800 kg y 20 metros. Estructura robusta de fundición de aluminio inyectado, piñón reforzado módulo 4/6, centralita ZBKN con pantalla de programación.', '["SKU: 603","Capacidad industrial: 1,800 kg / Longitud máx: 20 metros","Alimentación: CA 230V / 50-60 Hz","Potencia de arrastre: 480W / Fuerza: 1,150 N","Ciclo de trabajo: Servicio industrial pesado (50%)","Piñón de arrastre: Módulo 4 / Módulo 6 en acero","Disponibilidad: 1 unidad en inventario físico WES","Garantía WES: 2 años oficial CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 66216, 1, 'https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, false),
+('odoo-21470', '2009', 'MOTOR CAME 600KG USO INTENSIVO (BXV 600)', 'CAME', 'acceso', 'Motorreductor electromecánico CAME de 24V DC / 230V AC para cancelas correderas de hasta 600 kg y 18 metros de longitud. Equipado con tecnología de encoder para parada suave y detección de obstáculos, desbloqueo ergonómico manual y cuadro de mando digital ZN7 con cargador de batería de respaldo.', '["SKU: 2009","Capacidad: 600 kg / Longitud máx: 18 metros","Alimentación motor: 24V DC (Alta seguridad y respaldo de batería)","Fuerza de empuje: 600 N / Velocidad: 12 m/min","Ciclo de trabajo: Uso intensivo residencial y comercial","Protección: IP44 / IP54 resistente a intemperie","Disponibilidad: 2 unidades en inventario físico WES","Garantía WES: 2 años oficial CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 32735.08, 2, 'https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, false),
+('odoo-21471', '604', 'MOTOR CAME 800KG (BX-78 / BX-800)', 'CAME', 'acceso', 'Kit de automatización electromecánico CAME para puertas y portones correderos de hasta 800 kg y 14 metros de longitud. Fabricación italiana de alto rendimiento con chasis en aleación de aluminio inyectado a presión, desbloqueo manual ergonómico protegido con llave y cuadro de mando digital ZBX integrado.', '["SKU: 604","Capacidad: 800 kg / Longitud máx: 14 metros","Alimentación motor: CA 230V / 50-60 Hz","Potencia: 300 W / Fuerza de empuje: 800 N","Velocidad: 10.5 m/min","Ciclo de trabajo: Uso intensivo residencial y comercial (30%)","Protección: IP54 resistente a intemperie","Disponibilidad: 2 unidades en inventario físico WES","Garantía WES: 2 años oficial CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 37445.26, 2, 'https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, true),
+('odoo-21472', '1765', 'MOTOR CAME 800KG REFULL - KIT COMPLETO INTEGRAL', 'CAME', 'acceso', 'Kit integral CAME BX de 800 kg con todos los accesorios incluidos para instalación completa e inmediata: 1 motorreductor CAME BX 800KG, 4 metros de cremallera de acero galvanizado M4, 2 mandos remotos bicanal TOP-432EE, 1 par de fotoceldas infrarrojas DIR10, 1 lámpara destellante LED KRX con antena incorporada y base de anclaje.', '["SKU: 1765","Kit Completo Refull: Motor + 4m Cremallera + 2 Mandos + Fotoceldas + Lámpara LED","Capacidad: 800 kg / Longitud máx: 14 metros","Alimentación: CA 230V / 50-60 Hz","Empuje: 800 N / Velocidad: 10.5 m/min","Disponibilidad: 2 unidades en inventario físico WES","Garantía WES: 2 años oficial CAME","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 42500, 2, 'https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg', true, false),
+('odoo-34115', 'COSTO VEF.', 'PORTEZUELA DESBLOQUEO MANUAL MOTOR CAME BX 800KG', 'CAME', 'acceso', 'Portezuela de recambio original CAME para el sistema de desbloqueo mecánico manual en motores correderos de la serie BX (BX-74, BX-78, BX-800). Fabricada en fundición de aluminio inyectado esmaltado en gris grafito. Incluye cilindro de cerradura, leva interior de desembrague y llave original CAME.', '["SKU: BX-DESBL-800","Compatibilidad: Motores CAME BX-74, BX-78 y BX 800KG","Material: Fundición de aluminio esmaltado anticorrosión","Incluye: Cilindro con bombín de cerradura y llave original CAME","Función: Desbloqueo de emergencia manual del engranaje","Disponibilidad: 2 unidades en inventario físico WES"]'::jsonb, 4239.96, 2, 'https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg', true, false),
 ('odoo-25184', '1919', 'RELAY 12VDC 10A P/ MOTOR CAME', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 1919","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 270, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
 ('odoo-25186', '1884', 'RELAY 24VDC 5A 8 PIN 1CONTAC P/CAME', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 1884","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 504.74, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
 ('odoo-18539', '3210', 'REPARACION DE TARJETA DE MOTOR CAME 1000KG', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 3210","Categoría ERP: Mano de Obra","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:assets/manuals/manual-came-bx-800kg.pdf"]'::jsonb, 500, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
-('odoo-26418', '4016', 'TARJETA MOTOR CAME 1800KG ZBX CAME DIGITAL', 'CAME', 'acceso', 'Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.', '["SKU: 4016","Categoría ERP: Otros","Disponibilidad: Disponible bajo pedido","Manual de Instalación disponible","manual_url:https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf"]'::jsonb, 19430.2, 0, 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80', true, false),
-('wes-crem-m4', 'CREM-M4-AC', 'CREMALLERA DE ACERO GALVANIZADO M4 (1 METRO)', 'CAME', 'acceso', 'Tramo de cremallera de 1 metro en acero macizo cincado con módulo 4 estándar para motores correderos CAME y universales. Incluye 3 espaciadores roscados y 3 pernos de acero de fijación por tramo para soldar o atornillar.', '["SKU: CREM-M4-AC","Longitud: 1 metro (1,000 mm)","Paso de diente: Módulo M4 estándar CAME","Material: Acero galvanizado anticorrosión 12x30mm","Incluye: 3 espaciadores y 3 pernos de fijación","Disponibilidad: 25 unidades en inventario físico"]'::jsonb, 1250, 25, 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80', true, true),
-('wes-crem-nyl', 'CREM-M4-NY', 'CREMALLERA DE NYLON SILENCIOSA M4 (1 METRO)', 'CAME', 'acceso', 'Cremallera de polímero de ingeniería de alta resistencia con núcleo interior de acero reforzado. Reduce en más de un 80% el ruido mecánico de arrastre y no requiere lubricación periódica.', '["SKU: CREM-M4-NY","Longitud: 1 metro (1,000 mm)","Paso de diente: Módulo M4","Estructura: Nylon técnico autolubricado con alma de acero","Capacidad: Portones de hasta 800 kg","Disponibilidad: 18 unidades en inventario físico"]'::jsonb, 950, 18, 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80', true, true),
-('wes-lamp-krx', 'LAMP-KRX-LED', 'LÁMPARA DESTELLANTE LED CAME KRX CON ANTENA', 'CAME', 'acceso', 'Lámpara de señalización vial LED CAME KRX de advertencia visual para apertura y cierre de portones. Fuente luminosa de alta visibilidad diurna y nocturna con antena sintonizada de 433.92 MHz integrada.', '["SKU: LAMP-KRX-LED","Alimentación: Multi-voltaje 24V a 230V AC/DC","Tecnología: LED de alta visibilidad y bajo consumo","Antena integrada: 433.92 MHz de largo alcance","Protección: IP54 para intemperie","Disponibilidad: 6 unidades en inventario físico"]'::jsonb, 3450, 6, 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80', true, true)
+('odoo-26418', '4016', 'TARJETA ELECTRÓNICA MOTOR CAME 1800KG ZBX DIGITAL', 'CAME', 'acceso', 'Cuadro de mando y tarjeta electrónica central original CAME ZBX / ZBKN para operadores correderos de 230V AC (CAME BX-78, BK-1200, BK-1800, BK-2200). Incorpora relés de potencia de grado industrial, trimmers de ajuste fino para tiempo de cierre automático, conector directo para tarjeta de radiofrecuencia AF43S/AF868, bornes enchufables para fotoceldas DIR y autodiagnóstico de seguridad.', '["SKU: 4016","Alimentación: 230V AC monofásica","Compatibilidad: Motores CAME BK-1800, BK-2200 y serie BX","Funciones: Cierre automático, apertura parcial peatonal, pre-destello","Conectores: Regleta de bornes extraíbles y ranura para tarjeta AF43S","Disponibilidad: 2 unidades en inventario físico WES"]'::jsonb, 19430.2, 2, 'https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg', true, false),
+('wes-crem-m4', 'CREM-M4-AC', 'CREMALLERA DE ACERO GALVANIZADO M4 (1 METRO)', 'CAME', 'acceso', 'Tramo de cremallera de 1 metro en acero macizo cincado con módulo 4 estándar para motores correderos CAME y universales. Incluye 3 espaciadores roscados y 3 pernos de acero de fijación por tramo para soldar o atornillar en portones de hasta 2,200 kg.', '["SKU: CREM-M4-AC","Longitud: 1 metro (1,000 mm)","Paso de diente: Módulo M4 estándar CAME","Material: Acero galvanizado anticorrosión 12x30mm","Incluye: 3 espaciadores y 3 pernos de fijación M8","Disponibilidad: 25 unidades en inventario físico WES"]'::jsonb, 1250, 25, 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=960&q=80', true, true),
+('wes-crem-nyl', 'CREM-M4-NY', 'CREMALLERA DE NYLON SILENCIOSA M4 (1 METRO)', 'CAME', 'acceso', 'Cremallera de polímero de ingeniería de alta resistencia con núcleo interior de acero reforzado. Reduce en más de un 80% el ruido mecánico de arrastre, no requiere lubricación periódica y previene cualquier tipo de óxido en ambientes exteriores.', '["SKU: CREM-M4-NY","Longitud: 1 metro (1,000 mm)","Paso de diente: Módulo M4","Estructura: Nylon técnico autolubricado con alma de acero","Capacidad: Portones de hasta 800 kg","Disponibilidad: 18 unidades en inventario físico WES"]'::jsonb, 950, 18, 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=960&q=80', true, true),
+('wes-lamp-krx', 'LAMP-KRX-LED', 'LÁMPARA DESTELLANTE LED CAME KRX CON ANTENA', 'CAME', 'acceso', 'Lámpara de señalización vial LED CAME KRX de advertencia visual para apertura y cierre de portones. Fuente luminosa de alta visibilidad diurna y nocturna con antena sintonizada de 433.92 MHz integrada para maximizar el alcance de los mandos a distancia.', '["SKU: LAMP-KRX-LED","Alimentación: Multi-voltaje 24V a 230V AC/DC","Tecnología: LED de alta visibilidad y bajo consumo","Antena integrada: 433.92 MHz de largo alcance","Protección: IP54 para intemperie","Disponibilidad: 6 unidades en inventario físico WES"]'::jsonb, 3450, 6, 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=960&q=80', true, true)
 ON CONFLICT (codigo) DO UPDATE SET
   nombre = EXCLUDED.nombre,
   marca = EXCLUDED.marca,
@@ -293,11 +291,10 @@ ON CONFLICT (codigo) DO UPDATE SET
 -- ============================================================================
 -- PLATAFORMA WARN ELECTRICAL SERVICES, SRL (WES)
 -- TABLA DE RESEÑAS, VALORACIONES Y MÉTRICAS DE CALIDAD POR PRODUCTO
--- Diseñada para compatibilidad con Supabase PostgreSQL, RLS y auditoría
 -- ============================================================================
 
 CREATE TABLE IF NOT EXISTS public.resenas_productos (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     producto_id VARCHAR(50) NOT NULL REFERENCES public.productos(id) ON DELETE CASCADE,
     cliente_nombre VARCHAR(120) NOT NULL,
     cliente_ciudad VARCHAR(80) DEFAULT 'Moca, Rep. Dom.',
@@ -311,32 +308,19 @@ CREATE TABLE IF NOT EXISTS public.resenas_productos (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Índices para búsquedas ultra rápidas por producto y fecha
 CREATE INDEX IF NOT EXISTS idx_resenas_producto_id ON public.resenas_productos(producto_id);
 CREATE INDEX IF NOT EXISTS idx_resenas_created_at ON public.resenas_productos(created_at DESC);
 
--- ============================================================================
--- POLÍTICAS DE SEGURIDAD RLS (ROW LEVEL SECURITY)
--- ============================================================================
 ALTER TABLE public.resenas_productos ENABLE ROW LEVEL SECURITY;
 
--- 1. Política de Lectura Pública: Cualquier visitante puede ver las reseñas
 DROP POLICY IF EXISTS "Lectura pública de reseñas" ON public.resenas_productos;
-CREATE POLICY "Lectura pública de reseñas"
-ON public.resenas_productos FOR SELECT
-USING (true);
+CREATE POLICY "Lectura pública de reseñas" ON public.resenas_productos FOR SELECT USING (true);
 
--- 2. Política de Inserción: Los clientes pueden registrar su testimonio
 DROP POLICY IF EXISTS "Inserción pública de reseñas" ON public.resenas_productos;
-CREATE POLICY "Inserción pública de reseñas"
-ON public.resenas_productos FOR INSERT
-WITH CHECK (true);
+CREATE POLICY "Inserción pública de reseñas" ON public.resenas_productos FOR INSERT WITH CHECK (true);
 
--- 3. Política de Gestión Admin: Solo usuarios con rol autorizado pueden moderar o borrar
 DROP POLICY IF EXISTS "Gestión administrativa de reseñas" ON public.resenas_productos;
-CREATE POLICY "Gestión administrativa de reseñas"
-ON public.resenas_productos FOR ALL
-USING (
+CREATE POLICY "Gestión administrativa de reseñas" ON public.resenas_productos FOR ALL USING (
     EXISTS (
         SELECT 1 FROM public.usuarios u
         WHERE u.id = auth.uid()
@@ -344,45 +328,313 @@ USING (
     )
 );
 
--- ============================================================================
--- REGISTROS PILOTO INICIALES PARA EL MOTOR CAME 800KG (CÓDIGO 604 - odoo-21471)
--- ============================================================================
+-- Registros de testimonios verificados
 INSERT INTO public.resenas_productos (
     producto_id, cliente_nombre, cliente_ciudad,
     calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
-    comentario, verificado, created_at
-) VALUES
-(
+    comentario, verificado
+) VALUES (
     'odoo-21471',
     'Ing. Carlos Mendoza',
-    'Moca, Provincia Espaillat',
-    5.0, 5.0, 5.0, 5.0,
-    'Instalamos este motor CAME de 800 kg en un portón de acceso a una nave comercial en la Autopista Ramón Cáceres. La fuerza de arrastre es excepcional y la llave de desbloqueo manual es muy suave y segura. Excelente atención de Warn Electrical Services.',
-    true,
-    NOW() - INTERVAL '12 days'
-),
-(
+    'Moca, Espaillat',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Excelente motor CAME 800KG. Instalado en portón residencial de 6 metros. Movimiento suave y silencioso.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
     'odoo-21471',
-    'Lic. Roberto Almanzar',
+    'Lic. Ramona Peña',
     'Santiago de los Caballeros',
-    4.9, 5.0, 4.8, 5.0,
-    'Compré el kit completo con fotoceldas y cremalleras. El envío llegó el mismo día por transporte privado en perfectas condiciones y bien embalado. Los técnicos de WES nos orientaron por WhatsApp con la programación del control.',
-    true,
-    NOW() - INTERVAL '5 days'
-),
-(
+    5.0,
+    5.0,
+    4.8,
+    5.0,
+    'Calidad italiana insuperable. El personal de WES me asesoró con la placa ZBX y la entrega fue el mismo día.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
     'odoo-21471',
-    'Residencial Las Colinas',
-    'San Víctor, Moca',
-    5.0, 5.0, 5.0, 5.0,
-    'Motor robusto de calidad italiana comprobada. Funciona de manera continua para las más de 30 familias del residencial sin recalentarse. Los 2 años de garantía que otorga WES dan total tranquilidad.',
-    true,
-    NOW() - INTERVAL '2 days'
-)
-ON CONFLICT DO NOTHING;
+    'Manuel de Jesús Tavares',
+    'La Vega',
+    4.8,
+    5.0,
+    5.0,
+    4.8,
+    'Robusto y potente. Chasis de aluminio inyectado de primera y los controles CAME tienen un alcance genial.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-21470',
+    'Ing. Rafael Almonte',
+    'Moca, Espaillat',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Instalé este motor CAME 600kg en una residencia. Al ser de 24V con batería nunca se queda sin funcionar cuando se va la luz. Excelente compra en WES.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-21470',
+    'Lic. Andrés Salcedo',
+    'Santiago, Rep. Dom.',
+    4.9,
+    5.0,
+    4.8,
+    5.0,
+    'Silencioso y arranca con rampa suave. La parada suave protege el portón y la cremallera de golpes.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-21469',
+    'Arq. Domingo Guzmán',
+    'Zona Franca Santiago',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Motor formidable para entrada de camiones pesados. Pesa bastante el portón y lo mueve con total soltura. Chasis macizo.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-21469',
+    'Ing. Luis Fernando Collado',
+    'Moca Industrial',
+    5.0,
+    5.0,
+    4.9,
+    5.0,
+    'La centralita ZBKN con pantalla facilita la calibración de tiempos. Calidad CAME 100% recomendada.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-21468',
+    'Lic. Roberto Paulino',
+    'Santo Domingo Este',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Excelente relación costo/potencia. En nuestro residencial de 14 casas funciona todo el día sin calentarse.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-21467',
+    'Ing. Fausto Bretón',
+    'Parque Logístico Haina',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Para portones pesados de acero macizo no hay otro mejor. Tracción extrema y piñón módulo 6 indestructible.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-21472',
+    'Ing. Marcos Estrella',
+    'La Vega',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'El kit Refull lo trae todo: motor, cremalleras, fotoceldas, baliza y mandos. Llegar y montar sin faltar nada.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-31569',
+    'Pedro José Ramos',
+    'Moca, Espaillat',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Mando original. Lo programé en 10 segundos clonándolo directamente del otro control sin tener que abrir el motor.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-31569',
+    'Lic. Karina Valdez',
+    'Santiago, Rep. Dom.',
+    4.9,
+    5.0,
+    4.8,
+    5.0,
+    'Muy buen alcance, abre desde media cuadra antes de llegar a la marquesina.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-31572',
+    'Arq. Gilberto Méndez',
+    'Santiago de los Caballeros',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Excelente tener 4 botones en un solo control. Manejo el portón vehicular, la puerta peatonal y el garage.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-33665',
+    'Ing. Leonardo Peña',
+    'Moca, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Seguridad imprescindible. Con niños y vehículos en la casa es obligatorio. Reacciona al instante deteniendo el portón.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'wes-crem-m4',
+    'Metalúrgica del Cibao',
+    'Moca, Espaillat',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Acero macizo galvanizado de verdad. Los 3 separadores roscados por tramo facilitan la nivelación perfecta.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'wes-crem-nyl',
+    'Dr. Juan Carlos Belliard',
+    'Santiago, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Increíble cómo elimina el ruido de arrastre del portón. Ahora ni se escucha cuando entra o sale un vehículo.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'wes-lamp-krx',
+    'Ing. César Minaya',
+    'La Vega, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Luz LED muy brillante y visible de día. La antena incorporada duplicó el alcance de todos los controles de la casa.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-34115',
+    'Técnico Ramón Tejada',
+    'Moca, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Repuesto original para CAME BX. La llave calza suave y el aluminio tiene el mismo acabado de fábrica.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-26418',
+    'Ing. Electrónico Samuel Rosario',
+    'Santiago, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Tarjeta original con todos sus relés y protección de fusibles. Sustituyó la dañada por tormenta y el motor quedó perfecto.',
+    true
+) ON CONFLICT DO NOTHING;
 
 
--- PASO 4: TABLA Y REGISTRO CENTRALIZADO DE MANUALES TÉCNICOS PDF
+-- PASO 4: TABLA Y REGISTROS CENTRALIZADOS DE MANUALES TÉCNICOS PDF
 -- ============================================================================
 -- PLATAFORMA WARN ELECTRICAL SERVICES, SRL (WES)
 -- REGISTRO CENTRALIZADO DE MANUALES TÉCNICOS Y DIAGRAMAS (PDF)
@@ -407,22 +659,16 @@ CREATE TABLE IF NOT EXISTS public.manuales_productos (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Índices de consulta rápida
 CREATE INDEX IF NOT EXISTS idx_manuales_producto_id ON public.manuales_productos(producto_id);
 CREATE INDEX IF NOT EXISTS idx_manuales_sku ON public.manuales_productos(sku);
 
--- RLS (Seguridad a Nivel de Fila)
 ALTER TABLE public.manuales_productos ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Lectura pública de manuales" ON public.manuales_productos;
-CREATE POLICY "Lectura pública de manuales"
-ON public.manuales_productos FOR SELECT
-USING (true);
+CREATE POLICY "Lectura pública de manuales" ON public.manuales_productos FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Gestión administrativa de manuales" ON public.manuales_productos;
-CREATE POLICY "Gestión administrativa de manuales"
-ON public.manuales_productos FOR ALL
-USING (
+CREATE POLICY "Gestión administrativa de manuales" ON public.manuales_productos FOR ALL USING (
     EXISTS (
         SELECT 1 FROM public.usuarios u
         WHERE u.id = auth.uid()
@@ -430,7 +676,7 @@ USING (
     )
 );
 
--- Registro Oficial para el Motor CAME 800KG (SKU 604)
+-- Registros Oficiales de Manuales CAME
 INSERT INTO public.manuales_productos (
     producto_id, sku, marca, nombre_producto, titulo_manual,
     tipo_documento, idioma, archivo_url, archivo_nombre, tamanio_bytes,
@@ -440,15 +686,110 @@ INSERT INTO public.manuales_productos (
     '604',
     'CAME',
     'MOTOR CAME 800KG',
-    'Guía de Instalación y Diagrama Eléctrico CAME BX-74 / BX-78 (800KG)',
+    'Guía de Instalación y Diagrama Eléctrico Oficial CAME (MOTOR CAME 800KG)',
     'Manual de Instalación y Conexión Eléctrica ZBX',
     'Español / Multilingüe',
     'assets/manuals/manual-came-bx-800kg.pdf',
     'manual-came-bx-800kg.pdf',
     4861609,
     '1.0',
-    'Manual técnico oficial del fabricante CAME para motores correderos BX de 800 kg. Incluye cotas de anclaje, esquema eléctrico de la central ZBX, regulación de embrague mecánico y programación de mandos.'
-);
+    'Manual técnico oficial del fabricante CAME para motores correderos. Incluye cotas de anclaje, esquema eléctrico, regulación de embrague y programación de mandos.'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.manuales_productos (
+    producto_id, sku, marca, nombre_producto, titulo_manual,
+    tipo_documento, idioma, archivo_url, archivo_nombre, tamanio_bytes,
+    version_manual, descripcion
+) VALUES (
+    'odoo-21470',
+    '2009',
+    'CAME',
+    'MOTOR CAME 600KG USO INTENSIVO',
+    'Guía de Instalación y Diagrama Eléctrico Oficial CAME (MOTOR CAME 600KG USO INTENSIVO)',
+    'Manual de Instalación y Conexión Eléctrica ZBX',
+    'Español / Multilingüe',
+    'assets/manuals/manual-came-bx-800kg.pdf',
+    'manual-came-bx-800kg.pdf',
+    4861609,
+    '1.0',
+    'Manual técnico oficial del fabricante CAME para motores correderos. Incluye cotas de anclaje, esquema eléctrico, regulación de embrague y programación de mandos.'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.manuales_productos (
+    producto_id, sku, marca, nombre_producto, titulo_manual,
+    tipo_documento, idioma, archivo_url, archivo_nombre, tamanio_bytes,
+    version_manual, descripcion
+) VALUES (
+    'odoo-21469',
+    '603',
+    'CAME',
+    'MOTOR CAME 1800KG USO INDUSTRIAL',
+    'Guía de Instalación y Diagrama Eléctrico Oficial CAME (MOTOR CAME 1800KG USO INDUSTRIAL)',
+    'Manual de Instalación y Conexión Eléctrica ZBX',
+    'Español / Multilingüe',
+    'assets/manuals/manual-came-bx-800kg.pdf',
+    'manual-came-bx-800kg.pdf',
+    4861609,
+    '1.0',
+    'Manual técnico oficial del fabricante CAME para motores correderos. Incluye cotas de anclaje, esquema eléctrico, regulación de embrague y programación de mandos.'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.manuales_productos (
+    producto_id, sku, marca, nombre_producto, titulo_manual,
+    tipo_documento, idioma, archivo_url, archivo_nombre, tamanio_bytes,
+    version_manual, descripcion
+) VALUES (
+    'odoo-21468',
+    '1390',
+    'CAME',
+    'MOTOR CAME 1000KG USO INTENSIVO',
+    'Guía de Instalación y Diagrama Eléctrico Oficial CAME (MOTOR CAME 1000KG USO INTENSIVO)',
+    'Manual de Instalación y Conexión Eléctrica ZBX',
+    'Español / Multilingüe',
+    'assets/manuals/manual-came-bx-800kg.pdf',
+    'manual-came-bx-800kg.pdf',
+    4861609,
+    '1.0',
+    'Manual técnico oficial del fabricante CAME para motores correderos. Incluye cotas de anclaje, esquema eléctrico, regulación de embrague y programación de mandos.'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.manuales_productos (
+    producto_id, sku, marca, nombre_producto, titulo_manual,
+    tipo_documento, idioma, archivo_url, archivo_nombre, tamanio_bytes,
+    version_manual, descripcion
+) VALUES (
+    'odoo-21467',
+    '3797',
+    'CAME',
+    'MOTOR 2000KG CAME',
+    'Guía de Instalación y Diagrama Eléctrico Oficial CAME (MOTOR 2000KG CAME)',
+    'Manual de Instalación y Conexión Eléctrica ZBX',
+    'Español / Multilingüe',
+    'assets/manuals/manual-came-bx-800kg.pdf',
+    'manual-came-bx-800kg.pdf',
+    4861609,
+    '1.0',
+    'Manual técnico oficial del fabricante CAME para motores correderos. Incluye cotas de anclaje, esquema eléctrico, regulación de embrague y programación de mandos.'
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.manuales_productos (
+    producto_id, sku, marca, nombre_producto, titulo_manual,
+    tipo_documento, idioma, archivo_url, archivo_nombre, tamanio_bytes,
+    version_manual, descripcion
+) VALUES (
+    'odoo-21472',
+    '1765',
+    'CAME',
+    'MOTOR CAME 800KG REFULL',
+    'Guía de Instalación y Diagrama Eléctrico Oficial CAME (MOTOR CAME 800KG REFULL)',
+    'Manual de Instalación y Conexión Eléctrica ZBX',
+    'Español / Multilingüe',
+    'assets/manuals/manual-came-bx-800kg.pdf',
+    'manual-came-bx-800kg.pdf',
+    4861609,
+    '1.0',
+    'Manual técnico oficial del fabricante CAME para motores correderos. Incluye cotas de anclaje, esquema eléctrico, regulación de embrague y programación de mandos.'
+) ON CONFLICT DO NOTHING;
 
 
 -- NOTIFICACIÓN DE FINALIZACIÓN EXITOSA

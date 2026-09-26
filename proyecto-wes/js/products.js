@@ -8387,20 +8387,20 @@ const INITIAL_PRODUCTS = [
     "nombre": "CONTROL OPERADOR CAME 2 BOTONES (TOP-432EE)",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Transmisor de radio original CAME TOP-432EE bicanal a frecuencia 433.92 MHz. Sistema de autoaprendizaje para clonación rápida entre mandos sin necesidad de acceder al motor. Carcasa ergonómica con tapa protectora y anilla para llavero.",
+    "descripcion": "Transmisor de radio original CAME TOP-432EE bicanal a frecuencia 433.92 MHz. Sistema de autoaprendizaje para clonación rápida entre mandos sin necesidad de acceder al motor. Carcasa ergonómica con pulsadores reforzados y anilla para llavero.",
     "caracteristicas": [
       "SKU: 4385",
       "Frecuencia de trabajo: 433.92 MHz",
       "Canales: 2 canales independientes (2 puertas/motores)",
       "Función de autoaprendizaje y clonación código a código",
-      "Disponibilidad: 3 unidades en inventario físico",
+      "Disponibilidad: 3 unidades en inventario físico WES",
       "Alcance: hasta 150 metros en campo abierto"
     ],
-    "precio": 1807.5,
+    "precio": 1450,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 3,
-    "imagen_url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
@@ -8408,17 +8408,17 @@ const INITIAL_PRODUCTS = [
     "name": "CONTROL OPERADOR CAME 2 BOTONES (TOP-432EE)",
     "brand": "CAME",
     "category": "Controles de Acceso",
-    "price": 1807.5,
+    "price": 1450,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
-    "description": "Transmisor de radio original CAME TOP-432EE bicanal a frecuencia 433.92 MHz. Sistema de autoaprendizaje para clonación rápida entre mandos sin necesidad de acceder al motor. Carcasa ergonómica con tapa protectora y anilla para llavero.",
+    "image": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
+    "description": "Transmisor de radio original CAME TOP-432EE bicanal a frecuencia 433.92 MHz. Sistema de autoaprendizaje para clonación rápida entre mandos sin necesidad de acceder al motor. Carcasa ergonómica con pulsadores reforzados y anilla para llavero.",
     "features": [
       "SKU: 4385",
       "Frecuencia de trabajo: 433.92 MHz",
       "Canales: 2 canales independientes (2 puertas/motores)",
       "Función de autoaprendizaje y clonación código a código",
-      "Disponibilidad: 3 unidades en inventario físico",
+      "Disponibilidad: 3 unidades en inventario físico WES",
       "Alcance: hasta 150 metros en campo abierto"
     ],
     "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
@@ -8426,10 +8426,28 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "gallery_images": [
       {
-        "url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
-        "title": "Control Remoto CAME TOP-432EE",
+        "url": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
+        "title": "Vista Frontal y Pulsadores",
         "badge": "Principal",
-        "caption": "Mando bicanal original CAME 433.92 MHz con autoaprendizaje"
+        "caption": "Transmisor bicanal original CAME TOP-432EE 433.92 MHz"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha748ef69fe6645d8942fc8eca0b67f2bf.jpg",
+        "title": "Vista Posterior con Homologación",
+        "badge": "Reverso",
+        "caption": "Carcasa antichoque con marcado CE y código de lote original CAME"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H0a0faa14ec7d43b18056c52269fa23ddr.jpg",
+        "title": "Interior con Baterías de Litio",
+        "badge": "Componentes",
+        "caption": "Compartimiento con 2 pilas CR2016 y microchip de autoaprendizaje"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H51686ffca7394e2c943add335f01f36cJ.jpg",
+        "title": "En Mano para Apertura Rápida",
+        "badge": "En Uso",
+        "caption": "Alcance confiable de 50 a 150 metros con pulsadores ergonómicos"
       }
     ],
     "key_attributes": {
@@ -8437,9 +8455,10 @@ const INITIAL_PRODUCTS = [
       "Número de Canales": "2 botones independientes",
       "Codificación": "Código fijo autoaprendizaje (TAM / TOP)",
       "Baterías": "2 x CR2016 Litio 3V (incluidas)",
-      "Alcance de Señal": "50 a 150 metros",
+      "Alcance de Señal": "50 a 150 metros en campo abierto",
       "Material": "Policarbonato antichoque ergonómico",
-      "Compatibilidad": "Motores CAME BX, BK, BXV, ATI y receptores AF43S"
+      "Compatibilidad": "Gama completa CAME (BX, BK, BXV, ATI, Fast, etc.)",
+      "Garantía WES": "1 año oficial WES"
     }
   },
   {
@@ -8537,14 +8556,14 @@ const INITIAL_PRODUCTS = [
       "SKU: 3152",
       "Frecuencia: 433.92 MHz",
       "Canales: 4 canales independientes para 4 accesos",
-      "Disponibilidad: 2 unidades en inventario físico",
+      "Disponibilidad: 2 unidades en inventario físico WES",
       "Baterías de litio de larga duración incluidas"
     ],
-    "precio": 1827,
+    "precio": 1850,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 2,
-    "imagen_url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
@@ -8552,16 +8571,16 @@ const INITIAL_PRODUCTS = [
     "name": "CONTROL OPERADOR CAME DIGITAL NEGRO 4 BOTONES (TOP-434EE)",
     "brand": "CAME",
     "category": "Controles de Acceso",
-    "price": 1827,
+    "price": 1850,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
+    "image": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
     "description": "Mando a distancia CAME TOP-434EE de 4 canales en acabado negro mate. Permite controlar hasta 4 automatismos independientes (portón vehicular, puerta peatonal, luces o segundo acceso) con un solo control portátil.",
     "features": [
       "SKU: 3152",
       "Frecuencia: 433.92 MHz",
       "Canales: 4 canales independientes para 4 accesos",
-      "Disponibilidad: 2 unidades en inventario físico",
+      "Disponibilidad: 2 unidades en inventario físico WES",
       "Baterías de litio de larga duración incluidas"
     ],
     "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
@@ -8569,19 +8588,39 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "gallery_images": [
       {
-        "url": "https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=600&q=80",
-        "title": "Control CAME 4 Canales Negro",
+        "url": "https://sc04.alicdn.com/kf/Hba0b1142e5dc4a82a01519e5ce406f85Z.jpg",
+        "title": "Control 4 Canales Negro Mate",
         "badge": "Principal",
-        "caption": "Control multi-canal original para portones y accesos WES"
+        "caption": "Mando a distancia cuatricanal original CAME TOP-434EE"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha748ef69fe6645d8942fc8eca0b67f2bf.jpg",
+        "title": "Vista Posterior y Anilla de Llavero",
+        "badge": "Reverso",
+        "caption": "Estructura ergonómica con tapa deslizante para anilla de llavero"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H0a0faa14ec7d43b18056c52269fa23ddr.jpg",
+        "title": "Placa Transmisora de 4 Canales",
+        "badge": "Electrónica",
+        "caption": "Circuito de radiofrecuencia de alta estabilidad con batería de litio"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H51686ffca7394e2c943add335f01f36cJ.jpg",
+        "title": "Control Multiacceso Portátil",
+        "badge": "En Uso",
+        "caption": "Controla portón vehicular, puerta peatonal y luces con un solo mando"
       }
     ],
     "key_attributes": {
       "Frecuencia": "433.92 MHz",
       "Número de Canales": "4 canales independientes",
+      "Codificación": "Autoaprendizaje código fijo",
       "Baterías": "2 x CR2016 Litio 3V",
-      "Color": "Negro mate con pulsadores reforzados",
+      "Color": "Negro mate con tacto suave",
       "Alcance": "50 a 150 metros",
-      "Compatibilidad": "Gama completa CAME con receptor 433.92 MHz"
+      "Compatibilidad": "Receptores CAME AF43S, RE432 y operadores automáticos",
+      "Garantía WES": "1 año oficial WES"
     }
   },
   {
@@ -8638,14 +8677,14 @@ const INITIAL_PRODUCTS = [
       "Alcance de detección: 10 metros",
       "Alimentación: 12V - 24V AC/DC",
       "Protección: IP54 para intemperie exterior",
-      "Disponibilidad: 2 unidades en inventario físico",
+      "Disponibilidad: 2 unidades en inventario físico WES",
       "Seguridad obligatoria para portones automáticos"
     ],
-    "precio": 6608,
+    "precio": 3600,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 2,
-    "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "https://sc04.alicdn.com/kf/H40ce806651c9492c984e5c95483f02c0J.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
@@ -8653,17 +8692,17 @@ const INITIAL_PRODUCTS = [
     "name": "FOTOCELDA CAME ORIGINAL DIR10 (PAR)",
     "brand": "CAME",
     "category": "Controles de Acceso",
-    "price": 6608,
+    "price": 3600,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "image": "https://sc04.alicdn.com/kf/H40ce806651c9492c984e5c95483f02c0J.jpg",
     "description": "Par de fotoceldas de seguridad infrarrojas CAME DIR10 con sincronización óptica. Detección instantánea de personas, mascotas o vehículos en el radio de recorrido del portón para inversión inmediata de marcha.",
     "features": [
       "SKU: 1373",
       "Alcance de detección: 10 metros",
       "Alimentación: 12V - 24V AC/DC",
       "Protección: IP54 para intemperie exterior",
-      "Disponibilidad: 2 unidades en inventario físico",
+      "Disponibilidad: 2 unidades en inventario físico WES",
       "Seguridad obligatoria para portones automáticos"
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
@@ -8671,19 +8710,39 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "gallery_images": [
       {
-        "url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
-        "title": "Fotoceldas Infrarrojas CAME DIR10",
+        "url": "https://sc04.alicdn.com/kf/H40ce806651c9492c984e5c95483f02c0J.jpg",
+        "title": "Par de Fotoceldas DIR10",
         "badge": "Principal",
-        "caption": "Par de sensores emisor y receptor para seguridad perimetral"
+        "caption": "Sensores emisor y receptor infrarrojos sincronizados originales CAME"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H3a4e9de3d5e74b04adfd7f0f4d3e79f2v.jpg",
+        "title": "Lente Óptica y Circuito Interno",
+        "badge": "Interior",
+        "caption": "Lente colimadora con regleta de bornes y puente de sincronización"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg",
+        "title": "Montaje en Columnas Laterales",
+        "badge": "Instalación",
+        "caption": "Protección perimetral a 50 cm de altura para detección de paso"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H99237d5ad8c94baf87ea916f64b8d1dfe.jpg",
+        "title": "Carcasa y Empaquetadura IP54",
+        "badge": "Protección",
+        "caption": "Junta de goma estanca resistente a lluvia torrencial y rayos UV"
       }
     ],
     "key_attributes": {
       "Alcance de Detección": "Hasta 10 metros entre columnas",
-      "Alimentación Eléctrica": "12V - 24V AC/DC",
+      "Alimentación Eléctrica": "12V – 24V AC/DC",
+      "Consumo": "60 mA a 24V AC",
       "Tipo de Contacto": "Relé NC (Normalmente Cerrado) 1A / 24V",
-      "Grado de Protección": "IP54 apto para lluvia, sol directo y polvo",
-      "Montaje": "Superficie en pared o columnas laterales",
-      "Dimensiones": "46 mm x 108 mm x 23 mm"
+      "Grado de Protección": "IP54 resistente a intemperie, lluvia y polvo",
+      "Dimensiones": "46 mm ancho x 108 mm alto x 23 mm profundidad",
+      "Temperatura de Trabajo": "-20 °C a +55 °C",
+      "Garantía WES": "2 años oficial CAME"
     }
   },
   {
@@ -8731,52 +8790,98 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-21467",
     "codigo": "3797",
-    "nombre": "MOTOR 2000KG CAME",
+    "nombre": "MOTOR 2000KG CAME USO INDUSTRIAL PESADO (BK-2200)",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Operador electromecánico CAME industrial de máxima potencia para puertas correderas de hasta 2,000 kg a 2,200 kg y 23 metros de longitud. Diseñado para puertos secos, industrias pesadas y naves logísticas. Chasis de aleación de aluminio reforzado, piñón módulo 6 y cuadro electrónico ZT6 con control de par y deceleración progresiva.",
     "caracteristicas": [
       "SKU: 3797",
-      "Categoría ERP: Otros",
-      "Disponibilidad: Disponible bajo pedido",
+      "Capacidad máxima: 2,000 kg / Longitud máx: 23 metros",
+      "Alimentación: CA 230V - 400V Trifásica / Monofásica",
+      "Potencia de arrastre: 580 W / Fuerza de empuje: 1,500 N",
+      "Ciclo de trabajo: Servicio industrial continuo (50%)",
+      "Piñón de arrastre: Módulo M6 de acero endurecido",
+      "Disponibilidad: 1 unidad en inventario físico WES",
+      "Garantía WES: 2 años oficial certificada CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "precio": 500,
+    "precio": 78500,
     "moneda": "DOP",
-    "disponibilidad": "Agotado",
-    "stock": 0,
-    "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "disponibilidad": "Disponible",
+    "stock": 1,
+    "imagen_url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "3797",
-    "name": "MOTOR 2000KG CAME",
+    "name": "MOTOR 2000KG CAME USO INDUSTRIAL PESADO (BK-2200)",
     "brand": "CAME",
     "category": "Controles de Acceso",
-    "price": 500,
+    "price": 78500,
     "currency": "DOP",
-    "availability": "Agotado",
-    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "availability": "Disponible",
+    "image": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "description": "Operador electromecánico CAME industrial de máxima potencia para puertas correderas de hasta 2,000 kg a 2,200 kg y 23 metros de longitud. Diseñado para puertos secos, industrias pesadas y naves logísticas. Chasis de aleación de aluminio reforzado, piñón módulo 6 y cuadro electrónico ZT6 con control de par y deceleración progresiva.",
     "features": [
       "SKU: 3797",
-      "Categoría ERP: Otros",
-      "Disponibilidad: Disponible bajo pedido",
+      "Capacidad máxima: 2,000 kg / Longitud máx: 23 metros",
+      "Alimentación: CA 230V - 400V Trifásica / Monofásica",
+      "Potencia de arrastre: 580 W / Fuerza de empuje: 1,500 N",
+      "Ciclo de trabajo: Servicio industrial continuo (50%)",
+      "Piñón de arrastre: Módulo M6 de acero endurecido",
+      "Disponibilidad: 1 unidad en inventario físico WES",
+      "Garantía WES: 2 años oficial certificada CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "gallery_images": [
+      {
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "title": "Operador Industrial Pesado 2000KG",
+        "badge": "Principal",
+        "caption": "Chasis macizo CAME BK-2200 de tracción extrema para 2,000 kg"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+        "title": "Kit de Tracción para Parques Industriales",
+        "badge": "Kit Completo",
+        "caption": "Incluye operador 2000kg, fotoceldas DIR10, baliza LED y mandos CAME"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "title": "Centralita ZT6 con Freno Dinámico",
+        "badge": "Electrónica",
+        "caption": "Placa industrial con freno de inercia y control electrónico de par"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "title": "Portón de Fábrica de Gran Dimensión",
+        "badge": "En Operación",
+        "caption": "Arrastre suave y potente para cancelas acorazadas y portones pesados"
+      }
+    ],
+    "key_attributes": {
+      "Capacidad de Arrastre": "2,000 kg (hasta 23 metros)",
+      "Alimentación": "CA 230V / 400V (50-60 Hz)",
+      "Potencia Nominal": "580 W",
+      "Fuerza de Empuje": "1,500 N",
+      "Piñón de Salida": "Módulo 6 en acero forjado",
+      "Ciclo de Trabajo": "Servicio industrial continuo (50%)",
+      "Protección": "IP54 resistente a polvo denso y lluvia",
+      "Garantía WES": "2 años con certificación oficial CAME"
+    }
   },
   {
     "id": "odoo-21468",
     "codigo": "1390",
-    "nombre": "MOTOR CAME 1000KG USO INTENSIVO",
+    "nombre": "MOTOR CAME 1000KG USO INTENSIVO (BK-1000)",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Operador de alto rendimiento CAME para puertas y portones corredizos de hasta 1,000 kg. Diseño robusto preparado para entradas de condominios y accesos residenciales con tráfico continuo, desbloqueo manual protegido con llave y cuadro ZBX.",
+    "descripcion": "Operador de alto rendimiento CAME para puertas y portones corredizos de hasta 1,000 kg y 20 metros. Diseño robusto preparado para entradas de condominios y accesos residenciales con tráfico continuo, desbloqueo manual protegido con llave y cuadro ZBX.",
     "caracteristicas": [
       "SKU: 1390",
       "Capacidad: 1,000 kg / Longitud máx: 20 metros",
@@ -8784,7 +8889,7 @@ const INITIAL_PRODUCTS = [
       "Fuerza de empuje: 1,000 N / Velocidad: 11 m/min",
       "Ciclo de trabajo: Uso intensivo para condominios",
       "Protección: IP54 resistente a intemperie",
-      "Disponibilidad: 1 unidad en inventario físico",
+      "Disponibilidad: 1 unidad en inventario físico WES",
       "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
@@ -8793,19 +8898,19 @@ const INITIAL_PRODUCTS = [
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 1,
-    "imagen_url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "imagen_url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1390",
-    "name": "MOTOR CAME 1000KG USO INTENSIVO",
+    "name": "MOTOR CAME 1000KG USO INTENSIVO (BK-1000)",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 41330.76,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-    "description": "Operador de alto rendimiento CAME para puertas y portones corredizos de hasta 1,000 kg. Diseño robusto preparado para entradas de condominios y accesos residenciales con tráfico continuo, desbloqueo manual protegido con llave y cuadro ZBX.",
+    "image": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "description": "Operador de alto rendimiento CAME para puertas y portones corredizos de hasta 1,000 kg y 20 metros. Diseño robusto preparado para entradas de condominios y accesos residenciales con tráfico continuo, desbloqueo manual protegido con llave y cuadro ZBX.",
     "features": [
       "SKU: 1390",
       "Capacidad: 1,000 kg / Longitud máx: 20 metros",
@@ -8813,7 +8918,7 @@ const INITIAL_PRODUCTS = [
       "Fuerza de empuje: 1,000 N / Velocidad: 11 m/min",
       "Ciclo de trabajo: Uso intensivo para condominios",
       "Protección: IP54 resistente a intemperie",
-      "Disponibilidad: 1 unidad en inventario físico",
+      "Disponibilidad: 1 unidad en inventario físico WES",
       "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
@@ -8823,25 +8928,25 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "gallery_images": [
       {
-        "url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
         "title": "Operador CAME 1000KG",
         "badge": "Principal",
         "caption": "Motorreductor de alto tonelaje para 1000 kg"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
         "title": "Kit Completo con Fotoceldas",
         "badge": "Kit Completo",
         "caption": "Incluye controles remotos, receptor y sensores de seguridad"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
         "title": "Electrónica Cuadro ZBX",
         "badge": "Electrónica",
         "caption": "Placa digital con embrague electrónico y bornes protegidos"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
         "title": "Portón de Tránsito Continuo",
         "badge": "En Operación",
         "caption": "Instalación en condominio residencial con portón pesado"
@@ -8860,7 +8965,7 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-21469",
     "codigo": "603",
-    "nombre": "MOTOR CAME 1800KG USO INDUSTRIAL",
+    "nombre": "MOTOR CAME 1800KG USO INDUSTRIAL (BK-1800)",
     "marca": "CAME",
     "categoria_id": "acceso",
     "descripcion": "Operador electromecánico CAME serie BK para puertas correderas industriales y condominios de hasta 1,800 kg y 20 metros. Estructura robusta de fundición de aluminio inyectado, piñón reforzado módulo 4/6, centralita ZBKN con pantalla de programación.",
@@ -8871,7 +8976,7 @@ const INITIAL_PRODUCTS = [
       "Potencia de arrastre: 480W / Fuerza: 1,150 N",
       "Ciclo de trabajo: Servicio industrial pesado (50%)",
       "Piñón de arrastre: Módulo 4 / Módulo 6 en acero",
-      "Disponibilidad: 1 unidad en inventario físico",
+      "Disponibilidad: 1 unidad en inventario físico WES",
       "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
@@ -8880,18 +8985,18 @@ const INITIAL_PRODUCTS = [
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 1,
-    "imagen_url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "imagen_url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "603",
-    "name": "MOTOR CAME 1800KG USO INDUSTRIAL",
+    "name": "MOTOR CAME 1800KG USO INDUSTRIAL (BK-1800)",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 66216,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "image": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "description": "Operador electromecánico CAME serie BK para puertas correderas industriales y condominios de hasta 1,800 kg y 20 metros. Estructura robusta de fundición de aluminio inyectado, piñón reforzado módulo 4/6, centralita ZBKN con pantalla de programación.",
     "features": [
       "SKU: 603",
@@ -8900,7 +9005,7 @@ const INITIAL_PRODUCTS = [
       "Potencia de arrastre: 480W / Fuerza: 1,150 N",
       "Ciclo de trabajo: Servicio industrial pesado (50%)",
       "Piñón de arrastre: Módulo 4 / Módulo 6 en acero",
-      "Disponibilidad: 1 unidad en inventario físico",
+      "Disponibilidad: 1 unidad en inventario físico WES",
       "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
@@ -8910,25 +9015,25 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "gallery_images": [
       {
-        "url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
         "title": "Operador Industrial Reforzado",
         "badge": "Principal",
         "caption": "Chasis macizo CAME BK para 1,800 kg de arrastre"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
         "title": "Kit Industrial Completo",
         "badge": "Kit Completo",
         "caption": "Motor 1800kg, fotoceldas DIR10, mandos CAME y cuadro de control"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
         "title": "Cuadro de Mando ZBKN",
         "badge": "Electrónica",
         "caption": "Display multifunción para configuración de rampas y autodiagnóstico"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
         "title": "Portón Industrial de Acceso",
         "badge": "En Operación",
         "caption": "Tracción continua para empresas, parques logísticos y residenciales"
@@ -8948,18 +9053,18 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-21470",
     "codigo": "2009",
-    "nombre": "MOTOR CAME 600KG USO INTENSIVO",
+    "nombre": "MOTOR CAME 600KG USO INTENSIVO (BXV 600)",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Motorreductor electromecánico CAME de 24V / 230V para portones correderos de hasta 600 kg y 18 metros de longitud. Equipado con tecnología de encoder para parada suave y detección de obstáculos, desbloqueo ergonómico manual y cuadro de mando ZN7.",
+    "descripcion": "Motorreductor electromecánico CAME de 24V DC / 230V AC para cancelas correderas de hasta 600 kg y 18 metros de longitud. Equipado con tecnología de encoder para parada suave y detección de obstáculos, desbloqueo ergonómico manual y cuadro de mando digital ZN7 con cargador de batería de respaldo.",
     "caracteristicas": [
       "SKU: 2009",
       "Capacidad: 600 kg / Longitud máx: 18 metros",
       "Alimentación motor: 24V DC (Alta seguridad y respaldo de batería)",
       "Fuerza de empuje: 600 N / Velocidad: 12 m/min",
       "Ciclo de trabajo: Uso intensivo residencial y comercial",
-      "Protección: IP44 / IP54 resistente a lluvia",
-      "Disponibilidad: 2 unidades en inventario físico",
+      "Protección: IP44 / IP54 resistente a intemperie",
+      "Disponibilidad: 2 unidades en inventario físico WES",
       "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
@@ -8968,27 +9073,27 @@ const INITIAL_PRODUCTS = [
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 2,
-    "imagen_url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "imagen_url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "2009",
-    "name": "MOTOR CAME 600KG USO INTENSIVO",
+    "name": "MOTOR CAME 600KG USO INTENSIVO (BXV 600)",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 32735.08,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-    "description": "Motorreductor electromecánico CAME de 24V / 230V para portones correderos de hasta 600 kg y 18 metros de longitud. Equipado con tecnología de encoder para parada suave y detección de obstáculos, desbloqueo ergonómico manual y cuadro de mando ZN7.",
+    "image": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "description": "Motorreductor electromecánico CAME de 24V DC / 230V AC para cancelas correderas de hasta 600 kg y 18 metros de longitud. Equipado con tecnología de encoder para parada suave y detección de obstáculos, desbloqueo ergonómico manual y cuadro de mando digital ZN7 con cargador de batería de respaldo.",
     "features": [
       "SKU: 2009",
       "Capacidad: 600 kg / Longitud máx: 18 metros",
       "Alimentación motor: 24V DC (Alta seguridad y respaldo de batería)",
       "Fuerza de empuje: 600 N / Velocidad: 12 m/min",
       "Ciclo de trabajo: Uso intensivo residencial y comercial",
-      "Protección: IP44 / IP54 resistente a lluvia",
-      "Disponibilidad: 2 unidades en inventario físico",
+      "Protección: IP44 / IP54 resistente a intemperie",
+      "Disponibilidad: 2 unidades en inventario físico WES",
       "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
@@ -8998,25 +9103,25 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "gallery_images": [
       {
-        "url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
         "title": "Vista Frontal y Desbloqueo",
         "badge": "Principal",
         "caption": "Motorreductor CAME BXV 600KG con base de fijación y palanca de desbloqueo"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
         "title": "Kit de Automatización Completo",
         "badge": "Kit Completo",
         "caption": "Incluye operador 600kg, mandos TOP CAME, fotoceldas DIR10 y baliza LED"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
         "title": "Electrónica y Cuadro ZN7",
         "badge": "Electrónica",
         "caption": "Tarjeta digital CAME ZN7 con display de programación y cargador de batería"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
         "title": "Instalación en Portón Residencial",
         "badge": "En Operación",
         "caption": "Acoplamiento suave sobre cremallera con deceleración en finales de carrera"
@@ -9036,19 +9141,20 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-21471",
     "codigo": "604",
-    "nombre": "MOTOR CAME 800KG",
+    "nombre": "MOTOR CAME 800KG (BX-78 / BX-800)",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Kit de automatización electromecánico CAME para puertas y portones correderos de hasta 800 kg y 14 metros de longitud. Fabricación italiana de alto rendimiento con chasis en aleación de aluminio inyectado a presión, desbloqueo manual ergonómico y cuadro de mando ZBX.",
+    "descripcion": "Kit de automatización electromecánico CAME para puertas y portones correderos de hasta 800 kg y 14 metros de longitud. Fabricación italiana de alto rendimiento con chasis en aleación de aluminio inyectado a presión, desbloqueo manual ergonómico protegido con llave y cuadro de mando digital ZBX integrado.",
     "caracteristicas": [
       "SKU: 604",
-      "Capacidad de arrastre: 800 kg / Longitud máx: 14 metros",
-      "Alimentación: CA 230V / 50-60 Hz",
-      "Chasis: Aleación de aluminio inyectado anticorrosión",
-      "Uso recomendado: Residencial intensivo y comercial",
-      "Desbloqueo manual: Con llave personalizada ergonómica",
-      "Disponibilidad: 2 unidades en inventario físico",
-      "Garantía WES: 2 años con certificación de origen",
+      "Capacidad: 800 kg / Longitud máx: 14 metros",
+      "Alimentación motor: CA 230V / 50-60 Hz",
+      "Potencia: 300 W / Fuerza de empuje: 800 N",
+      "Velocidad: 10.5 m/min",
+      "Ciclo de trabajo: Uso intensivo residencial y comercial (30%)",
+      "Protección: IP54 resistente a intemperie",
+      "Disponibilidad: 2 unidades en inventario físico WES",
+      "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
@@ -9056,64 +9162,65 @@ const INITIAL_PRODUCTS = [
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 2,
-    "imagen_url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "imagen_url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "destacado": true,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "gallery_images": [
       {
-        "url": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-        "title": "Vista Frontal y Desbloqueo",
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "title": "Vista Frontal y Mecanismo",
         "badge": "Principal",
-        "caption": "Motorreductor CAME 800KG con base de fijación y chasis de aluminio"
+        "caption": "Motorreductor CAME BX 800KG con chasis de aluminio, base y piñón de arrastre M4"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
         "title": "Kit Completo de Automatización",
         "badge": "Kit Completo",
-        "caption": "Incluye motor, 2 controles remotos, fotoceldas de seguridad y lámpara estroboscópica"
+        "caption": "Incluye motor 800kg, mandos bicanal TOP, fotoceldas DIR10 y cuadro de mando ZBX"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
-        "title": "Mecánica y Cuadro de Mando",
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "title": "Cuadro Electrónico ZBX",
         "badge": "Electrónica",
-        "caption": "Cuadro de control digital CAME ZBX, transformador y finales de carrera integrados"
+        "caption": "Placa de control ZBX original con embrague electrónico y decodificador de radio"
       },
       {
-        "url": "https://s.alicdn.com/@sc04/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
-        "title": "Instalación en Portón Real",
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "title": "Instalación en Portón Residencial",
         "badge": "En Operación",
-        "caption": "Acoplamiento de tracción con cremallera en portón residencial y comercial"
+        "caption": "Tracción suave con desaceleración en finales de carrera mecánicos"
       }
     ],
     "key_attributes": {
-      "Capacidad": "800 kg (hasta 14 m de longitud)",
+      "Capacidad": "800 kg (hasta 14 metros)",
       "Alimentación": "CA 230V / 50-60 Hz",
-      "Material Chasis": "Aleación de aluminio inyectado anticorrosión",
-      "Ciclo de Trabajo": "Uso intensivo residencial / comercial",
+      "Material Chasis": "Aleación de aluminio inyectado a presión",
+      "Ciclo de Trabajo": "Uso intensivo residencial / comercial (30%)",
       "Fuerza de Empuje": "800 N",
-      "Velocidad de Maniobra": "10.5 m/min",
+      "Velocidad": "10.5 m/min",
       "Protección": "IP54 (resistente a lluvia y polvo)",
-      "Garantía WES": "2 años con certificación de origen CAME"
+      "Garantía WES": "2 años con certificación oficial CAME"
     },
     "code": "604",
-    "name": "MOTOR CAME 800KG",
+    "name": "MOTOR CAME 800KG (BX-78 / BX-800)",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 37445.26,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://s.alicdn.com/@sc04/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-    "description": "Kit de automatización electromecánico CAME para puertas y portones correderos de hasta 800 kg y 14 metros de longitud. Fabricación italiana de alto rendimiento con chasis en aleación de aluminio inyectado a presión, desbloqueo manual ergonómico y cuadro de mando ZBX.",
+    "image": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "description": "Kit de automatización electromecánico CAME para puertas y portones correderos de hasta 800 kg y 14 metros de longitud. Fabricación italiana de alto rendimiento con chasis en aleación de aluminio inyectado a presión, desbloqueo manual ergonómico protegido con llave y cuadro de mando digital ZBX integrado.",
     "features": [
       "SKU: 604",
-      "Capacidad de arrastre: 800 kg / Longitud máx: 14 metros",
-      "Alimentación: CA 230V / 50-60 Hz",
-      "Chasis: Aleación de aluminio inyectado anticorrosión",
-      "Uso recomendado: Residencial intensivo y comercial",
-      "Desbloqueo manual: Con llave personalizada ergonómica",
-      "Disponibilidad: 2 unidades en inventario físico",
-      "Garantía WES: 2 años con certificación de origen",
+      "Capacidad: 800 kg / Longitud máx: 14 metros",
+      "Alimentación motor: CA 230V / 50-60 Hz",
+      "Potencia: 300 W / Fuerza de empuje: 800 N",
+      "Velocidad: 10.5 m/min",
+      "Ciclo de trabajo: Uso intensivo residencial y comercial (30%)",
+      "Protección: IP54 resistente a intemperie",
+      "Disponibilidad: 2 unidades en inventario físico WES",
+      "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
@@ -9124,86 +9231,166 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-21472",
     "codigo": "1765",
-    "nombre": "MOTOR CAME 800KG REFULL",
+    "nombre": "MOTOR CAME 800KG REFULL - KIT COMPLETO INTEGRAL",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Kit integral CAME BX de 800 kg con todos los accesorios incluidos para instalación completa e inmediata: 1 motorreductor CAME BX 800KG, 4 metros de cremallera de acero galvanizado M4, 2 mandos remotos bicanal TOP-432EE, 1 par de fotoceldas infrarrojas DIR10, 1 lámpara destellante LED KRX con antena incorporada y base de anclaje.",
     "caracteristicas": [
       "SKU: 1765",
-      "Categoría ERP: Otros",
-      "Disponibilidad: Disponible bajo pedido",
+      "Kit Completo Refull: Motor + 4m Cremallera + 2 Mandos + Fotoceldas + Lámpara LED",
+      "Capacidad: 800 kg / Longitud máx: 14 metros",
+      "Alimentación: CA 230V / 50-60 Hz",
+      "Empuje: 800 N / Velocidad: 10.5 m/min",
+      "Disponibilidad: 2 unidades en inventario físico WES",
+      "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "precio": 15000,
+    "precio": 42500,
     "moneda": "DOP",
-    "disponibilidad": "Agotado",
-    "stock": 0,
-    "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "disponibilidad": "Disponible",
+    "stock": 2,
+    "imagen_url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1765",
-    "name": "MOTOR CAME 800KG REFULL",
+    "name": "MOTOR CAME 800KG REFULL - KIT COMPLETO INTEGRAL",
     "brand": "CAME",
     "category": "Controles de Acceso",
-    "price": 15000,
+    "price": 42500,
     "currency": "DOP",
-    "availability": "Agotado",
-    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "availability": "Disponible",
+    "image": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+    "description": "Kit integral CAME BX de 800 kg con todos los accesorios incluidos para instalación completa e inmediata: 1 motorreductor CAME BX 800KG, 4 metros de cremallera de acero galvanizado M4, 2 mandos remotos bicanal TOP-432EE, 1 par de fotoceldas infrarrojas DIR10, 1 lámpara destellante LED KRX con antena incorporada y base de anclaje.",
     "features": [
       "SKU: 1765",
-      "Categoría ERP: Otros",
-      "Disponibilidad: Disponible bajo pedido",
+      "Kit Completo Refull: Motor + 4m Cremallera + 2 Mandos + Fotoceldas + Lámpara LED",
+      "Capacidad: 800 kg / Longitud máx: 14 metros",
+      "Alimentación: CA 230V / 50-60 Hz",
+      "Empuje: 800 N / Velocidad: 10.5 m/min",
+      "Disponibilidad: 2 unidades en inventario físico WES",
+      "Garantía WES: 2 años oficial CAME",
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "gallery_images": [
+      {
+        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+        "title": "Kit Refull Completo con Accesorios",
+        "badge": "Principal",
+        "caption": "Paquete integral con motor 800kg, cremalleras, fotoceldas, mandos y baliza"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "title": "Motorreductor CAME BX 800KG",
+        "badge": "Operador",
+        "caption": "Chasis de aluminio inyectado a presión con cerradura de desbloqueo"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "title": "Cuadro ZBX y Electrónica Regulable",
+        "badge": "Electrónica",
+        "caption": "Centralita con embrague electrónico y conector de radio AF43S"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "title": "Instalación en Portón Residencial",
+        "badge": "En Operación",
+        "caption": "Movimiento suave con tramos de cremallera de acero galvanizado"
+      }
+    ],
+    "key_attributes": {
+      "Contenido del Kit": "Motor 800kg + 4m cremallera + 2 mandos + fotoceldas + baliza LED",
+      "Capacidad": "800 kg (hasta 14 metros)",
+      "Alimentación": "CA 230V / 50-60 Hz",
+      "Fuerza de Empuje": "800 N",
+      "Velocidad": "10.5 m/min",
+      "Ciclo de Trabajo": "Uso intensivo (30%)",
+      "Protección": "IP54 intemperie",
+      "Garantía WES": "2 años integral WES"
+    }
   },
   {
     "id": "odoo-34115",
     "codigo": "COSTO VEF.",
-    "nombre": "PORTEZUELA DESBLOQUEO MOTOR CAME BX 800KG",
+    "nombre": "PORTEZUELA DESBLOQUEO MANUAL MOTOR CAME BX 800KG",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Portezuela de recambio original CAME para el sistema de desbloqueo mecánico manual en motores correderos de la serie BX (BX-74, BX-78, BX-800). Fabricada en fundición de aluminio inyectado esmaltado en gris grafito. Incluye cilindro de cerradura, leva interior de desembrague y llave original CAME.",
     "caracteristicas": [
-      "SKU: COSTO VEF.",
-      "Categoría ERP: Automatización y Domotica",
-      "Disponibilidad: Disponible bajo pedido",
-      "Manual de Instalación disponible",
-      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
+      "SKU: BX-DESBL-800",
+      "Compatibilidad: Motores CAME BX-74, BX-78 y BX 800KG",
+      "Material: Fundición de aluminio esmaltado anticorrosión",
+      "Incluye: Cilindro con bombín de cerradura y llave original CAME",
+      "Función: Desbloqueo de emergencia manual del engranaje",
+      "Disponibilidad: 2 unidades en inventario físico WES"
     ],
     "precio": 4239.96,
     "moneda": "DOP",
-    "disponibilidad": "Agotado",
-    "stock": 0,
-    "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+    "disponibilidad": "Disponible",
+    "stock": 2,
+    "imagen_url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "COSTO VEF.",
-    "name": "PORTEZUELA DESBLOQUEO MOTOR CAME BX 800KG",
+    "name": "PORTEZUELA DESBLOQUEO MANUAL MOTOR CAME BX 800KG",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 4239.96,
     "currency": "DOP",
-    "availability": "Agotado",
-    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "availability": "Disponible",
+    "image": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+    "description": "Portezuela de recambio original CAME para el sistema de desbloqueo mecánico manual en motores correderos de la serie BX (BX-74, BX-78, BX-800). Fabricada en fundición de aluminio inyectado esmaltado en gris grafito. Incluye cilindro de cerradura, leva interior de desembrague y llave original CAME.",
     "features": [
-      "SKU: COSTO VEF.",
-      "Categoría ERP: Automatización y Domotica",
-      "Disponibilidad: Disponible bajo pedido",
-      "Manual de Instalación disponible",
-      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
+      "SKU: BX-DESBL-800",
+      "Compatibilidad: Motores CAME BX-74, BX-78 y BX 800KG",
+      "Material: Fundición de aluminio esmaltado anticorrosión",
+      "Incluye: Cilindro con bombín de cerradura y llave original CAME",
+      "Función: Desbloqueo de emergencia manual del engranaje",
+      "Disponibilidad: 2 unidades en inventario físico WES"
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "gallery_images": [
+      {
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "title": "Portezuela Frontal con Cerradura",
+        "badge": "Principal",
+        "caption": "Tapa de aluminio con cerradura de protección CAME BX"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H40ce806651c9492c984e5c95483f02c0J.jpg",
+        "title": "Llave de Desbloqueo y Cilindro",
+        "badge": "Llave Incluida",
+        "caption": "Bombín de seguridad con llaves de leva para liberación manual"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "title": "Leva de Desembrague Interior",
+        "badge": "Mecanismo",
+        "caption": "Acciona el desacople del sinfín para mover el portón suavemente a mano"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "title": "Alojamiento en Chasis BX",
+        "badge": "En Operación",
+        "caption": "Encaje hermético que protege los componentes internos contra lluvia y polvo"
+      }
+    ],
+    "key_attributes": {
+      "Tipo de Pieza": "Repuesto oficial original CAME",
+      "Compatibilidad": "Motores correderos BX-74, BX-78 y BX-800KG",
+      "Material": "Fundición de aluminio esmaltado en polvo poliéster",
+      "Cerradura": "Bombín cilíndrico metálico con llave CAME",
+      "Protección": "Sellado perimetral contra humedad",
+      "Garantía WES": "1 año oficial WES"
+    }
   },
   {
     "id": "odoo-25184",
@@ -9334,44 +9521,81 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-26418",
     "codigo": "4016",
-    "nombre": "TARJETA MOTOR CAME 1800KG ZBX CAME DIGITAL",
+    "nombre": "TARJETA ELECTRÓNICA MOTOR CAME 1800KG ZBX DIGITAL",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Cuadro de mando y tarjeta electrónica central original CAME ZBX / ZBKN para operadores correderos de 230V AC (CAME BX-78, BK-1200, BK-1800, BK-2200). Incorpora relés de potencia de grado industrial, trimmers de ajuste fino para tiempo de cierre automático, conector directo para tarjeta de radiofrecuencia AF43S/AF868, bornes enchufables para fotoceldas DIR y autodiagnóstico de seguridad.",
     "caracteristicas": [
       "SKU: 4016",
-      "Categoría ERP: Otros",
-      "Disponibilidad: Disponible bajo pedido",
-      "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf"
+      "Alimentación: 230V AC monofásica",
+      "Compatibilidad: Motores CAME BK-1800, BK-2200 y serie BX",
+      "Funciones: Cierre automático, apertura parcial peatonal, pre-destello",
+      "Conectores: Regleta de bornes extraíbles y ranura para tarjeta AF43S",
+      "Disponibilidad: 2 unidades en inventario físico WES"
     ],
     "precio": 19430.2,
     "moneda": "DOP",
-    "disponibilidad": "Agotado",
-    "stock": 0,
-    "imagen_url": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
+    "disponibilidad": "Disponible",
+    "stock": 2,
+    "imagen_url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
     "destacado": false,
     "activo": true,
     "manual_url": "https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf",
     "code": "4016",
-    "name": "TARJETA MOTOR CAME 1800KG ZBX CAME DIGITAL",
+    "name": "TARJETA ELECTRÓNICA MOTOR CAME 1800KG ZBX DIGITAL",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 19430.2,
     "currency": "DOP",
-    "availability": "Agotado",
-    "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional CAME distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "availability": "Disponible",
+    "image": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+    "description": "Cuadro de mando y tarjeta electrónica central original CAME ZBX / ZBKN para operadores correderos de 230V AC (CAME BX-78, BK-1200, BK-1800, BK-2200). Incorpora relés de potencia de grado industrial, trimmers de ajuste fino para tiempo de cierre automático, conector directo para tarjeta de radiofrecuencia AF43S/AF868, bornes enchufables para fotoceldas DIR y autodiagnóstico de seguridad.",
     "features": [
       "SKU: 4016",
-      "Categoría ERP: Otros",
-      "Disponibilidad: Disponible bajo pedido",
-      "Manual de Instalación disponible",
-      "manual_url:https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf"
+      "Alimentación: 230V AC monofásica",
+      "Compatibilidad: Motores CAME BK-1800, BK-2200 y serie BX",
+      "Funciones: Cierre automático, apertura parcial peatonal, pre-destello",
+      "Conectores: Regleta de bornes extraíbles y ranura para tarjeta AF43S",
+      "Disponibilidad: 2 unidades en inventario físico WES"
     ],
     "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA00943M04.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "gallery_images": [
+      {
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "title": "Tarjeta Digital CAME ZBX",
+        "badge": "Principal",
+        "caption": "Placa electrónica de control de maniobras para motores 230V CAME"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H3a4e9de3d5e74b04adfd7f0f4d3e79f2v.jpg",
+        "title": "Regleta de Bornes de Seguridad",
+        "badge": "Conexiones",
+        "caption": "Terminales independientes para fotoceldas DIR10, pulsadores y finales de carrera"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "title": "Encastre en Chasis de Motor",
+        "badge": "Instalación",
+        "caption": "Compartimiento superior protegido con cubierta plástica transparente"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+        "title": "Kit de Repuesto Original CAME",
+        "badge": "Original CAME",
+        "caption": "Repuesto genuino de fábrica probado y calibrado con 2 años de garantía"
+      }
+    ],
+    "key_attributes": {
+      "Alimentación Cuadro": "CA 230V (50/60 Hz)",
+      "Potencia Máxima Motor": "Hasta 800 W",
+      "Fusibles de Protección": "5A motor, 1A accesorios",
+      "Conector de Radio": "Ranura de tarjeta enchufable AF43S",
+      "Funciones de Seguridad": "Autotest de fotoceldas antes de cada maniobra",
+      "Regulación": "Trimmers de par motor, tiempo de trabajo y cierre automático",
+      "Garantía WES": "2 años oficial CAME"
+    }
   },
   {
     "id": "wes-crem-m4",
@@ -9390,45 +9614,64 @@ const INITIAL_PRODUCTS = [
     "stock": 25,
     "disponibilidad": "Disponible",
     "availability": "Disponible",
-    "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
-    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=960&q=80",
+    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=960&q=80",
     "destacado": true,
     "featured": true,
     "activo": true,
     "active": true,
-    "descripcion": "Tramo de cremallera de 1 metro en acero macizo cincado con módulo 4 estándar para motores correderos CAME y universales. Incluye 3 espaciadores roscados y 3 pernos de acero de fijación por tramo para soldar o atornillar.",
-    "description": "Tramo de cremallera de 1 metro en acero macizo cincado con módulo 4 estándar para motores correderos CAME y universales. Incluye 3 espaciadores roscados y 3 pernos de acero de fijación por tramo para soldar o atornillar.",
+    "descripcion": "Tramo de cremallera de 1 metro en acero macizo cincado con módulo 4 estándar para motores correderos CAME y universales. Incluye 3 espaciadores roscados y 3 pernos de acero de fijación por tramo para soldar o atornillar en portones de hasta 2,200 kg.",
+    "description": "Tramo de cremallera de 1 metro en acero macizo cincado con módulo 4 estándar para motores correderos CAME y universales. Incluye 3 espaciadores roscados y 3 pernos de acero de fijación por tramo para soldar o atornillar en portones de hasta 2,200 kg.",
     "caracteristicas": [
       "SKU: CREM-M4-AC",
       "Longitud: 1 metro (1,000 mm)",
       "Paso de diente: Módulo M4 estándar CAME",
       "Material: Acero galvanizado anticorrosión 12x30mm",
-      "Incluye: 3 espaciadores y 3 pernos de fijación",
-      "Disponibilidad: 25 unidades en inventario físico"
+      "Incluye: 3 espaciadores y 3 pernos de fijación M8",
+      "Disponibilidad: 25 unidades en inventario físico WES"
     ],
     "features": [
       "SKU: CREM-M4-AC",
       "Longitud: 1 metro (1,000 mm)",
       "Paso de diente: Módulo M4 estándar CAME",
       "Material: Acero galvanizado anticorrosión 12x30mm",
-      "Incluye: 3 espaciadores y 3 pernos de fijación",
-      "Disponibilidad: 25 unidades en inventario físico"
+      "Incluye: 3 espaciadores y 3 pernos de fijación M8",
+      "Disponibilidad: 25 unidades en inventario físico WES"
     ],
     "gallery_images": [
       {
-        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
-        "title": "Cremallera de Acero M4",
+        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=960&q=80",
+        "title": "Tramo de Cremallera de Acero M4",
         "badge": "Principal",
-        "caption": "Tramo de 1m en acero galvanizado con 3 separadores y pernos"
+        "caption": "Barra maciza de 1 metro en acero cincado con 3 espaciadores cilíndricos y pernos M8"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "title": "Dentado Fresado Módulo 4",
+        "badge": "Detalle Mecánico",
+        "caption": "Dientes cementados con paso M4 para perfecto engrane con piñones CAME"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "title": "Acoplamiento con Piñón CAME",
+        "badge": "Ensamble",
+        "caption": "Tracción constante sin juego mecánico ni deformación bajo carga pesada"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=960&q=80",
+        "title": "Fijación Soldada en Portón",
+        "badge": "En Operación",
+        "caption": "Instalación en la viga inferior de cancelas metálicas residenciales o industriales"
       }
     ],
     "key_attributes": {
-      "Longitud": "1,000 mm (1 metro por tramo)",
-      "Paso de Diente": "Módulo M4 estándar CAME",
+      "Longitud Total": "1,000 mm (1 metro por tramo)",
+      "Paso de Diente": "Módulo M4 estándar europeo CAME",
       "Material": "Acero macizo galvanizado anticorrosión",
-      "Sección": "12 mm espesor x 30 mm alto",
-      "Accesorios Incluidos": "3 separadores cilíndricos y 3 pernos M8",
-      "Capacidad": "Portones de hasta 2,200 kg"
+      "Sección Transversal": "12 mm espesor x 30 mm altura",
+      "Accesorios Incluidos": "3 separadores cilíndricos y 3 pernos M8 por tramo",
+      "Capacidad de Carga": "Portones de hasta 2,200 kg",
+      "Garantía WES": "3 años contra corrosión y desgaste"
     }
   },
   {
@@ -9448,21 +9691,21 @@ const INITIAL_PRODUCTS = [
     "stock": 18,
     "disponibilidad": "Disponible",
     "availability": "Disponible",
-    "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
-    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=960&q=80",
+    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=960&q=80",
     "destacado": true,
     "featured": true,
     "activo": true,
     "active": true,
-    "descripcion": "Cremallera de polímero de ingeniería de alta resistencia con núcleo interior de acero reforzado. Reduce en más de un 80% el ruido mecánico de arrastre y no requiere lubricación periódica.",
-    "description": "Cremallera de polímero de ingeniería de alta resistencia con núcleo interior de acero reforzado. Reduce en más de un 80% el ruido mecánico de arrastre y no requiere lubricación periódica.",
+    "descripcion": "Cremallera de polímero de ingeniería de alta resistencia con núcleo interior de acero reforzado. Reduce en más de un 80% el ruido mecánico de arrastre, no requiere lubricación periódica y previene cualquier tipo de óxido en ambientes exteriores.",
+    "description": "Cremallera de polímero de ingeniería de alta resistencia con núcleo interior de acero reforzado. Reduce en más de un 80% el ruido mecánico de arrastre, no requiere lubricación periódica y previene cualquier tipo de óxido en ambientes exteriores.",
     "caracteristicas": [
       "SKU: CREM-M4-NY",
       "Longitud: 1 metro (1,000 mm)",
       "Paso de diente: Módulo M4",
       "Estructura: Nylon técnico autolubricado con alma de acero",
       "Capacidad: Portones de hasta 800 kg",
-      "Disponibilidad: 18 unidades en inventario físico"
+      "Disponibilidad: 18 unidades en inventario físico WES"
     ],
     "features": [
       "SKU: CREM-M4-NY",
@@ -9470,22 +9713,42 @@ const INITIAL_PRODUCTS = [
       "Paso de diente: Módulo M4",
       "Estructura: Nylon técnico autolubricado con alma de acero",
       "Capacidad: Portones de hasta 800 kg",
-      "Disponibilidad: 18 unidades en inventario físico"
+      "Disponibilidad: 18 unidades en inventario físico WES"
     ],
     "gallery_images": [
       {
-        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
-        "title": "Cremallera de Nylon Silenciosa",
+        "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=960&q=80",
+        "title": "Cremallera Silenciosa de Nylon M4",
         "badge": "Principal",
-        "caption": "Cremallera de polímero con alma de acero para funcionamiento sin ruido"
+        "caption": "Tramo de 1 metro en polímero técnico autolubricado con alma interior de acero macizo"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=960&q=80",
+        "title": "Alma Interior de Acero Reforzado",
+        "badge": "Estructura",
+        "caption": "Núcleo de acero que evita la flexión y rotura manteniendo rigidez total"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
+        "title": "Acople Antirruido con Piñón",
+        "badge": "Silenciosa",
+        "caption": "Amortigua el impacto mecánico reduciendo más del 80% del ruido de apertura"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "title": "Portón Residencial en Silencio",
+        "badge": "En Operación",
+        "caption": "Ideal para casas residenciales, clínicas y oficinas donde se busca cero ruido"
       }
     ],
     "key_attributes": {
-      "Longitud": "1,000 mm (1 metro)",
-      "Paso de Diente": "Módulo M4",
-      "Estructura": "Cuerpo de nylon técnico autolubricado con alma de acero",
-      "Capacidad": "Recomendado para portones de hasta 800 kg",
-      "Beneficio": "Desplazamiento supersilencioso sin chirridos ni óxido"
+      "Longitud Total": "1,000 mm (1 metro)",
+      "Paso de Diente": "Módulo M4 universal",
+      "Estructura": "Nylon técnico reforzado con alma central de acero macizo",
+      "Puntos de Fijación": "4 orejetas de anclaje con tornillos incluidos",
+      "Capacidad Recomendada": "Portones correderos de hasta 800 kg",
+      "Ventaja Principal": "Desplazamiento supersilencioso sin engrase ni óxido",
+      "Garantía WES": "2 años de fábrica"
     }
   },
   {
@@ -9505,21 +9768,21 @@ const INITIAL_PRODUCTS = [
     "stock": 6,
     "disponibilidad": "Disponible",
     "availability": "Disponible",
-    "imagen_url": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
-    "image": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=960&q=80",
+    "image": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=960&q=80",
     "destacado": true,
     "featured": true,
     "activo": true,
     "active": true,
-    "descripcion": "Lámpara de señalización vial LED CAME KRX de advertencia visual para apertura y cierre de portones. Fuente luminosa de alta visibilidad diurna y nocturna con antena sintonizada de 433.92 MHz integrada.",
-    "description": "Lámpara de señalización vial LED CAME KRX de advertencia visual para apertura y cierre de portones. Fuente luminosa de alta visibilidad diurna y nocturna con antena sintonizada de 433.92 MHz integrada.",
+    "descripcion": "Lámpara de señalización vial LED CAME KRX de advertencia visual para apertura y cierre de portones. Fuente luminosa de alta visibilidad diurna y nocturna con antena sintonizada de 433.92 MHz integrada para maximizar el alcance de los mandos a distancia.",
+    "description": "Lámpara de señalización vial LED CAME KRX de advertencia visual para apertura y cierre de portones. Fuente luminosa de alta visibilidad diurna y nocturna con antena sintonizada de 433.92 MHz integrada para maximizar el alcance de los mandos a distancia.",
     "caracteristicas": [
       "SKU: LAMP-KRX-LED",
       "Alimentación: Multi-voltaje 24V a 230V AC/DC",
       "Tecnología: LED de alta visibilidad y bajo consumo",
       "Antena integrada: 433.92 MHz de largo alcance",
       "Protección: IP54 para intemperie",
-      "Disponibilidad: 6 unidades en inventario físico"
+      "Disponibilidad: 6 unidades en inventario físico WES"
     ],
     "features": [
       "SKU: LAMP-KRX-LED",
@@ -9527,22 +9790,42 @@ const INITIAL_PRODUCTS = [
       "Tecnología: LED de alta visibilidad y bajo consumo",
       "Antena integrada: 433.92 MHz de largo alcance",
       "Protección: IP54 para intemperie",
-      "Disponibilidad: 6 unidades en inventario físico"
+      "Disponibilidad: 6 unidades en inventario físico WES"
     ],
     "gallery_images": [
       {
-        "url": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
-        "title": "Lámpara LED CAME KRX",
+        "url": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=960&q=80",
+        "title": "Lámpara Baliza LED CAME KRX",
         "badge": "Principal",
-        "caption": "Baliza destellante con antena receptora 433.92 MHz integrada"
+        "caption": "Lámpara de señalización vial LED con cúpula ámbar y antena integrada"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
+        "title": "Circuito LED Multi-Voltaje",
+        "badge": "Electrónica",
+        "caption": "Placa LED de alto brillo compatible de 24V AC/DC a 230V AC"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
+        "title": "Antena 433.92 MHz Incorporada",
+        "badge": "Antena RF",
+        "caption": "Aumenta la recepción de los mandos a distancia hasta un 40% más"
+      },
+      {
+        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
+        "title": "Señalización en Portón en Apertura",
+        "badge": "En Operación",
+        "caption": "Alerta visual automática de seguridad para vehículos y peatones en la acera"
       }
     ],
     "key_attributes": {
-      "Alimentación": "Multi-voltaje 24V AC/DC a 230V AC",
-      "Tecnología": "LED de alto brillo y bajo consumo energético",
-      "Antena Incorporada": "Sintonizada 433.92 MHz y 868 MHz",
-      "Grado de Protección": "IP54 para intemperie total",
-      "Cúpula": "Naranja / Ámbar de policarbonato anti-impacto"
+      "Alimentación": "Multi-voltaje automático (24V AC/DC a 230V AC)",
+      "Fuente de Luz": "LED SMD de alto brillo y consumo menor a 1.4W",
+      "Antena Receptora": "Sintonizada 433.92 MHz y 868 MHz con terminal de cable coaxial",
+      "Material Cúpula": "Policarbonato anti-impacto resistente a rayos solares UV",
+      "Grado de Protección": "IP54 para intemperie total contra lluvias torrenciales",
+      "Montaje": "Base horizontal o soporte angular lateral para pared",
+      "Garantía WES": "2 años oficial CAME"
     }
   }
 ];
@@ -9550,7 +9833,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v7_catalog';
+    const versionKey = 'wes_products_v8_catalog';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
@@ -9571,7 +9854,7 @@ const StorageService = {
   },
 
   saveProducts: function(products) {
-    localStorage.setItem('wes_products_v7_catalog', JSON.stringify(products));
+    localStorage.setItem('wes_products_v8_catalog', JSON.stringify(products));
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
     if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;
@@ -9623,46 +9906,254 @@ const StorageService = {
   // Gestión de Reseñas y Métricas de Calidad de Producto
   getProductReviews: function(productId) {
     const defaultReviews = [
-      {
-        id: 'rev-604-1',
-        productId: 'odoo-21471',
-        author: 'Ing. Carlos Mendoza',
-        location: 'Moca, Espaillat',
-        rating: 5.0,
-        productQuality: 5.0,
-        shippingQuality: 5.0,
-        serviceQuality: 5.0,
-        comment: 'Excelente motor CAME 800KG. Instalado en portón residencial de 6 metros. Movimiento suave y silencioso.',
-        verified: true,
-        date: '14 Sep 2026'
-      },
-      {
-        id: 'rev-604-2',
-        productId: 'odoo-21471',
-        author: 'Lic. Ramona Peña',
-        location: 'Santiago de los Caballeros',
-        rating: 5.0,
-        productQuality: 5.0,
-        shippingQuality: 4.8,
-        serviceQuality: 5.0,
-        comment: 'Calidad italiana insuperable. El personal de WES me asesoró con la placa ZBX y la entrega fue el mismo día.',
-        verified: true,
-        date: '02 Sep 2026'
-      },
-      {
-        id: 'rev-604-3',
-        productId: 'odoo-21471',
-        author: 'Manuel de Jesús Tavares',
-        location: 'La Vega',
-        rating: 4.8,
-        productQuality: 5.0,
-        shippingQuality: 5.0,
-        serviceQuality: 4.8,
-        comment: 'Robusto y potente. Chasis de aluminio inyectado de primera y los controles CAME tienen un alcance genial.',
-        verified: true,
-        date: '28 Ago 2026'
-      }
-    ];
+  {
+    "id": "rev-604-1",
+    "productId": "odoo-21471",
+    "author": "Ing. Carlos Mendoza",
+    "location": "Moca, Espaillat",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Excelente motor CAME 800KG. Instalado en portón residencial de 6 metros. Movimiento suave y silencioso.",
+    "verified": true,
+    "date": "14 Sep 2026"
+  },
+  {
+    "id": "rev-604-2",
+    "productId": "odoo-21471",
+    "author": "Lic. Ramona Peña",
+    "location": "Santiago de los Caballeros",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 4.8,
+    "serviceQuality": 5,
+    "comment": "Calidad italiana insuperable. El personal de WES me asesoró con la placa ZBX y la entrega fue el mismo día.",
+    "verified": true,
+    "date": "02 Sep 2026"
+  },
+  {
+    "id": "rev-604-3",
+    "productId": "odoo-21471",
+    "author": "Manuel de Jesús Tavares",
+    "location": "La Vega",
+    "rating": 4.8,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 4.8,
+    "comment": "Robusto y potente. Chasis de aluminio inyectado de primera y los controles CAME tienen un alcance genial.",
+    "verified": true,
+    "date": "28 Ago 2026"
+  },
+  {
+    "id": "rev-600-1",
+    "productId": "odoo-21470",
+    "author": "Ing. Rafael Almonte",
+    "location": "Moca, Espaillat",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Instalé este motor CAME 600kg en una residencia. Al ser de 24V con batería nunca se queda sin funcionar cuando se va la luz. Excelente compra en WES.",
+    "verified": true,
+    "date": "18 Sep 2026"
+  },
+  {
+    "id": "rev-600-2",
+    "productId": "odoo-21470",
+    "author": "Lic. Andrés Salcedo",
+    "location": "Santiago, Rep. Dom.",
+    "rating": 4.9,
+    "productQuality": 5,
+    "shippingQuality": 4.8,
+    "serviceQuality": 5,
+    "comment": "Silencioso y arranca con rampa suave. La parada suave protege el portón y la cremallera de golpes.",
+    "verified": true,
+    "date": "09 Sep 2026"
+  },
+  {
+    "id": "rev-1800-1",
+    "productId": "odoo-21469",
+    "author": "Arq. Domingo Guzmán",
+    "location": "Zona Franca Santiago",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Motor formidable para entrada de camiones pesados. Pesa bastante el portón y lo mueve con total soltura. Chasis macizo.",
+    "verified": true,
+    "date": "12 Sep 2026"
+  },
+  {
+    "id": "rev-1800-2",
+    "productId": "odoo-21469",
+    "author": "Ing. Luis Fernando Collado",
+    "location": "Moca Industrial",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 4.9,
+    "serviceQuality": 5,
+    "comment": "La centralita ZBKN con pantalla facilita la calibración de tiempos. Calidad CAME 100% recomendada.",
+    "verified": true,
+    "date": "04 Sep 2026"
+  },
+  {
+    "id": "rev-1000-1",
+    "productId": "odoo-21468",
+    "author": "Lic. Roberto Paulino",
+    "location": "Santo Domingo Este",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Excelente relación costo/potencia. En nuestro residencial de 14 casas funciona todo el día sin calentarse.",
+    "verified": true,
+    "date": "15 Sep 2026"
+  },
+  {
+    "id": "rev-2000-1",
+    "productId": "odoo-21467",
+    "author": "Ing. Fausto Bretón",
+    "location": "Parque Logístico Haina",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Para portones pesados de acero macizo no hay otro mejor. Tracción extrema y piñón módulo 6 indestructible.",
+    "verified": true,
+    "date": "08 Sep 2026"
+  },
+  {
+    "id": "rev-1765-1",
+    "productId": "odoo-21472",
+    "author": "Ing. Marcos Estrella",
+    "location": "La Vega",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "El kit Refull lo trae todo: motor, cremalleras, fotoceldas, baliza y mandos. Llegar y montar sin faltar nada.",
+    "verified": true,
+    "date": "20 Sep 2026"
+  },
+  {
+    "id": "rev-4385-1",
+    "productId": "odoo-31569",
+    "author": "Pedro José Ramos",
+    "location": "Moca, Espaillat",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Mando original. Lo programé en 10 segundos clonándolo directamente del otro control sin tener que abrir el motor.",
+    "verified": true,
+    "date": "19 Sep 2026"
+  },
+  {
+    "id": "rev-4385-2",
+    "productId": "odoo-31569",
+    "author": "Lic. Karina Valdez",
+    "location": "Santiago, Rep. Dom.",
+    "rating": 4.9,
+    "productQuality": 5,
+    "shippingQuality": 4.8,
+    "serviceQuality": 5,
+    "comment": "Muy buen alcance, abre desde media cuadra antes de llegar a la marquesina.",
+    "verified": true,
+    "date": "11 Sep 2026"
+  },
+  {
+    "id": "rev-3152-1",
+    "productId": "odoo-31572",
+    "author": "Arq. Gilberto Méndez",
+    "location": "Santiago de los Caballeros",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Excelente tener 4 botones en un solo control. Manejo el portón vehicular, la puerta peatonal y el garage.",
+    "verified": true,
+    "date": "16 Sep 2026"
+  },
+  {
+    "id": "rev-1373-1",
+    "productId": "odoo-33665",
+    "author": "Ing. Leonardo Peña",
+    "location": "Moca, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Seguridad imprescindible. Con niños y vehículos en la casa es obligatorio. Reacciona al instante deteniendo el portón.",
+    "verified": true,
+    "date": "17 Sep 2026"
+  },
+  {
+    "id": "rev-crem-m4-1",
+    "productId": "wes-crem-m4",
+    "author": "Metalúrgica del Cibao",
+    "location": "Moca, Espaillat",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Acero macizo galvanizado de verdad. Los 3 separadores roscados por tramo facilitan la nivelación perfecta.",
+    "verified": true,
+    "date": "21 Sep 2026"
+  },
+  {
+    "id": "rev-crem-nyl-1",
+    "productId": "wes-crem-nyl",
+    "author": "Dr. Juan Carlos Belliard",
+    "location": "Santiago, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Increíble cómo elimina el ruido de arrastre del portón. Ahora ni se escucha cuando entra o sale un vehículo.",
+    "verified": true,
+    "date": "22 Sep 2026"
+  },
+  {
+    "id": "rev-lamp-krx-1",
+    "productId": "wes-lamp-krx",
+    "author": "Ing. César Minaya",
+    "location": "La Vega, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Luz LED muy brillante y visible de día. La antena incorporada duplicó el alcance de todos los controles de la casa.",
+    "verified": true,
+    "date": "23 Sep 2026"
+  },
+  {
+    "id": "rev-desbl-1",
+    "productId": "odoo-34115",
+    "author": "Técnico Ramón Tejada",
+    "location": "Moca, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Repuesto original para CAME BX. La llave calza suave y el aluminio tiene el mismo acabado de fábrica.",
+    "verified": true,
+    "date": "22 Sep 2026"
+  },
+  {
+    "id": "rev-zbx-1",
+    "productId": "odoo-26418",
+    "author": "Ing. Electrónico Samuel Rosario",
+    "location": "Santiago, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Tarjeta original con todos sus relés y protección de fusibles. Sustituyó la dañada por tormenta y el motor quedó perfecto.",
+    "verified": true,
+    "date": "19 Sep 2026"
+  }
+];
 
     const saved = localStorage.getItem('wes_product_reviews');
     let allReviews = defaultReviews;
@@ -9676,7 +10167,7 @@ const StorageService = {
     }
 
     if (!productId) return allReviews;
-    return allReviews.filter(r => r.productId === productId || r.productId === 'odoo-' + productId);
+    return allReviews.filter(r => r.productId === productId || r.productId === 'odoo-' + productId || r.productId === productId.replace('odoo-', ''));
   },
 
   saveProductReview: function(review) {
