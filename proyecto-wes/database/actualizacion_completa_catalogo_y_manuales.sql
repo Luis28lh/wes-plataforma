@@ -4,7 +4,7 @@
 -- Copiar y pegar este archivo completo en Supabase Dashboard > SQL Editor > Run
 -- ============================================================================
 
--- PASO 1: TABLA DE PRODUCTOS
+-- PASO 1: ASEGURAR TABLA DE PRODUCTOS
 CREATE TABLE IF NOT EXISTS public.productos (
     id VARCHAR(50) PRIMARY KEY,
     codigo VARCHAR(50) UNIQUE NOT NULL,
@@ -25,12 +25,14 @@ CREATE TABLE IF NOT EXISTS public.productos (
 ALTER TABLE public.productos ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Lectura pública de productos" ON public.productos;
-CREATE POLICY "Lectura pública de productos" ON public.productos FOR SELECT USING (true);
+CREATE POLICY "Lectura pública de productos"
+ON public.productos FOR SELECT
+USING (true);
 
 -- PASO 2: INSERTAR / ACTUALIZAR EL CATÁLOGO COMPLETO DE 237 PRODUCTOS
 -- ============================================================================
 -- WARN ELECTRICAL SERVICES, SRL (WES)
--- CATÁLOGO COMPLETO DE PRODUCTOS (SIN MENCIÓN DE ODOO)
+-- CATÁLOGO SINCRONIZADO DE PRODUCTOS (SOLO LECTURA)
 -- Total productos: 237
 -- ============================================================================
 
@@ -634,7 +636,7 @@ INSERT INTO public.resenas_productos (
 ) ON CONFLICT DO NOTHING;
 
 
--- PASO 4: TABLA Y REGISTROS CENTRALIZADOS DE MANUALES TÉCNICOS PDF
+-- PASO 4: TABLA Y REGISTRO CENTRALIZADO DE MANUALES TÉCNICOS PDF
 -- ============================================================================
 -- PLATAFORMA WARN ELECTRICAL SERVICES, SRL (WES)
 -- REGISTRO CENTRALIZADO DE MANUALES TÉCNICOS Y DIAGRAMAS (PDF)

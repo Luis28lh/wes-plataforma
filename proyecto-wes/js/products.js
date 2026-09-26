@@ -8610,12 +8610,6 @@ const INITIAL_PRODUCTS = [
         "title": "Compartimiento de Batería y Código QR",
         "badge": "Configuración",
         "caption": "Apertura fácil para batería CR2032 y configuración instantánea vía app CAME SetUp por QR"
-      },
-      {
-        "url": "https://sc04.alicdn.com/kf/H51686ffca7394e2c943add335f01f36cJ.jpg",
-        "title": "Control Portátil en Mano",
-        "badge": "En Operación",
-        "caption": "Alcance extendido de 50 a 150 metros para control simultáneo de portón, garage y accesos"
       }
     ],
     "key_attributes": {
@@ -9850,7 +9844,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v10_catalog';
+    const versionKey = 'wes_products_v11_catalog';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
@@ -9871,7 +9865,7 @@ const StorageService = {
   },
 
   saveProducts: function(products) {
-    localStorage.setItem('wes_products_v10_catalog', JSON.stringify(products));
+    localStorage.setItem('wes_products_v11_catalog', JSON.stringify(products));
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
     if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;

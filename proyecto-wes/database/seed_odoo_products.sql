@@ -1,6 +1,6 @@
 -- ============================================================================
 -- WARN ELECTRICAL SERVICES, SRL (WES)
--- CATÁLOGO COMPLETO DE PRODUCTOS (SIN MENCIÓN DE ODOO)
+-- CATÁLOGO SINCRONIZADO DE PRODUCTOS (SOLO LECTURA)
 -- Total productos: 237
 -- ============================================================================
 
