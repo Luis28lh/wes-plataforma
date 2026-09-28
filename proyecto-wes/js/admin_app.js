@@ -1705,6 +1705,10 @@ const AdminApp = {
       window.WES_CATALOG_STATE.products = products;
     }
 
+    if (window.WesDB && window.WesDB.isConfigured() && typeof window.WesDB.saveProduct === 'function') {
+      window.WesDB.saveProduct(productData);
+    }
+
     if (window.AuditLog) {
       window.AuditLog.log({
         module: 'productos',
@@ -1738,6 +1742,10 @@ const AdminApp = {
 
     if (window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;
+    }
+
+    if (window.WesDB && window.WesDB.isConfigured() && typeof window.WesDB.deleteProduct === 'function') {
+      window.WesDB.deleteProduct(productId);
     }
 
     if (window.AuditLog) {
@@ -2352,7 +2360,11 @@ const AdminApp = {
               <div class="text-[11px] text-slate-500">
                 <i class="fas fa-shield-alt text-emerald-600 mr-1"></i> Protegido con Row Level Security (RLS), aislamiento de roles y encriptación.
               </div>
-              <div class="flex space-x-2">
+              <div class="flex flex-wrap gap-2">
+                <button type="button" onclick="AdminApp.syncCatalogToSupabase()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow flex items-center space-x-1.5" title="Sube los 237 productos con fotos, ofertas y atributos a Supabase">
+                  <i class="fas fa-cloud-upload-alt text-emerald-200"></i>
+                  <span>Sincronizar Catálogo a Supabase</span>
+                </button>
                 <button type="button" onclick="AdminApp.disconnectDatabase()" class="px-4 py-2 border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-xs transition">
                   Desconectar
                 </button>
@@ -2668,6 +2680,32 @@ const AdminApp = {
       WesDB.disconnect();
       showToast('Base de datos desconectada. Operando en modo local.', 'info');
       this.renderAjustes();
+    }
+  },
+
+  async syncCatalogToSupabase() {
+    if (!PermissionsManager.checkOrAlert('ajustes', 'configurar')) return;
+    if (!window.WesDB || !window.WesDB.isConfigured()) {
+      showToast('Debe conectar la base de datos Supabase primero.', 'warning');
+      return;
+    }
+    showToast('Iniciando sincronización con Supabase (237 productos con fotos, ofertas y atributos)...', 'info');
+    const prods = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+
+    const res = await window.WesDB.syncAllProducts(prods);
+    if (res.success) {
+      showToast(`¡Catálogo sincronizado con Supabase! ${res.count} de ${res.total} productos procesados.`, 'success');
+      if (window.AuditLog) {
+        window.AuditLog.log({
+          module: 'productos',
+          action: 'sincronizar_supabase',
+          description: `Sincronización masiva de ${res.count} productos hacia PostgreSQL Supabase`
+        });
+      }
+    } else {
+      showToast('Aviso: Verifique que ejecutó el script SQL en Supabase para permitir escritura RLS.', 'warning');
     }
   },
 

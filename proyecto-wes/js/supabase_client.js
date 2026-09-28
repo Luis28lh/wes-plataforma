@@ -93,17 +93,40 @@ const WesDB = (function() {
             return data.map(p => ({
               id: p.id,
               name: p.nombre,
+              nombre: p.nombre,
               code: p.codigo,
+              codigo: p.codigo,
               brand: p.marca,
+              marca: p.marca,
               category: p.categoria_id,
+              categoria_id: p.categoria_id,
               description: p.descripcion,
+              descripcion: p.descripcion,
               features: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
+              caracteristicas: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
               manualUrl: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
+              manual_url: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
               price: Number(p.precio),
-              availability: p.disponibilidad,
-              stock: p.stock,
+              precio: Number(p.precio),
+              currency: p.moneda || 'DOP',
+              moneda: p.moneda || 'DOP',
+              availability: p.disponibilidad || 'Disponible',
+              disponibilidad: p.disponibilidad || 'Disponible',
+              stock: Number(p.stock || 0),
               image: p.imagen_url,
-              active: p.activo
+              imagen_url: p.imagen_url,
+              active: p.activo !== false,
+              activo: p.activo !== false,
+              featured: Boolean(p.destacado),
+              destacado: Boolean(p.destacado),
+              en_oferta: Boolean(p.en_oferta),
+              is_offer: Boolean(p.en_oferta),
+              novedad: Boolean(p.novedad),
+              is_new: Boolean(p.novedad),
+              precio_anterior: p.precio_anterior ? Number(p.precio_anterior) : null,
+              tipo_promocion: p.tipo_promocion || (p.en_oferta ? 'oferta' : 'normal'),
+              gallery_images: Array.isArray(p.gallery_images) ? p.gallery_images : [],
+              key_attributes: (p.key_attributes && typeof p.key_attributes === 'object') ? p.key_attributes : {}
             }));
           }
         } catch (err) {
@@ -113,6 +136,109 @@ const WesDB = (function() {
       // Fallback local seguro
       return StorageService.getProducts();
     },
+
+    saveProduct: async function(productData) {
+      if (this.isConfigured()) {
+        try {
+          const row = {
+            id: String(productData.id),
+            codigo: String(productData.code || productData.codigo || productData.id),
+            nombre: productData.name || productData.nombre || 'Producto WES',
+            marca: productData.brand || productData.marca || 'WES',
+            categoria_id: productData.category || productData.categoria_id || 'otros',
+            descripcion: productData.description || productData.descripcion || '',
+            caracteristicas: productData.features || productData.caracteristicas || [],
+            precio: Number(productData.price || productData.precio || 0),
+            moneda: productData.currency || productData.moneda || 'DOP',
+            disponibilidad: productData.availability || productData.disponibilidad || 'Disponible',
+            stock: Number(productData.stock !== undefined ? productData.stock : 0),
+            imagen_url: productData.image || productData.imagen_url || '',
+            destacado: Boolean(productData.featured || productData.destacado),
+            activo: productData.active !== false && productData.activo !== false,
+            en_oferta: Boolean(productData.en_oferta || productData.is_offer),
+            novedad: Boolean(productData.novedad || productData.is_new),
+            precio_anterior: productData.precio_anterior ? Number(productData.precio_anterior) : null,
+            tipo_promocion: productData.tipo_promocion || (productData.en_oferta ? 'oferta' : 'normal'),
+            manual_url: productData.manualUrl || productData.manual_url || null,
+            gallery_images: Array.isArray(productData.gallery_images) ? productData.gallery_images : [],
+            key_attributes: (productData.key_attributes && typeof productData.key_attributes === 'object') ? productData.key_attributes : {},
+            updated_at: new Date().toISOString()
+          };
+
+          const { error } = await client
+            .from('productos')
+            .upsert([row], { onConflict: 'id' });
+
+          if (error) throw error;
+          console.log('[WesDB] Producto guardado en Supabase:', row.id);
+          return { success: true };
+        } catch (err) {
+          console.warn('[WesDB] Error al guardar producto en Supabase:', err);
+          return { success: false, error: err };
+        }
+      }
+      return { success: false, reason: 'unconfigured' };
+    },
+
+    deleteProduct: async function(productId) {
+      if (this.isConfigured()) {
+        try {
+          const { error } = await client
+            .from('productos')
+            .update({ activo: false, updated_at: new Date().toISOString() })
+            .eq('id', String(productId));
+          if (error) throw error;
+          return { success: true };
+        } catch (err) {
+          console.warn('[WesDB] Error al desactivar producto en Supabase:', err);
+        }
+      }
+      return { success: false };
+    },
+
+    syncAllProducts: async function(productsList) {
+      if (!this.isConfigured()) return { success: false, message: 'Supabase no conectado' };
+      const items = Array.isArray(productsList) ? productsList : StorageService.getProducts();
+      let successCount = 0;
+      const batchSize = 40;
+
+      for (let i = 0; i < items.length; i += batchSize) {
+        const batch = items.slice(i, i + batchSize).map(p => ({
+          id: String(p.id),
+          codigo: String(p.code || p.codigo || p.id),
+          nombre: p.name || p.nombre || 'Producto WES',
+          marca: p.brand || p.marca || 'WES',
+          categoria_id: p.category || p.categoria_id || 'otros',
+          descripcion: p.description || p.descripcion || '',
+          caracteristicas: p.features || p.caracteristicas || [],
+          precio: Number(p.price || p.precio || 0),
+          moneda: p.currency || p.moneda || 'DOP',
+          disponibilidad: p.availability || p.disponibilidad || 'Disponible',
+          stock: Number(p.stock !== undefined ? p.stock : 0),
+          imagen_url: p.image || p.imagen_url || '',
+          destacado: Boolean(p.featured || p.destacado),
+          activo: p.active !== false && p.activo !== false,
+          en_oferta: Boolean(p.en_oferta || p.is_offer),
+          novedad: Boolean(p.novedad || p.is_new),
+          precio_anterior: p.precio_anterior ? Number(p.precio_anterior) : null,
+          tipo_promocion: p.tipo_promocion || (p.en_oferta ? 'oferta' : 'normal'),
+          manual_url: p.manualUrl || p.manual_url || null,
+          gallery_images: Array.isArray(p.gallery_images) ? p.gallery_images : [],
+          key_attributes: (p.key_attributes && typeof p.key_attributes === 'object') ? p.key_attributes : {},
+          updated_at: new Date().toISOString()
+        }));
+
+        try {
+          const { error } = await client.from('productos').upsert(batch, { onConflict: 'id' });
+          if (!error) successCount += batch.length;
+          else console.warn('[WesDB] Error en lote Supabase:', error);
+        } catch (e) {
+          console.warn('[WesDB] Excepción en lote Supabase:', e);
+        }
+      }
+      return { success: true, count: successCount, total: items.length };
+    },
+
 
     // ------------------------------------------------------------------------
     // REGISTRO DE COTIZACIONES

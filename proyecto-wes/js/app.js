@@ -38,6 +38,19 @@ function initApp() {
     applyFeatureFlags();
     renderProducts();
   });
+
+  // Sincronización en segundo plano con Supabase si está disponible
+  if (window.WesDB && window.WesDB.isConfigured()) {
+    window.WesDB.getProducts().then(remoteProducts => {
+      if (Array.isArray(remoteProducts) && remoteProducts.length >= 200) {
+        StorageService.saveProducts(remoteProducts);
+        renderProducts();
+        populateFilterDropdowns();
+      }
+    }).catch(err => {
+      console.warn('[WesApp] Fallback a catálogo local activo:', err);
+    });
+  }
 }
 
 // 1. Renderizar datos de contacto y textos de la empresa
