@@ -17,7 +17,7 @@ Esta solución implementa la plataforma web empresarial para **Warn Electrical S
 * **Teléfono Principal y WhatsApp:** **`(849) 207-5474`** (`https://wa.me/18492075474`)
 * **Ubicación Google Maps:** [https://maps.app.goo.gl/KMosxdkCGwXxqFjC9](https://maps.app.goo.gl/KMosxdkCGwXxqFjC9) (`19.3877255, -70.531041`)
 * **Correos Electrónicos:** **`wes.inform@gmail.com`**
-* **Redes Sociales:** Instagram **`@wes.inform`** (`https://instagram.com/wes.inform`)
+* **Redes Sociales:** Instagram **`@wes.inform`** ([instagram.com/wes.inform](https://www.instagram.com/wes.inform/)) | Facebook **`Warn.Electrical.Services`** ([facebook.com/Warn.Electrical.Services](https://www.facebook.com/Warn.Electrical.Services))
 * **Horarios:** Lun - Vie: 7:30 AM – 6:00 PM | Sáb: 8:00 AM – 1:00 PM
 
 ---

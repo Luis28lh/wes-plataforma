@@ -2300,6 +2300,15 @@ const AdminApp = {
             <div>
               <label class="block font-bold text-slate-700 mb-1">Dirección Oficial:</label>
               <input type="text" name="address" value="${settings.address || 'Autopista Ramón Cáceres, Plaza Megatone, Moca, República Dominicana'}" class="w-full p-2.5 border border-slate-300 rounded-xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1"><i class="fab fa-facebook-f text-[#1877F2] mr-1"></i> Página de Facebook:</label>
+                <input type="url" name="facebook" value="${settings.facebook || 'https://www.facebook.com/Warn.Electrical.Services'}" class="w-full p-2.5 border border-slate-300 rounded-xl">
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1"><i class="fab fa-instagram text-[#DD2A7B] mr-1"></i> Perfil de Instagram:</label>
+                <input type="url" name="instagram" value="${settings.instagram || 'https://www.instagram.com/wes.inform/'}" class="w-full p-2.5 border border-slate-300 rounded-xl">
+              </div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
@@ -2743,6 +2752,8 @@ const AdminApp = {
       address: form.address.value.trim(),
       scheduleWeek: form.scheduleWeek.value.trim(),
       scheduleSat: form.scheduleSat.value.trim(),
+      facebook: form.facebook ? form.facebook.value.trim() : (current.facebook || 'https://www.facebook.com/Warn.Electrical.Services'),
+      instagram: form.instagram ? form.instagram.value.trim() : (current.instagram || 'https://www.instagram.com/wes.inform/'),
       currency: form.currency.value
     });
 
