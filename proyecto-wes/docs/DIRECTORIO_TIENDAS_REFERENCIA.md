@@ -84,7 +84,21 @@ Cada vez que se procese un producto en el catálogo WES:
 
 ---
 
-### 6. 🌐 Plataforma Alibaba B2B (Referencia Estilística y Arquitectura)
+### 6. 🟠 Data Import (República Dominicana)
+* **Portal Oficial:** [https://dataimport.com](https://dataimport.com)
+* **Plantilla de Búsqueda:** `https://dataimport.com/?s={query}`
+* **Plantilla de Producto Web:** `https://dataimport.com/tienda/{slug}/`
+* **Sedes:** Santo Domingo y Santiago de los Caballeros.
+* **Especialidad:**
+  * Bobinas de cable de red UTP Cat5e, Cat6, Cat6 Exterior (Dahua, Venlogic).
+  * Cable Dahua CAT6 UL DH-PFM920I-6U-U (1000 pies / 305m Flame Retardant).
+  * Equipamiento de CCTV Dahua, NVR, DVR y cámaras IP.
+  * Fuentes de poder centralizadas, conectores y video baluns.
+  * Computadoras, laptops y equipamiento para puestos de trabajo.
+
+---
+
+### 7. 🌐 Plataforma Alibaba B2B (Referencia Estilística y Arquitectura)
 * **Portal Oficial:** [https://www.alibaba.com](https://www.alibaba.com)
 * **Plantilla de Búsqueda:** `https://www.alibaba.com/trade/search?SearchText={query}`
 * **Especialidad:**

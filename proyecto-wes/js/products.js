@@ -378,14 +378,24 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-171",
     "codigo": "2362",
-    "nombre": "CABLE UTP DAHUA CAT 6 AZUL",
+    "nombre": "CABLE DE RED DAHUA CAT6 UL DH-PFM920I-6U-U (1000 PIES / 305M FLAME RETARDANT)",
     "marca": "Dahua",
     "categoria_id": "cables",
-    "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Cable de red UTP Categoría 6 de alto rendimiento para instalaciones profesionales de telecomunicaciones, redes Gigabit y videovigilancia CCTV / IP. Fabricado con conductores de cobre 100% puro libre de oxígeno (99.97% OFC) calibre 23 AWG sólido, con aislamiento HDPE y separador central cruciforme en polietileno que minimiza la diafonía (crosstalk). Cubierta exterior en PVC ignífugo certificada bajo la norma ANSI UL CM (Flame Retardant Class) para máxima seguridad en edificaciones residenciales y comerciales. Compatible con transmisión de energía y datos Power over Ethernet (PoE, PoE+, Hi-PoE hasta 90W). Presentación en caja dispensadora tipo Pull Box de 1000 pies (305 metros) con hilo de rasgado (rip cord) para un desaislado rápido y limpio.",
     "caracteristicas": [
       "SKU: 2362",
-      "Categoría ERP: Cable UTP",
-      "Disponibilidad: 191 unidades en inventario físico",
+      "Modelo de Referencia: Dahua DH-PFM920I-6U-U (CAT6 UL Flame Retardant)",
+      "Tipo de Cable: UTP Cat6 (Par Trenzado No Blindado de 4 Pares)",
+      "Material Conductor: 99.97% Cobre Libre de Oxígeno (OFC) Sólido 23 AWG (0.57 mm)",
+      "Aislamiento: HDPE de alta densidad con cruceta separadora interna anti-diafonía",
+      "Norma de Seguridad: ANSI UL CM Flame Retardant (Retardante de llama)",
+      "Frecuencia de Trabajo: Hasta 250 MHz para redes Gigabit Ethernet 1 Gbps",
+      "Compatibilidad PoE: Transmisión combinada de datos y energía PoE/PoE+/Hi-PoE para cámaras IP",
+      "Presentación: Caja dispensadora Pull Box de 1000 pies (305 metros) con marcador de metraje",
+      "Hilo de Rasgado: Rip Cord integrado de poliéster 500D",
+      "Disponibilidad: 191 metros / unidades en inventario físico WES",
+      "Venta WES: Disponible por metro fraccionado (RD$ 30.15/m) o bobina completa",
+      "Garantía WES: 1 año con certificación de continuidad y conductividad",
       "Manual de Instalación disponible",
       "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
     ],
@@ -393,29 +403,76 @@ const INITIAL_PRODUCTS = [
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 191,
-    "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "assets/products/dahua-pfm920i-6u-u-caja.png",
     "destacado": true,
     "activo": true,
     "manual_url": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
+    "gallery_images": [
+      {
+        "url": "assets/products/dahua-pfm920i-6u-u-caja.png",
+        "title": "Caja Dispensadora Pull Box 1000 Pies",
+        "badge": "Principal",
+        "caption": "Caja original Dahua DH-PFM920I-6U-U 305m (1000ft) CAT6 UL Flame Retardant"
+      },
+      {
+        "url": "assets/products/dahua-pfm920i-6u-u-box.png",
+        "title": "Vista en Perspectiva y Bobina",
+        "badge": "Dahua Original",
+        "caption": "Empaque de alta resistencia con dispensador suave anti-enredos para instaladores"
+      },
+      {
+        "url": "assets/products/dahua-pfm920i-6u-u-angled.webp",
+        "title": "Identificación de Modelo y Certificación",
+        "badge": "UL Listed CM",
+        "caption": "Rotulado de fábrica con certificación ANSI UL CM y metraje secuencial descendente"
+      }
+    ],
+    "key_attributes": {
+      "Modelo Oficial": "DH-PFM920I-6U-U",
+      "Categoría": "CAT6 UTP (Unshielded Twisted Pair)",
+      "Conductor": "23 AWG Cobre 99.97% OFC (Sólido 0.57 mm)",
+      "Longitud Bobina": "1000 Pies (305 Metros) / Caja Pull Box",
+      "Certificación Fuego": "ANSI UL CM – Flame Retardant Class",
+      "Frecuencia": "Hasta 250 MHz (Gigabit 1000BASE-T)",
+      "Soporte PoE": "PoE / PoE+ (802.3at) / Hi-PoE (90W)",
+      "Aislamiento / Separador": "HDPE + Cruceta Central de Polietileno",
+      "Cubierta Exterior": "PVC Ignífugo con Hilo de Rasgado (Rip Cord)",
+      "Resistencia DC": "Máx. 7.5 Ω / 100 m",
+      "Garantía WES": "1 año oficial WES / Certificado Dahua"
+    },
     "code": "2362",
-    "name": "CABLE UTP DAHUA CAT 6 AZUL",
+    "name": "CABLE DE RED DAHUA CAT6 UL DH-PFM920I-6U-U (1000 PIES / 305M FLAME RETARDANT)",
     "brand": "Dahua",
-    "category": "Accesorios de Instalación",
+    "category": "Cables & Conectividad",
     "price": 30.15,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "image": "assets/products/dahua-pfm920i-6u-u-caja.png",
+    "description": "Cable de red UTP Categoría 6 de alto rendimiento para instalaciones profesionales de telecomunicaciones, redes Gigabit y videovigilancia CCTV / IP. Fabricado con conductores de cobre 100% puro libre de oxígeno (99.97% OFC) calibre 23 AWG sólido, con aislamiento HDPE y separador central cruciforme en polietileno que minimiza la diafonía (crosstalk). Cubierta exterior en PVC ignífugo certificada bajo la norma ANSI UL CM (Flame Retardant Class) para máxima seguridad en edificaciones residenciales y comerciales. Compatible con transmisión de energía y datos Power over Ethernet (PoE, PoE+, Hi-PoE hasta 90W). Presentación en caja dispensadora tipo Pull Box de 1000 pies (305 metros) con hilo de rasgado (rip cord) para un desaislado rápido y limpio.",
     "features": [
       "SKU: 2362",
-      "Categoría ERP: Cable UTP",
-      "Disponibilidad: 191 unidades en inventario físico",
+      "Modelo de Referencia: Dahua DH-PFM920I-6U-U (CAT6 UL Flame Retardant)",
+      "Tipo de Cable: UTP Cat6 (Par Trenzado No Blindado de 4 Pares)",
+      "Material Conductor: 99.97% Cobre Libre de Oxígeno (OFC) Sólido 23 AWG (0.57 mm)",
+      "Aislamiento: HDPE de alta densidad con cruceta separadora interna anti-diafonía",
+      "Norma de Seguridad: ANSI UL CM Flame Retardant (Retardante de llama)",
+      "Frecuencia de Trabajo: Hasta 250 MHz para redes Gigabit Ethernet 1 Gbps",
+      "Compatibilidad PoE: Transmisión combinada de datos y energía PoE/PoE+/Hi-PoE para cámaras IP",
+      "Presentación: Caja dispensadora Pull Box de 1000 pies (305 metros) con marcador de metraje",
+      "Hilo de Rasgado: Rip Cord integrado de poliéster 500D",
+      "Disponibilidad: 191 metros / unidades en inventario físico WES",
+      "Venta WES: Disponible por metro fraccionado (RD$ 30.15/m) o bobina completa",
+      "Garantía WES: 1 año con certificación de continuidad y conductividad",
       "Manual de Instalación disponible",
       "manual_url:https://warnelectricalservices.com/docs/manual_dahua_wes.pdf"
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "en_oferta": true,
+    "is_offer": true,
+    "tipo_promocion": "oferta",
+    "precio_anterior": 35
   },
   {
     "id": "odoo-173",
@@ -9955,7 +10012,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v14_catalog';
+    const versionKey = 'wes_products_v15_catalog';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
@@ -9976,7 +10033,7 @@ const StorageService = {
   },
 
   saveProducts: function(products) {
-    localStorage.setItem('wes_products_v14_catalog', JSON.stringify(products));
+    localStorage.setItem('wes_products_v15_catalog', JSON.stringify(products));
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
     if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;
@@ -10028,6 +10085,32 @@ const StorageService = {
   // Gestión de Reseñas y Métricas de Calidad de Producto
   getProductReviews: function(productId) {
     const defaultReviews = [
+  {
+    "id": "rev-2362-1",
+    "productId": "odoo-171",
+    "author": "Ing. Francisco Rosario",
+    "location": "Santiago de los Caballeros",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Excelente cable Dahua CAT6 100% cobre. Lo usamos para enlazar 16 cámaras IP PoE a más de 85 metros de tirada sin caídas de tensión ni paquetes perdidos. La caja pull-box no se traba.",
+    "verified": true,
+    "date": "18 Sep 2026"
+  },
+  {
+    "id": "rev-2362-2",
+    "productId": "odoo-171",
+    "author": "Tec. Ramón Almonte",
+    "location": "Moca, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 4.9,
+    "serviceQuality": 5,
+    "comment": "La certificación UL CM y el hilo de rasgado ahorran mucho tiempo en las tuberías y bandejas de red. Conductor sólido y la cruceta central aísla muy bien los pares.",
+    "verified": true,
+    "date": "08 Sep 2026"
+  },
   {
     "id": "rev-604-1",
     "productId": "odoo-21471",

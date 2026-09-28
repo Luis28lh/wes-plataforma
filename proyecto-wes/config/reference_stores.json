@@ -100,6 +100,27 @@
       "notes": "Excelente para componentes menores, adaptadores, baluns y accesorios de instalación."
     },
     {
+      "id": "data-import",
+      "name": "Data Import República Dominicana",
+      "country": "DO",
+      "status": "active",
+      "baseUrl": "https://dataimport.com",
+      "searchUrlTemplate": "https://dataimport.com/?s={query}",
+      "productUrlTemplate": "https://dataimport.com/tienda/{slug}/",
+      "specialties": [
+        "Cable de red UTP Cat5, Cat6, Cat6 Exterior (Dahua, Venlogic)",
+        "Seguridad electrónica y CCTV Dahua (Cámaras, NVR, DVR)",
+        "Fuentes de poder centralizadas y baluns de video",
+        "Conectores y accesorios de telecomunicaciones",
+        "Computadoras y equipamiento de oficina"
+      ],
+      "locations": [
+        "Santo Domingo",
+        "Santiago"
+      ],
+      "notes": "Excelente fuente de referencia para bobinas de cable de red Dahua, accesorios de telecomunicaciones y precios de mercado en RD."
+    },
+    {
       "id": "alibaba-b2b",
       "name": "Alibaba B2B Platform (Estándar de Conversión y Estructura)",
       "country": "Global",
