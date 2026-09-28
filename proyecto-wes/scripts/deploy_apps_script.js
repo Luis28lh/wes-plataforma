@@ -67,7 +67,7 @@ async function deployToAppsScript() {
   `;
 
   // Remover scripts externos que apuntan a js/... y poner el bundle
-  htmlContent = htmlContent.replace(/<script src="js\/products\.js"><\/script>[\s\S]*?<script src="js\/app\.js"><\/script>/, scriptsBundle);
+  htmlContent = htmlContent.replace(/<script src="js\/products\.js[^>]*><\/script>[\s\S]*?<script src="js\/app\.js[^>]*><\/script>/, scriptsBundle);
 
   // Leer Code.js y appsscript.json
   const codeJs = fs.readFileSync(path.join(ROOT_DIR, 'Code.js'), 'utf8');
@@ -127,18 +127,22 @@ async function deployToAppsScript() {
   const versionNumber = versionData.versionNumber || 1;
   console.log(`✓ Versión creada: #${versionNumber}`);
 
-  // 6. Crear despliegue productivo (Deployment)
+  // 6. Actualizar despliegue productivo permanente (Deployment)
   console.log('\n5. Publicando Web App en producción...');
-  const deployRes = await fetch(`https://script.googleapis.com/v1/projects/${scriptId}/deployments`, {
-    method: 'POST',
+  const PERMANENT_DEPLOYMENT_ID = 'AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ';
+  const deployRes = await fetch(`https://script.googleapis.com/v1/projects/${scriptId}/deployments/${PERMANENT_DEPLOYMENT_ID}`, {
+    method: 'PUT',
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      versionNumber: versionNumber,
-      manifestFileName: 'appsscript',
-      description: 'Producción Web WES v1.0'
+      deploymentConfig: {
+        scriptId: scriptId,
+        versionNumber: versionNumber,
+        manifestFileName: 'appsscript',
+        description: 'Producción Web WES v1.0 - Ofertas y Soporte'
+      }
     })
   });
 
@@ -147,7 +151,7 @@ async function deployToAppsScript() {
     throw new Error('Error en deployment: ' + JSON.stringify(deployData.error));
   }
 
-  const deploymentId = deployData.deploymentId;
+  const deploymentId = deployData.deploymentId || PERMANENT_DEPLOYMENT_ID;
   const webAppEntry = (deployData.entryPoints || []).find(ep => ep.entryPointType === 'WEB_APP');
   const webAppUrl = webAppEntry ? webAppEntry.webApp.url : `https://script.google.com/macros/s/${deploymentId}/exec`;
 
