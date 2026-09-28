@@ -17,7 +17,7 @@ const AppState = {
   sortBy: 'featured',
   supportImages: [],
   settings: StorageService.getCompanySettings(),
-  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbxSDriZqv7SYSECp1lEvKNqf7J_9nr602lJ494vlWwHRD-BQ8cXZDwZFfS-MTXtYDfQMw/exec'
+  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec'
 };
 
 let wesMapInstance = null;
@@ -412,6 +412,36 @@ function resetProductFilters() {
 
   renderProducts();
 }
+
+// Filtrar catálogo por marca desde los accesos del pie de página
+function filterByBrand(brandName) {
+  const brandSelect = document.getElementById('brand-filter');
+  const searchInput = document.getElementById('search-input');
+  const storeSection = document.getElementById('tienda');
+
+  if (brandSelect) {
+    const hasOption = Array.from(brandSelect.options).some(
+      o => o.value.toLowerCase() === brandName.toLowerCase()
+    );
+    if (hasOption) {
+      AppState.selectedBrand = brandName;
+      brandSelect.value = brandName;
+      AppState.searchQuery = '';
+      if (searchInput) searchInput.value = '';
+    } else {
+      AppState.selectedBrand = 'all';
+      brandSelect.value = 'all';
+      AppState.searchQuery = brandName;
+      if (searchInput) searchInput.value = brandName;
+    }
+    renderProducts();
+  }
+
+  if (storeSection) {
+    storeSection.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+window.filterByBrand = filterByBrand;
 
 // 3. Sistema de Carrito / Lista de Cotización
 function addToQuote(productId) {
