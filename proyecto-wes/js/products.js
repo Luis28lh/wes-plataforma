@@ -557,40 +557,103 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-177",
     "codigo": "252",
-    "nombre": "CABLE UTP LEVITON CAT 6 AZUL",
-    "marca": "WES",
+    "nombre": "CABLE DE RED LEVITON CAT6 UTP CLASIFICACIÓN CM (305M / 1000FT UTP6M-MLB)",
+    "marca": "Leviton",
     "categoria_id": "cables",
-    "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Cable UTP Categoría 6 de alto rendimiento Leviton Network Solutions certificado para aplicaciones de cableado estructurado comercial, corporativo y centros de datos. Diseñado con 4 pares trenzados de conductores de cobre electrolítico 100% sólido de calibre 23 AWG con cruceta central dieléctrica no metálica para minimizar la diafonía (NEXT / PS-NEXT). Cubierta exterior de PVC con clasificación CM (UL Listed para comunicaciones de uso general en edificaciones) y resistencia a la propagación del fuego. Rendimiento garantizado para Gigabit Ethernet 1000BASE-T, 2.5G/5GBASE-T y soporte PoE de alta potencia (PoE+ 802.3at y PoE++ 802.3bt hasta 90W) en cámaras IP y puntos de acceso WiFi 6/7. Suministrado en caja dispensadora 'Reel-in-a-Box' de 305 metros (1000 pies) con orificio dispensador suave y marcas de longitud descendente por pie/metro.",
     "caracteristicas": [
       "SKU: 252",
-      "Categoría ERP: Cable UTP",
-      "Disponibilidad: 873 unidades en inventario físico"
+      "Modelo de Referencia: Leviton UTP6M-MLB (Cat 6 CM Reel-in-a-Box)",
+      "Fabricante: Leviton Network Solutions",
+      "Tipo de Cable: U/UTP Cat 6 (4 Pares Trenzados Sin Blindaje)",
+      "Conductor: Cobre Electrolítico 100% Sólido 23 AWG",
+      "Clasificación Ignífuga: CM (UL Listed Communications General Purpose)",
+      "Separador Central: Cruceta dieléctrica no metálica para reducción de diafonía",
+      "Frecuencia / Ancho de Banda: Hasta 250 MHz (Certificado Gigabit 1000BASE-T)",
+      "Soporte PoE: Compatible PoE (802.3af), PoE+ (802.3at) y PoE++ (802.3bt hasta 90W)",
+      "Longitud Bobina: 305 metros (1,000 pies) con metraje descendente impreso",
+      "Presentación: Caja dispensadora Reel-in-a-Box anti-enredos para instalación rápida",
+      "Disponibilidad WES: 873 metros / unidades en inventario físico",
+      "Venta WES: Disponible por metro fraccionado (RD$ 46.11/m) o bobina completa",
+      "Garantía WES: 1 año con certificación de enlace permanente Leviton",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_leviton_wes.pdf"
     ],
     "precio": 46.11,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 873,
-    "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "assets/products/leviton-utp6m-mlb-caja-azul.jpg",
     "destacado": true,
     "activo": true,
-    "manual_url": null,
+    "manual_url": "https://warnelectricalservices.com/docs/manual_leviton_wes.pdf",
+    "gallery_images": [
+      {
+        "url": "assets/products/leviton-utp6m-mlb-caja-azul.jpg",
+        "title": "Caja Reel-in-a-Box Leviton Cat 6",
+        "badge": "Principal",
+        "caption": "Caja original Leviton Network Solutions UTP6M-MLB Cat 6 CM 305m (1000ft)"
+      },
+      {
+        "url": "assets/products/leviton-cat6-utp-caja.jpg",
+        "title": "Bobina y Carrete Dispensador",
+        "badge": "Fordelink Ref",
+        "caption": "Empaque de alta resistencia con dispensador fluido libre de torceduras"
+      },
+      {
+        "url": "assets/products/leviton-utp6m-mlb-box.jpg",
+        "title": "Perspectiva y Certificación UL",
+        "badge": "UL Listed CM",
+        "caption": "Identificación de modelo Leviton UTP6M con certificación de fábrica"
+      }
+    ],
+    "key_attributes": {
+      "Modelo Fabricante": "Leviton UTP6M-MLB",
+      "Categoría Red": "CAT6 U/UTP (Unshielded Twisted Pair)",
+      "Conductor": "23 AWG Cobre 100% Sólido Electrolítico",
+      "Clasificación Fuego": "CM (UL Listed Communications)",
+      "Longitud Bobina": "305 Metros (1,000 Pies) / Reel-in-a-Box",
+      "Frecuencia": "Hasta 250 MHz (Gigabit 1000BASE-T / 2.5G)",
+      "Soporte PoE": "PoE / PoE+ (802.3at) / PoE++ (802.3bt 90W)",
+      "Separador Interno": "Cruceta Dieléctrica No Metálica",
+      "Cubierta": "PVC Retardante de Llama con Hilo de Rasgado",
+      "Normas Cumplidas": "ANSI/TIA-568.2-D, ISO/IEC 11801, UL 444",
+      "Garantía WES": "1 año oficial WES / Certificado Leviton"
+    },
     "code": "252",
-    "name": "CABLE UTP LEVITON CAT 6 AZUL",
-    "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "name": "CABLE DE RED LEVITON CAT6 UTP CLASIFICACIÓN CM (305M / 1000FT UTP6M-MLB)",
+    "brand": "Leviton",
+    "category": "Cables & Conectividad",
     "price": 46.11,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "image": "assets/products/leviton-utp6m-mlb-caja-azul.jpg",
+    "description": "Cable UTP Categoría 6 de alto rendimiento Leviton Network Solutions certificado para aplicaciones de cableado estructurado comercial, corporativo y centros de datos. Diseñado con 4 pares trenzados de conductores de cobre electrolítico 100% sólido de calibre 23 AWG con cruceta central dieléctrica no metálica para minimizar la diafonía (NEXT / PS-NEXT). Cubierta exterior de PVC con clasificación CM (UL Listed para comunicaciones de uso general en edificaciones) y resistencia a la propagación del fuego. Rendimiento garantizado para Gigabit Ethernet 1000BASE-T, 2.5G/5GBASE-T y soporte PoE de alta potencia (PoE+ 802.3at y PoE++ 802.3bt hasta 90W) en cámaras IP y puntos de acceso WiFi 6/7. Suministrado en caja dispensadora 'Reel-in-a-Box' de 305 metros (1000 pies) con orificio dispensador suave y marcas de longitud descendente por pie/metro.",
     "features": [
       "SKU: 252",
-      "Categoría ERP: Cable UTP",
-      "Disponibilidad: 873 unidades en inventario físico"
+      "Modelo de Referencia: Leviton UTP6M-MLB (Cat 6 CM Reel-in-a-Box)",
+      "Fabricante: Leviton Network Solutions",
+      "Tipo de Cable: U/UTP Cat 6 (4 Pares Trenzados Sin Blindaje)",
+      "Conductor: Cobre Electrolítico 100% Sólido 23 AWG",
+      "Clasificación Ignífuga: CM (UL Listed Communications General Purpose)",
+      "Separador Central: Cruceta dieléctrica no metálica para reducción de diafonía",
+      "Frecuencia / Ancho de Banda: Hasta 250 MHz (Certificado Gigabit 1000BASE-T)",
+      "Soporte PoE: Compatible PoE (802.3af), PoE+ (802.3at) y PoE++ (802.3bt hasta 90W)",
+      "Longitud Bobina: 305 metros (1,000 pies) con metraje descendente impreso",
+      "Presentación: Caja dispensadora Reel-in-a-Box anti-enredos para instalación rápida",
+      "Disponibilidad WES: 873 metros / unidades en inventario físico",
+      "Venta WES: Disponible por metro fraccionado (RD$ 46.11/m) o bobina completa",
+      "Garantía WES: 1 año con certificación de enlace permanente Leviton",
+      "Manual de Instalación disponible",
+      "manual_url:https://warnelectricalservices.com/docs/manual_leviton_wes.pdf"
     ],
-    "manualUrl": null,
+    "manualUrl": "https://warnelectricalservices.com/docs/manual_leviton_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "en_oferta": true,
+    "is_offer": true,
+    "tipo_promocion": "oferta",
+    "precio_anterior": 52
   },
   {
     "id": "odoo-178",
@@ -10085,6 +10148,32 @@ const StorageService = {
   // Gestión de Reseñas y Métricas de Calidad de Producto
   getProductReviews: function(productId) {
     const defaultReviews = [
+  {
+    "id": "rev-252-1",
+    "productId": "odoo-177",
+    "author": "Ing. Manuel Tavares (Cableado Estructurado)",
+    "location": "Santo Domingo, D.N.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Calidad Leviton insuperable. Cable 23 AWG de cobre puro con excelente aislamiento para backbone y enlaces PoE++ de 90W en puntos de acceso WiFi 6. Pasó las pruebas de certificación Fluke DSX-8000 a la primera.",
+    "verified": true,
+    "date": "24 Sep 2026"
+  },
+  {
+    "id": "rev-252-2",
+    "productId": "odoo-177",
+    "author": "Redes & Comunicaciones Cibao",
+    "location": "Santiago, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "La caja Reel-in-a-Box de Leviton dispensa el cable de forma impecable sin atascos ni nudos. La cubierta CM UL Listed es muy flexible para canaletas y tuberías Conduit EMT.",
+    "verified": true,
+    "date": "27 Sep 2026"
+  },
   {
     "id": "rev-2362-1",
     "productId": "odoo-171",

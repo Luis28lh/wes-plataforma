@@ -17,4 +17,6 @@ desktop.ini
 
 # Repositorio independiente Asistente de Reuniones
 asistente-reuniones/
-
+# Ejecutables y binarios
+*.exe
+cloudflared.exe

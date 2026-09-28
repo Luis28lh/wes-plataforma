@@ -98,7 +98,21 @@ Cada vez que se procese un producto en el catálogo WES:
 
 ---
 
-### 7. 🌐 Plataforma Alibaba B2B (Referencia Estilística y Arquitectura)
+### 7. 🔵 Fordelink (República Dominicana)
+* **Portal Oficial:** [https://fordelink.com](https://fordelink.com)
+* **Plantilla de Búsqueda:** `https://fordelink.com/search?q={query}`
+* **Plantilla de Producto Web:** `https://fordelink.com/products/{slug}`
+* **Sede:** República Dominicana.
+* **Especialidad:**
+  * Cable UTP Cat 6 y Cat 6A Leviton (UTP6M-MLB, UTP6Z-MLB, DUTAZ-MLS).
+  * Bobinas de cable UTP Vertical Cable (23AWG Riser Rated).
+  * Conectores y jacks RJ45, patch panels y faceplates Leviton.
+  * Soluciones de fibra óptica, distribuidores y latiguillos monomodo/multimodo.
+  * Racks de comunicaciones, bandejas y organizadores de cableado.
+
+---
+
+### 8. 🌐 Plataforma Alibaba B2B (Referencia Estilística y Arquitectura)
 * **Portal Oficial:** [https://www.alibaba.com](https://www.alibaba.com)
 * **Plantilla de Búsqueda:** `https://www.alibaba.com/trade/search?SearchText={query}`
 * **Especialidad:**

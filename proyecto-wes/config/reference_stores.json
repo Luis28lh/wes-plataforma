@@ -121,6 +121,26 @@
       "notes": "Excelente fuente de referencia para bobinas de cable de red Dahua, accesorios de telecomunicaciones y precios de mercado en RD."
     },
     {
+      "id": "fordelink",
+      "name": "Fordelink (Redes, Fibra Óptica y Cableado Estructurado RD)",
+      "country": "DO",
+      "status": "active",
+      "baseUrl": "https://fordelink.com",
+      "searchUrlTemplate": "https://fordelink.com/search?q={query}",
+      "productUrlTemplate": "https://fordelink.com/products/{slug}",
+      "specialties": [
+        "Cable UTP Cat 6 y Cat 6A Leviton (UTP6M-MLB, UTP6Z-MLB, DUTAZ-MLS)",
+        "Cable UTP Vertical Cable (23AWG Riser Rated)",
+        "Jacks RJ45, patch panels y conectividad Leviton",
+        "Fibra óptica, latiguillos y distribuidores ópticos",
+        "Racks de comunicaciones y gabinetes murales"
+      ],
+      "locations": [
+        "República Dominicana"
+      ],
+      "notes": "Distribuidor especializado clave en marcas Leviton, Vertical Cable y telecomunicaciones en RD."
+    },
+    {
       "id": "alibaba-b2b",
       "name": "Alibaba B2B Platform (Estándar de Conversión y Estructura)",
       "country": "Global",
