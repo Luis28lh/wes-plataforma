@@ -1,0 +1,126 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-09-28T10:28:00-04:00",
+  "description": "Directorio centralizado de tiendas, distribuidores y fabricantes de referencia para la consulta y enriquecimiento técnico de productos del catálogo de Warn Electrical Services (WES).",
+  "stores": [
+    {
+      "id": "omega-tech",
+      "name": "Omega Tech República Dominicana",
+      "country": "DO",
+      "status": "active",
+      "baseUrl": "https://tienda.omega.com.do",
+      "searchUrlTemplate": "https://tienda.omega.com.do/es/search/buscar?busqueda={query}",
+      "productUrlTemplate": "https://tienda.omega.com.do/es/product/consul/{id}",
+      "api": {
+        "enabled": true,
+        "endpointProduct": "https://sis.omega.com.do/rest/productos/get/producto/{id}",
+        "endpointCategory": "https://sis.omega.com.do/rest/clasificacion/get/categoria/{id}",
+        "imageBaseUrl": "https://sis.omega.com.do/upload/"
+      },
+      "specialties": [
+        "Baterías AGM / VRLA de respaldo",
+        "UPS y reguladores de voltaje",
+        "Fuentes de poder y adaptadores",
+        "Cableado estructurado y redes",
+        "CCTV y videovigilancia",
+        "Accesorios de computación y servidores"
+      ],
+      "knownCategories": {
+        "179": "Ups Y Baterias -> Ups",
+        "180": "Ups Y Baterias -> Bateria (Forza FUB-1245, FUB-1270, FUB-1290, CSB)",
+        "181": "Ups Y Baterias -> Regulador",
+        "182": "Redes -> Cable UTP / Conectividad"
+      },
+      "notes": "Excelente para especificaciones exactas en marcas Forza, CSB, Dahua y equipos de energía en Rep. Dominicana."
+    },
+    {
+      "id": "winterbournea",
+      "name": "Winterbournea (Distribuidor Oficial de Seguridad y Automatización)",
+      "country": "DO / Regional",
+      "status": "active",
+      "baseUrl": "https://store.winterbournea.com",
+      "searchUrlTemplate": "https://store.winterbournea.com/buscar?controller=search&s={query}",
+      "productUrlTemplate": "https://store.winterbournea.com/producto-p-{id}.htm",
+      "specialties": [
+        "Automatización de puertas y portones CAME",
+        "Motores corredizos y batientes (BX, BK, Krono, Ferni)",
+        "Tarjetas electrónicas de control (ZBX74-78, ZLJ24, etc.)",
+        "Cremalleras de acero cincado y nylon",
+        "Mandos y controles remotos (TOP44RBN, TOP432EE)",
+        "Fotoceldas de seguridad DIR10, DIR20",
+        "Lámparas de señalización intermitente KRX",
+        "Cerraduras de seguridad y electroimanes"
+      ],
+      "notes": "Proveedor clave en RD para repuestos originales, números de parte CAME y piezas mecánicas."
+    },
+    {
+      "id": "came-oficial",
+      "name": "CAME Americas / CAME Group Oficial",
+      "country": "Global / IT",
+      "status": "active",
+      "baseUrl": "https://www.came.com/es/",
+      "americasUrl": "https://www.cameamericas.com",
+      "searchUrlTemplate": "https://www.came.com/es/buscar?q={query}",
+      "specialties": [
+        "Manuales oficiales de instalación (PDF)",
+        "Diagramas de conexionado eléctrico y borneras",
+        "Fichas técnicas con torque, ciclos de trabajo y pesos máximos",
+        "Planos de despiece y códigos de partes de repuesto"
+      ],
+      "notes": "Fuente primaria para validar manuales PDF y cotas técnicas milimétricas para clientes WES."
+    },
+    {
+      "id": "cecomsa",
+      "name": "Cecomsa República Dominicana",
+      "country": "DO",
+      "status": "active",
+      "baseUrl": "https://cecomsa.com",
+      "searchUrlTemplate": "https://cecomsa.com/catalogsearch/result/?q={query}",
+      "specialties": [
+        "UPS y protección eléctrica (APC, Forza, Tripp-Lite)",
+        "Cableado UTP Furukawa / Panduit / CommScope",
+        "Equipos de redes y switches gestionables",
+        "Almacenamiento y servidores"
+      ],
+      "notes": "Referencia de precios de mercado corporativo y modelos alternativos en Rep. Dom."
+    },
+    {
+      "id": "steren-rd",
+      "name": "Steren República Dominicana",
+      "country": "DO",
+      "status": "active",
+      "baseUrl": "https://www.steren.com.do",
+      "searchUrlTemplate": "https://www.steren.com.do/catalogsearch/result/?q={query}",
+      "specialties": [
+        "Cables de conexión, conectores BNC, RJ45, DC",
+        "Herramientas de crimpado e instrumentación de prueba",
+        "Fuentes conmutadas de 12V y reguladores de voltaje",
+        "Accesorios de audio, video y automatización liviana"
+      ],
+      "notes": "Excelente para componentes menores, adaptadores, baluns y accesorios de instalación."
+    },
+    {
+      "id": "alibaba-b2b",
+      "name": "Alibaba B2B Platform (Estándar de Conversión y Estructura)",
+      "country": "Global",
+      "status": "active",
+      "baseUrl": "https://www.alibaba.com",
+      "searchUrlTemplate": "https://www.alibaba.com/trade/search?SearchText={query}",
+      "specialties": [
+        "Estructura de Fichas Técnicas Key Attributes",
+        "Galerías fotográficas multi-ángulo (Frontal, Trasera, Terminales, Empaque, Despiece)",
+        "Métricas de calidad y tablas de especificaciones industriales",
+        "Secciones de garantía de fábrica y control de calidad"
+      ],
+      "notes": "Estándar visual y de arquitectura de información utilizado por WES para maximizar la conversión."
+    }
+  ],
+  "enrichmentWorkflow": [
+    "1. Identificar SKU, nombre o categoría del producto en el catálogo WES.",
+    "2. Consultar las tiendas de referencia (iniciando por Omega Tech para energía/redes, o Winterbournea/CAME para automatización).",
+    "3. Extraer especificaciones técnicas exactas (voltaje, corriente, dimensiones, tecnología, peso).",
+    "4. Descargar imágenes oficiales en alta resolución y almacenarlas en assets/products/.",
+    "5. Construir ficha estilo Alibaba (Key Attributes + Galería multi-ángulo + Reseñas verificadas).",
+    "6. Sincronizar catálogo frontend (js/products.js), base de datos (Supabase SQL) y desplegar."
+  ]
+}
