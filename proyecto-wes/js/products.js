@@ -4,77 +4,165 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-96",
     "codigo": "122",
-    "nombre": "BATERIA 12V-4A",
-    "marca": "WES",
+    "nombre": "BATERIA 12V-4A (FORZA FUB-1245 / 4.5AH AGM)",
+    "marca": "Forza",
     "categoria_id": "energia",
-    "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Batería recargable sellada de plomo-ácido (VRLA) de 12V y 4.5Ah con tecnología AGM (Absorbent Glass Mat) de alta eficiencia. Fabricación hermética 100% libre de mantenimiento y a prueba de derrames para montaje en cualquier orientación. Diseñada específicamente para sistemas de respaldo de energía, paneles de alarma residencial y comercial (DSC, Honeywell), controles de acceso biométricos y RFID, cerraduras electromagnéticas y luces de emergencia.",
     "caracteristicas": [
       "SKU: 122",
-      "Categoría ERP: Baterías",
-      "Disponibilidad: 5 unidades en inventario físico"
+      "Modelo de Referencia: Forza FUB-1245 (AGM)",
+      "Voltaje Nominal: 12 V DC",
+      "Capacidad Nominal: 4.5 Ah (tasa de 20 horas)",
+      "Tecnología: Plomo-Ácido VRLA / AGM libre de mantenimiento",
+      "Terminales: Tipo Faston F1 (4.75 mm / 0.187 in)",
+      "Dimensiones: 90 mm (L) x 70 mm (An) x 101 mm (Al) [107 mm con bornes]",
+      "Peso Neto: 1.45 kg (3.2 lbs)",
+      "Corriente Máx. de Descarga: 67.5 A (5 seg)",
+      "Uso: Paneles de alarma, controles de acceso, cerraduras magnéticas, UPS",
+      "Disponibilidad: 5 unidades en inventario físico WES",
+      "Garantía WES: 1 año con prueba de carga computarizada"
     ],
     "precio": 794.6,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 5,
-    "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
-    "destacado": false,
+    "imagen_url": "assets/products/bateria-12v-4a-frontal.png",
+    "destacado": true,
     "activo": true,
     "manual_url": null,
+    "gallery_images": [
+      {
+        "url": "assets/products/bateria-12v-4a-frontal.png",
+        "title": "Vista Frontal y Certificaciones",
+        "badge": "Principal",
+        "caption": "Batería Forza FUB-1245 12V 4.5Ah AGM hermética libre de mantenimiento"
+      },
+      {
+        "url": "assets/products/bateria-12v-4a-angulo.png",
+        "title": "Perspectiva y Terminales",
+        "badge": "Terminales F1",
+        "caption": "Bornes Faston F1 con polaridad identificada (+/-) y carcasa ABS resistente"
+      }
+    ],
+    "key_attributes": {
+      "Voltaje": "12 V DC",
+      "Capacidad": "4.5 Ah (20 horas)",
+      "Tecnología": "VRLA / AGM (Plomo-Ácido Sellada)",
+      "Mantenimiento": "100% Libre de Mantenimiento",
+      "Terminales": "Faston F1 (4.75 mm / 0.187 in)",
+      "Dimensiones": "90 x 70 x 101 mm (107 mm total)",
+      "Peso Neto": "1.45 kg (3.2 lbs)",
+      "Vida Útil": "3 a 5 años en régimen flotante",
+      "Aplicación": "Alarmas, Acceso, Luces Emergencia, UPS",
+      "Garantía WES": "1 año oficial WES"
+    },
     "code": "122",
-    "name": "BATERIA 12V-4A",
-    "brand": "WES",
+    "name": "BATERIA 12V-4A (FORZA FUB-1245 / 4.5AH AGM)",
+    "brand": "Forza",
     "category": "Energía y Respaldo",
     "price": 794.6,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "image": "assets/products/bateria-12v-4a-frontal.png",
+    "description": "Batería recargable sellada de plomo-ácido (VRLA) de 12V y 4.5Ah con tecnología AGM (Absorbent Glass Mat) de alta eficiencia. Fabricación hermética 100% libre de mantenimiento y a prueba de derrames para montaje en cualquier orientación. Diseñada específicamente para sistemas de respaldo de energía, paneles de alarma residencial y comercial (DSC, Honeywell), controles de acceso biométricos y RFID, cerraduras electromagnéticas y luces de emergencia.",
     "features": [
       "SKU: 122",
-      "Categoría ERP: Baterías",
-      "Disponibilidad: 5 unidades en inventario físico"
+      "Modelo de Referencia: Forza FUB-1245 (AGM)",
+      "Voltaje Nominal: 12 V DC",
+      "Capacidad Nominal: 4.5 Ah (tasa de 20 horas)",
+      "Tecnología: Plomo-Ácido VRLA / AGM libre de mantenimiento",
+      "Terminales: Tipo Faston F1 (4.75 mm / 0.187 in)",
+      "Dimensiones: 90 mm (L) x 70 mm (An) x 101 mm (Al) [107 mm con bornes]",
+      "Peso Neto: 1.45 kg (3.2 lbs)",
+      "Corriente Máx. de Descarga: 67.5 A (5 seg)",
+      "Uso: Paneles de alarma, controles de acceso, cerraduras magnéticas, UPS",
+      "Disponibilidad: 5 unidades en inventario físico WES",
+      "Garantía WES: 1 año con prueba de carga computarizada"
     ],
     "manualUrl": null,
-    "featured": false,
+    "featured": true,
     "active": true
   },
   {
     "id": "odoo-97",
     "codigo": "123",
-    "nombre": "BATERIA 12V-7A",
-    "marca": "WES",
+    "nombre": "BATERIA 12V-7A (FORZA FUB-1270 / 7.0AH AGM)",
+    "marca": "Forza",
     "categoria_id": "energia",
-    "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Batería recargable regulada por válvula (VRLA) de 12V y 7.0Ah con tecnología AGM libre de mantenimiento. Estándar de la industria en República Dominicana para respaldo ininterrumpido en fuentes centralizadas de CCTV (cajas metálicas de 4, 8 y 16 canales con cargador), sistemas UPS de 500VA a 1500VA, respaldo de 24V en serie para motores de portón corredizo CAME y cercas eléctricas perimetrales. Carcasa hermética en ABS retardante de llama.",
     "caracteristicas": [
       "SKU: 123",
-      "Categoría ERP: Baterías",
-      "Disponibilidad: 4 unidades en inventario físico"
+      "Modelo de Referencia: Forza FUB-1270 (AGM)",
+      "Voltaje Nominal: 12 V DC",
+      "Capacidad Nominal: 7.0 Ah (tasa de 20 horas)",
+      "Tecnología: Plomo-Ácido VRLA / AGM libre de mantenimiento",
+      "Terminales: Tipo Faston F1 / F2 estándar",
+      "Dimensiones: 151 mm (L) x 65 mm (An) x 94 mm (Al) [100 mm con bornes]",
+      "Peso Neto: 2.05 kg (4.5 lbs)",
+      "Corriente Máx. de Descarga: 105 A (5 seg)",
+      "Uso: Fuentes CCTV, UPS 500-1500VA, Motores de Portón 24V, Cercas",
+      "Disponibilidad: 4 unidades en inventario físico WES",
+      "Garantía WES: 1 año con prueba de carga computarizada"
     ],
     "precio": 1173.55,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 4,
-    "imagen_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
-    "destacado": false,
+    "imagen_url": "assets/products/bateria-12v-7a-frontal.png",
+    "destacado": true,
     "activo": true,
     "manual_url": null,
+    "gallery_images": [
+      {
+        "url": "assets/products/bateria-12v-7a-frontal.png",
+        "title": "Vista Frontal y Capacidad 7.0Ah",
+        "badge": "Principal",
+        "caption": "Batería Forza FUB-1270 12V 7.0Ah AGM para fuentes CCTV y UPS"
+      },
+      {
+        "url": "assets/products/bateria-12v-4a-angulo.png",
+        "title": "Detalle de Construcción AGM",
+        "badge": "Hermética",
+        "caption": "Sellado hermético VRLA a prueba de fugas y terminales polarizados"
+      }
+    ],
+    "key_attributes": {
+      "Voltaje": "12 V DC",
+      "Capacidad": "7.0 Ah (20 horas)",
+      "Tecnología": "VRLA / AGM (Plomo-Ácido Sellada)",
+      "Mantenimiento": "100% Libre de Mantenimiento",
+      "Terminales": "Faston F1 / F2 estándar",
+      "Dimensiones": "151 x 65 x 94 mm (100 mm total)",
+      "Peso Neto": "2.05 kg (4.5 lbs)",
+      "Vida Útil": "3 a 5 años en régimen flotante",
+      "Aplicación": "Cajas CCTV, UPS 500-1500VA, Motores Portón 24V",
+      "Garantía WES": "1 año oficial WES"
+    },
     "code": "123",
-    "name": "BATERIA 12V-7A",
-    "brand": "WES",
+    "name": "BATERIA 12V-7A (FORZA FUB-1270 / 7.0AH AGM)",
+    "brand": "Forza",
     "category": "Energía y Respaldo",
     "price": 1173.55,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "image": "assets/products/bateria-12v-7a-frontal.png",
+    "description": "Batería recargable regulada por válvula (VRLA) de 12V y 7.0Ah con tecnología AGM libre de mantenimiento. Estándar de la industria en República Dominicana para respaldo ininterrumpido en fuentes centralizadas de CCTV (cajas metálicas de 4, 8 y 16 canales con cargador), sistemas UPS de 500VA a 1500VA, respaldo de 24V en serie para motores de portón corredizo CAME y cercas eléctricas perimetrales. Carcasa hermética en ABS retardante de llama.",
     "features": [
       "SKU: 123",
-      "Categoría ERP: Baterías",
-      "Disponibilidad: 4 unidades en inventario físico"
+      "Modelo de Referencia: Forza FUB-1270 (AGM)",
+      "Voltaje Nominal: 12 V DC",
+      "Capacidad Nominal: 7.0 Ah (tasa de 20 horas)",
+      "Tecnología: Plomo-Ácido VRLA / AGM libre de mantenimiento",
+      "Terminales: Tipo Faston F1 / F2 estándar",
+      "Dimensiones: 151 mm (L) x 65 mm (An) x 94 mm (Al) [100 mm con bornes]",
+      "Peso Neto: 2.05 kg (4.5 lbs)",
+      "Corriente Máx. de Descarga: 105 A (5 seg)",
+      "Uso: Fuentes CCTV, UPS 500-1500VA, Motores de Portón 24V, Cercas",
+      "Disponibilidad: 4 unidades en inventario físico WES",
+      "Garantía WES: 1 año con prueba de carga computarizada"
     ],
     "manualUrl": null,
-    "featured": false,
+    "featured": true,
     "active": true
   },
   {
@@ -9844,7 +9932,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v11_catalog';
+    const versionKey = 'wes_products_v12_catalog';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
@@ -9865,7 +9953,7 @@ const StorageService = {
   },
 
   saveProducts: function(products) {
-    localStorage.setItem('wes_products_v11_catalog', JSON.stringify(products));
+    localStorage.setItem('wes_products_v12_catalog', JSON.stringify(products));
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
     if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;
@@ -10163,6 +10251,58 @@ const StorageService = {
     "comment": "Tarjeta original con todos sus relés y protección de fusibles. Sustituyó la dañada por tormenta y el motor quedó perfecto.",
     "verified": true,
     "date": "19 Sep 2026"
+  },
+  {
+    "id": "rev-122-1",
+    "productId": "odoo-96",
+    "author": "Ing. Cristian Peralta",
+    "location": "Santo Domingo Norte, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Excelente batería para panel de alarma DSC PowerSeries. Mantiene el voltaje estable durante los cortes de luz y los terminales F1 calzan a la perfección sin holguras.",
+    "verified": true,
+    "date": "24 Sep 2026"
+  },
+  {
+    "id": "rev-122-2",
+    "productId": "odoo-96",
+    "author": "Marcos Valenzuela (Seguridad Electrónica)",
+    "location": "Santiago, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "La instalamos en un control de acceso con electroimán de 600 lbs. Excelente tiempo de respaldo y sellado 100% hermético libre de fugas de ácido.",
+    "verified": true,
+    "date": "26 Sep 2026"
+  },
+  {
+    "id": "rev-123-1",
+    "productId": "odoo-97",
+    "author": "Lic. Eduardo Henríquez",
+    "location": "Distrito Nacional, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "Compré 4 unidades para las cajas de distribución de cámaras de nuestro edificio. Llegaron con prueba de carga y fecha de fabricación reciente. Recomendadas al 100%.",
+    "verified": true,
+    "date": "25 Sep 2026"
+  },
+  {
+    "id": "rev-123-2",
+    "productId": "odoo-97",
+    "author": "Instalaciones Moya & Asoc.",
+    "location": "La Vega, Rep. Dom.",
+    "rating": 5,
+    "productQuality": 5,
+    "shippingQuality": 5,
+    "serviceQuality": 5,
+    "comment": "La usamos en serie de 24V (2 baterías de 12V 7Ah) para respaldo de emergencia de motor CAME. Potencia de arranque impecable incluso con el portón pesado.",
+    "verified": true,
+    "date": "27 Sep 2026"
   }
 ];
 

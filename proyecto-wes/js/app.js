@@ -17,7 +17,7 @@ const AppState = {
   sortBy: 'featured',
   supportImages: [],
   settings: StorageService.getCompanySettings(),
-  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbzvXWerfxpYjWkOF__pDVqofC42wXnqk8XLPaBaLmxTiIaZ2uWQUMNd7BCP6o7p3u8xGQ/exec'
+  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbzsbigPxNH44OD5SPEL-NmLbG6_tSMj5pYcVErjCGrzT6mfE7oloi6Jmnsh2jx1NRWKmQ/exec'
 };
 
 let wesMapInstance = null;
@@ -1366,14 +1366,14 @@ function openProductDetailModal(productId) {
   const keyAttrsGrid = document.getElementById('detail-key-attributes-grid');
   if (keyAttrsGrid) {
     const attrs = product.key_attributes || {
-      "Capacidad": "800 kg (hasta 14 metros)",
-      "Alimentación": "CA 230V / 50-60 Hz",
-      "Material Chasis": "Aleación de aluminio inyectado a presión",
-      "Ciclo de Trabajo": "Uso intensivo residencial / comercial",
-      "Fuerza de Empuje": "800 N",
-      "Velocidad": "10.5 m/min",
-      "Protección": "IP54 (resistente a lluvia y polvo)",
-      "Garantía WES": "2 años con certificación oficial CAME"
+      "Código / SKU": product.code || product.codigo || 'N/A',
+      "Marca": product.brand || product.marca || 'WES Certificado',
+      "Categoría": product.category || product.categoria_id || 'Equipos y Repuestos',
+      "Disponibilidad": (product.stock !== undefined && product.stock > 0) ? `${product.stock} unidades en stock` : 'Disponible bajo pedido',
+      "Condición": "100% Nuevo Original",
+      "Garantía WES": "Garantía oficial Warn Electrical Services",
+      "Soporte Técnico": "Asistencia técnica directa WES",
+      "Entrega": "Despacho a todo el país (Rep. Dominicana)"
     };
 
     keyAttrsGrid.innerHTML = Object.entries(attrs).map(([key, value]) => `

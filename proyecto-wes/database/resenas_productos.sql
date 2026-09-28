@@ -342,3 +342,68 @@ INSERT INTO public.resenas_productos (
     'Tarjeta original con todos sus relés y protección de fusibles. Sustituyó la dañada por tormenta y el motor quedó perfecto.',
     true
 ) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-96',
+    'Ing. Cristian Peralta',
+    'Santo Domingo Norte, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Excelente batería para panel de alarma DSC PowerSeries. Mantiene el voltaje estable durante los cortes de luz y los terminales F1 calzan a la perfección sin holguras.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-96',
+    'Marcos Valenzuela (Seguridad Electrónica)',
+    'Santiago, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'La instalamos en un control de acceso con electroimán de 600 lbs. Excelente tiempo de respaldo y sellado 100% hermético libre de fugas de ácido.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-97',
+    'Lic. Eduardo Henríquez',
+    'Distrito Nacional, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'Compré 4 unidades para las cajas de distribución de cámaras de nuestro edificio. Llegaron con prueba de carga y fecha de fabricación reciente. Recomendadas al 100%.',
+    true
+) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.resenas_productos (
+    producto_id, cliente_nombre, cliente_ciudad,
+    calificacion_general, calidad_producto, calidad_envio, calidad_servicio,
+    comentario, verificado
+) VALUES (
+    'odoo-97',
+    'Instalaciones Moya & Asoc.',
+    'La Vega, Rep. Dom.',
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    'La usamos en serie de 24V (2 baterías de 12V 7Ah) para respaldo de emergencia de motor CAME. Potencia de arranque impecable incluso con el portón pesado.',
+    true
+) ON CONFLICT DO NOTHING;
+
