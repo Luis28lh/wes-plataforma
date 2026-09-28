@@ -278,6 +278,23 @@
             <input type="number" name="price" step="0.01" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-1 focus:ring-wes-blue">
           </div>
         </div>
+        <div class="grid grid-cols-2 gap-3 p-3 bg-amber-50/70 border border-amber-200 rounded-2xl">
+          <div>
+            <label class="block font-bold text-amber-900 mb-1 flex items-center">
+              <i class="fas fa-tags mr-1 text-rose-500"></i>Criterio Promocional
+            </label>
+            <select name="promotional_status" class="w-full p-2.5 border border-amber-300 rounded-xl font-semibold bg-white text-slate-800">
+              <option value="none">Normal (Sin promoción)</option>
+              <option value="oferta">🔥 Oferta con Descuento</option>
+              <option value="novedad">⭐ Novedad / Lanzamiento</option>
+              <option value="ambos">🔥⭐ Oferta y Novedad</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-amber-900 mb-1">Precio Anterior / Regular (RD$)</label>
+            <input type="number" name="precio_anterior" step="0.01" placeholder="Ej: 1350.00" class="w-full p-2.5 border border-amber-300 rounded-xl bg-white focus:ring-1 focus:ring-wes-blue">
+          </div>
+        </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1">Disponibilidad Inmediata *</label>
           <select name="availability" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
@@ -444,12 +461,12 @@
 
   <!-- Scripts del Portal Administrativo -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/products.js?v=20260928_1025"></script>
-  <script src="js/supabase_client.js?v=20260923_1440"></script>
-  <script src="js/feature_flags.js?v=20260923_1440"></script>
-  <script src="js/admin_audit.js?v=20260923_1440"></script>
-  <script src="js/admin_permissions.js?v=20260923_1440"></script>
-  <script src="js/admin_auth.js?v=20260923_1440"></script>
-  <script src="js/admin_app.js?v=20260923_1440"></script>
+  <script src="js/products.js?v=20260928_1050"></script>
+  <script src="js/supabase_client.js?v=20260928_1050"></script>
+  <script src="js/feature_flags.js?v=20260928_1050"></script>
+  <script src="js/admin_audit.js?v=20260928_1050"></script>
+  <script src="js/admin_permissions.js?v=20260928_1050"></script>
+  <script src="js/admin_auth.js?v=20260928_1050"></script>
+  <script src="js/admin_app.js?v=20260928_1050"></script>
 </body>
 </html>

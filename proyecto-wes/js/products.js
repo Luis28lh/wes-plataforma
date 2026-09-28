@@ -81,7 +81,11 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "en_oferta": true,
+    "is_offer": true,
+    "tipo_promocion": "oferta",
+    "precio_anterior": 890
   },
   {
     "id": "odoo-97",
@@ -163,7 +167,11 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "en_oferta": true,
+    "is_offer": true,
+    "tipo_promocion": "oferta",
+    "precio_anterior": 1350
   },
   {
     "id": "odoo-125",
@@ -319,7 +327,11 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "en_oferta": true,
+    "is_offer": true,
+    "tipo_promocion": "oferta",
+    "precio_anterior": 15.50
   },
   {
     "id": "odoo-170",
@@ -9325,7 +9337,10 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "novedad": true,
+    "is_new": true,
+    "tipo_promocion": "novedad"
   },
   {
     "id": "odoo-21472",
@@ -9352,6 +9367,10 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
     "destacado": false,
     "activo": true,
+    "en_oferta": true,
+    "is_offer": true,
+    "tipo_promocion": "oferta",
+    "precio_anterior": 47900,
     "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
     "code": "1765",
     "name": "MOTOR CAME 800KG REFULL - KIT COMPLETO INTEGRAL",
@@ -9376,6 +9395,10 @@ const INITIAL_PRODUCTS = [
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true,
+    "en_oferta": true,
+    "is_offer": true,
+    "tipo_promocion": "oferta",
+    "precio_anterior": 47900,
     "gallery_images": [
       {
         "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
@@ -9932,7 +9955,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v12_catalog';
+    const versionKey = 'wes_products_v14_catalog';
     const saved = localStorage.getItem(versionKey);
     if (!saved) {
       localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
@@ -9953,7 +9976,7 @@ const StorageService = {
   },
 
   saveProducts: function(products) {
-    localStorage.setItem('wes_products_v12_catalog', JSON.stringify(products));
+    localStorage.setItem('wes_products_v14_catalog', JSON.stringify(products));
     localStorage.setItem('wes_custom_products', JSON.stringify(products));
     if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;

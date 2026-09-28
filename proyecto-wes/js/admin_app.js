@@ -1373,8 +1373,10 @@ const AdminApp = {
       ? StorageService.getProducts()
       : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
 
-    // Extraer categorías dinámicas
-    const categories = ['Todas', ...new Set(products.map(p => p.category || p.categoria_id).filter(Boolean))];
+    // Extraer categorías dinámicas con opciones promocionales
+    const promoOptions = ['🔥 Solo Ofertas', '⭐ Solo Novedades'];
+    const dbCategories = [...new Set(products.map(p => p.category || p.categoria_id).filter(Boolean))];
+    const categories = ['Todas', ...promoOptions, ...dbCategories];
     this.selectedAdminProductCat = this.selectedAdminProductCat || 'Todas';
 
     const filtered = products.filter(p => {
@@ -1386,7 +1388,16 @@ const AdminApp = {
         ((p.category || p.categoria_id || '').toLowerCase().includes(q));
 
       const pCat = p.category || p.categoria_id || '';
-      const matchCat = this.selectedAdminProductCat === 'Todas' || pCat === this.selectedAdminProductCat;
+      let matchCat = false;
+      if (this.selectedAdminProductCat === 'Todas') {
+        matchCat = true;
+      } else if (this.selectedAdminProductCat === '🔥 Solo Ofertas') {
+        matchCat = !!(p.en_oferta || p.is_offer);
+      } else if (this.selectedAdminProductCat === '⭐ Solo Novedades') {
+        matchCat = !!(p.novedad || p.is_new);
+      } else {
+        matchCat = (pCat === this.selectedAdminProductCat);
+      }
 
       return matchSearch && matchCat;
     });
@@ -1477,6 +1488,10 @@ const AdminApp = {
                         <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-900 text-white uppercase">${brand}</span>
                       </td>
                       <td class="p-3.5 font-bold text-slate-800 max-w-xs">
+                        <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                          ${(p.en_oferta || p.is_offer) ? '<span class="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-black bg-rose-600 text-white shadow-xs">🔥 OFERTA</span>' : ''}
+                          ${(p.novedad || p.is_new) ? '<span class="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-black bg-amber-500 text-white shadow-xs">⭐ NOVEDAD</span>' : ''}
+                        </div>
                         <div class="line-clamp-2">${name}</div>
                       </td>
                       <td class="p-3.5">
@@ -1485,7 +1500,12 @@ const AdminApp = {
                         </span>
                       </td>
                       <td class="p-3.5 font-bold text-slate-900 whitespace-nowrap">
-                        RD$ ${price.toLocaleString('es-DO', { minimumFractionDigits: 2 })}
+                        ${((p.en_oferta || p.is_offer) && p.precio_anterior && p.precio_anterior > price) ? `
+                          <div class="text-[10px] line-through text-slate-400 font-normal">RD$ ${Number(p.precio_anterior).toLocaleString('es-DO', { minimumFractionDigits: 2 })}</div>
+                          <div class="text-rose-600 font-black">RD$ ${price.toLocaleString('es-DO', { minimumFractionDigits: 2 })}</div>
+                        ` : `
+                          RD$ ${price.toLocaleString('es-DO', { minimumFractionDigits: 2 })}
+                        `}
                       </td>
                       <td class="p-3.5 whitespace-nowrap">
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold ${isAvailable ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
@@ -1575,6 +1595,21 @@ const AdminApp = {
         form.brand.value = product.brand || product.marca || '';
         form.category.value = product.category || product.categoria_id || '';
         form.price.value = product.price || product.precio || 0;
+
+        // Criterio promocional y precio anterior
+        const isOffer = product.en_oferta || product.is_offer;
+        const isNov = product.novedad || product.is_new;
+        if (isOffer && isNov) {
+          form.promotional_status.value = 'ambos';
+        } else if (isOffer) {
+          form.promotional_status.value = 'oferta';
+        } else if (isNov) {
+          form.promotional_status.value = 'novedad';
+        } else {
+          form.promotional_status.value = 'none';
+        }
+        form.precio_anterior.value = product.precio_anterior || '';
+
         form.availability.value = product.availability || product.disponibilidad || 'Disponible';
         form.image.value = product.image || product.imagen_url || '';
         form.description.value = product.description || product.descripcion || '';
@@ -1583,6 +1618,8 @@ const AdminApp = {
       }
     } else {
       title.textContent = 'Nuevo Producto en Catálogo';
+      if (form.promotional_status) form.promotional_status.value = 'none';
+      if (form.precio_anterior) form.precio_anterior.value = '';
     }
 
     modal.classList.remove('hidden');
@@ -1611,6 +1648,11 @@ const AdminApp = {
     const description = form.description.value.trim();
     const features = form.features.value.split('\n').map(f => f.trim()).filter(Boolean);
 
+    const promoStatus = form.promotional_status ? form.promotional_status.value : 'none';
+    const precioAnterior = form.precio_anterior ? (parseFloat(form.precio_anterior.value) || null) : null;
+    const isOffer = (promoStatus === 'oferta' || promoStatus === 'ambos');
+    const isNovelty = (promoStatus === 'novedad' || promoStatus === 'ambos');
+
     const productData = {
       id: rawId || `custom-${Date.now()}`,
       name: name,
@@ -1633,7 +1675,12 @@ const AdminApp = {
       features: features,
       caracteristicas: features,
       active: true,
-      activo: true
+      activo: true,
+      en_oferta: isOffer,
+      is_offer: isOffer,
+      novedad: isNovelty,
+      is_new: isNovelty,
+      precio_anterior: precioAnterior
     };
 
     let products = (typeof StorageService !== 'undefined')

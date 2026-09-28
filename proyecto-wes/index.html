@@ -105,6 +105,11 @@
           <a href="#nosotros" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Nosotros</a>
           <a href="#fundadores" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Fundadores</a>
           <a href="#tienda" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Tienda</a>
+          <a href="#tienda" onclick="filterByCategory('ofertas')" class="px-2.5 py-1.5 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 font-bold transition flex items-center space-x-1" title="Ver ofertas y promociones">
+            <i class="fas fa-fire-alt text-rose-500 animate-pulse"></i>
+            <span>Ofertas</span>
+            <span class="text-[9px] bg-rose-600 text-white px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider">Hot</span>
+          </a>
           <a href="#proyectos" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Proyectos</a>
           <a href="#servicios" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Servicios</a>
           <a href="#soporte" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition text-amber-600 font-bold">
@@ -145,6 +150,10 @@
       <a href="#nosotros" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Nosotros</a>
       <a href="#fundadores" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Fundadores & Equipo</a>
       <a href="#tienda" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Tienda y Catálogo</a>
+      <a href="#tienda" onclick="filterByCategory('ofertas')" class="mobile-nav-link block p-2.5 rounded-lg bg-rose-50 text-rose-700 font-bold flex items-center justify-between">
+        <span class="flex items-center"><i class="fas fa-fire-alt text-rose-500 mr-2"></i>Ofertas & Promociones</span>
+        <span class="text-[9px] bg-rose-600 text-white px-1.5 py-0.5 rounded-full font-black uppercase">Hot</span>
+      </a>
       <a href="#proyectos" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Proyectos Realizados</a>
       <a href="#servicios" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Servicios</a>
       <a href="#soporte" class="mobile-nav-link block p-2.5 rounded-lg bg-amber-50 text-amber-700">
@@ -560,15 +569,67 @@
     <section id="tienda" class="py-20 bg-white border-b border-slate-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
+        <!-- Breadcrumbs Dinámicos de Tienda (Estilo Ofertas y Promociones) -->
+        <div id="store-breadcrumb" class="hidden text-xs text-slate-500 font-medium mb-3">
+          <a href="#inicio" class="text-slate-400 hover:text-wes-blue transition">Inicio</a>
+          <span class="mx-1 text-slate-300">/</span>
+          <span id="breadcrumb-current" class="text-rose-600 font-bold">Ofertas y promociones</span>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
           <div>
-            <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Catálogo Comercial</span>
-            <h2 class="text-3xl font-extrabold text-slate-900 mt-1 font-brand">Tienda de Equipos y Accesorios</h2>
-            <p class="text-sm text-slate-600 mt-1">Selecciona los productos y agrégalos a tu lista para solicitar una cotización formal.</p>
+            <span id="store-badge" class="text-xs font-bold tracking-widest text-wes-blue uppercase">Catálogo Comercial</span>
+            <h2 id="store-title" class="text-3xl font-extrabold text-slate-900 mt-1 font-brand">Tienda de Equipos y Accesorios</h2>
+            <p id="store-desc" class="text-sm text-slate-600 mt-1">Selecciona los productos y agrégalos a tu lista para solicitar una cotización formal.</p>
           </div>
-          <div id="products-count" class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg">
+          <div id="products-count" class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg shrink-0">
             Cargando productos...
           </div>
+        </div>
+
+        <!-- Pestañas de Sub-filtro Especiales para Ofertas y Novedades -->
+        <div id="offer-sub-tabs" class="hidden bg-rose-50/80 border border-rose-200/90 rounded-2xl p-3.5 sm:p-4 mb-6 transition-all duration-300">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-600 animate-pulse"></span>
+              <span class="text-xs font-extrabold text-rose-900 uppercase tracking-wider">Criterio Promocional:</span>
+            </div>
+            <div class="flex flex-wrap gap-2 text-xs font-bold">
+              <button type="button" onclick="setOfferSubFilter('all')" id="offer-tab-all" class="offer-sub-btn px-3 py-1.5 rounded-xl bg-rose-600 text-white shadow-sm transition">
+                Todos (Ofertas & Novedades)
+              </button>
+              <button type="button" onclick="setOfferSubFilter('ofertas')" id="offer-tab-ofertas" class="offer-sub-btn px-3 py-1.5 rounded-xl bg-white border border-rose-300 text-rose-700 hover:bg-rose-600 hover:text-white transition">
+                🔥 Solo Ofertas con Descuento
+              </button>
+              <button type="button" onclick="setOfferSubFilter('novedades')" id="offer-tab-novedades" class="offer-sub-btn px-3 py-1.5 rounded-xl bg-white border border-rose-300 text-slate-700 hover:bg-amber-600 hover:text-white transition">
+                ⭐ Solo Novedades Recientes
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones Rápidos de Categoría (Pills Bar) -->
+        <div class="flex items-center space-x-2 overflow-x-auto pb-3 mb-6 scrollbar-none text-xs font-bold">
+          <button type="button" onclick="filterByCategory('all')" class="cat-pill px-3.5 py-2 rounded-xl bg-wes-blue text-white shadow-sm shrink-0 hover:bg-wes-dark transition" data-cat="all">
+            Todas las Soluciones
+          </button>
+          <button type="button" onclick="filterByCategory('ofertas')" class="cat-pill px-3.5 py-2 rounded-xl bg-rose-600 text-white shadow-sm shrink-0 hover:bg-rose-700 flex items-center space-x-1.5 transition" data-cat="ofertas">
+            <i class="fas fa-fire-alt animate-pulse text-amber-300"></i>
+            <span>Ofertas & Novedades</span>
+            <span class="bg-white/25 text-white text-[9px] px-1.5 py-0.2 rounded-full font-black ml-0.5">HOT</span>
+          </button>
+          <button type="button" onclick="filterByCategory('Energía y Respaldo')" class="cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition" data-cat="Energía y Respaldo">
+            ⚡ Energía & Baterías
+          </button>
+          <button type="button" onclick="filterByCategory('Controles de Acceso')" class="cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition" data-cat="Controles de Acceso">
+            🚪 Automatización & Portones
+          </button>
+          <button type="button" onclick="filterByCategory('CCTV y Cámaras')" class="cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition" data-cat="CCTV y Cámaras">
+            📹 Cámaras & Seguridad
+          </button>
+          <button type="button" onclick="filterByCategory('Accesorios de Instalación')" class="cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition" data-cat="Accesorios de Instalación">
+            🌐 Cableado & Redes
+          </button>
         </div>
 
         <!-- Banner de Pausa de Cotizaciones (Activado vía Feature Flags) -->
@@ -1792,8 +1853,16 @@
 
             <!-- Precio y Disponibilidad -->
             <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+              <div id="detail-promo-container" class="hidden items-center gap-2 mb-2 flex-wrap">
+                <span id="detail-promo-badge" class="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-600 text-white shadow-sm flex items-center space-x-1">
+                  <i class="fas fa-fire-alt text-amber-300"></i>
+                  <span id="detail-promo-text">OFERTA ESPECIAL</span>
+                </span>
+                <span id="detail-promo-savings" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800"></span>
+              </div>
               <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Precio de Referencia Oficial</div>
               <div class="flex items-baseline space-x-2 mt-1">
+                <span id="detail-product-old-price" class="hidden text-sm sm:text-base line-through text-slate-400 font-bold"></span>
                 <span id="detail-product-price" class="text-2xl sm:text-3xl font-extrabold text-wes-blue font-brand">RD$ 37,445.26</span>
                 <span class="text-xs text-slate-400">/ unidad</span>
               </div>
@@ -2036,9 +2105,9 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Supabase JS Client Oficial para PostgreSQL en la Nube -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/products.js?v=20260928_1030"></script>
-  <script src="js/supabase_client.js?v=20260928_1030"></script>
-  <script src="js/feature_flags.js?v=20260928_1030"></script>
-  <script src="js/app.js?v=20260928_1030"></script>
+  <script src="js/products.js?v=20260928_1050"></script>
+  <script src="js/supabase_client.js?v=20260928_1050"></script>
+  <script src="js/feature_flags.js?v=20260928_1050"></script>
+  <script src="js/app.js?v=20260928_1050"></script>
 </body>
 </html>

@@ -15,9 +15,10 @@ const AppState = {
   selectedAvailability: 'all',
   searchQuery: '',
   sortBy: 'featured',
+  offerSubFilter: 'all',
   supportImages: [],
   settings: StorageService.getCompanySettings(),
-  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec'
+  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbxqJ8ENLj4weskNeI-oHej_ddcnovhQWVwhsHMNDUFFCTyL_f9jL6OznoMgYJSECRCfkg/exec'
 };
 
 let wesMapInstance = null;
@@ -228,9 +229,63 @@ function renderProducts() {
   // Extraer categorías y marcas únicas para poblar los filtros dinámicamente
   populateFilterOptions(allProducts);
 
+  // Detectar si la categoría seleccionada es Ofertas & Promociones
+  const isOfferCategory = (
+    AppState.selectedCategory === 'ofertas' ||
+    AppState.selectedCategory.toLowerCase() === 'ofertas' ||
+    AppState.selectedCategory.toLowerCase().includes('oferta')
+  );
+
+  // Sincronizar encabezados y breadcrumbs dinámicos
+  const breadcrumbEl = document.getElementById('store-breadcrumb');
+  const breadcrumbCurrent = document.getElementById('breadcrumb-current');
+  const storeBadge = document.getElementById('store-badge');
+  const storeTitle = document.getElementById('store-title');
+  const storeDesc = document.getElementById('store-desc');
+  const offerTabs = document.getElementById('offer-sub-tabs');
+
+  if (isOfferCategory) {
+    if (breadcrumbEl) breadcrumbEl.classList.remove('hidden');
+    if (breadcrumbCurrent) {
+      if (AppState.offerSubFilter === 'novedades') {
+        breadcrumbCurrent.textContent = 'Novedades y Nuevos Lanzamientos';
+      } else if (AppState.offerSubFilter === 'ofertas') {
+        breadcrumbCurrent.textContent = 'Ofertas con Descuento';
+      } else {
+        breadcrumbCurrent.textContent = 'Ofertas y promociones';
+      }
+    }
+    if (offerTabs) offerTabs.classList.remove('hidden');
+    if (storeBadge) storeBadge.textContent = '🔥 Oportunidades & Temporada';
+    if (storeTitle) storeTitle.textContent = 'Ofertas y Promociones WES';
+    if (storeDesc) storeDesc.textContent = 'Aprovecha precios especiales en equipos de seguridad y novedades tecnológicas con garantía oficial.';
+  } else {
+    if (breadcrumbEl) breadcrumbEl.classList.add('hidden');
+    if (offerTabs) offerTabs.classList.add('hidden');
+    if (storeBadge) storeBadge.textContent = 'Catálogo Comercial';
+    if (storeTitle) storeTitle.textContent = 'Tienda de Equipos y Accesorios';
+    if (storeDesc) storeDesc.textContent = 'Selecciona los productos y agrégalos a tu lista para solicitar una cotización formal.';
+  }
+
   // Filtrado
   let filtered = allProducts.filter(product => {
-    const matchCat = AppState.selectedCategory === 'all' || product.category === AppState.selectedCategory;
+    let matchCat = false;
+    if (AppState.selectedCategory === 'all') {
+      matchCat = true;
+    } else if (isOfferCategory) {
+      const isOffer = !!(product.en_oferta || product.is_offer || product.tipo_promocion === 'oferta');
+      const isNew = !!(product.novedad || product.is_new || product.tipo_promocion === 'novedad');
+      if (AppState.offerSubFilter === 'ofertas') {
+        matchCat = isOffer;
+      } else if (AppState.offerSubFilter === 'novedades') {
+        matchCat = isNew;
+      } else {
+        matchCat = isOffer || isNew;
+      }
+    } else {
+      matchCat = (product.category === AppState.selectedCategory || product.categoria_id === AppState.selectedCategory);
+    }
+
     const matchBrand = AppState.selectedBrand === 'all' || product.brand === AppState.selectedBrand;
     const matchAvail = AppState.selectedAvailability === 'all' || product.availability === AppState.selectedAvailability;
     const query = AppState.searchQuery.toLowerCase();
@@ -278,9 +333,60 @@ function renderProducts() {
     const availClass = isAvail ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
     const waUrl = `https://wa.me/${AppState.settings.whatsapp}?text=${encodeURIComponent(`Hola WES, deseo consultar disponibilidad y precio sobre: ${product.name} (Código: ${product.code})`)}`;
 
-    const priceHtml = flags.showPrices
-      ? `RD$ ${(product.price || 0).toLocaleString()}`
-      : `<span class="text-xs text-slate-500 font-bold italic">Consultar precio</span>`;
+    const isProductOffer = !!(product.en_oferta || product.is_offer);
+    const isProductNew = !!(product.novedad || product.is_new);
+    const hasDiscount = isProductOffer && product.precio_anterior && product.precio_anterior > (product.price || 0);
+    const discountPct = hasDiscount ? Math.round((1 - (product.price / product.precio_anterior)) * 100) : null;
+
+    let promoBadgeHtml = '';
+    if (isProductOffer && discountPct) {
+      promoBadgeHtml = `
+        <span class="absolute top-3 left-3 text-[11px] font-black px-2.5 py-1 rounded-full bg-rose-600 text-white shadow-md flex items-center space-x-1 animate-pulse z-10">
+          <i class="fas fa-fire-alt text-amber-300"></i>
+          <span>-${discountPct}% OFERTA</span>
+        </span>
+      `;
+    } else if (isProductOffer) {
+      promoBadgeHtml = `
+        <span class="absolute top-3 left-3 text-[11px] font-black px-2.5 py-1 rounded-full bg-rose-600 text-white shadow-md flex items-center space-x-1 z-10">
+          <i class="fas fa-fire-alt text-amber-300"></i>
+          <span>OFERTA</span>
+        </span>
+      `;
+    } else if (isProductNew) {
+      promoBadgeHtml = `
+        <span class="absolute top-3 left-3 text-[11px] font-black px-2.5 py-1 rounded-full bg-amber-500 text-white shadow-md flex items-center space-x-1 z-10">
+          <i class="fas fa-star text-white"></i>
+          <span>NOVEDAD</span>
+        </span>
+      `;
+    } else {
+      promoBadgeHtml = `
+        <span class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${availClass} backdrop-blur-sm shadow-sm">
+          ${product.availability}
+        </span>
+      `;
+    }
+
+    let priceHtml = '';
+    if (flags.showPrices) {
+      if (hasDiscount) {
+        priceHtml = `
+          <div class="flex flex-col">
+            <span class="text-xs line-through text-slate-400 font-bold">RD$ ${Number(product.precio_anterior).toLocaleString()}</span>
+            <span class="text-lg font-black text-rose-600 font-brand">RD$ ${(product.price || 0).toLocaleString()}</span>
+          </div>
+        `;
+      } else {
+        priceHtml = `
+          <span class="text-lg font-bold text-wes-blue font-brand">
+            RD$ ${(product.price || 0).toLocaleString()}
+          </span>
+        `;
+      }
+    } else {
+      priceHtml = `<span class="text-xs text-slate-500 font-bold italic">Consultar precio</span>`;
+    }
 
     const quoteBtnHtml = flags.enableQuotes
       ? `
@@ -306,9 +412,7 @@ function renderProducts() {
       <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
         <div onclick="openProductDetailModal('${product.id}')" class="relative h-56 bg-white flex items-center justify-center p-3 border-b border-slate-100 overflow-hidden cursor-pointer">
           <img src="${product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500" loading="lazy">
-          <span class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${availClass} backdrop-blur-sm shadow-sm">
-            ${product.availability}
-          </span>
+          ${promoBadgeHtml}
           <span class="absolute top-3 right-3 text-xs font-bold px-2 py-1 bg-slate-900/80 text-white rounded-md shadow-sm">
             ${product.brand}
           </span>
@@ -348,9 +452,7 @@ function renderProducts() {
           <div class="mt-auto pt-4 flex items-center justify-between">
             <div>
               <span class="text-xs text-slate-400 block font-medium">Precio Ref:</span>
-              <span class="text-lg font-bold text-wes-blue">
-                ${priceHtml}
-              </span>
+              ${priceHtml}
             </div>
             
             <div class="flex space-x-2">
@@ -371,8 +473,15 @@ function populateFilterOptions(products) {
   const brandSelect = document.getElementById('brand-filter');
 
   if (catSelect && catSelect.children.length <= 1) {
-    const categories = [...new Set(products.map(p => p.category))];
+    // Agregar opción destacada de Ofertas y Promociones
+    const offerOpt = document.createElement('option');
+    offerOpt.value = 'ofertas';
+    offerOpt.textContent = '🔥 Ofertas y Promociones';
+    catSelect.appendChild(offerOpt);
+
+    const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
     categories.forEach(cat => {
+      if (cat.toLowerCase().includes('oferta')) return;
       const opt = document.createElement('option');
       opt.value = cat;
       opt.textContent = cat;
@@ -381,7 +490,7 @@ function populateFilterOptions(products) {
   }
 
   if (brandSelect && brandSelect.children.length <= 1) {
-    const brands = [...new Set(products.map(p => p.brand))];
+    const brands = [...new Set(products.map(p => p.brand).filter(Boolean))];
     brands.forEach(b => {
       const opt = document.createElement('option');
       opt.value = b;
@@ -391,12 +500,69 @@ function populateFilterOptions(products) {
   }
 }
 
+function syncCategoryPillsUI(categoryName) {
+  document.querySelectorAll('.cat-pill').forEach(pill => {
+    const cat = pill.getAttribute('data-cat');
+    if (cat === categoryName) {
+      if (categoryName === 'ofertas') {
+        pill.className = 'cat-pill px-3.5 py-2 rounded-xl bg-rose-600 text-white shadow-md shrink-0 flex items-center space-x-1.5 transition font-bold';
+      } else {
+        pill.className = 'cat-pill px-3.5 py-2 rounded-xl bg-wes-blue text-white shadow-md shrink-0 transition font-bold';
+      }
+    } else {
+      pill.className = 'cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition flex items-center space-x-1.5 font-bold';
+    }
+  });
+}
+
+function filterByCategory(categoryName, subFilter = null) {
+  AppState.selectedCategory = categoryName;
+  if (subFilter) {
+    AppState.offerSubFilter = subFilter;
+  }
+  
+  const catSelect = document.getElementById('category-filter');
+  if (catSelect) {
+    const hasOption = Array.from(catSelect.options).some(o => o.value.toLowerCase() === categoryName.toLowerCase());
+    if (hasOption) {
+      catSelect.value = categoryName;
+    } else {
+      catSelect.value = (categoryName === 'ofertas') ? 'ofertas' : 'all';
+    }
+  }
+
+  syncCategoryPillsUI(categoryName);
+  renderProducts();
+
+  const storeSection = document.getElementById('tienda');
+  if (storeSection) {
+    storeSection.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+window.filterByCategory = filterByCategory;
+
+function setOfferSubFilter(subFilter) {
+  AppState.offerSubFilter = subFilter;
+  
+  document.querySelectorAll('.offer-sub-btn').forEach(btn => {
+    btn.className = 'offer-sub-btn px-3 py-1.5 rounded-xl bg-white border border-rose-300 text-slate-700 hover:bg-rose-600 hover:text-white transition';
+  });
+  const activeBtn = document.getElementById(`offer-tab-${subFilter}`);
+  if (activeBtn) {
+    activeBtn.className = 'offer-sub-btn px-3 py-1.5 rounded-xl bg-rose-600 text-white shadow-sm transition';
+  }
+
+  renderProducts();
+}
+window.setOfferSubFilter = setOfferSubFilter;
+
 function resetProductFilters() {
   AppState.selectedCategory = 'all';
   AppState.selectedBrand = 'all';
   AppState.selectedAvailability = 'all';
   AppState.searchQuery = '';
   AppState.sortBy = 'featured';
+  AppState.offerSubFilter = 'all';
 
   const catSelect = document.getElementById('category-filter');
   const brandSelect = document.getElementById('brand-filter');
@@ -410,6 +576,7 @@ function resetProductFilters() {
   if (searchInput) searchInput.value = '';
   if (sortSelect) sortSelect.value = 'featured';
 
+  syncCategoryPillsUI('all');
   renderProducts();
 }
 
@@ -1199,6 +1366,7 @@ function setupEventListeners() {
   if (catSelect) {
     catSelect.addEventListener('change', (e) => {
       AppState.selectedCategory = e.target.value;
+      syncCategoryPillsUI(e.target.value);
       renderProducts();
     });
   }
@@ -1338,9 +1506,66 @@ function openProductDetailModal(productId) {
   const titleEl = document.getElementById('detail-product-title');
   if (titleEl) titleEl.textContent = product.name || product.nombre;
 
+  // Promociones y Precios
   const priceEl = document.getElementById('detail-product-price');
+  const oldPriceEl = document.getElementById('detail-product-old-price');
+  const promoContainer = document.getElementById('detail-promo-container');
+  const promoBadge = document.getElementById('detail-promo-badge');
+  const promoText = document.getElementById('detail-promo-text');
+  const promoSavings = document.getElementById('detail-promo-savings');
+
+  const isOffer = !!(product.en_oferta || product.is_offer);
+  const isNovelty = !!(product.novedad || product.is_new);
+  const currentPrice = product.price || product.precio || 0;
+  const oldPrice = product.precio_anterior || null;
+  const hasDiscount = isOffer && oldPrice && oldPrice > currentPrice;
+
   if (priceEl) {
-    priceEl.textContent = `RD$ ${(product.price || product.precio || 0).toLocaleString()}`;
+    priceEl.textContent = `RD$ ${currentPrice.toLocaleString()}`;
+  }
+
+  if (promoContainer) {
+    if (hasDiscount) {
+      const discountPct = Math.round((1 - (currentPrice / oldPrice)) * 100);
+      const savingsVal = (oldPrice - currentPrice).toFixed(2);
+      promoContainer.classList.remove('hidden');
+      promoContainer.classList.add('flex');
+      if (promoBadge) {
+        promoBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-600 text-white shadow-sm flex items-center space-x-1 animate-pulse';
+      }
+      if (promoText) promoText.textContent = `🔥 OFERTA ESPECIAL (-${discountPct}%)`;
+      if (promoSavings) {
+        promoSavings.textContent = `Ahorras: RD$ ${Number(savingsVal).toLocaleString()}`;
+        promoSavings.classList.remove('hidden');
+      }
+      if (oldPriceEl) {
+        oldPriceEl.textContent = `RD$ ${Number(oldPrice).toLocaleString()}`;
+        oldPriceEl.classList.remove('hidden');
+      }
+    } else if (isOffer) {
+      promoContainer.classList.remove('hidden');
+      promoContainer.classList.add('flex');
+      if (promoBadge) {
+        promoBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-600 text-white shadow-sm flex items-center space-x-1';
+      }
+      if (promoText) promoText.textContent = '🔥 OFERTA DE TEMPORADA';
+      if (promoSavings) promoSavings.classList.add('hidden');
+      if (oldPriceEl) oldPriceEl.classList.add('hidden');
+    } else if (isNovelty) {
+      promoContainer.classList.remove('hidden');
+      promoContainer.classList.add('flex');
+      if (promoBadge) {
+        promoBadge.className = 'px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-500 text-white shadow-sm flex items-center space-x-1';
+      }
+      if (promoText) promoText.textContent = '⭐ NOVEDAD 2026';
+      if (promoSavings) promoSavings.classList.add('hidden');
+      if (oldPriceEl) oldPriceEl.classList.add('hidden');
+    } else {
+      promoContainer.classList.add('hidden');
+      promoContainer.classList.remove('flex');
+      if (oldPriceEl) oldPriceEl.classList.add('hidden');
+      if (promoSavings) promoSavings.classList.add('hidden');
+    }
   }
 
   const stockBadge = document.getElementById('detail-stock-badge');
