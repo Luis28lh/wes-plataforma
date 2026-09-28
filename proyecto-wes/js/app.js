@@ -17,7 +17,7 @@ const AppState = {
   sortBy: 'featured',
   supportImages: [],
   settings: StorageService.getCompanySettings(),
-  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbzsbigPxNH44OD5SPEL-NmLbG6_tSMj5pYcVErjCGrzT6mfE7oloi6Jmnsh2jx1NRWKmQ/exec'
+  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbxSDriZqv7SYSECp1lEvKNqf7J_9nr602lJ494vlWwHRD-BQ8cXZDwZFfS-MTXtYDfQMw/exec'
 };
 
 let wesMapInstance = null;
