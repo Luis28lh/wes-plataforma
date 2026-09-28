@@ -52,6 +52,14 @@ async function deployToAppsScript() {
   // Reemplazar rutas de logo
   htmlContent = htmlContent.split('assets/logo-wes.png').join(logoDataUri);
 
+  // Base64 de la foto real del proyecto de respaldo con inversor y baterías
+  const projectImgPath = path.join(ROOT_DIR, 'assets', 'projects', 'sistema-respaldo-inversor-interstate-3600w.jpg');
+  if (fs.existsSync(projectImgPath)) {
+    const projectImgB64 = fs.readFileSync(projectImgPath).toString('base64');
+    const projectImgDataUri = `data:image/jpeg;base64,${projectImgB64}`;
+    htmlContent = htmlContent.split('assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg').join(projectImgDataUri);
+  }
+
   // Inyectar scripts directamente antes del cierre del body
   const scriptsBundle = `
   <script>

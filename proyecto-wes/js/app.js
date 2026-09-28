@@ -1892,3 +1892,32 @@ function addCurrentDetailToQuote() {
     showToast('Producto añadido a la cotización.', 'success');
   }
 }
+
+/**
+ * Abre el visor modal de fotografías de proyectos reales WES.
+ */
+function openProjectImageModal(imgSrc, title, desc) {
+  const modal = document.getElementById('project-photo-modal');
+  const imgEl = document.getElementById('project-modal-img');
+  const titleEl = document.getElementById('project-modal-title');
+  const descEl = document.getElementById('project-modal-desc');
+  if (modal && imgEl) {
+    imgEl.src = imgSrc;
+    if (titleEl) titleEl.textContent = title || '';
+    if (descEl) descEl.textContent = desc || '';
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  }
+}
+
+/**
+ * Cierra el visor modal de fotografías de proyectos.
+ */
+function closeProjectImageModal() {
+  const modal = document.getElementById('project-photo-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+  }
+}
+
