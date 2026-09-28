@@ -64,6 +64,20 @@
       background-color: #F5B300;
       border-radius: 2px;
     }
+    /* Estándar de Retrato Institucional y Perfil Corporativo */
+    .profile-img {
+      width: 11rem;
+      height: 11rem;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: center 20%;
+      border-radius: 50%;
+      border: 4px solid #ffffff;
+      box-shadow: 0 10px 25px -5px rgba(13, 42, 92, 0.18), 0 8px 10px -6px rgba(13, 42, 92, 0.1);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, filter 0.35s ease;
+      filter: contrast(1.02) saturate(1.02);
+      display: block;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-wes-gold selection:text-wes-dark">
@@ -484,7 +498,7 @@
           <!-- Fundador 1: Luis Miguel Lizardo -->
           <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
             <div class="h-64 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative overflow-hidden group-hover:bg-blue-50/40 transition">
-              <img src="assets/luis-miguel-lizardo.png" alt="Luis Miguel Lizardo - Gerente General" class="h-44 w-44 rounded-full object-cover shadow-lg border-4 border-white ring-4 ring-wes-gold/40 group-hover:scale-105 transition-transform duration-300">
+              <img src="assets/luis-miguel-lizardo.jpg" alt="Luis Miguel Lizardo - Gerente General" class="profile-img ring-4 ring-wes-gold/40 group-hover:scale-105 transition-transform duration-300">
               <div class="absolute top-3.5 right-3.5 bg-wes-gold text-wes-dark font-extrabold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                 Gerente General
               </div>
@@ -502,7 +516,7 @@
           <!-- Fundador 2: Yaneiry Díaz -->
           <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
             <div class="h-64 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative overflow-hidden group-hover:bg-blue-50/40 transition">
-              <img src="assets/yaneiry-diaz.png" alt="Yaneiry Díaz - Directora Administrativa" class="h-44 w-44 rounded-full object-cover shadow-lg border-4 border-white ring-4 ring-wes-blue/30 group-hover:scale-105 transition-transform duration-300">
+              <img src="assets/yaneiry-diaz.png" alt="Yaneiry Díaz - Directora Administrativa" class="profile-img ring-4 ring-wes-blue/30 group-hover:scale-105 transition-transform duration-300">
               <div class="absolute top-3.5 right-3.5 bg-wes-blue text-white font-extrabold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                 Directora Administrativa
               </div>
@@ -520,7 +534,7 @@
           <!-- Fundador 3: Stephano Vásquez -->
           <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
             <div class="h-64 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative overflow-hidden group-hover:bg-blue-50/40 transition">
-              <img src="assets/stephano-vasquez.png" alt="Stephano Vásquez - Director de Ventas" class="h-44 w-44 rounded-full object-cover shadow-lg border-4 border-white ring-4 ring-emerald-600/30 group-hover:scale-105 transition-transform duration-300">
+              <img src="assets/stephano-vasquez.png" alt="Stephano Vásquez - Director de Ventas" class="profile-img ring-4 ring-emerald-600/30 group-hover:scale-105 transition-transform duration-300">
               <div class="absolute top-3.5 right-3.5 bg-emerald-600 text-white font-extrabold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                 Director de Ventas
               </div>
