@@ -263,25 +263,29 @@ function procesarNuevoSoporte(data) {
     }
 
     const nextNum = Math.max(1, sheet.getLastRow());
-    const caseNumber = data.id || ('SOP-2026-' + ('0000' + nextNum).slice(-4));
+    const caseNumber = data.id || data.caseNumber || ('SOP-2026-' + ('0000' + nextNum).slice(-4));
     const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
 
     // Almacenar imágenes en Google Drive
     let photoLinks = [];
-    if (data.images && data.images.length > 0) {
+    const rawImages = (data.images && data.images.length > 0) ? data.images : (data.photos || []);
+    if (rawImages && rawImages.length > 0) {
       try {
         const folders = DriveApp.getFoldersByName(CONFIG.DRIVE_FOLDER_NAME);
         const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(CONFIG.DRIVE_FOLDER_NAME);
 
-        data.images.forEach((imgData, idx) => {
-          if (imgData.indexOf('data:image') !== -1) {
+        rawImages.forEach((imgData, idx) => {
+          if (imgData && imgData.indexOf('data:image') !== -1) {
             const parts = imgData.split(',');
             const mimeType = parts[0].match(/:(.*?);/)[1];
             const decoded = Utilities.base64Decode(parts[1]);
-            const blob = Utilities.newBlob(decoded, mimeType, `${caseNumber}_evidencia_${idx + 1}.${mimeType.split('/')[1]}`);
+            const ext = mimeType.split('/')[1] || 'jpg';
+            const blob = Utilities.newBlob(decoded, mimeType, `${caseNumber}_evidencia_${idx + 1}.${ext}`);
             const file = folder.createFile(blob);
             file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
             photoLinks.push(file.getUrl());
+          } else if (imgData && imgData.startsWith('http')) {
+            photoLinks.push(imgData);
           }
         });
       } catch (driveErr) {
@@ -295,7 +299,7 @@ function procesarNuevoSoporte(data) {
       data.clientName,
       data.company || 'N/A',
       data.phone,
-      data.whatsapp,
+      data.whatsapp || data.phone || 'N/A',
       data.email,
       data.address,
       data.orderNumber || 'N/A',
@@ -310,77 +314,375 @@ function procesarNuevoSoporte(data) {
       ''
     ]);
 
-    // Enviar correos
+    // Variables de estilo por prioridad
+    const priorityUpper = (data.priority || 'Media').toUpperCase();
+    let priorityBadgeBg = '#fef3c7';
+    let priorityBadgeColor = '#b45309';
+    let priorityBorder = '#fde68a';
+    if ((data.priority || '').toLowerCase() === 'alta') {
+      priorityBadgeBg = '#fee2e2';
+      priorityBadgeColor = '#b91c1c';
+      priorityBorder = '#fca5a5';
+    } else if ((data.priority || '').toLowerCase() === 'baja') {
+      priorityBadgeBg = '#dcfce7';
+      priorityBadgeColor = '#15803d';
+      priorityBorder = '#86efac';
+    }
+
+    // Teléfono para enlace WhatsApp directo
+    const rawWa = String(data.whatsapp || data.phone || '').replace(/[^0-9]/g, '');
+    const waNumber = rawWa.length === 10 ? ('1' + rawWa) : rawWa;
+    const waLink = waNumber ? `https://wa.me/${waNumber}` : '';
+
+    // Enviar correos automáticos
     try {
-      // Alerta a la empresa
-      const subjectEmpresa = `Nueva solicitud de soporte – ${caseNumber} – ${data.priority.toUpperCase()}`;
-      const photosHtml = photoLinks.length > 0
-        ? photoLinks.map((url, i) => `<li><a href="${url}" target="_blank">Ver Fotografía de Evidencia #${i + 1}</a></li>`).join('')
-        : '<li>No se adjuntaron fotografías</li>';
+      // =========================================================================
+      // 1. CORREO A LA EMPRESA (WES - CENTRO DE OPERACIONES TÉCNICAS)
+      // =========================================================================
+      const subjectEmpresa = `🚨 Nueva Solicitud de Soporte Técnico [${caseNumber}] – ${data.clientName} (Prioridad: ${priorityUpper})`;
+      
+      const photosEmpresaHtml = photoLinks.length > 0
+        ? photoLinks.map((url, i) => `
+            <li style="margin-bottom: 6px;">
+              <a href="${url}" target="_blank" style="color: #0284c7; text-decoration: underline; font-weight: bold;">
+                📷 Ver Evidencia Fotográfica #${i + 1} en Google Drive
+              </a>
+            </li>
+          `).join('')
+        : '<li style="color: #94a3b8; font-style: italic;">No se adjuntaron fotografías en este reporte.</li>';
 
       const bodyEmpresa = `
-        <div style="font-family:Arial,sans-serif; color:#333; max-width:650px; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;">
-          <div style="background:#0D2A5C; color:#FFFFFF; padding:24px; text-align:center;">
-            <h2 style="margin:0; color:#F5B300;">WES — TICKET DE SOPORTE TÉCNICO</h2>
-            <p style="margin:6px 0 0 0; font-size:14px;">Prioridad: <strong>${data.priority.toUpperCase()}</strong></p>
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="utf-8"></head>
+        <body style="margin:0; padding:20px; background-color:#f1f5f9; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#1e293b;">
+          <div style="max-width:640px; margin:0 auto; background-color:#ffffff; border-radius:14px; overflow:hidden; border:1px solid #cbd5e1; box-shadow:0 4px 12px rgba(0,0,0,0.06);">
+            
+            <!-- Encabezado Corporativo WES -->
+            <div style="background-color:#0D2A5C; color:#ffffff; padding:24px 28px; text-align:center; border-bottom:4px solid #F5B300;">
+              <div style="font-size:20px; font-weight:800; letter-spacing:1px; color:#ffffff; margin-bottom:4px;">
+                WARN ELECTRICAL SERVICES (WES)
+              </div>
+              <div style="font-size:13px; color:#F5B300; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">
+                CENTRO DE OPERACIONES TÉCNICAS — NUEVO TICKET
+              </div>
+            </div>
+
+            <!-- Alerta de Compromiso 24 Horas -->
+            <div style="background-color:#eff6ff; border-left:5px solid #0284c7; padding:14px 20px; margin:20px 24px 0 24px; border-radius:6px;">
+              <div style="font-size:13px; font-weight:bold; color:#1e40af; margin-bottom:2px;">
+                ⏱️ RECORDATORIO DE ATENCIÓN (SLA 24 HORAS)
+              </div>
+              <div style="font-size:12px; color:#1e3a8a; line-height:1.4;">
+                Se ha notificado al cliente que un especialista lo contactará dentro de las <strong>próximas 24 horas</strong> (${data.preferredTime} a través de <strong>${data.contactMethod}</strong>).
+              </div>
+            </div>
+
+            <div style="padding:24px 28px;">
+
+              <!-- HERO: Número de Soporte y Prioridad -->
+              <div style="background-color:#f8fafc; border:2px dashed #0D2A5C; border-radius:12px; padding:16px 20px; text-align:center; margin-bottom:24px;">
+                <div style="font-size:11px; text-transform:uppercase; font-weight:800; color:#64748b; letter-spacing:1px; margin-bottom:4px;">
+                  NÚMERO DE SOPORTE ASIGNADO
+                </div>
+                <div style="font-size:30px; font-weight:900; color:#0D2A5C; letter-spacing:2px; font-family:monospace; margin-bottom:8px;">
+                  ${caseNumber}
+                </div>
+                <div>
+                  <span style="display:inline-block; padding:4px 12px; font-size:11px; font-weight:bold; border-radius:20px; background-color:${priorityBadgeBg}; color:${priorityBadgeColor}; border:1px solid ${priorityBorder}; text-transform:uppercase;">
+                    Prioridad: ${priorityUpper}
+                  </span>
+                  <span style="display:inline-block; margin-left:8px; font-size:11px; color:#64748b;">
+                    📅 ${now}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Botones de Acción Rápida -->
+              <div style="margin-bottom:22px; text-align:center;">
+                <table style="width:100%; border-collapse:collapse;">
+                  <tr>
+                    <td style="padding:4px; width:33.3%;">
+                      <a href="tel:${data.phone}" style="display:block; text-align:center; padding:10px 8px; background-color:#0D2A5C; color:#ffffff; text-decoration:none; border-radius:8px; font-size:12px; font-weight:bold;">
+                        📞 Llamar (${data.phone})
+                      </a>
+                    </td>
+                    ${waLink ? `
+                    <td style="padding:4px; width:33.3%;">
+                      <a href="${waLink}" target="_blank" style="display:block; text-align:center; padding:10px 8px; background-color:#16a34a; color:#ffffff; text-decoration:none; border-radius:8px; font-size:12px; font-weight:bold;">
+                        💬 WhatsApp
+                      </a>
+                    </td>` : ''}
+                    <td style="padding:4px; width:33.3%;">
+                      <a href="mailto:${data.email}?subject=Seguimiento%20Soporte%20WES%20${caseNumber}" style="display:block; text-align:center; padding:10px 8px; background-color:#0284c7; color:#ffffff; text-decoration:none; border-radius:8px; font-size:12px; font-weight:bold;">
+                        ✉️ Responder Email
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <!-- Ficha de Datos del Cliente -->
+              <h4 style="margin:0 0 10px 0; color:#0D2A5C; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:2px solid #e2e8f0; padding-bottom:6px;">
+                👤 Información del Cliente y Ubicación
+              </h4>
+              <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:20px;">
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; width:150px; font-weight:600;">Cliente / Contacto:</td>
+                  <td style="padding:6px 0; color:#0f172a; font-weight:bold;">${data.clientName}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">Empresa / Negocio:</td>
+                  <td style="padding:6px 0; color:#0f172a;">${data.company || 'Particular'}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">Teléfono Principal:</td>
+                  <td style="padding:6px 0; color:#0f172a;">${data.phone}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">WhatsApp:</td>
+                  <td style="padding:6px 0; color:#0f172a;">${data.whatsapp || data.phone}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">Correo Electrónico:</td>
+                  <td style="padding:6px 0;"><a href="mailto:${data.email}" style="color:#0284c7; font-weight:bold; text-decoration:none;">${data.email}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">Dirección / Ubicación:</td>
+                  <td style="padding:6px 0; color:#0f172a; font-weight:bold;">📍 ${data.address}</td>
+                </tr>
+              </table>
+
+              <!-- Ficha Técnica del Incidente -->
+              <h4 style="margin:0 0 10px 0; color:#0D2A5C; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:2px solid #e2e8f0; padding-bottom:6px;">
+                🛠️ Especificaciones Técnicas del Incidente
+              </h4>
+              <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:20px;">
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; width:150px; font-weight:600;">Producto / Sistema:</td>
+                  <td style="padding:6px 0; color:#0f172a; font-weight:bold;">${data.productSystem || 'No especificado'}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">Categoría de Falla:</td>
+                  <td style="padding:6px 0; color:#0D2A5C; font-weight:bold;">${data.category}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">Nº Factura / Orden:</td>
+                  <td style="padding:6px 0; color:#0f172a;">${data.orderNumber || 'No provista'}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">Horario Preferido:</td>
+                  <td style="padding:6px 0; color:#0f172a;">${data.preferredTime || 'Cualquiera'}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; color:#64748b; font-weight:600;">Método Contacto:</td>
+                  <td style="padding:6px 0; color:#0f172a; font-weight:bold;">${data.contactMethod || 'Llamada'}</td>
+                </tr>
+              </table>
+
+              <!-- Descripción de la Falla -->
+              <h4 style="margin:0 0 8px 0; color:#0D2A5C; font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">
+                📝 Descripción Detallada del Problema:
+              </h4>
+              <div style="background-color:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #0D2A5C; padding:16px; border-radius:8px; font-size:13px; line-height:1.6; color:#334155; white-space:pre-wrap; margin-bottom:20px;">
+                ${data.description}
+              </div>
+
+              <!-- Evidencias Fotográficas -->
+              <h4 style="margin:0 0 8px 0; color:#0D2A5C; font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">
+                📸 Evidencias Fotográficas Adjuntas (${photoLinks.length}):
+              </h4>
+              <ul style="margin:0; padding-left:20px; font-size:13px; line-height:1.6; color:#334155;">
+                ${photosEmpresaHtml}
+              </ul>
+
+            </div>
+
+            <!-- Footer Empresa -->
+            <div style="background-color:#f1f5f9; padding:16px 28px; border-top:1px solid #cbd5e1; font-size:12px; color:#64748b; text-align:center;">
+              Este es un correo automático generado por el portal web de <strong>Warn Electrical Services (WES)</strong>.<br>
+              Base de Datos: WES - Base de Datos Operativa (Hoja: Soporte)
+            </div>
+
           </div>
-          <div style="padding:28px;">
-            <p><strong>Número de caso:</strong> <span style="font-size:16px; color:#0D2A5C; font-weight:bold;">${caseNumber}</span></p>
-            <p><strong>Fecha y hora:</strong> ${now}</p>
-            <p><strong>Cliente:</strong> ${data.clientName} (${data.company || 'Particular'})</p>
-            <p><strong>Contacto:</strong> Tel: ${data.phone} | WA: ${data.whatsapp} | Email: ${data.email}</p>
-            <p><strong>Ubicación del servicio:</strong> ${data.address}</p>
-            <hr style="border:0; border-top:1px solid #e2e8f0; margin:16px 0;">
-            <p><strong>Producto o sistema:</strong> ${data.productSystem || 'No indicado'}</p>
-            <p><strong>Categoría de la falla:</strong> ${data.category}</p>
-            <p><strong>Descripción:</strong><br>${data.description}</p>
-            <p><strong>Horario preferido:</strong> ${data.preferredTime}</p>
-            <h4 style="color:#0D2A5C; margin-bottom:6px;">Evidencias Fotográficas:</h4>
-            <ul>${photosHtml}</ul>
-          </div>
-        </div>
+        </body>
+        </html>
       `;
 
       MailApp.sendEmail({
-        to: Session.getActiveUser().getEmail() || CONFIG.COMPANY_EMAIL_SUPPORT,
+        to: CONFIG.COMPANY_EMAIL_SUPPORT,
         subject: subjectEmpresa,
-        htmlBody: bodyEmpresa
+        htmlBody: bodyEmpresa,
+        replyTo: data.email
       });
 
-      // Confirmación al cliente
+      // =========================================================================
+      // 2. CORREO AL CLIENTE (CONFIRMACIÓN ELEGANTE, NÚMERO DESTACADO Y SLA 24H)
+      // =========================================================================
       if (data.email) {
-        const subjectCliente = `Recibimos tu solicitud de soporte – Caso ${caseNumber}`;
+        const subjectCliente = `Confirmación de Soporte Técnico – Ticket #${caseNumber} – Warn Electrical Services`;
+        
+        const photoInfoCliente = photoLinks.length > 0
+          ? `✓ Se han recibido y adjuntado <strong>${photoLinks.length} fotografía(s) de evidencia</strong> a tu expediente técnico.`
+          : 'No se adjuntaron fotografías al reporte.';
+
         const bodyCliente = `
-          <div style="font-family:Arial,sans-serif; color:#333; max-width:650px; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;">
-            <div style="background:#0D2A5C; color:#FFFFFF; padding:24px; text-align:center;">
-              <h2 style="margin:0; color:#F5B300;">WARN ELECTRICAL SERVICES (WES)</h2>
-              <p style="margin:6px 0 0 0; font-size:13px;">Centro de Soporte Técnico Especializado</p>
-            </div>
-            <div style="padding:28px;">
-              <p>Hola, <strong>${data.clientName}</strong>:</p>
-              <p>Hemos recibido tu solicitud de soporte correctamente.</p>
-              <div style="background:#f8fafc; padding:16px; border-radius:8px; margin:16px 0;">
-                <p style="margin:4px 0;"><strong>Número de caso:</strong> <span style="color:#0D2A5C; font-weight:bold;">${caseNumber}</span></p>
-                <p style="margin:4px 0;"><strong>Producto o sistema:</strong> ${data.productSystem || 'Reportado'}</p>
-                <p style="margin:4px 0;"><strong>Categoría:</strong> ${data.category}</p>
-                <p style="margin:4px 0;"><strong>Descripción registrada:</strong> ${data.description}</p>
+          <!DOCTYPE html>
+          <html>
+          <head><meta charset="utf-8"></head>
+          <body style="margin:0; padding:20px; background-color:#f1f5f9; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#1e293b;">
+            <div style="max-width:640px; margin:0 auto; background-color:#ffffff; border-radius:16px; overflow:hidden; border:1px solid #e2e8f0; box-shadow:0 8px 24px rgba(13,42,92,0.08);">
+              
+              <!-- Cabecera Corporativa de Alta Elegancia -->
+              <div style="background-color:#0D2A5C; color:#ffffff; padding:30px 25px; text-align:center; border-bottom:4px solid #F5B300;">
+                <div style="font-size:22px; font-weight:800; letter-spacing:1px; color:#ffffff; margin:0 0 6px 0;">
+                  WARN ELECTRICAL SERVICES (WES)
+                </div>
+                <div style="font-size:13px; color:#F5B300; font-weight:600; text-transform:uppercase; letter-spacing:1px;">
+                  Centro de Asistencia Técnica y Garantías
+                </div>
               </div>
-              <p>Nuestro equipo técnico evaluará la información y las fotografías enviadas para asignarte el técnico especialista. Nos comunicaremos contigo mediante tu método preferido (<strong>${data.contactMethod}</strong>).</p>
-              <div style="background:#fffbeb; padding:12px; border-radius:6px; font-size:12px; color:#78350f; margin-top:16px;">
-                <em>Nota: Este correo confirma la recepción de la solicitud. La visita técnica presencial, el diagnóstico y cualquier costo relacionado serán coordinados previamente por nuestro equipo.</em>
+
+              <div style="padding:32px 28px;">
+                
+                <!-- Saludo -->
+                <p style="font-size:16px; color:#0f172a; margin-top:0; margin-bottom:12px;">
+                  Estimado(a) <strong>${data.clientName}</strong>:
+                </p>
+                <p style="font-size:14px; color:#475569; line-height:1.6; margin-top:0; margin-bottom:24px;">
+                  Agradecemos que te hayas comunicado con <strong>Warn Electrical Services, SRL</strong>. Confirmamos que tu solicitud de soporte técnico ha sido recibida y registrada exitosamente en nuestro sistema operativo.
+                </p>
+
+                <!-- HERO SUPER DESTACADO: NÚMERO DE SOPORTE -->
+                <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #0D2A5C; border-radius: 14px; padding: 22px 20px; text-align: center; margin: 24px 0; box-shadow: 0 4px 12px rgba(13,42,92,0.06);">
+                  <div style="display:inline-block; font-size:11px; text-transform:uppercase; font-weight:800; letter-spacing:1.5px; background-color:#F5B300; color:#0D2A5C; padding:4px 14px; border-radius:20px; margin-bottom:10px;">
+                    🎫 NÚMERO DE SOPORTE TÉCNICO OFICIAL
+                  </div>
+                  <div style="font-size:34px; font-weight:900; color:#0D2A5C; letter-spacing:2.5px; font-family:'Courier New', Courier, monospace; margin:6px 0; text-shadow:0 1px 2px rgba(0,0,0,0.05);">
+                    ${caseNumber}
+                  </div>
+                  <div style="font-size:12px; color:#64748b; font-weight:500; margin-top:6px;">
+                    Conserva este código oficial para cualquier consulta, seguimiento o comunicación sobre tu caso.
+                  </div>
+                </div>
+
+                <!-- TARJETA DE COMPROMISO 24 HORAS -->
+                <div style="background-color:#ecfdf5; border:1px solid #a7f3d0; border-left:5px solid #10b981; border-radius:10px; padding:18px 20px; margin:24px 0;">
+                  <div style="font-size:15px; font-weight:bold; color:#065f46; margin-bottom:6px;">
+                    ⏱️ Compromiso de Contacto en las Próximas 24 Horas
+                  </div>
+                  <div style="font-size:13px; color:#047857; line-height:1.6;">
+                    Tu requerimiento ha sido asignado a nuestra cola de atención técnica especializada. Un técnico especialista revisará las especificaciones y evidencias de tu caso y <strong>se comunicará contigo en las próximas 24 horas</strong> a través de tu método preferido (<strong>${data.contactMethod}</strong>, en horario de <strong>${data.preferredTime}</strong>) para coordinar el diagnóstico o la visita en sitio.
+                  </div>
+                </div>
+
+                <!-- RESUMEN DETALLADO DE LO SOLICITADO -->
+                <div style="margin-top:28px;">
+                  <h4 style="margin:0 0 12px 0; color:#0D2A5C; font-size:14px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:2px solid #e2e8f0; padding-bottom:8px;">
+                    📋 Resumen de la Solicitud Registrada
+                  </h4>
+
+                  <table style="width:100%; border-collapse:collapse; font-size:13px; background-color:#f8fafc; border-radius:10px; overflow:hidden; border:1px solid #e2e8f0;">
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; width:160px; font-weight:600;">Número de Caso:</td>
+                      <td style="padding:10px 14px; color:#0D2A5C; font-weight:bold; font-size:14px;">${caseNumber}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Fecha de Registro:</td>
+                      <td style="padding:10px 14px; color:#1e293b;">${now}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Solicitante:</td>
+                      <td style="padding:10px 14px; color:#1e293b; font-weight:bold;">${data.clientName} ${data.company ? `(${data.company})` : ''}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Teléfono / WhatsApp:</td>
+                      <td style="padding:10px 14px; color:#1e293b;">${data.phone} / ${data.whatsapp || data.phone}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Ubicación del Servicio:</td>
+                      <td style="padding:10px 14px; color:#1e293b;">${data.address}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Producto o Sistema:</td>
+                      <td style="padding:10px 14px; color:#0D2A5C; font-weight:bold;">${data.productSystem || 'Reportado en descripción'}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Categoría del Problema:</td>
+                      <td style="padding:10px 14px; color:#1e293b; font-weight:600;">${data.category}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Nivel de Prioridad:</td>
+                      <td style="padding:10px 14px;">
+                        <span style="display:inline-block; padding:3px 10px; font-size:11px; font-weight:bold; border-radius:14px; background-color:${priorityBadgeBg}; color:${priorityBadgeColor}; border:1px solid ${priorityBorder}; text-transform:uppercase;">
+                          ${data.priority}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Horario de Contacto:</td>
+                      <td style="padding:10px 14px; color:#1e293b;">${data.preferredTime}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid #e2e8f0;">
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Canal Preferido:</td>
+                      <td style="padding:10px 14px; color:#1e293b; font-weight:bold;">${data.contactMethod}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:10px 14px; color:#64748b; font-weight:600;">Evidencias Adjuntas:</td>
+                      <td style="padding:10px 14px; color:#1e293b;">${photoInfoCliente}</td>
+                    </tr>
+                  </table>
+                </div>
+
+                <!-- Detalle de la Descripción -->
+                <div style="margin-top:24px;">
+                  <h4 style="margin:0 0 8px 0; color:#0D2A5C; font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">
+                    📝 Descripción Registrada:
+                  </h4>
+                  <div style="background-color:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid #0D2A5C; padding:16px; border-radius:8px; font-size:13px; line-height:1.6; color:#334155; white-space:pre-wrap;">${data.description}</div>
+                </div>
+
+                <!-- Nota Informativa de Procedimiento -->
+                <div style="background-color:#fffbeb; border:1px solid #fef3c7; border-radius:8px; padding:14px 16px; font-size:12px; color:#92400e; line-height:1.5; margin-top:24px;">
+                  ℹ️ <strong>Información importante sobre el servicio:</strong><br>
+                  Este correo confirma formalmente la apertura de tu solicitud en nuestro sistema. Toda visita técnica presencial, revisión de garantías o diagnóstico en terreno será validada y coordinada previamente contigo vía telefónica o WhatsApp antes del desplazamiento del técnico.
+                </div>
+
+                <div style="margin-top:28px; border-top:1px solid #e2e8f0; padding-top:16px;">
+                  <p style="font-size:13px; color:#475569; margin:16px 0 4px 0;">
+                    Atentamente,
+                  </p>
+                  <p style="font-size:14px; color:#0D2A5C; font-weight:bold; margin:0 0 16px 0;">
+                    Departamento de Soporte y Asistencia Técnica<br>
+                    <span style="font-size:12px; color:#64748b; font-weight:normal;">Warn Electrical Services, SRL (WES)</span>
+                  </p>
+                </div>
+
               </div>
-              <br>
-              <p>Atentamente,<br>
-              <strong>Equipo de Soporte de ${CONFIG.COMPANY_NAME}</strong><br>
-              Teléfono: ${CONFIG.COMPANY_PHONE}</p>
+
+              <!-- Pie de Página Elegante -->
+              <div style="background-color:#0D2A5C; color:#cbd5e1; padding:24px 28px; font-size:12px; line-height:1.6; text-align:center;">
+                <div style="color:#ffffff; font-weight:bold; font-size:13px; margin-bottom:4px;">
+                  WARN ELECTRICAL SERVICES, SRL (WES)
+                </div>
+                <div>📍 Autopista Ramón Cáceres, Plaza Megatone, Moca, República Dominicana</div>
+                <div>📞 Central Telefónica: (849) 207-5474 | 💬 WhatsApp: (849) 207-5474</div>
+                <div>✉️ Correo Oficial: <a href="mailto:wes.inform@gmail.com" style="color:#F5B300; text-decoration:none;">wes.inform@gmail.com</a></div>
+                <div style="margin-top:10px; font-size:11px; color:#94a3b8;">
+                  Portal Web Oficial: <a href="https://web.warnelectricalservices.com" style="color:#F5B300; text-decoration:none;">web.warnelectricalservices.com</a>
+                </div>
+              </div>
+
             </div>
-          </div>
+          </body>
+          </html>
         `;
 
         MailApp.sendEmail({
           to: data.email,
           subject: subjectCliente,
-          htmlBody: bodyCliente
+          htmlBody: bodyCliente,
+          replyTo: CONFIG.COMPANY_EMAIL_SUPPORT
         });
       }
 

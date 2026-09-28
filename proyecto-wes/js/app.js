@@ -17,7 +17,7 @@ const AppState = {
   sortBy: 'featured',
   supportImages: [],
   settings: StorageService.getCompanySettings(),
-  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbzrTknUYb2ttEUJhFuS0gL4RvdcRzYZexvLPOTCNwlzmeBKZKF1CKeXI5mdFI1rqBbX/exec'
+  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbwx3vc01ANf6nVIFmYDqgISXNSlwtQyp5lLnvaceNc0pGoyHtIhNGR6Z97hBVA4SAa5Kg/exec'
 };
 
 let wesMapInstance = null;
@@ -902,9 +902,18 @@ async function handleSupportSubmit(e) {
 
     // 4. Mostrar confirmación
     showConfirmationModal({
-      title: '¡Solicitud enviada correctamente!',
+      title: '¡Solicitud de Soporte Recibida!',
       code: caseId,
-      message: `Tu número de soporte es <strong>${caseId}</strong>. Hemos registrado los detalles y fotografías de tu reporte. Nuestro equipo técnico evaluará la situación y te contactará.`,
+      message: `
+        <div class="space-y-2">
+          <p>Tu número de soporte asignado es <strong class="text-wes-blue text-sm">${caseId}</strong>.</p>
+          <p>Hemos enviado un correo formal de confirmación a <strong class="text-slate-800">${ticketData.email}</strong> con el resumen completo de lo que solicitaste.</p>
+          <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-2.5 rounded-xl text-[11px] font-medium flex items-start space-x-2 mt-2">
+            <span class="text-base leading-none">⏱️</span>
+            <span><strong>Compromiso WES en 24h:</strong> Un especialista técnico evaluará tu reporte y serás contactado dentro de las <strong>próximas 24 horas</strong> a través de tu método preferido (${ticketData.contactMethod}).</span>
+          </div>
+        </div>
+      `,
       type: 'support',
       data: ticketData
     });
@@ -1030,7 +1039,31 @@ function showConfirmationModal({ title, code, message, type, data }) {
   if (!modal) return;
 
   document.getElementById('conf-title').textContent = title;
-  document.getElementById('conf-code').textContent = code;
+  
+  const codeEl = document.getElementById('conf-code');
+  if (codeEl) {
+    codeEl.textContent = code;
+    if (type === 'support') {
+      codeEl.className = 'text-2xl sm:text-3xl font-mono font-black text-wes-blue tracking-widest mt-1 bg-wes-blue/5 py-1.5 px-3 rounded-xl border border-wes-blue/20 inline-block shadow-inner';
+    } else {
+      codeEl.className = 'text-2xl font-mono font-extrabold text-wes-blue tracking-wider mt-1';
+    }
+  }
+
+  const labelEl = document.getElementById('conf-code-label');
+  if (labelEl) {
+    if (type === 'support') {
+      labelEl.textContent = '🎫 Número de Soporte Técnico Oficial';
+      labelEl.className = 'text-[11px] uppercase tracking-wider text-amber-600 font-extrabold mb-1 block';
+    } else if (type === 'contact') {
+      labelEl.textContent = '✉️ Número de Ticket de Consulta Web';
+      labelEl.className = 'text-[11px] uppercase tracking-wider text-sky-600 font-bold mb-1 block';
+    } else {
+      labelEl.textContent = 'Número de Registro Oficial';
+      labelEl.className = 'text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-1 block';
+    }
+  }
+
   document.getElementById('conf-message').innerHTML = message;
 
   // Botón para WhatsApp con la referencia (se oculta en contacto porque se gestiona por correo)
