@@ -56,6 +56,11 @@ function doPost(e) {
         response = procesarNuevoSoporte(payload.data);
         break;
 
+      case 'nuevoMensaje':
+      case 'nuevoContacto':
+        response = procesarNuevoMensajeContacto(payload.data);
+        break;
+
       case 'record_audit':
         response = { success: true, message: 'Auditoría registrada en WES' };
         break;
@@ -391,6 +396,171 @@ function procesarNuevoSoporte(data) {
 
   } catch (err) {
     console.error('Error en procesarNuevoSoporte:', err);
+    return { success: false, message: err.toString() };
+  }
+}
+
+/**
+ * Procesa un nuevo mensaje de contacto web generando un ticket formal y enviando correos
+ */
+function procesarNuevoMensajeContacto(data) {
+  try {
+    const ss = getOrCreateDatabase();
+    let sheet = ss.getSheetByName('Mensajes_Contacto');
+
+    if (!sheet) {
+      sheet = ss.insertSheet('Mensajes_Contacto');
+      sheet.appendRow([
+        'Nº Ticket', 'Fecha y Hora', 'Nombre', 'Teléfono', 'Correo',
+        'Asunto', 'Mensaje', 'Estado', 'Notas'
+      ]);
+      sheet.getRange(1, 1, 1, 9).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+    }
+
+    const nextNum = Math.max(1, sheet.getLastRow());
+    const ticketNumber = data.ticketId || ('TKT-2026-' + ('0000' + nextNum).slice(-4));
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    sheet.appendRow([
+      ticketNumber,
+      now,
+      data.name,
+      data.phone || 'N/A',
+      data.email,
+      data.subject,
+      data.message,
+      'Nuevo',
+      ''
+    ]);
+
+    // Enviar correos automáticos
+    try {
+      // 1. Correo a la empresa (WES)
+      const subjectEmpresa = `Nuevo Mensaje Web – Ticket ${ticketNumber} – ${data.subject}`;
+      const htmlEmpresa = `
+        <div style="font-family:Arial,sans-serif; color:#333; max-width:600px; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;">
+          <div style="background:#0D2A5C; color:#fff; padding:22px; text-align:center;">
+            <h2 style="margin:0; color:#F5B300; font-size:20px; font-weight:bold;">WARN ELECTRICAL SERVICES (WES)</h2>
+            <p style="margin:6px 0 0 0; font-size:14px; opacity:0.9;">Nuevo Ticket de Mensaje Web: <strong style="color:#fff;">${ticketNumber}</strong></p>
+          </div>
+          <div style="padding:25px;">
+            <p style="font-size:14px;">Se ha recibido una nueva solicitud a través del formulario de contacto web.</p>
+            <table style="width:100%; border-collapse:collapse; font-size:13px; margin:15px 0;">
+              <tr>
+                <td style="padding:6px 0; color:#64748b; width:130px;"><strong>Nº Ticket:</strong></td>
+                <td style="padding:6px 0; color:#0D2A5C; font-weight:bold; font-size:15px;">${ticketNumber}</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0; color:#64748b;"><strong>Fecha y Hora:</strong></td>
+                <td style="padding:6px 0; color:#1e293b;">${now}</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0; color:#64748b;"><strong>Remitente:</strong></td>
+                <td style="padding:6px 0; color:#1e293b; font-weight:bold;">${data.name}</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0; color:#64748b;"><strong>Correo:</strong></td>
+                <td style="padding:6px 0;"><a href="mailto:${data.email}" style="color:#0284c7; text-decoration:none; font-weight:bold;">${data.email}</a></td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0; color:#64748b;"><strong>Teléfono:</strong></td>
+                <td style="padding:6px 0; color:#1e293b;">${data.phone || 'No especificado'}</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0; color:#64748b;"><strong>Asunto:</strong></td>
+                <td style="padding:6px 0; color:#0D2A5C; font-weight:bold;">${data.subject}</td>
+              </tr>
+            </table>
+            <hr style="border:0; border-top:1px solid #e2e8f0; margin:15px 0;">
+            <h4 style="margin:0 0 8px 0; color:#0D2A5C; font-size:13px; text-transform:uppercase;">Mensaje del Cliente:</h4>
+            <div style="background:#f8fafc; padding:15px; border-radius:8px; border-left:4px solid #0D2A5C; white-space:pre-wrap; font-size:13px; line-height:1.5; color:#334155;">${data.message}</div>
+            <div style="margin-top:20px; padding:12px; background:#eff6ff; border-radius:8px; font-size:12px; color:#1e40af;">
+              💡 <em>Puedes responder directamente a este correo para comunicarte con el cliente (${data.email}).</em>
+            </div>
+          </div>
+        </div>
+      `;
+
+      MailApp.sendEmail({
+        to: CONFIG.COMPANY_EMAIL_GENERAL,
+        subject: subjectEmpresa,
+        htmlBody: htmlEmpresa,
+        replyTo: data.email
+      });
+
+      // 2. Correo de confirmación con el TICKET al cliente
+      if (data.email) {
+        const subjectCliente = `Confirmación de Solicitud – Ticket ${ticketNumber} – Warn Electrical Services`;
+        const htmlCliente = `
+          <div style="font-family:Arial,sans-serif; color:#333; max-width:600px; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;">
+            <div style="background:#0D2A5C; color:#fff; padding:22px; text-align:center;">
+              <h2 style="margin:0; color:#F5B300; font-size:20px; font-weight:bold;">WARN ELECTRICAL SERVICES (WES)</h2>
+              <p style="margin:6px 0 0 0; font-size:13px; opacity:0.9;">Tecnología, seguridad y soporte a tu alcance</p>
+            </div>
+            <div style="padding:25px;">
+              <p style="font-size:15px; margin-top:0;">Hola, <strong>${data.name}</strong>:</p>
+              <p style="font-size:13px; color:#475569; line-height:1.5;">
+                Gracias por comunicarte con <strong>Warn Electrical Services, SRL</strong>. Hemos recibido tu mensaje correctamente a través de nuestro portal web y se ha generado tu ticket formal de seguimiento.
+              </p>
+              
+              <div style="background:#f0f9ff; border:1px solid #bae6fd; border-left:4px solid #0284c7; padding:16px; border-radius:8px; margin:20px 0;">
+                <span style="font-size:11px; color:#0369a1; text-transform:uppercase; font-weight:bold; letter-spacing:0.5px; display:block;">Número de Ticket Asignado:</span>
+                <div style="font-size:24px; font-weight:extrabold; color:#0D2A5C; letter-spacing:1px; margin:4px 0;">${ticketNumber}</div>
+                <span style="font-size:12px; color:#64748b;">Conserva este código para cualquier consulta sobre tu solicitud.</span>
+              </div>
+
+              <h4 style="margin:20px 0 10px 0; color:#0D2A5C; font-size:14px;">Resumen de lo solicitado:</h4>
+              <table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:15px; background:#f8fafc; border-radius:8px; padding:12px;">
+                <tr>
+                  <td style="padding:8px 12px; color:#64748b; width:120px; border-bottom:1px solid #e2e8f0;"><strong>Asunto:</strong></td>
+                  <td style="padding:8px 12px; color:#1e293b; font-weight:bold; border-bottom:1px solid #e2e8f0;">${data.subject}</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 12px; color:#64748b; border-bottom:1px solid #e2e8f0;"><strong>Fecha y Hora:</strong></td>
+                  <td style="padding:8px 12px; color:#1e293b; border-bottom:1px solid #e2e8f0;">${now}</td>
+                </tr>
+                <tr>
+                  <td style="padding:8px 12px; color:#64748b; vertical-align:top;"><strong>Mensaje:</strong></td>
+                  <td style="padding:8px 12px; color:#334155; white-space:pre-wrap; line-height:1.5;">${data.message}</td>
+                </tr>
+              </table>
+
+              <div style="background:#fefce8; border:1px solid #fef08a; padding:14px; border-radius:8px; margin:20px 0; font-size:13px; color:#854d0e; line-height:1.5;">
+                ✉️ <strong>Gestión por correo electrónico:</strong><br>
+                Nuestro equipo revisará tu solicitud y te responderá directamente a este correo electrónico a la brevedad posible.
+              </div>
+
+              <hr style="border:0; border-top:1px solid #e2e8f0; margin:20px 0;">
+
+              <p style="font-size:12px; color:#64748b; line-height:1.5; margin:0;">
+                <strong>Warn Electrical Services, SRL (WES)</strong><br>
+                Autopista Ramón Cáceres, Plaza Megatone, Moca, República Dominicana<br>
+                Teléfono: (849) 207-5474 | Correo Oficial: wes.inform@gmail.com<br>
+                Portal Web: <a href="https://web.warnelectricalservices.com" style="color:#0284c7; text-decoration:none;">web.warnelectricalservices.com</a>
+              </p>
+            </div>
+          </div>
+        `;
+
+        MailApp.sendEmail({
+          to: data.email,
+          subject: subjectCliente,
+          htmlBody: htmlCliente
+        });
+      }
+
+    } catch (emailErr) {
+      console.warn('Alerta enviando email de contacto:', emailErr);
+    }
+
+    return {
+      success: true,
+      ticketNumber: ticketNumber,
+      message: 'Ticket generado y enviado por correo exitosamente'
+    };
+
+  } catch (err) {
+    console.error('Error en procesarNuevoMensajeContacto:', err);
     return { success: false, message: err.toString() };
   }
 }

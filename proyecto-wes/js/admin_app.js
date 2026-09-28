@@ -1294,35 +1294,42 @@ const AdminApp = {
             <table class="w-full text-left text-xs border-collapse">
               <thead>
                 <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                  <th class="p-3.5">Nº Ticket</th>
                   <th class="p-3.5">Fecha</th>
                   <th class="p-3.5">Remitente</th>
                   <th class="p-3.5">Contacto</th>
                   <th class="p-3.5">Asunto</th>
                   <th class="p-3.5">Mensaje</th>
-                  <th class="p-3.5">Estado</th>
+                  <th class="p-3.5 text-center">Gestión Correo</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
                 ${filtered.length === 0 ? `
                   <tr>
-                    <td colspan="6" class="p-8 text-center text-slate-400">
+                    <td colspan="7" class="p-8 text-center text-slate-400">
                       No hay mensajes de contacto registrados.
                     </td>
                   </tr>
                 ` : filtered.map(c => `
                   <tr class="hover:bg-slate-50/80 transition">
+                    <td class="p-3.5 whitespace-nowrap">
+                      <span class="font-mono font-extrabold text-wes-blue text-[11px] bg-blue-50 px-2 py-1 rounded-md border border-blue-200/80">
+                        ${c.ticketId || c.id}
+                      </span>
+                    </td>
                     <td class="p-3.5 text-slate-500 whitespace-nowrap">${new Date(c.date || Date.now()).toLocaleDateString('es-DO')}</td>
                     <td class="p-3.5 font-bold text-slate-800">${c.name}</td>
                     <td class="p-3.5 text-slate-600">
-                      <div>${c.email}</div>
+                      <div class="font-semibold text-slate-700">${c.email}</div>
                       <div class="text-[11px] text-slate-400">${c.phone || ''}</div>
                     </td>
                     <td class="p-3.5 font-semibold text-wes-blue">${c.subject}</td>
-                    <td class="p-3.5 text-slate-600 max-w-sm">${c.message}</td>
-                    <td class="p-3.5">
-                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">
-                        Atendido
-                      </span>
+                    <td class="p-3.5 text-slate-600 max-w-xs break-words">${c.message}</td>
+                    <td class="p-3.5 text-center whitespace-nowrap">
+                      <a href="mailto:${c.email}?subject=${encodeURIComponent(`RE: [${c.ticketId || c.id}] ${c.subject || 'Consulta WES'}`)}" class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-wes-blue hover:bg-wes-dark text-white rounded-lg font-bold text-[11px] transition shadow-sm">
+                        <i class="fas fa-reply text-wes-gold"></i>
+                        <span>Responder</span>
+                      </a>
                     </td>
                   </tr>
                 `).join('')}

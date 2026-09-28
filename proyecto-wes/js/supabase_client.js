@@ -279,6 +279,34 @@ const WesDB = (function() {
     },
 
     // ------------------------------------------------------------------------
+    // REGISTRO DE MENSAJES DE CONTACTO
+    // ------------------------------------------------------------------------
+    createContactMessage: async function(contactData) {
+      if (this.isConfigured()) {
+        try {
+          const { error } = await client
+            .from('mensajes_contacto')
+            .insert([{
+              id: generateUUID(),
+              nombre_remitente: contactData.name,
+              email: contactData.email,
+              telefono: contactData.phone || null,
+              asunto: contactData.subject,
+              mensaje: contactData.message,
+              leido: false,
+              respondido: false
+            }]);
+          if (error) throw error;
+          console.log('[WesDB] Mensaje de contacto persistido en PostgreSQL.');
+          return { success: true };
+        } catch (err) {
+          console.warn('[WesDB] Error en createContactMessage PG:', err);
+        }
+      }
+      return { success: false, source: 'local' };
+    },
+
+    // ------------------------------------------------------------------------
     // GESTIÓN DE RESEÑAS Y VALORACIONES DE PRODUCTOS
     // ------------------------------------------------------------------------
     getReviews: async function(productId) {

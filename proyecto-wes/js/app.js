@@ -17,7 +17,7 @@ const AppState = {
   sortBy: 'featured',
   supportImages: [],
   settings: StorageService.getCompanySettings(),
-  backendUrl: localStorage.getItem('wes_backend_url') || ''
+  backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbzrTknUYb2ttEUJhFuS0gL4RvdcRzYZexvLPOTCNwlzmeBKZKF1CKeXI5mdFI1rqBbX/exec'
 };
 
 let wesMapInstance = null;
@@ -918,38 +918,110 @@ async function handleSupportSubmit(e) {
   }
 }
 
-// 7. Formulario de Contacto General
-function handleContactSubmit(e) {
+// 7. Formulario de Contacto General (Gestión por Correo con Generación de Ticket Formal)
+async function handleContactSubmit(e) {
   e.preventDefault();
   const form = e.target;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Enviar mensaje';
+
   const name = form.name.value.trim();
   const phone = form.phone ? form.phone.value.trim() : '';
   const email = form.email ? form.email.value.trim() : '';
   const subject = form.subject.value.trim();
   const message = form.message.value.trim();
 
-  // Guardar en buzón interno para el portal administrativo
-  try {
-    const contacts = JSON.parse(localStorage.getItem('wes_contact_messages') || '[]');
-    contacts.unshift({
-      id: 'CNT-' + Date.now().toString().slice(-4),
-      date: new Date().toISOString(),
-      name,
-      phone,
-      email,
-      subject,
-      message
-    });
-    localStorage.setItem('wes_contact_messages', JSON.stringify(contacts));
-  } catch (err) {
-    console.warn('Error guardando contacto:', err);
-  }
+  // Generar número de Ticket formal consecutivo
+  const contacts = JSON.parse(localStorage.getItem('wes_contact_messages') || '[]');
+  const nextNum = contacts.length + 1;
+  const ticketId = `TKT-2026-${String(nextNum).padStart(4, '0')}`;
+  const now = new Date().toISOString();
 
-  const waUrl = `https://wa.me/${AppState.settings.whatsapp}?text=${encodeURIComponent(`Hola WES, soy ${name}.\nAsunto: ${subject}\n\nMensaje: ${message}`)}`;
-  
-  showToast('¡Mensaje enviado con éxito! Se abrirá WhatsApp para comunicación directa.', 'success');
-  window.open(waUrl, '_blank');
-  form.reset();
+  const ticketData = {
+    id: ticketId,
+    ticketId: ticketId,
+    date: now,
+    name,
+    phone,
+    email,
+    subject,
+    message,
+    status: 'Nuevo'
+  };
+
+  try {
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generando ticket y enviando correo...';
+    }
+
+    // 1. Guardar en buzón interno para el portal administrativo
+    contacts.unshift(ticketData);
+    localStorage.setItem('wes_contact_messages', JSON.stringify(contacts));
+
+    // 1b. Si Supabase PostgreSQL está activo, registrar en la base de datos
+    if (window.WesDB && WesDB.isConfigured()) {
+      try {
+        if (typeof WesDB.createContactMessage === 'function') {
+          await WesDB.createContactMessage({
+            name,
+            email,
+            phone,
+            subject: `[${ticketId}] ${subject}`,
+            message
+          });
+        }
+      } catch (pgErr) {
+        console.warn('Error sincronizando mensaje con PostgreSQL:', pgErr);
+      }
+    }
+
+    // 2. Despachar correo automático vía Google Apps Script Backend (Cliente y WES)
+    if (AppState.backendUrl) {
+      try {
+        await fetch(AppState.backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'nuevoMensaje',
+            data: {
+              ticketId,
+              name,
+              phone,
+              email,
+              subject,
+              message
+            }
+          })
+        });
+      } catch (beErr) {
+        console.warn('Backend Apps Script no alcanzado (modo local/resiliente):', beErr);
+      }
+    }
+
+    // 3. Limpiar formulario
+    form.reset();
+
+    // 4. Mostrar confirmación en pantalla con el número de Ticket (Gestión 100% por Correo, sin WhatsApp)
+    showConfirmationModal({
+      title: '¡Solicitud Recibida y Ticket Generado!',
+      code: ticketId,
+      message: `Tu solicitud ha sido registrada bajo el ticket oficial <strong>${ticketId}</strong>.<br><br>📧 <strong>Confirmación por Correo Electrónico:</strong><br>Hemos enviado los detalles completos y la confirmación a tu correo <strong>${email}</strong>.<br><br>Nuestro equipo de atención al cliente revisará tu solicitud y te responderá por esa misma vía de correo a la mayor brevedad posible.`,
+      type: 'contact',
+      data: ticketData
+    });
+
+    showToast(`¡Ticket ${ticketId} generado! Se envió la confirmación a tu correo.`, 'success');
+
+  } catch (err) {
+    console.error('Error al procesar solicitud de contacto:', err);
+    showToast('Ocurrió un error al procesar el mensaje. Intenta nuevamente.', 'error');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+    }
+  }
 }
 
 // 8. Modales de Confirmación y Políticas
@@ -961,13 +1033,18 @@ function showConfirmationModal({ title, code, message, type, data }) {
   document.getElementById('conf-code').textContent = code;
   document.getElementById('conf-message').innerHTML = message;
 
-  // Botón para WhatsApp con la referencia
+  // Botón para WhatsApp con la referencia (se oculta en contacto porque se gestiona por correo)
   const waBtn = document.getElementById('conf-wa-btn');
   if (waBtn) {
-    const text = type === 'quote' 
-      ? `Hola WES, acabo de enviar la solicitud de cotización ${code}. Mi nombre es ${data.clientName}.`
-      : `Hola WES, acabo de generar el caso de soporte ${code} con prioridad ${data.priority}. Mi nombre es ${data.clientName}.`;
-    waBtn.href = `https://wa.me/${AppState.settings.whatsapp}?text=${encodeURIComponent(text)}`;
+    if (type === 'contact') {
+      waBtn.classList.add('hidden');
+    } else {
+      waBtn.classList.remove('hidden');
+      const text = type === 'quote' 
+        ? `Hola WES, acabo de enviar la solicitud de cotización ${code}. Mi nombre es ${data.clientName}.`
+        : `Hola WES, acabo de generar el caso de soporte ${code} con prioridad ${data.priority}. Mi nombre es ${data.clientName}.`;
+      waBtn.href = `https://wa.me/${AppState.settings.whatsapp}?text=${encodeURIComponent(text)}`;
+    }
   }
 
   modal.classList.remove('hidden');
