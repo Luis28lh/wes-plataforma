@@ -15,8 +15,10 @@ desktop.ini
 # Logs de tareas temporales
 .system_generated/
 
-# Repositorio independiente Asistente de Reuniones
+# Proyectos independientes (aislados en sus propios repositorios)
 asistente-reuniones/
+plaza-megaton/
+
 # Ejecutables y binarios
 *.exe
 cloudflared.exe

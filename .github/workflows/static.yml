@@ -27,12 +27,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Prepare combined site
+      - name: Prepare WES site
         run: |
           mkdir -p _site
           cp -r ./proyecto-wes/* _site/
-          mkdir -p _site/plaza-megaton
-          cp -r ./plaza-megaton/public/* _site/plaza-megaton/
+          echo "web.warnelectricalservices.com" > _site/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
