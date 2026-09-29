@@ -10075,29 +10075,100 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v15_catalog';
-    const saved = localStorage.getItem(versionKey);
-    if (!saved) {
-      localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
-      localStorage.setItem('wes_custom_products', JSON.stringify(INITIAL_PRODUCTS));
-      return INITIAL_PRODUCTS;
-    }
+    const versionKey = 'wes_products_v16_catalog';
+    let products = null;
     try {
-      const parsed = JSON.parse(saved);
-      if (!Array.isArray(parsed) || parsed.length === 0 || !parsed[0].name) {
-        localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
-        localStorage.setItem('wes_custom_products', JSON.stringify(INITIAL_PRODUCTS));
-        return INITIAL_PRODUCTS;
+      const saved = (typeof localStorage !== 'undefined') ? localStorage.getItem(versionKey) : null;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length >= 200 && (parsed[0].name || parsed[0].nombre)) {
+          products = parsed;
+        }
       }
-      return parsed;
     } catch (e) {
-      return INITIAL_PRODUCTS;
+      console.warn('[StorageService] Error leyendo cache de productos:', e);
     }
+
+    if (!products || !Array.isArray(products) || products.length === 0) {
+      products = INITIAL_PRODUCTS;
+      if (typeof localStorage !== 'undefined') {
+        try {
+          localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
+          localStorage.setItem('wes_custom_products', JSON.stringify(INITIAL_PRODUCTS));
+        } catch (e) {}
+      }
+    }
+
+    const CATEGORY_NAMES = {
+      'energia': 'Energía y Respaldo',
+      'cables': 'Accesorios de Instalación',
+      'redes': 'Redes y Conectividad',
+      'camaras': 'Cámaras de Seguridad',
+      'acceso': 'Controles de Acceso',
+      'cerraduras': 'Cerraduras Inteligentes',
+      'alarmas': 'Alarmas y Sensores',
+      'automatizacion': 'Automatización y Domótica',
+      'grabadores': 'Grabadores DVR y NVR',
+      'intercom': 'Videoporteros e Intercomunicadores',
+      'accesorios': 'Accesorios de Instalación',
+      'otros': 'Accesorios de Instalación'
+    };
+
+    return products.map(p => {
+      const catId = p.categoria_id || (function() {
+        const c = (p.category || '').toLowerCase();
+        if (c.includes('energia')) return 'energia';
+        if (c.includes('camara') || c.includes('cctv')) return 'camaras';
+        if (c.includes('acceso') || c.includes('porton')) return 'acceso';
+        if (c.includes('red')) return 'redes';
+        if (c.includes('cable') || c.includes('accesorio')) return 'cables';
+        return 'otros';
+      })();
+
+      const catName = (p.category && p.category.length > 5 && !CATEGORY_NAMES[p.category])
+        ? p.category
+        : (CATEGORY_NAMES[catId] || p.category || 'Accesorios de Instalación');
+
+      return Object.assign({}, p, {
+        id: p.id,
+        name: p.name || p.nombre || 'Producto WES',
+        nombre: p.nombre || p.name || 'Producto WES',
+        code: p.code || p.codigo || p.id,
+        codigo: p.codigo || p.code || p.id,
+        brand: p.brand || p.marca || 'WES',
+        marca: p.marca || p.brand || 'WES',
+        category: catName,
+        categoria_id: catId,
+        price: Number(p.price !== undefined ? p.price : (p.precio || 0)),
+        precio: Number(p.precio !== undefined ? p.precio : (p.price || 0)),
+        currency: p.currency || p.moneda || 'DOP',
+        moneda: p.moneda || p.currency || 'DOP',
+        availability: p.availability || p.disponibilidad || 'Disponible',
+        disponibilidad: p.disponibilidad || p.availability || 'Disponible',
+        stock: Number(p.stock !== undefined ? p.stock : 0),
+        image: p.image || p.imagen_url || 'assets/products/bateria-12v-4a-frontal.png',
+        imagen_url: p.imagen_url || p.image || 'assets/products/bateria-12v-4a-frontal.png',
+        active: (p.active !== false && p.activo !== false),
+        activo: (p.activo !== false && p.active !== false),
+        featured: Boolean(p.featured || p.destacado),
+        destacado: Boolean(p.destacado || p.featured),
+        en_oferta: Boolean(p.en_oferta || p.is_offer),
+        is_offer: Boolean(p.is_offer || p.en_oferta),
+        novedad: Boolean(p.novedad || p.is_new),
+        is_new: Boolean(p.is_new || p.novedad),
+        features: Array.isArray(p.features) ? p.features : (Array.isArray(p.caracteristicas) ? p.caracteristicas : []),
+        caracteristicas: Array.isArray(p.caracteristicas) ? p.caracteristicas : (Array.isArray(p.features) ? p.features : [])
+      });
+    });
   },
 
   saveProducts: function(products) {
-    localStorage.setItem('wes_products_v15_catalog', JSON.stringify(products));
-    localStorage.setItem('wes_custom_products', JSON.stringify(products));
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem('wes_products_v16_catalog', JSON.stringify(products));
+        localStorage.setItem('wes_custom_products', JSON.stringify(products));
+      } catch (e) {}
+    }
     if (typeof window !== 'undefined' && window.WES_CATALOG_STATE) {
       window.WES_CATALOG_STATE.products = products;
     }

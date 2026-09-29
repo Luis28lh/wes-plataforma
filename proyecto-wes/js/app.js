@@ -45,7 +45,9 @@ function initApp() {
       if (Array.isArray(remoteProducts) && remoteProducts.length >= 200) {
         StorageService.saveProducts(remoteProducts);
         renderProducts();
-        populateFilterDropdowns();
+        if (typeof populateFilterOptions === 'function') {
+          populateFilterOptions(remoteProducts);
+        }
       }
     }).catch(err => {
       console.warn('[WesApp] Fallback a catálogo local activo:', err);
@@ -216,6 +218,35 @@ function applyFeatureFlags() {
   }
 }
 
+// Función utilitaria para emparejar categorías tolerando sinónimos, slugs y títulos
+function matchesCategoryFilter(product, selectedCat) {
+  if (!selectedCat || selectedCat === 'all') return true;
+  const sel = String(selectedCat).toLowerCase().trim();
+  const cat = String(product.category || '').toLowerCase().trim();
+  const catId = String(product.categoria_id || '').toLowerCase().trim();
+
+  if (cat === sel || catId === sel) return true;
+
+  // Cámaras / CCTV
+  if (sel.includes('camara') || sel.includes('cctv')) {
+    return cat.includes('camara') || cat.includes('cctv') || catId === 'camaras' || catId === 'grabadores';
+  }
+  // Acceso / Portones / Automatización
+  if (sel.includes('acceso') && !sel.includes('accesorio')) {
+    return (cat.includes('acceso') && !cat.includes('accesorio')) || catId === 'acceso' || catId === 'cerraduras' || catId === 'automatizacion';
+  }
+  // Energía / Baterías / Respaldo
+  if (sel.includes('energia') || sel.includes('bateria') || sel.includes('respaldo')) {
+    return cat.includes('energia') || cat.includes('bateria') || catId === 'energia';
+  }
+  // Accesorios / Cableado / Redes
+  if (sel.includes('accesorio') || sel.includes('cable') || sel.includes('red')) {
+    return cat.includes('accesorio') || cat.includes('cable') || cat.includes('red') || catId === 'cables' || catId === 'redes';
+  }
+
+  return false;
+}
+
 // 2. Renderizar catálogo de productos
 function renderProducts() {
   const container = document.getElementById('products-grid');
@@ -227,16 +258,19 @@ function renderProducts() {
     hideOutOfStock: false
   };
 
-  let allProducts = StorageService.getProducts().filter(p => p.active !== false);
+  let allProducts = StorageService.getProducts().filter(p => p.active !== false && p.activo !== false);
+  if (!allProducts || allProducts.length === 0) {
+    allProducts = (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+  }
 
   // Filtrar si la categoría está activa en Feature Flags
   if (window.FeatureFlags) {
-    allProducts = allProducts.filter(p => FeatureFlags.isCategoryActive(p.category));
+    allProducts = allProducts.filter(p => FeatureFlags.isCategoryActive(p.category) || FeatureFlags.isCategoryActive(p.categoria_id));
   }
 
   // Filtrar productos sin stock inmediato si está encendido el toggle
   if (flags.hideOutOfStock) {
-    allProducts = allProducts.filter(p => p.availability === 'Disponible');
+    allProducts = allProducts.filter(p => p.availability === 'Disponible' || p.disponibilidad === 'Disponible');
   }
   
   // Extraer categorías y marcas únicas para poblar los filtros dinámicamente
@@ -296,7 +330,7 @@ function renderProducts() {
         matchCat = isOffer || isNew;
       }
     } else {
-      matchCat = (product.category === AppState.selectedCategory || product.categoria_id === AppState.selectedCategory);
+      matchCat = matchesCategoryFilter(product, AppState.selectedCategory);
     }
 
     const matchBrand = AppState.selectedBrand === 'all' || product.brand === AppState.selectedBrand;

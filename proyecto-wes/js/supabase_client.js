@@ -78,7 +78,24 @@ const WesDB = (function() {
     // ------------------------------------------------------------------------
     // PRODUCTOS (LECTURA Y GESTIÓN CON RLS)
     // ------------------------------------------------------------------------
+    // GESTIÓN DE PRODUCTOS E INVENTARIO
+    // ------------------------------------------------------------------------
     getProducts: async function() {
+      const CATEGORY_NAMES = {
+        'energia': 'Energía y Respaldo',
+        'cables': 'Accesorios de Instalación',
+        'redes': 'Redes y Conectividad',
+        'camaras': 'Cámaras de Seguridad',
+        'acceso': 'Controles de Acceso',
+        'cerraduras': 'Cerraduras Inteligentes',
+        'alarmas': 'Alarmas y Sensores',
+        'automatizacion': 'Automatización y Domótica',
+        'grabadores': 'Grabadores DVR y NVR',
+        'intercom': 'Videoporteros e Intercomunicadores',
+        'accesorios': 'Accesorios de Instalación',
+        'otros': 'Accesorios de Instalación'
+      };
+
       if (this.isConfigured()) {
         try {
           const { data, error } = await client
@@ -88,52 +105,55 @@ const WesDB = (function() {
             .order('destacado', { ascending: false });
 
           if (error) throw error;
-          if (data && data.length > 0) {
-            // Mapear campos si es necesario
-            return data.map(p => ({
-              id: p.id,
-              name: p.nombre,
-              nombre: p.nombre,
-              code: p.codigo,
-              codigo: p.codigo,
-              brand: p.marca,
-              marca: p.marca,
-              category: p.categoria_id,
-              categoria_id: p.categoria_id,
-              description: p.descripcion,
-              descripcion: p.descripcion,
-              features: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
-              caracteristicas: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
-              manualUrl: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
-              manual_url: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
-              price: Number(p.precio),
-              precio: Number(p.precio),
-              currency: p.moneda || 'DOP',
-              moneda: p.moneda || 'DOP',
-              availability: p.disponibilidad || 'Disponible',
-              disponibilidad: p.disponibilidad || 'Disponible',
-              stock: Number(p.stock || 0),
-              image: p.imagen_url,
-              imagen_url: p.imagen_url,
-              active: p.activo !== false,
-              activo: p.activo !== false,
-              featured: Boolean(p.destacado),
-              destacado: Boolean(p.destacado),
-              en_oferta: Boolean(p.en_oferta),
-              is_offer: Boolean(p.en_oferta),
-              novedad: Boolean(p.novedad),
-              is_new: Boolean(p.novedad),
-              precio_anterior: p.precio_anterior ? Number(p.precio_anterior) : null,
-              tipo_promocion: p.tipo_promocion || (p.en_oferta ? 'oferta' : 'normal'),
-              gallery_images: Array.isArray(p.gallery_images) ? p.gallery_images : [],
-              key_attributes: (p.key_attributes && typeof p.key_attributes === 'object') ? p.key_attributes : {}
-            }));
+          if (data && data.length >= 200) {
+            // Mapear campos garantizando que category sea legible y categoria_id sea el slug
+            return data.map(p => {
+              const catName = CATEGORY_NAMES[p.categoria_id] || p.categoria_id || 'Accesorios de Instalación';
+              return {
+                id: p.id,
+                name: p.nombre,
+                nombre: p.nombre,
+                code: p.codigo,
+                codigo: p.codigo,
+                brand: p.marca,
+                marca: p.marca,
+                category: catName,
+                categoria_id: p.categoria_id,
+                description: p.descripcion,
+                descripcion: p.descripcion,
+                features: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
+                caracteristicas: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
+                manualUrl: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
+                manual_url: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
+                price: Number(p.precio),
+                precio: Number(p.precio),
+                currency: p.moneda || 'DOP',
+                moneda: p.moneda || 'DOP',
+                availability: p.disponibilidad || 'Disponible',
+                disponibilidad: p.disponibilidad || 'Disponible',
+                stock: Number(p.stock || 0),
+                image: p.imagen_url,
+                imagen_url: p.imagen_url,
+                active: p.activo !== false,
+                activo: p.activo !== false,
+                featured: Boolean(p.destacado),
+                destacado: Boolean(p.destacado),
+                en_oferta: Boolean(p.en_oferta),
+                is_offer: Boolean(p.en_oferta),
+                novedad: Boolean(p.novedad),
+                is_new: Boolean(p.novedad),
+                precio_anterior: p.precio_anterior ? Number(p.precio_anterior) : null,
+                tipo_promocion: p.tipo_promocion || (p.en_oferta ? 'oferta' : 'normal'),
+                gallery_images: Array.isArray(p.gallery_images) ? p.gallery_images : [],
+                key_attributes: (p.key_attributes && typeof p.key_attributes === 'object') ? p.key_attributes : {}
+              };
+            });
           }
         } catch (err) {
           console.warn('[WesDB] Fallo al consultar productos en PostgreSQL, usando fallback local:', err);
         }
       }
-      // Fallback local seguro
+      // Fallback local seguro con los 237 productos iniciales
       return StorageService.getProducts();
     },
 
