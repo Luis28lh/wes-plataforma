@@ -13,7 +13,7 @@ Esta solución implementa la plataforma web empresarial para **Warn Electrical S
 ### Datos Corporativos Oficiales:
 * **Razón Social:** Warn Electrical Services, SRL (WES)
 * **RNC:** 1-31-89326-4
-* **Sede:** Autopista Ramón Cáceres, Plaza Megatone, Moca, Provincia Espaillat, República Dominicana
+* **Sede:** Autopista Ramón Cáceres, Moca, Provincia Espaillat, República Dominicana
 * **Teléfono Principal y WhatsApp:** **`(849) 207-5474`** (`https://wa.me/18492075474`)
 * **Ubicación Google Maps:** [https://maps.app.goo.gl/KMosxdkCGwXxqFjC9](https://maps.app.goo.gl/KMosxdkCGwXxqFjC9) (`19.3877255, -70.531041`)
 * **Correos Electrónicos:** **`wes.inform@gmail.com`**

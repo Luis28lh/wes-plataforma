@@ -1220,22 +1220,38 @@ const AdminApp = {
     }
   },
 
-  resendSupportEmail(ticketId) {
+  async resendSupportEmail(ticketId) {
     const tickets = JSON.parse(localStorage.getItem('wes_support_tickets') || '[]');
     const idx = tickets.findIndex(t => t.id === ticketId);
     if (idx !== -1) {
+      const ticket = tickets[idx];
       tickets[idx].emailStatus = 'sent';
       localStorage.setItem('wes_support_tickets', JSON.stringify(tickets));
+
+      const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+      try {
+        await fetch(backendUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'nuevoSoporte',
+            data: ticket
+          })
+        });
+      } catch (err) {
+        console.warn('Error reenviando correo de soporte:', err);
+      }
 
       if (window.AuditLog) {
         window.AuditLog.log({
           module: 'soportes',
           action: 'reenviar_correo',
-          description: `Reenvío manual de notificación de soporte ${ticketId} a wes.inform@gmail.com`
+          description: `Reenvío manual de notificación de soporte ${ticketId} a wes.inform@gmail.com y confirmación al cliente`
         });
       }
 
-      showToast(`Notificación del ticket ${ticketId} reenviada con éxito a wes.inform@gmail.com`, 'success');
+      showToast(`Notificaciones del ticket ${ticketId} despachadas con éxito a wes.inform@gmail.com y al cliente`, 'success');
       this.refreshCurrentView();
       if (this.currentModalEntity && this.currentModalEntity.data.id === ticketId) {
         this.openSupportDetail(ticketId);
@@ -2228,7 +2244,7 @@ const AdminApp = {
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
               <div>
                 <h4 class="text-xs font-bold text-slate-800">Mostrar Mapa Interactivo de la Sede</h4>
-                <p class="text-[11px] text-slate-500">Ubicación en Plaza Megatone, Moca con marcador WES.</p>
+                <p class="text-[11px] text-slate-500">Ubicación en Autopista Ramón Cáceres, Moca con marcador WES.</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" ${flags.showMap ? 'checked' : ''} onchange="AdminApp.updateFeatureToggle('showMap', this.checked)" class="sr-only peer">
@@ -2299,7 +2315,7 @@ const AdminApp = {
             </div>
             <div>
               <label class="block font-bold text-slate-700 mb-1">Dirección Oficial:</label>
-              <input type="text" name="address" value="${settings.address || 'Autopista Ramón Cáceres, Plaza Megatone, Moca, República Dominicana'}" class="w-full p-2.5 border border-slate-300 rounded-xl">
+              <input type="text" name="address" value="${settings.address || 'Autopista Ramón Cáceres, Moca, República Dominicana'}" class="w-full p-2.5 border border-slate-300 rounded-xl">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block font-bold text-slate-700 mb-1"><i class="fab fa-facebook-f text-[#1877F2] mr-1"></i> Página de Facebook:</label>

@@ -10304,7 +10304,7 @@ const StorageService = {
       whatsappDisplay: '(849) 207-5474',
       emailGeneral: 'wes.inform@gmail.com',
       emailSupport: 'wes.inform@gmail.com',
-      address: 'Autopista Ramón Cáceres, Plaza Megatone, Moca, Rep. Dom.',
+      address: 'Autopista Ramón Cáceres, Moca, Rep. Dom.',
       scheduleWeek: 'Lun - Vie: 8:00 AM - 6:00 PM',
       scheduleSat: 'Sábados: 8:00 AM - 12:00 PM',
       facebook: 'https://www.facebook.com/Warn.Electrical.Services',

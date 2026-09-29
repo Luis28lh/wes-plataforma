@@ -11,7 +11,7 @@ const CONFIG = {
   COMPANY_EMAIL_GENERAL: 'wes.inform@gmail.com',
   COMPANY_EMAIL_SUPPORT: 'wes.inform@gmail.com',
   COMPANY_PHONE: '(849) 207-5474',
-  COMPANY_ADDRESS: 'Autopista Ramón Cáceres, Plaza Megatone, Moca, República Dominicana',
+  COMPANY_ADDRESS: 'Autopista Ramón Cáceres, Moca, República Dominicana',
   SHEET_NAME: 'WES - Base de Datos Operativa',
   DRIVE_FOLDER_NAME: 'WES_Soporte_Evidencias'
 };
@@ -337,9 +337,9 @@ function procesarNuevoSoporte(data) {
     // Enviar correos automáticos
     try {
       // =========================================================================
-      // 1. CORREO A LA EMPRESA (WES - CENTRO DE OPERACIONES TÉCNICAS)
+      // 1. CORREO A LA EMPRESA (WES - CENTRO DE OPERACIONES TÉCNICAS: wes.inform@gmail.com)
       // =========================================================================
-      const subjectEmpresa = `🚨 Nueva Solicitud de Soporte Técnico [${caseNumber}] – ${data.clientName} (Prioridad: ${priorityUpper})`;
+      const subjectEmpresa = `🚨 [SOPORTE PENDIENTE] Ticket #${caseNumber} – ${data.clientName} (Atención requerida en 1 hora)`;
       
       const photosEmpresaHtml = photoLinks.length > 0
         ? photoLinks.map((url, i) => `
@@ -364,17 +364,17 @@ function procesarNuevoSoporte(data) {
                 WARN ELECTRICAL SERVICES (WES)
               </div>
               <div style="font-size:13px; color:#F5B300; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">
-                CENTRO DE OPERACIONES TÉCNICAS — NUEVO TICKET
+                CENTRO DE OPERACIONES TÉCNICAS — SOPORTE PENDIENTE DE ATENCIÓN
               </div>
             </div>
 
-            <!-- Alerta de Compromiso 24 Horas -->
-            <div style="background-color:#eff6ff; border-left:5px solid #0284c7; padding:14px 20px; margin:20px 24px 0 24px; border-radius:6px;">
-              <div style="font-size:13px; font-weight:bold; color:#1e40af; margin-bottom:2px;">
-                ⏱️ RECORDATORIO DE ATENCIÓN (SLA 24 HORAS)
+            <!-- Alerta de Compromiso 1 Hora -->
+            <div style="background-color:#fef2f2; border-left:5px solid #ef4444; padding:14px 20px; margin:20px 24px 0 24px; border-radius:6px;">
+              <div style="font-size:13px; font-weight:bold; color:#991b1b; margin-bottom:2px;">
+                ⏱️ ALERTA: SOPORTE TÉCNICO PENDIENTE (COMPROMISO EN 1 HORA)
               </div>
-              <div style="font-size:12px; color:#1e3a8a; line-height:1.4;">
-                Se ha notificado al cliente que un especialista lo contactará dentro de las <strong>próximas 24 horas</strong> (${data.preferredTime} a través de <strong>${data.contactMethod}</strong>).
+              <div style="font-size:12px; color:#7f1d1d; line-height:1.4;">
+                Se ha notificado al cliente que un especialista técnico lo contactará dentro de la <strong>próxima 1 hora</strong> (${data.preferredTime || 'Inmediato'} a través de <strong>${data.contactMethod || 'su método preferido'}</strong>) para atender el problema reportado.
               </div>
             </div>
 
@@ -517,10 +517,10 @@ function procesarNuevoSoporte(data) {
       });
 
       // =========================================================================
-      // 2. CORREO AL CLIENTE (CONFIRMACIÓN ELEGANTE, NÚMERO DESTACADO Y SLA 24H)
+      // 2. CORREO AL CLIENTE (CONFIRMACIÓN ELEGANTE, NÚMERO DESTACADO Y SLA 1 HORA)
       // =========================================================================
       if (data.email) {
-        const subjectCliente = `Confirmación de Soporte Técnico – Ticket #${caseNumber} – Warn Electrical Services`;
+        const subjectCliente = `Confirmación de Soporte Técnico – Ticket #${caseNumber} – Warn Electrical Services (Atención en 1 hora)`;
         
         const photoInfoCliente = photoLinks.length > 0
           ? `✓ Se han recibido y adjuntado <strong>${photoLinks.length} fotografía(s) de evidencia</strong> a tu expediente técnico.`
@@ -550,7 +550,7 @@ function procesarNuevoSoporte(data) {
                   Estimado(a) <strong>${data.clientName}</strong>:
                 </p>
                 <p style="font-size:14px; color:#475569; line-height:1.6; margin-top:0; margin-bottom:24px;">
-                  Agradecemos que te hayas comunicado con <strong>Warn Electrical Services, SRL</strong>. Confirmamos que tu solicitud de soporte técnico ha sido recibida y registrada exitosamente en nuestro sistema operativo.
+                  Agradecemos que te hayas comunicado con <strong>Warn Electrical Services, SRL</strong>. Confirmamos que tu solicitud de soporte técnico ha sido recibida y registrada exitosamente en nuestro sistema operativo. Hemos tomado nota de tu caso y de los detalles que mencionaste para una atención técnica en un plazo máximo estimado de <strong>1 hora</strong>.
                 </p>
 
                 <!-- HERO SUPER DESTACADO: NÚMERO DE SOPORTE -->
@@ -566,13 +566,13 @@ function procesarNuevoSoporte(data) {
                   </div>
                 </div>
 
-                <!-- TARJETA DE COMPROMISO 24 HORAS -->
+                <!-- TARJETA DE COMPROMISO 1 HORA -->
                 <div style="background-color:#ecfdf5; border:1px solid #a7f3d0; border-left:5px solid #10b981; border-radius:10px; padding:18px 20px; margin:24px 0;">
                   <div style="font-size:15px; font-weight:bold; color:#065f46; margin-bottom:6px;">
-                    ⏱️ Compromiso de Contacto en las Próximas 24 Horas
+                    ⏱️ Compromiso de Contacto / Atención en 1 Hora
                   </div>
                   <div style="font-size:13px; color:#047857; line-height:1.6;">
-                    Tu requerimiento ha sido asignado a nuestra cola de atención técnica especializada. Un técnico especialista revisará las especificaciones y evidencias de tu caso y <strong>se comunicará contigo en las próximas 24 horas</strong> a través de tu método preferido (<strong>${data.contactMethod}</strong>, en horario de <strong>${data.preferredTime}</strong>) para coordinar el diagnóstico o la visita en sitio.
+                    Tu requerimiento ha sido clasificado para atención técnica prioritaria. Un especialista técnico evaluará las especificaciones y evidencias de tu reporte y <strong>se comunicará contigo en el transcurso de la próxima 1 hora</strong> a través de tu método preferido (<strong>${data.contactMethod || 'Llamada o Correo'}</strong>${data.preferredTime ? `, en horario de <strong>${data.preferredTime}</strong>` : ''}) para coordinar el diagnóstico y la solución técnica conforme a los detalles que indicaste.
                   </div>
                 </div>
 
@@ -665,7 +665,7 @@ function procesarNuevoSoporte(data) {
                 <div style="color:#ffffff; font-weight:bold; font-size:13px; margin-bottom:4px;">
                   WARN ELECTRICAL SERVICES, SRL (WES)
                 </div>
-                <div>📍 Autopista Ramón Cáceres, Plaza Megatone, Moca, República Dominicana</div>
+                <div>📍 Autopista Ramón Cáceres, Moca, República Dominicana</div>
                 <div>📞 Central Telefónica: (849) 207-5474 | 💬 WhatsApp: (849) 207-5474</div>
                 <div>✉️ Correo Oficial: <a href="mailto:wes.inform@gmail.com" style="color:#F5B300; text-decoration:none;">wes.inform@gmail.com</a></div>
                 <div style="margin-top:10px; font-size:11px; color:#94a3b8;">
@@ -836,7 +836,7 @@ function procesarNuevoMensajeContacto(data) {
 
               <p style="font-size:12px; color:#64748b; line-height:1.5; margin:0;">
                 <strong>Warn Electrical Services, SRL (WES)</strong><br>
-                Autopista Ramón Cáceres, Plaza Megatone, Moca, República Dominicana<br>
+                Autopista Ramón Cáceres, Moca, República Dominicana<br>
                 Teléfono: (849) 207-5474 | Correo Oficial: wes.inform@gmail.com<br>
                 Portal Web: <a href="https://web.warnelectricalservices.com" style="color:#0284c7; text-decoration:none;">web.warnelectricalservices.com</a>
               </p>

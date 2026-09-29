@@ -97,7 +97,7 @@ function initInteractiveMap() {
     wesMapInstance.remove();
   }
 
-  const wesCoords = [19.3877255, -70.531041]; // Autopista Ramón Cáceres, Plaza Megatone, Moca
+  const wesCoords = [19.3877255, -70.531041]; // Autopista Ramón Cáceres, Moca
 
   wesMapInstance = L.map('wes-interactive-map', {
     center: wesCoords,
@@ -137,7 +137,7 @@ function initInteractiveMap() {
       </div>
       <p style="margin: 0 0 6px 0; color: #475569; font-size: 11px; line-height: 1.4;">
         <i class="fas fa-map-marker-alt" style="color: #0D2A5C; margin-right: 4px;"></i>
-        Autopista Ramón Cáceres, Plaza Megatone, Moca, Rep. Dominicana.
+        Autopista Ramón Cáceres, Moca, Rep. Dominicana.
       </p>
       <p style="margin: 0 0 8px 0; color: #475569; font-size: 11px;">
         <i class="fas fa-phone-alt" style="color: #059669; margin-right: 4px;"></i>
@@ -867,6 +867,7 @@ async function handleQuoteSubmit(e) {
       try {
         await fetch(AppState.backendUrl, {
           method: 'POST',
+          mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
             action: 'nuevaCotizacion',
@@ -1128,6 +1129,7 @@ async function handleSupportSubmit(e) {
       try {
         await fetch(AppState.backendUrl, {
           method: 'POST',
+          mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
             action: 'nuevoSoporte',
@@ -1154,7 +1156,7 @@ async function handleSupportSubmit(e) {
           <p>Hemos enviado un correo formal de confirmación a <strong class="text-slate-800">${ticketData.email}</strong> con el resumen completo de lo que solicitaste.</p>
           <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-2.5 rounded-xl text-[11px] font-medium flex items-start space-x-2 mt-2">
             <span class="text-base leading-none">⏱️</span>
-            <span><strong>Compromiso WES en 24h:</strong> Un especialista técnico evaluará tu reporte y serás contactado dentro de las <strong>próximas 24 horas</strong> a través de tu método preferido (${ticketData.contactMethod}).</span>
+            <span><strong>Compromiso WES en 1h:</strong> Tu solicitud ha sido tomada con todos los detalles reportados. Un especialista técnico evaluará tu caso y serás contactado dentro de la <strong>próxima 1 hora</strong> a través de tu método preferido (${ticketData.contactMethod}).</span>
           </div>
         </div>
       `,
@@ -1234,6 +1236,7 @@ async function handleContactSubmit(e) {
       try {
         await fetch(AppState.backendUrl, {
           method: 'POST',
+          mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
             action: 'nuevoMensaje',
