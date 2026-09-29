@@ -121,34 +121,67 @@ const WesDB = (function() {
                 categoria_id: p.categoria_id,
                 description: p.descripcion,
                 descripcion: p.descripcion,
-                features: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
-                caracteristicas: Array.isArray(p.caracteristicas) ? p.caracteristicas : [],
-                manualUrl: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
-                manual_url: p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null,
-                price: Number(p.precio),
-                precio: Number(p.precio),
-                currency: p.moneda || 'DOP',
-                moneda: p.moneda || 'DOP',
-                availability: p.disponibilidad || 'Disponible',
-                disponibilidad: p.disponibilidad || 'Disponible',
-                stock: Number(p.stock || 0),
-                image: p.imagen_url,
-                imagen_url: p.imagen_url,
-                active: p.activo !== false,
-                activo: p.activo !== false,
-                featured: Boolean(p.destacado),
-                destacado: Boolean(p.destacado),
-                en_oferta: Boolean(p.en_oferta),
-                is_offer: Boolean(p.en_oferta),
-                novedad: Boolean(p.novedad),
-                is_new: Boolean(p.novedad),
-                precio_anterior: p.precio_anterior ? Number(p.precio_anterior) : null,
-                tipo_promocion: p.tipo_promocion || (p.en_oferta ? 'oferta' : 'normal'),
-                gallery_images: Array.isArray(p.gallery_images) ? p.gallery_images : [],
-                key_attributes: (p.key_attributes && typeof p.key_attributes === 'object') ? p.key_attributes : {}
-              };
-            });
-          }
+                const localRef = (typeof INITIAL_PRODUCTS !== 'undefined' && Array.isArray(INITIAL_PRODUCTS))
+                  ? INITIAL_PRODUCTS.find(i => (i.codigo && (i.codigo === p.codigo || i.codigo === p.code)) || (i.code && (i.code === p.codigo || i.code === p.code)) || i.id === p.id)
+                  : null;
+
+                const rawImg = p.imagen_url || '';
+                const chosenImg = (localRef && (localRef.image || localRef.imagen_url || '').startsWith('assets/'))
+                  ? (localRef.image || localRef.imagen_url)
+                  : (rawImg.startsWith('assets/') ? rawImg : ((localRef && localRef.image) || rawImg));
+
+                const chosenGallery = (localRef && Array.isArray(localRef.gallery_images) && localRef.gallery_images.length > 0 && (!p.gallery_images || p.gallery_images.length === 0 || p.gallery_images.some(g => (g.url || '').includes('unsplash'))))
+                  ? localRef.gallery_images
+                  : (Array.isArray(p.gallery_images) && p.gallery_images.length > 0 ? p.gallery_images : ((localRef && localRef.gallery_images) || []));
+
+                const chosenAttributes = (localRef && localRef.key_attributes && Object.keys(localRef.key_attributes).length > 0)
+                  ? Object.assign({}, p.key_attributes || {}, localRef.key_attributes)
+                  : (p.key_attributes || {});
+
+                const chosenManual = (localRef && (localRef.manualUrl || localRef.manual_url))
+                  ? (localRef.manualUrl || localRef.manual_url)
+                  : (p.manual_url || (Array.isArray(p.caracteristicas) && (p.caracteristicas.find(f => typeof f === 'string' && f.startsWith('manual_url:')) || '').replace('manual_url:', '')) || null);
+
+                return {
+                  id: p.id,
+                  name: (localRef && localRef.name && localRef.name.length > (p.nombre || '').length) ? localRef.name : (p.nombre || 'Producto WES'),
+                  nombre: (localRef && localRef.nombre && localRef.nombre.length > (p.nombre || '').length) ? localRef.nombre : (p.nombre || 'Producto WES'),
+                  code: p.codigo,
+                  codigo: p.codigo,
+                  brand: (localRef && localRef.brand && localRef.brand !== 'WES') ? localRef.brand : (p.marca || 'WES'),
+                  marca: (localRef && localRef.marca && localRef.marca !== 'WES') ? localRef.marca : (p.marca || 'WES'),
+                  category: catName,
+                  categoria_id: p.categoria_id,
+                  description: (localRef && localRef.description && localRef.description.length > (p.descripcion || '').length) ? localRef.description : (p.descripcion || ''),
+                  descripcion: (localRef && localRef.descripcion && localRef.descripcion.length > (p.descripcion || '').length) ? localRef.descripcion : (p.descripcion || ''),
+                  features: Array.isArray(p.caracteristicas) && p.caracteristicas.length > 0 ? p.caracteristicas : ((localRef && localRef.features) || []),
+                  caracteristicas: Array.isArray(p.caracteristicas) && p.caracteristicas.length > 0 ? p.caracteristicas : ((localRef && localRef.caracteristicas) || []),
+                  manualUrl: chosenManual,
+                  manual_url: chosenManual,
+                  price: Number(p.precio),
+                  precio: Number(p.precio),
+                  currency: p.moneda || 'DOP',
+                  moneda: p.moneda || 'DOP',
+                  availability: p.disponibilidad || 'Disponible',
+                  disponibilidad: p.disponibilidad || 'Disponible',
+                  stock: Number(p.stock || 0),
+                  image: chosenImg,
+                  imagen_url: chosenImg,
+                  active: p.activo !== false,
+                  activo: p.activo !== false,
+                  featured: Boolean(p.destacado),
+                  destacado: Boolean(p.destacado),
+                  en_oferta: Boolean(p.en_oferta || (localRef && localRef.en_oferta)),
+                  is_offer: Boolean(p.en_oferta || (localRef && localRef.en_oferta)),
+                  novedad: Boolean(p.novedad || (localRef && localRef.novedad)),
+                  is_new: Boolean(p.novedad || (localRef && localRef.novedad)),
+                  precio_anterior: p.precio_anterior ? Number(p.precio_anterior) : ((localRef && localRef.precio_anterior) || null),
+                  tipo_promocion: p.tipo_promocion || (localRef && localRef.tipo_promocion) || (p.en_oferta ? 'oferta' : 'normal'),
+                  gallery_images: chosenGallery,
+                  key_attributes: chosenAttributes
+                };
+              });
+            }
         } catch (err) {
           console.warn('[WesDB] Fallo al consultar productos en PostgreSQL, usando fallback local:', err);
         }

@@ -10075,7 +10075,7 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v16_catalog';
+    const versionKey = 'wes_products_v17_catalog';
     let products = null;
     try {
       const saved = (typeof localStorage !== 'undefined') ? localStorage.getItem(versionKey) : null;
@@ -10129,14 +10129,35 @@ const StorageService = {
         ? p.category
         : (CATEGORY_NAMES[catId] || p.category || 'Accesorios de Instalación');
 
+      const initRef = (typeof INITIAL_PRODUCTS !== 'undefined' && Array.isArray(INITIAL_PRODUCTS))
+        ? INITIAL_PRODUCTS.find(i => (i.codigo && (i.codigo === p.codigo || i.codigo === p.code)) || (i.code && (i.code === p.codigo || i.code === p.code)) || i.id === p.id)
+        : null;
+
+      const rawImg = p.image || p.imagen_url || '';
+      const chosenImage = (initRef && (initRef.image || initRef.imagen_url || '').startsWith('assets/'))
+        ? (initRef.image || initRef.imagen_url)
+        : (rawImg.startsWith('assets/') ? rawImg : ((initRef && initRef.image) || rawImg));
+
+      const chosenGallery = (initRef && Array.isArray(initRef.gallery_images) && initRef.gallery_images.length > 0 && (!p.gallery_images || p.gallery_images.length === 0 || p.gallery_images.some(g => (g.url || '').includes('unsplash'))))
+        ? initRef.gallery_images
+        : (Array.isArray(p.gallery_images) && p.gallery_images.length > 0 ? p.gallery_images : ((initRef && initRef.gallery_images) || []));
+
+      const chosenAttributes = (initRef && initRef.key_attributes && Object.keys(initRef.key_attributes).length > 0)
+        ? Object.assign({}, p.key_attributes || {}, initRef.key_attributes)
+        : (p.key_attributes || {});
+
+      const chosenManual = (initRef && (initRef.manualUrl || initRef.manual_url))
+        ? (initRef.manualUrl || initRef.manual_url)
+        : (p.manualUrl || p.manual_url || null);
+
       return Object.assign({}, p, {
         id: p.id,
-        name: p.name || p.nombre || 'Producto WES',
-        nombre: p.nombre || p.name || 'Producto WES',
+        name: (initRef && initRef.name && initRef.name.length > (p.name || '').length) ? initRef.name : (p.name || p.nombre || 'Producto WES'),
+        nombre: (initRef && initRef.nombre && initRef.nombre.length > (p.nombre || '').length) ? initRef.nombre : (p.nombre || p.name || 'Producto WES'),
         code: p.code || p.codigo || p.id,
         codigo: p.codigo || p.code || p.id,
-        brand: p.brand || p.marca || 'WES',
-        marca: p.marca || p.brand || 'WES',
+        brand: (initRef && initRef.brand && initRef.brand !== 'WES') ? initRef.brand : (p.brand || p.marca || 'WES'),
+        marca: (initRef && initRef.marca && initRef.marca !== 'WES') ? initRef.marca : (p.marca || p.brand || 'WES'),
         category: catName,
         categoria_id: catId,
         price: Number(p.price !== undefined ? p.price : (p.precio || 0)),
@@ -10146,18 +10167,24 @@ const StorageService = {
         availability: p.availability || p.disponibilidad || 'Disponible',
         disponibilidad: p.disponibilidad || p.availability || 'Disponible',
         stock: Number(p.stock !== undefined ? p.stock : 0),
-        image: p.image || p.imagen_url || 'assets/products/bateria-12v-4a-frontal.png',
-        imagen_url: p.imagen_url || p.image || 'assets/products/bateria-12v-4a-frontal.png',
+        image: chosenImage,
+        imagen_url: chosenImage,
+        gallery_images: chosenGallery,
+        key_attributes: chosenAttributes,
+        manualUrl: chosenManual,
+        manual_url: chosenManual,
         active: (p.active !== false && p.activo !== false),
         activo: (p.activo !== false && p.active !== false),
         featured: Boolean(p.featured || p.destacado),
         destacado: Boolean(p.destacado || p.featured),
-        en_oferta: Boolean(p.en_oferta || p.is_offer),
-        is_offer: Boolean(p.is_offer || p.en_oferta),
-        novedad: Boolean(p.novedad || p.is_new),
-        is_new: Boolean(p.is_new || p.novedad),
-        features: Array.isArray(p.features) ? p.features : (Array.isArray(p.caracteristicas) ? p.caracteristicas : []),
-        caracteristicas: Array.isArray(p.caracteristicas) ? p.caracteristicas : (Array.isArray(p.features) ? p.features : [])
+        en_oferta: Boolean(p.en_oferta || p.is_offer || (initRef && initRef.en_oferta)),
+        is_offer: Boolean(p.is_offer || p.en_oferta || (initRef && initRef.en_oferta)),
+        novedad: Boolean(p.novedad || p.is_new || (initRef && initRef.novedad)),
+        is_new: Boolean(p.is_new || p.novedad || (initRef && initRef.novedad)),
+        precio_anterior: p.precio_anterior || (initRef && initRef.precio_anterior) || null,
+        tipo_promocion: p.tipo_promocion || (initRef && initRef.tipo_promocion) || 'normal',
+        features: Array.isArray(p.features) && p.features.length > 0 ? p.features : (initRef && initRef.features ? initRef.features : (Array.isArray(p.caracteristicas) ? p.caracteristicas : [])),
+        caracteristicas: Array.isArray(p.caracteristicas) && p.caracteristicas.length > 0 ? p.caracteristicas : (initRef && initRef.caracteristicas ? initRef.caracteristicas : (Array.isArray(p.features) ? p.features : []))
       });
     });
   },
@@ -10165,7 +10192,7 @@ const StorageService = {
   saveProducts: function(products) {
     if (typeof localStorage !== 'undefined') {
       try {
-        localStorage.setItem('wes_products_v16_catalog', JSON.stringify(products));
+        localStorage.setItem('wes_products_v17_catalog', JSON.stringify(products));
         localStorage.setItem('wes_custom_products', JSON.stringify(products));
       } catch (e) {}
     }
