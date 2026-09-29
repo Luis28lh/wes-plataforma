@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Estricto: Impedir indexación en buscadores y visibilidad externa -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  
+  <title>Portal de Gestión Operativa | Warn Electrical Services, SRL</title>
+  
+  <link rel="icon" type="image/jpeg" href="assets/logo-buho.jpg">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'wes-blue': '#0D2A5C',
+            'wes-dark': '#071836',
+            'wes-gold': '#F5B300',
+            'wes-amber': '#D97706'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            brand: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-brand { font-family: 'Montserrat', sans-serif; }
+  </style>
+</head>
+<body class="h-full antialiased text-slate-800 selection:bg-wes-blue selection:text-white">
+
+  <!-- ==================================================================== -->
+  <!-- 1. VISTA DE AUTENTICACIÓN Y ACCESO PRIVADO                           -->
+  <!-- ==================================================================== -->
+  <div id="admin-auth-container" class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-wes-dark to-slate-900">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center px-4">
+      <div class="inline-flex items-center justify-center p-3 bg-white/10 rounded-2xl backdrop-blur-md mb-4 border border-white/10 shadow-2xl space-x-3">
+        <img src="assets/logo-buho.jpg" alt="Logo WES Búho" class="h-12 w-12 rounded-xl object-cover ring-2 ring-wes-gold/50 shadow-md">
+        <img src="assets/logo-wes.png" alt="WES" class="h-10 w-auto">
+      </div>
+      <h2 class="text-2xl font-black text-white font-brand tracking-tight">Portal Administrativo Privado</h2>
+      <p class="mt-1 text-xs text-slate-400">Warn Electrical Services, SRL — Acceso Restringido</p>
+    </div>
+
+    <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4">
+      <div class="bg-white py-8 px-6 shadow-2xl rounded-3xl sm:px-10 border border-slate-200">
+        
+        <!-- Banner de Bloqueo por Intentos Fallidos -->
+        <div id="login-lockout-banner" class="hidden mb-5 bg-rose-50 border-l-4 border-rose-500 p-4 rounded-xl text-xs text-rose-800">
+          <div class="flex items-center space-x-2.5 font-bold mb-1">
+            <i class="fas fa-shield-alt text-rose-600 text-sm"></i>
+            <span>Acceso Bloqueado por Seguridad</span>
+          </div>
+          <p class="text-[11px] text-rose-700 leading-relaxed">
+            Se registraron 5 intentos fallidos consecutivos. Por protocolo de seguridad, el acceso está suspendido temporalmente.
+          </p>
+          <div class="mt-2 text-xs font-mono font-bold text-rose-900">
+            Reintentar en: <span id="lockout-seconds" class="underline">15m 00s</span>
+          </div>
+        </div>
+
+        <!-- Formulario de Login -->
+        <form id="login-form-box" onsubmit="AdminApp.handleLoginSubmit(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Usuario o Correo *</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
+                <i class="fas fa-user text-xs"></i>
+              </span>
+              <input type="text" name="identifier" required placeholder="admin@wes.com.do o usuario" class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Contraseña *</label>
+              <button type="button" onclick="AdminApp.openForgotPasswordModal()" class="text-[11px] text-wes-blue hover:underline font-semibold">¿Olvidaste tu contraseña?</button>
+            </div>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
+                <i class="fas fa-lock text-xs"></i>
+              </span>
+              <input type="password" name="password" id="login-password-input" required placeholder="••••••••" class="w-full pl-9 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+              <button type="button" onclick="AdminApp.togglePasswordVisibility('login-password-input', 'toggle-pass-icon')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600">
+                <i id="toggle-pass-icon" class="fas fa-eye text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-wes-blue/20 flex items-center justify-center space-x-2">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Ingresar al Portal</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="mt-6 pt-5 border-t border-slate-100 text-center">
+          <p class="text-[11px] text-slate-400">
+            Conexión protegida con auditoría de sesiones y verificación de privilegios RBAC.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- 2. VISTA PRINCIPAL DEL PORTAL ADMINISTRATIVO (DASHBOARD)             -->
+  <!-- ==================================================================== -->
+  <div id="admin-main-container" class="min-h-full flex hidden">
+    
+    <!-- Barra Lateral (Sidebar) -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex shrink-0">
+      <div>
+        <div class="p-4 border-b border-slate-100 flex items-center space-x-2.5">
+          <img src="assets/logo-buho.jpg" alt="Logo WES Búho" class="h-9 w-9 rounded-lg object-cover ring-1 ring-wes-gold/50 shadow-sm shrink-0">
+          <img src="assets/logo-wes.png" alt="WES" class="h-8 w-auto">
+          <div class="overflow-hidden">
+            <h1 class="font-bold text-xs text-slate-900 font-brand truncate">Warn Electrical</h1>
+            <span class="text-[10px] text-wes-gold font-bold uppercase tracking-wider block">Gestión Operativa</span>
+          </div>
+        </div>
+
+        <!-- Menú de Navegación Dinámico -->
+        <nav id="admin-sidebar-nav" class="p-3 space-y-1">
+          <!-- Inyectado dinámicamente según permisos -->
+        </nav>
+      </div>
+
+      <!-- Tarjeta de Usuario y Salida -->
+      <div class="p-4 border-t border-slate-100 bg-slate-50/70">
+        <div class="flex items-center space-x-3 mb-3">
+          <div id="header-user-avatar" class="w-9 h-9 rounded-xl bg-wes-blue text-white font-black text-xs flex items-center justify-center uppercase shadow-sm">
+            US
+          </div>
+          <div class="overflow-hidden flex-1">
+            <div id="header-user-name" class="font-bold text-xs text-slate-800 truncate">Usuario</div>
+            <div id="header-user-role" class="text-[10px] font-semibold text-wes-blue truncate">Rol</div>
+          </div>
+        </div>
+        <button onclick="AdminAuth.logout('Cierre de sesión manual voluntario')" class="w-full py-2 bg-white hover:bg-rose-50 hover:text-rose-600 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 transition flex items-center justify-center space-x-2 shadow-sm">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      
+      <!-- Barra Superior (Header) -->
+      <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm shrink-0">
+        <div class="flex items-center space-x-3">
+          <button onclick="document.querySelector('aside').classList.toggle('hidden')" class="md:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2 id="admin-view-title" class="text-base font-extrabold text-slate-800 font-brand">Panel Principal</h2>
+        </div>
+
+        <!-- Buscador Global y Estado -->
+        <div class="flex items-center space-x-4">
+          <div class="relative hidden sm:block w-64">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+              <i class="fas fa-search text-xs"></i>
+            </span>
+            <input type="text" id="admin-global-search" placeholder="Buscar en la sección..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:ring-1 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+          </div>
+
+          <div class="flex items-center space-x-2 text-xs text-slate-500 border-l border-slate-200 pl-4">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-[11px] font-medium hidden sm:inline">Sesión activa</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Área de Trabajo Dinámica (Scrollable) -->
+      <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-100">
+        <div id="admin-dynamic-content" class="max-w-7xl mx-auto">
+          <!-- Contenido de cada módulo inyectado dinámicamente mediante admin_app.js -->
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: DETALLE DE COTIZACIÓN O SOPORTE                              -->
+  <!-- ==================================================================== -->
+  <div id="admin-modal-detail" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl max-h-[92vh] flex flex-col border border-slate-200">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
+        <h3 id="detail-modal-title" class="font-bold text-sm text-slate-800 font-brand">Detalle de Solicitud</h3>
+        <button onclick="AdminApp.closeModal('admin-modal-detail')" class="text-slate-400 hover:text-slate-700 p-1 text-base">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div id="detail-modal-content" class="overflow-y-auto flex-1 pr-1">
+        <!-- Inyectado dinámicamente -->
+      </div>
+      <div class="pt-3 border-t border-slate-200 text-right mt-3">
+        <button onclick="AdminApp.closeModal('admin-modal-detail')" class="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: VISOR DE FOTOGRAFÍAS DE EVIDENCIA (AMPLIACIÓN)               -->
+  <!-- ==================================================================== -->
+  <div id="admin-modal-photo-viewer" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-4xl flex justify-between items-center text-white mb-3 px-2">
+      <span id="photo-viewer-label" class="text-xs font-mono font-bold tracking-wider">Evidencia Fotográfica</span>
+      <button onclick="AdminApp.closePhotoViewer()" class="p-2 text-white/80 hover:text-white text-lg">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="max-w-4xl max-h-[82vh] overflow-hidden rounded-2xl shadow-2xl flex items-center justify-center bg-black/50">
+      <img id="photo-viewer-img" src="" alt="Evidencia en resolución completa" class="max-w-full max-h-[80vh] object-contain">
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: CREACIÓN / EDICIÓN DE PRODUCTO EN CATÁLOGO                   -->
+  <!-- ==================================================================== -->
+  <div id="admin-modal-product" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto border border-slate-200">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
+        <h3 id="product-modal-title" class="font-bold text-sm text-slate-800 font-brand">Gestión de Producto</h3>
+        <button onclick="AdminApp.closeProductModal()" class="text-slate-400 hover:text-slate-700 p-1">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="product-form" onsubmit="AdminApp.handleProductSave(event)" class="space-y-3 text-xs">
+        <input type="hidden" name="productId">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nombre Comercial del Producto *</label>
+          <input type="text" name="name" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-1 focus:ring-wes-blue">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Código / Referencia *</label>
+            <input type="text" name="code" required class="w-full p-2.5 border border-slate-300 rounded-xl font-mono focus:ring-1 focus:ring-wes-blue">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Marca *</label>
+            <input type="text" name="brand" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-1 focus:ring-wes-blue">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Categoría *</label>
+            <input type="text" name="category" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-1 focus:ring-wes-blue">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Precio Referencial (RD$) *</label>
+            <input type="number" name="price" step="0.01" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-1 focus:ring-wes-blue">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 p-3 bg-amber-50/70 border border-amber-200 rounded-2xl">
+          <div>
+            <label class="block font-bold text-amber-900 mb-1 flex items-center">
+              <i class="fas fa-tags mr-1 text-rose-500"></i>Criterio Promocional
+            </label>
+            <select name="promotional_status" class="w-full p-2.5 border border-amber-300 rounded-xl font-semibold bg-white text-slate-800">
+              <option value="none">Normal (Sin promoción)</option>
+              <option value="oferta">🔥 Oferta con Descuento</option>
+              <option value="novedad">⭐ Novedad / Lanzamiento</option>
+              <option value="ambos">🔥⭐ Oferta y Novedad</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-amber-900 mb-1">Precio Anterior / Regular (RD$)</label>
+            <input type="number" name="precio_anterior" step="0.01" placeholder="Ej: 1350.00" class="w-full p-2.5 border border-amber-300 rounded-xl bg-white focus:ring-1 focus:ring-wes-blue">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Disponibilidad Inmediata *</label>
+          <select name="availability" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+            <option value="Disponible">Disponible (En almacén)</option>
+            <option value="Bajo pedido">Bajo pedido (Entrega estimada)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">URL de Fotografía *</label>
+          <input type="url" name="image" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-1 focus:ring-wes-blue">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Descripción Breve *</label>
+          <textarea name="description" rows="2" required class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-1 focus:ring-wes-blue"></textarea>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Características Técnicas (una por línea):</label>
+          <textarea name="features" rows="3" class="w-full p-2.5 border border-slate-300 rounded-xl font-mono text-[11px]" placeholder="Resolución 4K Ultra HD&#10;Visión nocturna a color 30m"></textarea>
+        </div>
+        <div class="pt-3 flex justify-end space-x-2 border-t border-slate-100">
+          <button type="button" onclick="AdminApp.closeProductModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold shadow">Guardar Producto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: CREACIÓN DE USUARIO CORPORATIVO                              -->
+  <!-- ==================================================================== -->
+  <div id="admin-modal-user" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
+        <h3 class="font-bold text-sm text-slate-800 font-brand">Registrar Nuevo Usuario</h3>
+        <button onclick="AdminApp.closeUserModal()" class="text-slate-400 hover:text-slate-700 p-1">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form onsubmit="AdminApp.handleUserSave(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nombre Completo *</label>
+          <input type="text" name="name" required class="w-full p-2.5 border border-slate-300 rounded-xl">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nombre de Usuario *</label>
+            <input type="text" name="username" required placeholder="usuario" class="w-full p-2.5 border border-slate-300 rounded-xl font-mono">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Teléfono</label>
+            <input type="text" name="phone" placeholder="849-000-0000" class="w-full p-2.5 border border-slate-300 rounded-xl">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Correo Electrónico *</label>
+          <input type="email" name="email" required placeholder="correo@wes.com.do" class="w-full p-2.5 border border-slate-300 rounded-xl">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Rol en la Organización *</label>
+          <select name="role" required class="w-full p-2.5 border border-slate-300 rounded-xl font-bold bg-slate-50">
+            <option value="administrador">Administrador</option>
+            <option value="gestor_tienda">Gestor de Tienda</option>
+            <option value="gestor_cotizaciones">Gestor de Cotizaciones</option>
+            <option value="gestor_soporte">Gestor de Soporte</option>
+            <option value="editor_contenido">Editor de Contenido</option>
+            <option value="usuario_consulta">Usuario de Consulta</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Contraseña Temporal *</label>
+          <input type="password" name="password" required value="Wes2026!" class="w-full p-2.5 border border-slate-300 rounded-xl font-mono">
+        </div>
+        <div class="flex items-center space-x-2 pt-1">
+          <input type="checkbox" name="twoFactor" id="user-2fa-check" class="rounded text-wes-blue">
+          <label for="user-2fa-check" class="text-xs text-slate-600 cursor-pointer">Activar Verificación en Dos Pasos (2FA)</label>
+        </div>
+        <div class="pt-3 flex justify-end space-x-2 border-t border-slate-100">
+          <button type="button" onclick="AdminApp.closeUserModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold shadow">Crear Usuario</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: VERIFICACIÓN EN DOS PASOS (2FA)                              -->
+  <!-- ==================================================================== -->
+  <div id="modal-2fa" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl text-center border border-slate-200">
+      <div class="w-14 h-14 rounded-2xl bg-blue-50 text-wes-blue flex items-center justify-center text-2xl mx-auto mb-4">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <h3 class="text-base font-extrabold text-slate-900 font-brand">Verificación en Dos Pasos</h3>
+      <p class="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+        Ingresa el código de 6 dígitos generado para confirmar tu identidad.
+      </p>
+
+      <div class="bg-slate-100 p-2.5 rounded-xl mb-4 text-[11px] font-mono text-slate-600">
+        Código de prueba: <strong id="2fa-demo-code" class="text-wes-blue font-bold text-sm">202601</strong>
+      </div>
+
+      <form onsubmit="AdminApp.handle2FASubmit(event)" class="space-y-4">
+        <div>
+          <input type="text" id="2fa-input-code" maxlength="6" required placeholder="000000" class="w-full text-center text-xl font-mono tracking-widest py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-wes-blue focus:outline-none">
+        </div>
+        <div class="flex space-x-2">
+          <button type="button" onclick="AdminApp.close2FAModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">Cancelar</button>
+          <button type="submit" class="w-1/2 py-2.5 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs shadow">Verificar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: RECUPERACIÓN DE CONTRASEÑA                                   -->
+  <!-- ==================================================================== -->
+  <div id="modal-forgot-password" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl text-center border border-slate-200">
+      <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mx-auto mb-3">
+        <i class="fas fa-key"></i>
+      </div>
+      <h3 class="text-base font-extrabold text-slate-900 font-brand">Recuperar Contraseña</h3>
+      <p class="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+        Ingresa tu correo institucional para recibir un enlace de restablecimiento seguro.
+      </p>
+
+      <form onsubmit="AdminApp.handleForgotPasswordSubmit(event)" class="space-y-3">
+        <div>
+          <input type="email" name="recoveryEmail" required placeholder="usuario@wes.com.do" class="w-full p-2.5 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue focus:outline-none">
+        </div>
+        <div class="flex space-x-2 pt-2">
+          <button type="button" onclick="AdminApp.closeForgotPasswordModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">Cancelar</button>
+          <button type="submit" class="w-1/2 py-2.5 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs shadow">Enviar Enlace</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: ALERTA DE INACTIVIDAD (WATCHDOG 15 MIN)                      -->
+  <!-- ==================================================================== -->
+  <div id="inactivity-warning-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl text-center border border-amber-300">
+      <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mx-auto mb-4 animate-bounce">
+        <i class="fas fa-hourglass-half"></i>
+      </div>
+      <h3 class="text-base font-extrabold text-slate-900 font-brand">¿Sigues ahí?</h3>
+      <p class="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+        Tu sesión se cerrará automáticamente por inactividad de 15 minutos en:
+      </p>
+      <div class="text-3xl font-mono font-black text-amber-600 mb-5">
+        <span id="inactivity-seconds-countdown">60</span>s
+      </div>
+      <div class="flex space-x-2">
+        <button onclick="AdminAuth.logout('Cierre de sesión voluntario por advertencia')" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs">Cerrar Sesión</button>
+        <button onclick="AdminAuth.extendSession()" class="w-1/2 py-2.5 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs shadow">Mantener Sesión</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor Toast para Notificaciones -->
+  <div id="admin-toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
+
+  <!-- Scripts del Portal Administrativo -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/products.js?v=20260928_1050"></script>
+  <script src="js/supabase_client.js?v=20260928_1050"></script>
+  <script src="js/feature_flags.js?v=20260928_1050"></script>
+  <script src="js/admin_audit.js?v=20260928_1050"></script>
+  <script src="js/admin_permissions.js?v=20260928_1050"></script>
+  <script src="js/admin_auth.js?v=20260928_1050"></script>
+  <script src="js/admin_app.js?v=20260928_1050"></script>
+</body>
+</html>

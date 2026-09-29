@@ -1,16 +1,2186 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=proyecto-wes/index.html">
-  <title>Warn Electrical Services, SRL (WES) | Portal Oficial</title>
-  <script>window.location.replace("proyecto-wes/index.html");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warn Electrical Services (WES) | Seguridad Electrónica, Automatización e Instalaciones</title>
+  <meta name="description" content="Warn Electrical Services, SRL (WES) — Venta, instalación y soporte técnico de cámaras de seguridad, controles de acceso, cerraduras inteligentes y automatización en Moca, República Dominicana.">
+  
+  <!-- Favicon con logo WES Búho Guardián -->
+  <link rel="icon" type="image/jpeg" href="assets/logo-buho.jpg">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'wes-blue': '#0D2A5C',
+            'wes-dark': '#071836',
+            'wes-gold': '#F5B300',
+            'wes-gold-light': '#FDD835',
+            'wes-amber': '#D97706'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-brand {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, rgba(7, 24, 54, 0.94) 0%, rgba(13, 42, 92, 0.88) 100%);
+    }
+    .accent-lightning {
+      position: relative;
+    }
+    .accent-lightning::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 48px;
+      height: 4px;
+      background-color: #F5B300;
+      border-radius: 2px;
+    }
+    /* Estándar de Retrato Institucional y Perfil Corporativo */
+    .profile-img {
+      width: 11rem;
+      height: 11rem;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: center 20%;
+      border-radius: 50%;
+      border: 4px solid #ffffff;
+      box-shadow: 0 10px 25px -5px rgba(13, 42, 92, 0.18), 0 8px 10px -6px rgba(13, 42, 92, 0.1);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, filter 0.35s ease;
+      filter: contrast(1.02) saturate(1.02);
+      display: block;
+    }
+  </style>
 </head>
-<body style="font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #0b1528; color: #ffffff;">
-  <div style="text-align: center;">
-    <h2>Warn Electrical Services, SRL</h2>
-    <p>Cargando cat�logo y servicios oficiales...</p>
-    <p><a href="proyecto-wes/index.html" style="color: #f5b300; text-decoration: none; font-weight: bold;">Acceder a la Plataforma WES &rarr;</a></p>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-wes-gold selection:text-wes-dark">
+
+  <!-- ========================================================= -->
+  <!-- NAVEGACIÓN PRINCIPAL (STICKY NAVBAR)                      -->
+  <!-- ========================================================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logotipo Oficial WES con Búho Guardián -->
+        <a href="#inicio" class="flex items-center space-x-3 group">
+          <img src="assets/logo-buho.jpg" alt="Logo WES Búho" class="h-11 w-11 rounded-xl object-cover ring-2 ring-wes-gold/40 shadow-sm group-hover:scale-105 transition-transform shrink-0">
+          <img src="assets/logo-wes.png" alt="Warn Electrical Services Logo" class="h-11 w-auto object-contain">
+          <div class="hidden lg:block leading-tight">
+            <span class="text-sm font-bold tracking-tight text-wes-blue block uppercase font-brand">Warn Electrical Services</span>
+            <span class="text-[11px] font-medium text-slate-500 tracking-wide">Tecnología & Seguridad Electrónica</span>
+          </div>
+        </a>
+
+        <!-- Menú Desktop -->
+        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-semibold text-slate-700">
+          <a href="#inicio" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Inicio</a>
+          <a href="#nosotros" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Nosotros</a>
+          <a href="#fundadores" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Fundadores</a>
+          <a href="#tienda" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Tienda</a>
+          <a href="#tienda" onclick="filterByCategory('ofertas')" class="px-2.5 py-1.5 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 font-bold transition flex items-center space-x-1" title="Ver ofertas y promociones">
+            <i class="fas fa-fire-alt text-rose-500 animate-pulse"></i>
+            <span>Ofertas</span>
+            <span class="text-[9px] bg-rose-600 text-white px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider">Hot</span>
+          </a>
+          <a href="#proyectos" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Proyectos</a>
+          <a href="#servicios" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Servicios</a>
+          <a href="#soporte" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition text-amber-600 font-bold">
+            <i class="fas fa-tools mr-1"></i>Soporte
+          </a>
+          <a href="#contacto" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Contacto</a>
+        </nav>
+
+        <!-- Botones de Acción Rápida (Móvil) -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <!-- Botón Menú Móvil (Hamburger) -->
+          <button id="mobile-menu-btn" class="md:hidden p-2.5 text-slate-700 hover:text-wes-blue hover:bg-slate-100 rounded-xl transition" aria-label="Abrir menú">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================= -->
+  <!-- MENÚ MÓVIL DESLIZABLE (DRAWER)                            -->
+  <!-- ========================================================= -->
+  <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 z-50 w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col md:hidden">
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+      <div class="flex items-center space-x-2.5">
+        <img src="assets/logo-buho.jpg" alt="Logo WES Búho" class="h-8 w-8 rounded-lg object-cover ring-1 ring-wes-gold/50 shadow-sm">
+        <img src="assets/logo-wes.png" alt="WES" class="h-7 w-auto">
+        <span class="font-bold text-xs text-wes-blue uppercase font-brand">Warn Electrical</span>
+      </div>
+      <button id="mobile-menu-close" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">
+        <i class="fas fa-times text-lg"></i>
+      </button>
+    </div>
+
+    <div class="p-6 flex-1 overflow-y-auto space-y-3 text-sm font-semibold text-slate-700">
+      <a href="#inicio" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Inicio</a>
+      <a href="#nosotros" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Nosotros</a>
+      <a href="#fundadores" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Fundadores & Equipo</a>
+      <a href="#tienda" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Tienda y Catálogo</a>
+      <a href="#tienda" onclick="filterByCategory('ofertas')" class="mobile-nav-link block p-2.5 rounded-lg bg-rose-50 text-rose-700 font-bold flex items-center justify-between">
+        <span class="flex items-center"><i class="fas fa-fire-alt text-rose-500 mr-2"></i>Ofertas & Promociones</span>
+        <span class="text-[9px] bg-rose-600 text-white px-1.5 py-0.5 rounded-full font-black uppercase">Hot</span>
+      </a>
+      <a href="#proyectos" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Proyectos Realizados</a>
+      <a href="#servicios" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Servicios</a>
+      <a href="#soporte" class="mobile-nav-link block p-2.5 rounded-lg bg-amber-50 text-amber-700">
+        <i class="fas fa-tools mr-2"></i>Solicitar Soporte Técnico
+      </a>
+      <a href="#contacto" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Contacto</a>
+
+      <div class="pt-6 border-t border-slate-100 space-y-3">
+        <button onclick="openQuoteModal()" class="w-full py-2.5 bg-wes-blue text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
+          <i class="fas fa-file-invoice"></i>
+          <span>Revisar Cotización (<span class="cart-count-badge">0</span>)</span>
+        </button>
+        <a href="https://wa.me/18492075474" target="_blank" class="w-full py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
+          <i class="fab fa-whatsapp"></i>
+          <span>Escribir por WhatsApp</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="p-4 bg-slate-50 border-t border-slate-100 text-center text-[11px] text-slate-500">
+      <span class="font-bold text-slate-700">Warn Electrical Services, SRL</span>
+      <p class="text-[10px] text-slate-400">Moca, Provincia Espaillat</p>
+    </div>
   </div>
+
+  <main>
+    <!-- ========================================================= -->
+    <!-- 1. PORTADA E INICIO (HERO SECTION)                        -->
+    <!-- ========================================================= -->
+    <section id="inicio" class="relative min-h-[620px] flex items-center justify-center bg-slate-900 text-white overflow-hidden">
+      <!-- Fondo fotográfico con overlay corporativo -->
+      <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1920&q=80" alt="Tecnología y Seguridad" class="w-full h-full object-cover opacity-25">
+        <div class="absolute inset-0 hero-gradient"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div class="max-w-3xl">
+          
+          <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-wes-gold/20 text-wes-gold text-xs font-bold mb-6 border border-wes-gold/30">
+            <i class="fas fa-bolt text-wes-gold"></i>
+            <span>Líderes en Seguridad e Instalaciones Eléctricas en Espaillat</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight sm:leading-tight lg:leading-tight mb-6 font-brand">
+            Soluciones tecnológicas que <span class="text-wes-gold">protegen y conectan</span> lo que más valoras.
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-300 font-normal leading-relaxed mb-8">
+            Ofrecemos productos confiables, instalaciones organizadas y soporte técnico especializado para hogares, comercios y empresas. Nuestro objetivo es ayudarte a encontrar una solución eficiente y adaptada a tus necesidades reales.
+          </p>
+
+          <!-- 3 Botones Principales -->
+          <div class="flex flex-wrap gap-3 sm:gap-4">
+            <a href="#tienda" class="px-6 py-3.5 bg-wes-gold hover:bg-wes-gold-light text-wes-dark font-extrabold rounded-xl text-sm transition shadow-lg hover:shadow-wes-gold/30 flex items-center space-x-2">
+              <i class="fas fa-store"></i>
+              <span>Ver productos</span>
+            </a>
+            <button onclick="openQuoteModal()" class="px-6 py-3.5 bg-white hover:bg-slate-100 text-wes-blue font-bold rounded-xl text-sm transition shadow-lg flex items-center space-x-2">
+              <i class="fas fa-file-invoice"></i>
+              <span>Solicitar cotización</span>
+            </button>
+            <a href="#soporte" class="px-6 py-3.5 bg-slate-800/80 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm border border-slate-700 transition flex items-center space-x-2">
+              <i class="fas fa-wrench text-wes-gold"></i>
+              <span>Solicitar soporte</span>
+            </a>
+          </div>
+
+          <!-- Métricas de Confianza -->
+          <div class="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-800/80">
+            <div class="grid grid-cols-3 gap-2 sm:gap-6 text-center sm:text-left items-start">
+              
+              <!-- Métrica 1: +8 Años -->
+              <div class="flex flex-col items-center sm:items-start">
+                <div class="text-base sm:text-2xl lg:text-3xl font-extrabold text-white font-brand tracking-tight flex items-baseline justify-center sm:justify-start gap-1">
+                  <span>+8</span>
+                  <span class="text-xs sm:text-base lg:text-xl font-bold text-slate-200">Años</span>
+                </div>
+                <div class="text-[10px] sm:text-xs text-slate-400 mt-1 leading-tight text-center sm:text-left">
+                  Trayectoria desde 2017
+                </div>
+              </div>
+
+              <!-- Métrica 2: 15 Especialistas -->
+              <div class="flex flex-col items-center sm:items-start border-x border-slate-800/80 sm:border-0 px-1 sm:px-0">
+                <div class="text-base sm:text-2xl lg:text-3xl font-extrabold text-wes-gold font-brand tracking-tight flex items-baseline justify-center sm:justify-start gap-1">
+                  <span>15</span>
+                  <span class="text-xs sm:text-base lg:text-xl font-bold text-wes-gold">Especialistas</span>
+                </div>
+                <div class="text-[10px] sm:text-xs text-slate-400 mt-1 leading-tight text-center sm:text-left">
+                  Equipo técnico y ventas
+                </div>
+              </div>
+
+              <!-- Métrica 3: 100% Garantía -->
+              <div class="flex flex-col items-center sm:items-start">
+                <div class="text-base sm:text-2xl lg:text-3xl font-extrabold text-white font-brand tracking-tight flex items-baseline justify-center sm:justify-start gap-1">
+                  <span>100%</span>
+                  <span class="text-xs sm:text-base lg:text-xl font-bold text-slate-200">Garantía</span>
+                </div>
+                <div class="text-[10px] sm:text-xs text-slate-400 mt-1 leading-tight text-center sm:text-left">
+                  Instalación profesional
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TRES BENEFICIOS PRINCIPALES                               -->
+    <!-- ========================================================= -->
+    <section class="py-16 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <div class="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-wes-blue/30 transition-all duration-300 hover:shadow-lg group">
+            <div class="w-14 h-14 rounded-xl bg-blue-100/70 text-wes-blue flex items-center justify-center text-2xl mb-6 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-comments"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Asesoría Personalizada</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Analizamos las necesidades de cada cliente para recomendarle los productos y servicios más adecuados, optimizando su inversión.
+            </p>
+          </div>
+
+          <div class="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-wes-blue/30 transition-all duration-300 hover:shadow-lg group">
+            <div class="w-14 h-14 rounded-xl bg-amber-100/70 text-amber-700 flex items-center justify-center text-2xl mb-6 group-hover:bg-wes-gold group-hover:text-wes-dark transition">
+              <i class="fas fa-tools"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Instalación Profesional</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Realizamos instalaciones organizadas, seguras y adaptadas a las condiciones de cada espacio residencial, comercial o industrial.
+            </p>
+          </div>
+
+          <div class="p-8 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-wes-blue/30 transition-all duration-300 hover:shadow-lg group">
+            <div class="w-14 h-14 rounded-xl bg-emerald-100/70 text-emerald-700 flex items-center justify-center text-2xl mb-6 group-hover:bg-emerald-600 group-hover:text-white transition">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Soporte Técnico Continuo</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Acompañamos al cliente antes, durante y después de cada instalación, garantizando la operatividad continua de sus equipos.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- CATEGORÍAS DESTACADAS Y CTA INTERMEDIO                    -->
+    <!-- ========================================================= -->
+    <section class="py-16 bg-slate-100/70">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Gama de Soluciones</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 font-brand">Categorías Destacadas</h2>
+          <p class="text-sm text-slate-600 mt-2">Tecnología de vanguardia para la seguridad, el control y la eficiencia.</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-video"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Cámaras y CCTV</h4>
+            <p class="text-xs text-slate-500 mt-1">IP, HD, domo y PTZ</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-id-card"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Controles de Acceso</h4>
+            <p class="text-xs text-slate-500 mt-1">Facial, huella y RFID</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Cerraduras Inteligentes</h4>
+            <p class="text-xs text-slate-500 mt-1">Digitales y magnéticas</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-microchip"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Automatización</h4>
+            <p class="text-xs text-slate-500 mt-1">Domótica y control remoto</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Redes y Conectividad</h4>
+            <p class="text-xs text-slate-500 mt-1">Switches PoE y cableado</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-ethernet"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Cables y Conectores</h4>
+            <p class="text-xs text-slate-500 mt-1">UTP Cat6 100% cobre</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-plug"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Fuentes y Respaldo</h4>
+            <p class="text-xs text-slate-500 mt-1">Cajas de poder y baterías</p>
+          </div>
+
+          <div onclick="scrollToSection('tienda')" class="cursor-pointer bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-wes-blue transition group">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center text-xl mb-4 group-hover:bg-wes-blue group-hover:text-white transition">
+              <i class="fas fa-bell"></i>
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 group-hover:text-wes-blue transition">Alarmas y Sensores</h4>
+            <p class="text-xs text-slate-500 mt-1">Kits inalámbricos WiFi/GSM</p>
+          </div>
+
+        </div>
+
+        <!-- Banner de Llamado a la Acción -->
+        <div class="mt-12 bg-wes-blue text-white rounded-2xl p-8 sm:p-10 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="max-w-xl text-center md:text-left">
+            <h3 class="text-xl sm:text-2xl font-bold font-brand text-wes-gold">¿Necesitas ayuda para seleccionar la solución correcta?</h3>
+            <p class="text-sm text-slate-200 mt-2">
+              Cuéntanos qué deseas proteger, controlar o automatizar. Nuestro equipo evaluará tu necesidad y preparará una recomendación personalizada sin compromiso.
+            </p>
+          </div>
+          <a href="#contacto" class="px-6 py-3.5 bg-wes-gold hover:bg-wes-gold-light text-wes-dark font-extrabold rounded-xl text-sm transition shadow-lg whitespace-nowrap">
+            Solicitar asesoría
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 2. SECCIÓN NOSOTROS (HISTORIA, MISIÓN, VISIÓN, VALORES)   -->
+    <!-- ========================================================= -->
+    <section id="nosotros" class="py-20 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          <div>
+            <div class="inline-flex items-center space-x-2 text-xs font-bold text-wes-blue uppercase tracking-widest mb-2">
+              <i class="fas fa-shield-alt text-wes-gold"></i>
+              <span>Nuestra Identidad</span>
+            </div>
+            <h2 class="text-3xl font-extrabold text-slate-900 font-brand mb-6 accent-lightning">
+              Conoce nuestra empresa
+            </h2>
+            <div class="prose prose-sm text-slate-600 space-y-4">
+              <p>
+                En <strong>Warn Electrical Services, SRL (WES)</strong> trabajamos para acercar soluciones tecnológicas confiables a hogares, comercios y empresas. Nuestra labor no se limita a vender equipos. Nos enfocamos en comprender cada necesidad, recomendar la solución adecuada, realizar una instalación profesional y ofrecer acompañamiento técnico cuando el cliente lo necesite.
+              </p>
+              <p>
+                <strong>Historia de WES:</strong> Warn Electrical Services, SRL fue fundada el <strong>9 de julio de 2017</strong>, e incorporada formalmente por el Decreto No. 326-06 del 11 de diciembre del 2017.
+              </p>
+              <p>
+                El origen de nuestra organización parte de las circunstancias de brindar a nuestra comunidad un servicio mixto e integral de <strong>Seguridad Electrónica e Instalaciones Eléctricas</strong>. Aliados comerciales de gran prestigio como <em>Coopcibao, Farmacia Naraly y Carbec Import</em> contribuyeron a la formación y rápido crecimiento de nuestra compañía en la Provincia Espaillat.
+              </p>
+            </div>
+
+            <!-- Estructura Organizativa WES -->
+            <div class="mt-8 pt-6 border-t border-slate-100">
+              <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3">Estructura Operativa</h4>
+              <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-semibold text-slate-700">A) Administración</div>
+                <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-semibold text-slate-700">B) Ventas</div>
+                <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 font-semibold text-slate-700">C) Instalación y Soporte</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="space-y-6">
+            <!-- Misión -->
+            <div class="p-6 bg-slate-50 rounded-2xl border-l-4 border-wes-blue shadow-sm">
+              <div class="flex items-center space-x-3 mb-2">
+                <i class="fas fa-bullseye text-wes-blue text-lg"></i>
+                <h3 class="font-bold text-slate-900 text-base font-brand">MISIÓN</h3>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Ser una empresa proveedora de los productos de más altos Estándares de Seguridad y servicios múltiples de excelente calidad, que satisfaga plenamente la demanda de nuestros clientes.
+              </p>
+            </div>
+
+            <!-- Visión -->
+            <div class="p-6 bg-slate-50 rounded-2xl border-l-4 border-wes-gold shadow-sm">
+              <div class="flex items-center space-x-3 mb-2">
+                <i class="fas fa-eye text-wes-gold text-lg"></i>
+                <h3 class="font-bold text-slate-900 text-base font-brand">VISIÓN</h3>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Ser proveedores líderes de productos y servicios en nuestra provincia, con un modelo empresarial eficiente, contribuyendo de manera activa al fortalecimiento de la comunidad.
+              </p>
+            </div>
+
+            <!-- Valores Corporativos -->
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm">
+              <h3 class="font-bold text-slate-900 text-base font-brand mb-4 flex items-center space-x-2">
+                <i class="fas fa-award text-wes-blue"></i>
+                <span>VALORES CORPORATIVOS</span>
+              </h3>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Servicios</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Puntualidad</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Ética</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Emprendedores</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Responsabilidad</span></div>
+                <div class="flex items-center space-x-2 text-slate-700 font-semibold"><i class="fas fa-check-circle text-wes-gold"></i><span>Espíritu de Calidez</span></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 3. SECCIÓN DE FUNDADORES                                   -->
+    <!-- ========================================================= -->
+    <section id="fundadores" class="py-20 bg-slate-50 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Liderazgo & Dirección</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-2 font-brand">Conoce a nuestros fundadores</h2>
+          <p class="text-sm text-slate-600 mt-2">
+            Profesionales comprometidos con el desarrollo tecnológico, la calidad operativa y el servicio de excelencia.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Fundador 1: Luis Miguel Lizardo -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
+            <div class="h-64 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative overflow-hidden group-hover:bg-blue-50/40 transition">
+              <img src="assets/luis-miguel-lizardo.jpg" alt="Luis Miguel Lizardo - Gerente General" class="profile-img ring-4 ring-wes-gold/40 group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute top-3.5 right-3.5 bg-wes-gold text-wes-dark font-extrabold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                Gerente General
+              </div>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-wes-blue uppercase tracking-wider block mb-1">Dirección General</span>
+              <h3 class="text-lg font-bold text-slate-900">Luis Miguel Lizardo</h3>
+              <div class="text-xs font-semibold text-wes-gold uppercase mt-0.5 mb-3">Fundador & Gerente General</div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Fundador y Gerente General de Warn Electrical Services, SRL. Lidera la dirección estratégica, visión de negocio y crecimiento continuo de la compañía. Comprometido con la innovación, excelencia operativa y la entrega de soluciones integrales en seguridad electrónica e instalaciones eléctricas en Moca y toda la República Dominicana.
+              </p>
+            </div>
+          </div>
+
+          <!-- Fundador 2: Yaneiry Díaz -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
+            <div class="h-64 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative overflow-hidden group-hover:bg-blue-50/40 transition">
+              <img src="assets/yaneiry-diaz.png" alt="Yaneiry Díaz - Directora Administrativa" class="profile-img ring-4 ring-wes-blue/30 group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute top-3.5 right-3.5 bg-wes-blue text-white font-extrabold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                Directora Administrativa
+              </div>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-wes-blue uppercase tracking-wider block mb-1">Administración & Finanzas</span>
+              <h3 class="text-lg font-bold text-slate-900">Yaneiry Díaz</h3>
+              <div class="text-xs font-semibold text-wes-gold uppercase mt-0.5 mb-3">Directora Administrativa & Operaciones</div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Directora Administrativa de WES. Responsable de mantener el orden, la disciplina financiera y el estricto control contable y presupuestario de la empresa. Gestiona los recursos humanos, compras y procesos administrativos para asegurar la máxima transparencia, eficiencia y estabilidad corporativa.
+              </p>
+            </div>
+          </div>
+
+          <!-- Fundador 3: Stephano Vásquez -->
+          <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
+            <div class="h-64 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative overflow-hidden group-hover:bg-blue-50/40 transition">
+              <img src="assets/stephano-vasquez.png" alt="Stephano Vásquez - Director de Ventas" class="profile-img ring-4 ring-emerald-600/30 group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute top-3.5 right-3.5 bg-emerald-600 text-white font-extrabold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                Director de Ventas
+              </div>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-wes-blue uppercase tracking-wider block mb-1">Ventas & Atención al Cliente</span>
+              <h3 class="text-lg font-bold text-slate-900">Stephano Vásquez</h3>
+              <div class="text-xs font-semibold text-wes-gold uppercase mt-0.5 mb-3">Director de Ventas & Especialista en Servicio</div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Director de Ventas y Especialista en Servicio al Cliente de WES. Profesional apasionado por el servicio de excelencia, altamente comprometido con escuchar y asesorar a cada cliente de forma personalizada, garantizando soluciones a la medida, respuesta oportuna y relaciones de confianza a largo plazo.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 4. TIENDA Y CATÁLOGO DE PRODUCTOS                         -->
+    <!-- ========================================================= -->
+    <section id="tienda" class="py-20 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Breadcrumbs Dinámicos de Tienda (Estilo Ofertas y Promociones) -->
+        <div id="store-breadcrumb" class="hidden text-xs text-slate-500 font-medium mb-3">
+          <a href="#inicio" class="text-slate-400 hover:text-wes-blue transition">Inicio</a>
+          <span class="mx-1 text-slate-300">/</span>
+          <span id="breadcrumb-current" class="text-rose-600 font-bold">Ofertas y promociones</span>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+          <div>
+            <span id="store-badge" class="text-xs font-bold tracking-widest text-wes-blue uppercase">Catálogo Comercial</span>
+            <h2 id="store-title" class="text-3xl font-extrabold text-slate-900 mt-1 font-brand">Tienda de Equipos y Accesorios</h2>
+            <p id="store-desc" class="text-sm text-slate-600 mt-1">Selecciona los productos y agrégalos a tu lista para solicitar una cotización formal.</p>
+          </div>
+          <div id="products-count" class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg shrink-0">
+            Cargando productos...
+          </div>
+        </div>
+
+        <!-- Pestañas de Sub-filtro Especiales para Ofertas y Novedades -->
+        <div id="offer-sub-tabs" class="hidden bg-rose-50/80 border border-rose-200/90 rounded-2xl p-3.5 sm:p-4 mb-6 transition-all duration-300">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-600 animate-pulse"></span>
+              <span class="text-xs font-extrabold text-rose-900 uppercase tracking-wider">Criterio Promocional:</span>
+            </div>
+            <div class="flex flex-wrap gap-2 text-xs font-bold">
+              <button type="button" onclick="setOfferSubFilter('all')" id="offer-tab-all" class="offer-sub-btn px-3 py-1.5 rounded-xl bg-rose-600 text-white shadow-sm transition">
+                Todos (Ofertas & Novedades)
+              </button>
+              <button type="button" onclick="setOfferSubFilter('ofertas')" id="offer-tab-ofertas" class="offer-sub-btn px-3 py-1.5 rounded-xl bg-white border border-rose-300 text-rose-700 hover:bg-rose-600 hover:text-white transition">
+                🔥 Solo Ofertas con Descuento
+              </button>
+              <button type="button" onclick="setOfferSubFilter('novedades')" id="offer-tab-novedades" class="offer-sub-btn px-3 py-1.5 rounded-xl bg-white border border-rose-300 text-slate-700 hover:bg-amber-600 hover:text-white transition">
+                ⭐ Solo Novedades Recientes
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones Rápidos de Categoría (Pills Bar) -->
+        <div class="flex items-center space-x-2 overflow-x-auto pb-3 mb-6 scrollbar-none text-xs font-bold">
+          <button type="button" onclick="filterByCategory('all')" class="cat-pill px-3.5 py-2 rounded-xl bg-wes-blue text-white shadow-sm shrink-0 hover:bg-wes-dark transition" data-cat="all">
+            Todas las Soluciones
+          </button>
+          <button type="button" onclick="filterByCategory('ofertas')" class="cat-pill px-3.5 py-2 rounded-xl bg-rose-600 text-white shadow-sm shrink-0 hover:bg-rose-700 flex items-center space-x-1.5 transition" data-cat="ofertas">
+            <i class="fas fa-fire-alt animate-pulse text-amber-300"></i>
+            <span>Ofertas & Novedades</span>
+            <span class="bg-white/25 text-white text-[9px] px-1.5 py-0.2 rounded-full font-black ml-0.5">HOT</span>
+          </button>
+          <button type="button" onclick="filterByCategory('Energía y Respaldo')" class="cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition" data-cat="Energía y Respaldo">
+            ⚡ Energía & Baterías
+          </button>
+          <button type="button" onclick="filterByCategory('Controles de Acceso')" class="cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition" data-cat="Controles de Acceso">
+            🚪 Automatización & Portones
+          </button>
+          <button type="button" onclick="filterByCategory('CCTV y Cámaras')" class="cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition" data-cat="CCTV y Cámaras">
+            📹 Cámaras & Seguridad
+          </button>
+          <button type="button" onclick="filterByCategory('Accesorios de Instalación')" class="cat-pill px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 transition" data-cat="Accesorios de Instalación">
+            🌐 Cableado & Redes
+          </button>
+        </div>
+
+        <!-- Banner de Pausa de Cotizaciones (Activado vía Feature Flags) -->
+        <div id="quote-pause-banner" class="hidden"></div>
+
+        <!-- Barra de Búsqueda y Filtros Interactivos -->
+        <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 mb-8 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            
+            <!-- Buscador -->
+            <div class="lg:col-span-2 relative">
+              <i class="fas fa-search absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+              <input type="text" id="search-input" placeholder="Buscar por nombre, código o características..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+            </div>
+
+            <!-- Filtro de Categoría -->
+            <div>
+              <select id="category-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                <option value="all">Todas las Categorías</option>
+              </select>
+            </div>
+
+            <!-- Filtro de Marca -->
+            <div>
+              <select id="brand-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                <option value="all">Todas las Marcas</option>
+              </select>
+            </div>
+
+            <!-- Filtro de Disponibilidad / Orden -->
+            <div>
+              <select id="sort-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                <option value="featured">Destacados</option>
+                <option value="price-asc">Precio: Menor a Mayor</option>
+                <option value="price-desc">Precio: Mayor a Menor</option>
+                <option value="name-asc">Nombre (A - Z)</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Malla de Productos -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <!-- Renderizado dinámicamente mediante app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 5. SECCIÓN DE PROYECTOS REALIZADOS (CASOS DE ÉXITO)       -->
+    <!-- ========================================================= -->
+    <section id="proyectos" class="py-20 bg-slate-900 text-white border-b border-slate-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-14">
+          <div>
+            <div class="inline-flex items-center space-x-2 text-xs font-bold text-wes-gold uppercase tracking-widest mb-2">
+              <i class="fas fa-hammer text-wes-gold"></i>
+              <span>Obras & Casos de Éxito WES</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-brand">Proyectos e Instalaciones Realizadas</h2>
+            <p class="text-sm text-slate-400 mt-2 max-w-2xl leading-relaxed">
+              Muestra fotográfica de soluciones de seguridad electrónica, control biométrico, cableado estructurado y automatización ejecutadas por nuestros ingenieros y técnicos en la Provincia Espaillat y el Cibao.
+            </p>
+          </div>
+          <a href="#contacto" class="px-5 py-3 bg-wes-gold hover:bg-amber-400 text-wes-dark font-extrabold rounded-xl text-xs uppercase tracking-wider transition shadow-lg shrink-0 flex items-center space-x-2">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Solicitar Cotización de Proyecto</span>
+          </a>
+        </div>
+
+        <!-- Malla de 6 Proyectos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          <!-- Proyecto 1 -->
+          <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 overflow-hidden shadow-xl hover:border-wes-gold/50 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="relative h-52 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80" alt="CCTV 4K Parque Industrial" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                <span class="absolute top-3 left-3 bg-wes-blue/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-wes-gold/30">
+                  CCTV & Videovigilancia
+                </span>
+                <span class="absolute bottom-3 left-3 text-xs font-semibold text-slate-200 flex items-center space-x-1">
+                  <i class="fas fa-map-marker-alt text-wes-gold mr-1"></i> Moca, Rep. Dominicana
+                </span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-base font-bold text-white group-hover:text-wes-gold transition mb-2 font-brand">
+                  Circuito Cerrado IP 4K en Parque Industrial
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                  Instalación de 24 cámaras bala y domo Ultra HD con visión nocturna a color ColorVu, enlaces inalámbricos de 5 GHz y NVR con 16 TB para almacenamiento continuo y monitoreo centralizado.
+                </p>
+                <div class="space-y-1.5 text-[11px] text-slate-400 border-t border-slate-700/60 pt-3">
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Cobertura perimetral 360° e IA para detección humana</span></div>
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Visualización en vivo desde smartphone de directivos</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-6 pt-0">
+              <button onclick="openQuoteModal()" class="w-full py-2.5 bg-slate-700 hover:bg-wes-gold hover:text-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+                <i class="fas fa-file-invoice"></i>
+                <span>Cotizar Proyecto Similar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Proyecto 2 -->
+          <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 overflow-hidden shadow-xl hover:border-wes-gold/50 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="relative h-52 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=800&q=80" alt="Control de Acceso Biométrico" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                <span class="absolute top-3 left-3 bg-wes-blue/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-wes-gold/30">
+                  Control de Acceso
+                </span>
+                <span class="absolute bottom-3 left-3 text-xs font-semibold text-slate-200 flex items-center space-x-1">
+                  <i class="fas fa-map-marker-alt text-wes-gold mr-1"></i> Santiago - Moca
+                </span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-base font-bold text-white group-hover:text-wes-gold transition mb-2 font-brand">
+                  Acceso Facial Biométrico & Torniquetes
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                  Implementación de terminales faciales ZKTeco Visible Light anti-suplantación en puertas de cristal templado, combinadas con electroimanes de 600 lbs y software de reportería de nómina.
+                </p>
+                <div class="space-y-1.5 text-[11px] text-slate-400 border-t border-slate-700/60 pt-3">
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Reconocimiento facial en 0.3s sin contacto físico</span></div>
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Batería UPS de respaldo para 8 horas sin electricidad</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-6 pt-0">
+              <button onclick="openQuoteModal()" class="w-full py-2.5 bg-slate-700 hover:bg-wes-gold hover:text-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+                <i class="fas fa-file-invoice"></i>
+                <span>Cotizar Proyecto Similar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Proyecto 3 -->
+          <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 overflow-hidden shadow-xl hover:border-wes-gold/50 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="relative h-52 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80" alt="Automatización de Portón y Cerco" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                <span class="absolute top-3 left-3 bg-wes-blue/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-wes-gold/30">
+                  Seguridad Perimetral
+                </span>
+                <span class="absolute bottom-3 left-3 text-xs font-semibold text-slate-200 flex items-center space-x-1">
+                  <i class="fas fa-map-marker-alt text-wes-gold mr-1"></i> Residencial Los Maestros, Moca
+                </span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-base font-bold text-white group-hover:text-wes-gold transition mb-2 font-brand">
+                  Portón Automatizado y Cerco Eléctrico
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                  Motorización de portón corredizo de 800 kg de alto flujo vehicular con receptor de largo alcance, emparejado con cerco eléctrico perimetral de 6 líneas y alarma de corte o aterrizaje.
+                </p>
+                <div class="space-y-1.5 text-[11px] text-slate-400 border-t border-slate-700/60 pt-3">
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Apertura por control remoto, tag RFID y app telefónica</span></div>
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Energizador homologado con disuasión de alto voltaje</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-6 pt-0">
+              <button onclick="openQuoteModal()" class="w-full py-2.5 bg-slate-700 hover:bg-wes-gold hover:text-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+                <i class="fas fa-file-invoice"></i>
+                <span>Cotizar Proyecto Similar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Proyecto 4 -->
+          <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 overflow-hidden shadow-xl hover:border-wes-gold/50 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="relative h-52 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80" alt="Cableado Estructurado y Rack" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                <span class="absolute top-3 left-3 bg-wes-blue/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-wes-gold/30">
+                  Redes & Cableado
+                </span>
+                <span class="absolute bottom-3 left-3 text-xs font-semibold text-slate-200 flex items-center space-x-1">
+                  <i class="fas fa-map-marker-alt text-wes-gold mr-1"></i> Autopista Ramón Cáceres, Moca
+                </span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-base font-bold text-white group-hover:text-wes-gold transition mb-2 font-brand">
+                  Rack de Telecomunicaciones y Fibra Óptica
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                  Diseño de centro de cableado estructurado Cat6 100% cobre con 36 nodos certificados, patch panels, switches administrables PoE+ y enlaces de fibra óptica para comunicación interedificios.
+                </p>
+                <div class="space-y-1.5 text-[11px] text-slate-400 border-t border-slate-700/60 pt-3">
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Peinado técnico normado con rotulación punto a punto</span></div>
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Garantía de ancho de banda Gigabit y cero latencia</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-6 pt-0">
+              <button onclick="openQuoteModal()" class="w-full py-2.5 bg-slate-700 hover:bg-wes-gold hover:text-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+                <i class="fas fa-file-invoice"></i>
+                <span>Cotizar Proyecto Similar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Proyecto 5 -->
+          <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 overflow-hidden shadow-xl hover:border-wes-gold/50 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="relative h-60 overflow-hidden cursor-pointer" onclick="openProjectImageModal('assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg', 'Instalación de Sistema de Respaldo Energético Crítico: Inversor Onda Senoidal Pura 3.6 kW y Banco de 8 Baterías Interstate', 'Diseño, reacondicionamiento e instalación de infraestructura eléctrica de respaldo ininterrumpido (UPS/Inversor), orientada a proteger y mantener en operación continua los activos más sensibles del cliente: el sistema de facturación, la plataforma de videovigilancia y los sistemas de bombeo de agua.')">
+                <img src="assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg" alt="Instalación de Sistema de Respaldo Energético Crítico: Inversor Wave 3.6 kW y 8 Baterías Interstate" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                <span class="absolute top-3 left-3 bg-wes-blue/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-wes-gold/30">
+                  Energía & Respaldo Crítico
+                </span>
+                <span class="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-sm text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-400/40 flex items-center space-x-1 shadow-md">
+                  <i class="fas fa-camera text-[10px]"></i>
+                  <span>Obra Real WES</span>
+                </span>
+                <span class="absolute bottom-3 left-3 text-xs font-semibold text-slate-200 flex items-center space-x-1">
+                  <i class="fas fa-map-marker-alt text-wes-gold mr-1"></i> Espaillat / Cibao, Rep. Dominicana
+                </span>
+                <span class="absolute bottom-3 right-3 text-[11px] font-bold text-wes-gold/90 bg-slate-900/80 px-2 py-0.5 rounded-lg flex items-center space-x-1 border border-wes-gold/30">
+                  <i class="fas fa-search-plus"></i>
+                  <span>Ver Foto</span>
+                </span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-base font-bold text-white group-hover:text-wes-gold transition mb-2 font-brand leading-snug">
+                  Instalación de Sistema de Respaldo Energético Crítico: Inversor Onda Senoidal Pura 3.6 kW y Banco de 8 Baterías Interstate
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                  Diseño, reacondicionamiento e instalación de infraestructura eléctrica de respaldo ininterrumpido (UPS/Inversor), orientada a proteger y mantener en operación continua los activos más sensibles del cliente: el sistema de facturación, la plataforma de videovigilancia y los sistemas de bombeo de agua.
+                </p>
+                <div class="space-y-2 text-[11px] text-slate-300 border-t border-slate-700/60 pt-3">
+                  <div class="flex items-start space-x-2">
+                    <i class="fas fa-bolt text-wes-gold text-[11px] mt-0.5 shrink-0"></i>
+                    <span><strong class="text-white">Inversor / Cargador:</strong> Inversor Inteligente Onda Senoidal Pura (Wave 3.6 kW) de alto rendimiento.</span>
+                  </div>
+                  <div class="flex items-start space-x-2">
+                    <i class="fas fa-car-battery text-wes-gold text-[11px] mt-0.5 shrink-0"></i>
+                    <span><strong class="text-white">Banco de Baterías:</strong> 8 baterías de ciclo profundo marca Interstate Batteries en base metálica reforzada.</span>
+                  </div>
+                  <div class="flex items-start space-x-2">
+                    <i class="fas fa-shield-alt text-wes-gold text-[11px] mt-0.5 shrink-0"></i>
+                    <span><strong class="text-white">Protecciones y Control:</strong> Centro de carga / caja de breakers dedicada y panel de transferencia para protección contra sobrecargas y cortocircuitos.</span>
+                  </div>
+                  <div class="flex items-start space-x-2">
+                    <i class="fas fa-server text-wes-gold text-[11px] mt-0.5 shrink-0"></i>
+                    <span><strong class="text-white">Cargas Críticas Respaldadas:</strong> Servidores y facturación (cero reinicios ni pérdidas), circuito cerrado (CCTV) y sistemas de bombeo de agua.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="p-6 pt-0">
+              <button onclick="openQuoteModal()" class="w-full py-2.5 bg-slate-700 hover:bg-wes-gold hover:text-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md">
+                <i class="fas fa-file-invoice"></i>
+                <span>Cotizar Proyecto Similar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Proyecto 6 -->
+          <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 overflow-hidden shadow-xl hover:border-wes-gold/50 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="relative h-52 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=800&q=80" alt="Videoportero IP Multi-Apartamento" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                <span class="absolute top-3 left-3 bg-wes-blue/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-wes-gold/30">
+                  Citofonía & Videoporteros
+                </span>
+                <span class="absolute bottom-3 left-3 text-xs font-semibold text-slate-200 flex items-center space-x-1">
+                  <i class="fas fa-map-marker-alt text-wes-gold mr-1"></i> Moca Centro
+                </span>
+              </div>
+              <div class="p-6">
+                <h3 class="text-base font-bold text-white group-hover:text-wes-gold transition mb-2 font-brand">
+                  Videoportería Digital Multi-Apartamento
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                  Estación externa metálica para edificio de 12 apartamentos con lector de tarjetas RFID y pantallas táctiles de 7 pulgadas en cada unidad, permitiendo responder timbres y abrir cerraduras desde el celular.
+                </p>
+                <div class="space-y-1.5 text-[11px] text-slate-400 border-t border-slate-700/60 pt-3">
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Captura de foto de visitantes al timbrar la entrada</span></div>
+                  <div class="flex items-center space-x-2"><i class="fas fa-check text-wes-gold text-[10px]"></i><span>Integración directa con cerradura eléctrica principal</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-6 pt-0">
+              <button onclick="openQuoteModal()" class="w-full py-2.5 bg-slate-700 hover:bg-wes-gold hover:text-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+                <i class="fas fa-file-invoice"></i>
+                <span>Cotizar Proyecto Similar</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Banner de Confianza y Garantía WES en Proyectos -->
+        <div class="mt-14 p-8 rounded-3xl bg-gradient-to-r from-wes-blue via-slate-800 to-wes-dark border border-wes-gold/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 rounded-2xl bg-wes-gold/20 text-wes-gold flex items-center justify-center text-3xl shrink-0 border border-wes-gold/40">
+              <i class="fas fa-award"></i>
+            </div>
+            <div>
+              <h4 class="text-lg font-bold text-white font-brand">¿Tienes un proyecto residencial o empresarial en mente?</h4>
+              <p class="text-xs text-slate-300 mt-1">
+                Realizamos levantamiento técnico en sitio sin costo, evaluamos riesgos y diseñamos un presupuesto llave en mano ajustado a tu inversión.
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-3 shrink-0">
+            <a href="https://wa.me/18492075474?text=Hola%20WES,%20me%20gustar%C3%ADa%20cotizar%20un%20proyecto" target="_blank" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center space-x-2 transition shadow-lg">
+              <i class="fab fa-whatsapp text-sm"></i>
+              <span>Consultar por WhatsApp</span>
+            </a>
+            <a href="#contacto" class="px-5 py-3 bg-white hover:bg-slate-100 text-wes-dark font-bold rounded-xl text-xs flex items-center space-x-2 transition shadow-lg">
+              <i class="fas fa-envelope text-wes-blue"></i>
+              <span>Escribir Mensaje</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 6. SECCIÓN DE SERVICIOS                                   -->
+    <!-- ========================================================= -->
+    <section id="servicios" class="py-20 bg-slate-50 border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Soluciones Llave en Mano</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-2 font-brand">Nuestros Servicios Profesionales</h2>
+          <p class="text-sm text-slate-600 mt-2">
+            Ingeniería, montaje técnico y mantenimiento certificado para infraestructura eléctrica y de seguridad.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          <!-- Servicio 1 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-video"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Instalación de Cámaras</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Diseño e instalación de sistemas de videovigilancia CCTV y cámaras IP de alta definición para hogares, comercios e industrias, con visualización remota en el móvil.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 2 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-fingerprint"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Controles de Acceso</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Soluciones para controlar y registrar el ingreso de personas a áreas residenciales, comerciales y empresariales mediante biométricos faciales, huella y tarjetas.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 3 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-key"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Cerraduras Eléctricas e Inteligentes</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Instalación y configuración de electroimanes de alta retención, pestillos eléctricos y cerraduras digitales adaptadas a diferentes tipos de puertas.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 4 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-robot"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Automatización</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Integración de dispositivos inteligentes para facilitar el control de iluminación, apertura de portones, seguridad perimetral y ahorro de energía.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 5 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-network-wired"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Redes y Conectividad</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Instalación, peinado y certificación de cableado estructurado Cat6, enlaces inalámbricos y switches PoE para garantizar comunicación estable entre equipos.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+          <!-- Servicio 6 -->
+          <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xl mb-5 group-hover:bg-wes-blue group-hover:text-white transition">
+                <i class="fas fa-headset"></i>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 mb-2 font-brand uppercase tracking-wide">Mantenimiento y Soporte</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                Diagnóstico técnico especializado, mantenimiento preventivo y corrección de averías en equipos y cableados preexistentes.
+              </p>
+            </div>
+            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Solicitar evaluación</span>
+              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 7. SOLICITUD DE SOPORTE TÉCNICO CON FOTOGRAFÍAS           -->
+    <!-- ========================================================= -->
+    <section id="soporte" class="py-20 bg-white border-b border-slate-200">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <div class="inline-flex items-center space-x-1.5 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold mb-3">
+            <i class="fas fa-tools"></i>
+            <span>Asistencia Técnica Especializada WES</span>
+          </div>
+          <h2 class="text-3xl font-extrabold text-slate-900 font-brand">¿Necesitas soporte técnico?</h2>
+          <p class="text-sm text-slate-600 mt-2">
+            Completa el siguiente formulario y comparte toda la información posible. Las fotografías nos ayudarán a evaluar el problema antes de comunicarnos contigo.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm">
+          <!-- Banner de Pausa de Soporte (Activado vía Feature Flags) -->
+          <div id="support-pause-banner" class="hidden"></div>
+
+          <form id="support-form" class="space-y-6">
+            
+            <!-- Datos del Cliente -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
+                <input type="text" name="clientName" required placeholder="Ej. Juan Pérez" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Empresa / Negocio (si aplica)</label>
+                <input type="text" name="company" placeholder="Ej. Farmacia Naraly / Particular" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Teléfono de Contacto *</label>
+                <input type="tel" name="phone" required placeholder="809-000-0000" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">WhatsApp</label>
+                <input type="tel" name="whatsapp" placeholder="809-000-0000" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Correo Electrónico *</label>
+                <input type="email" name="email" required placeholder="tu-correo@ejemplo.com" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Dirección / Ubicación del Servicio *</label>
+                <input type="text" name="address" required placeholder="Calle, sector, ciudad (Moca o región)" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+            </div>
+
+            <!-- Datos Técnicos del Incidente -->
+            <div class="pt-4 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nº Factura / Orden (Opcional)</label>
+                <input type="text" name="orderNumber" placeholder="FAC-XXXX o instalación previa" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Categoría del Problema *</label>
+                <select name="category" required class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                  <option value="Cámara sin imagen">Cámara sin imagen</option>
+                  <option value="Problema de grabación">Problema de grabación (DVR/NVR)</option>
+                  <option value="Acceso remoto celular">Acceso remoto / App en celular</option>
+                  <option value="Control de acceso">Control de acceso biométrico/RFID</option>
+                  <option value="Cerradura eléctrica">Cerradura eléctrica o imán</option>
+                  <option value="Red o conectividad">Red o conectividad / Switch</option>
+                  <option value="Fuente de alimentación">Fuente de alimentación / Energía</option>
+                  <option value="Automatización">Automatización</option>
+                  <option value="Instalación">Instalación nueva</option>
+                  <option value="Mantenimiento">Mantenimiento preventivo</option>
+                  <option value="Otro">Otro problema</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nivel de Prioridad *</label>
+                <select name="priority" required class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                  <option value="Baja">Baja (Consulta o inconveniente menor)</option>
+                  <option value="Media" selected>Media (Funcionamiento parcial)</option>
+                  <option value="Alta">Alta (Sistema principal fuera de servicio)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Producto o Sistema Relacionado</label>
+              <input type="text" name="productSystem" placeholder="Ej. Sistema CCTV Hikvision 8 cámaras, Control ZKTeco, etc." class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Descripción Detallada del Problema *</label>
+              <textarea name="description" required rows="4" placeholder="Explica detalladamente qué ocurre, qué luces están encendidas, si ocurrió tras una lluvia o corte eléctrico..." class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none"></textarea>
+            </div>
+
+            <!-- ADJUNTAR FOTOGRAFÍAS (CÁMARA / GALERÍA / DRAG & DROP + PREVIEW) -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div>
+                  <label class="block text-xs font-bold text-slate-900 uppercase">
+                    Fotografías del Problema o Avería
+                  </label>
+                  <p class="text-[11px] text-slate-500">Muestra las luces, cables, equipo o pantalla de error (hasta 5 fotografías).</p>
+                </div>
+                <span id="support-photo-counter" class="text-[11px] font-bold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
+                  0 de 5 fotos
+                </span>
+              </div>
+
+              <!-- Botones directos de captura y selección -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                <button type="button" id="btn-trigger-camera" class="flex items-center justify-center space-x-2 py-3 px-4 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition shadow-sm">
+                  <i class="fas fa-camera text-base text-wes-gold"></i>
+                  <span>Tomar Foto con la Cámara</span>
+                </button>
+                <button type="button" id="btn-trigger-gallery" class="flex items-center justify-center space-x-2 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition border border-slate-200">
+                  <i class="fas fa-images text-base text-wes-blue"></i>
+                  <span>Seleccionar desde Galería / Archivos</span>
+                </button>
+              </div>
+
+              <!-- Inputs invisibles para cámara y selector de archivos -->
+              <input type="file" id="support-camera-input" accept="image/*" capture="environment" class="hidden">
+              <input type="file" id="support-file-input" accept="image/jpeg,image/png,image/webp" multiple class="hidden">
+
+              <!-- Zona Drag & Drop interactiva alternativa -->
+              <div id="support-dropzone" class="border-2 border-dashed border-slate-300 hover:border-wes-blue p-4 rounded-xl text-center cursor-pointer bg-slate-50/70 hover:bg-blue-50/40 transition duration-200">
+                <p class="text-xs text-slate-600 font-medium">O arrastra tus imágenes directamente a este recuadro</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">Formatos admitidos: JPG, PNG, WEBP (hasta 5MB por imagen)</p>
+              </div>
+
+              <!-- Contenedor de Vista Previa de Imágenes Mejorado -->
+              <div id="support-images-preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 pt-2"></div>
+            </div>
+
+            <!-- Preferencias de Contacto -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Horario Preferido de Contacto</label>
+                <select name="preferredTime" class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue">
+                  <option value="Mañana (7:30 AM - 12:00 PM)">Mañana (7:30 AM - 12:00 PM)</option>
+                  <option value="Tarde (2:00 PM - 6:00 PM)">Tarde (2:00 PM - 6:00 PM)</option>
+                  <option value="Cualquier momento">Cualquier momento disponible</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Método Preferido de Contacto</label>
+                <select name="contactMethod" class="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue">
+                  <option value="WhatsApp">WhatsApp</option>
+                  <option value="Llamada telefónica">Llamada telefónica</option>
+                  <option value="Correo electrónico">Correo electrónico</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Política de Privacidad -->
+            <div class="flex items-start space-x-2">
+              <input type="checkbox" id="support-privacy" required class="mt-1 w-4 h-4 rounded text-wes-blue focus:ring-wes-blue border-slate-300">
+              <label for="support-privacy" class="text-xs text-slate-600">
+                Acepto la <button type="button" onclick="openPolicyModal('privacy')" class="text-wes-blue underline font-semibold">Política de Privacidad</button> y autorizo el uso de estos datos para la gestión del soporte técnico solicitado.
+              </label>
+            </div>
+
+            <!-- Botón Principal -->
+            <div>
+              <button type="submit" class="w-full py-4 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-sm transition shadow-lg hover:shadow-wes-blue/20 flex items-center justify-center space-x-2">
+                <i class="fas fa-paper-plane"></i>
+                <span>Enviar solicitud de soporte</span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 8. PÁGINA DE CONTACTO Y UBICACIÓN                         -->
+    <!-- ========================================================= -->
+    <section id="contacto" class="py-20 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-bold tracking-widest text-wes-blue uppercase">Atención al Cliente</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 mt-2 font-brand">Contacto y Ubicación</h2>
+          <p class="text-sm text-slate-600 mt-2">Visítanos en nuestra sede en Moca o contáctanos por los canales directos.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          
+          <!-- Información y Mapa -->
+          <div class="space-y-6">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              
+              <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center mb-3">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h4 class="font-bold text-xs uppercase text-slate-500">Dirección Sede</h4>
+                <p class="text-xs font-semibold text-slate-800 mt-1 company-address">
+                  Autopista Ramón Cáceres, Plaza Megatone, Moca, Provincia Espaillat.
+                </p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
+                  <i class="fab fa-whatsapp"></i>
+                </div>
+                <h4 class="font-bold text-xs uppercase text-slate-500">WhatsApp Directo</h4>
+                <a href="https://wa.me/18492075474" target="_blank" class="text-xs font-bold text-emerald-600 hover:underline mt-1 block company-whatsapp">
+                  (849) 207-5474
+                </a>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <h4 class="font-bold text-xs uppercase text-slate-500">Horario de Atención</h4>
+                <p class="text-xs text-slate-700 mt-1 company-schedule-week">Lun - Vie: 7:30 AM – 6:00 PM</p>
+                <p class="text-[11px] text-slate-500 company-schedule-sat">Sáb: 8:00 AM – 1:00 PM</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-3">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <h4 class="font-bold text-xs uppercase text-slate-500">Correos Electrónicos</h4>
+                <a href="mailto:wes.inform@gmail.com" class="text-xs text-slate-800 hover:text-wes-blue block truncate company-email-general">wes.inform@gmail.com</a>
+                <a href="mailto:wes.inform@gmail.com" class="text-xs text-amber-700 hover:underline block truncate company-email-support">wes.inform@gmail.com (Soporte)</a>
+              </div>
+
+            </div>
+
+            <!-- Redes Sociales Oficiales WES -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+              <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-slate-100 text-wes-blue flex items-center justify-center font-bold text-sm shrink-0">
+                  <i class="fas fa-share-alt text-wes-gold"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-slate-800">Síguenos en Redes Sociales</h4>
+                  <p class="text-[11px] text-slate-500">Noticias, proyectos y demostraciones de seguridad en vivo</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2 shrink-0">
+                <a href="https://www.facebook.com/Warn.Electrical.Services" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-[#1877F2] text-[#1877F2] hover:text-white transition text-xs font-bold border border-blue-200/60 shadow-sm" title="Página Oficial de Facebook">
+                  <i class="fab fa-facebook-f"></i>
+                  <span>Facebook</span>
+                </a>
+                <a href="https://www.instagram.com/wes.inform/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-pink-50 hover:bg-pink-600 text-pink-700 hover:text-white transition text-xs font-bold border border-pink-200/60 shadow-sm" title="Instagram Oficial @wes.inform">
+                  <i class="fab fa-instagram"></i>
+                  <span>@wes.inform</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Mapa Interactivo con Marcador Personalizado WES -->
+            <div id="wes-map-section-container" class="space-y-2">
+              <div id="wes-interactive-map" class="rounded-2xl overflow-hidden border border-slate-200 shadow-sm h-64 bg-slate-200 relative z-10">
+                <!-- Leaflet renderiza aquí el mapa interactivo con marcador WES -->
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-500 text-[11px]"><i class="fas fa-info-circle mr-1 text-wes-gold"></i> Pulsa el marcador para ver detalles</span>
+                <a href="https://maps.app.goo.gl/KMosxdkCGwXxqFjC9" target="_blank" class="inline-flex items-center space-x-1.5 font-bold text-wes-blue hover:text-wes-gold transition">
+                  <i class="fas fa-map-marked-alt text-wes-gold"></i>
+                  <span>Abrir en Google Maps</span>
+                  <i class="fas fa-external-link-alt text-[10px]"></i>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Formulario de Mensaje Rápido -->
+          <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+            <h3 class="font-bold text-slate-900 text-lg mb-1 font-brand">Envíanos un Mensaje</h3>
+            <p class="text-xs text-slate-500 mb-6">Gestionado por correo electrónico. Al enviar, recibirás un ticket formal y copia de tu solicitud directamente en tu correo.</p>
+
+            <form id="contact-form" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre Completo *</label>
+                <input type="text" name="name" required placeholder="Tu nombre y apellido" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Teléfono</label>
+                  <input type="tel" name="phone" placeholder="809-000-0000" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Correo Electrónico * <span class="text-[10px] text-wes-blue font-normal">(Recibirás tu ticket aquí)</span></label>
+                  <input type="email" name="email" required placeholder="correo@ejemplo.com" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Asunto *</label>
+                <input type="text" name="subject" required placeholder="Motivo de la consulta" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mensaje *</label>
+                <textarea name="message" required rows="4" placeholder="Escribe detalladamente tu consulta, requerimiento o solicitud aquí..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3.5 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center space-x-2">
+                <i class="fas fa-paper-plane text-wes-gold"></i>
+                <span>Enviar mensaje y generar ticket</span>
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- PIE DE PÁGINA (FOOTER)                                    -->
+  <!-- ========================================================= -->
+  <footer class="bg-wes-dark text-slate-400 text-xs py-14 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Grid de 4 Columnas del Footer -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        
+        <!-- Columna 1: Identidad Corporativa y Redes Sociales -->
+        <div class="space-y-4">
+          <div class="border-b border-slate-800 pb-2">
+            <h4 class="font-bold text-white uppercase text-xs tracking-wider font-brand">Warn Electrical Services, SRL</h4>
+            <span class="text-[11px] text-wes-gold font-medium block mt-0.5">Tecnología, seguridad y soporte a tu alcance</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Empresa incorporada por el Decreto No. 326-06. Dedicada a la venta, instalación y soporte técnico de sistemas de videovigilancia, controles de acceso, cerraduras inteligentes y automatización en la Provincia Espaillat.
+          </p>
+          <div class="flex space-x-3 text-slate-400">
+            <a href="https://www.facebook.com/Warn.Electrical.Services" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-[#1877F2] hover:text-white flex items-center justify-center transition shadow-sm" title="Facebook Warn.Electrical.Services" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/wes.inform/" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-gradient-to-tr hover:from-[#F58529] hover:via-[#DD2A7B] hover:to-[#8134AF] hover:text-white flex items-center justify-center transition shadow-sm" title="Instagram @wes.inform" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/18492075474" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-sm" title="WhatsApp (849) 207-5474" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <!-- Columna 2: Enlaces Rápidos de Navegación -->
+        <div>
+          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4 border-b border-slate-800 pb-2">Enlaces Rápidos</h4>
+          <ul class="space-y-2">
+            <li><a href="#inicio" class="hover:text-white transition">Inicio</a></li>
+            <li><a href="#nosotros" class="hover:text-white transition">Nuestra Empresa</a></li>
+            <li><a href="#fundadores" class="hover:text-white transition">Fundadores & Equipo</a></li>
+            <li><a href="#tienda" class="hover:text-white transition">Catálogo de Productos</a></li>
+            <li><a href="#proyectos" class="hover:text-white transition text-wes-gold">Proyectos Realizados</a></li>
+            <li><a href="#servicios" class="hover:text-white transition">Servicios e Instalación</a></li>
+            <li><a href="#soporte" class="hover:text-white transition text-amber-400">Módulo de Soporte Técnico</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Ubicación, Contacto y Horarios (Reubicado desde el encabezado superior) -->
+        <div>
+          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4 border-b border-slate-800 pb-2">Contacto & Sede</h4>
+          <ul class="space-y-3">
+            <li class="flex items-start space-x-2.5">
+              <i class="fas fa-map-marker-alt text-wes-gold mt-1 shrink-0"></i>
+              <span class="company-address text-slate-300 leading-snug">Autopista Ramón Cáceres, Plaza Megatone, Moca, Rep. Dom.</span>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <i class="fas fa-phone-alt text-wes-gold shrink-0"></i>
+              <a href="tel:8492075474" class="hover:text-white transition company-phone text-slate-300 font-semibold">(849) 207-5474</a>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <i class="fab fa-whatsapp text-emerald-400 shrink-0"></i>
+              <a href="https://wa.me/18492075474" target="_blank" class="hover:text-white transition company-whatsapp text-emerald-400 font-semibold">(849) 207-5474</a>
+            </li>
+            <li class="flex items-center space-x-2.5">
+              <i class="fas fa-envelope text-wes-gold shrink-0"></i>
+              <a href="mailto:wes.inform@gmail.com" class="hover:text-white transition company-email-general text-slate-300 truncate">wes.inform@gmail.com</a>
+            </li>
+            <li class="pt-2 border-t border-slate-800/80">
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-clock text-wes-gold mt-1 shrink-0"></i>
+                <div class="text-[11px] leading-tight">
+                  <p class="text-slate-300 company-schedule-week font-medium">Lun - Vie: 7:30 AM – 6:00 PM</p>
+                  <p class="text-slate-500 company-schedule-sat">Sáb: 8:00 AM – 1:00 PM</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna 4: Políticas y Cumplimiento Legal -->
+        <div>
+          <h4 class="font-bold text-white uppercase text-xs tracking-wider mb-4 border-b border-slate-800 pb-2">Políticas y Legal</h4>
+          <ul class="space-y-2">
+            <li><button onclick="openPolicyModal('privacy')" class="hover:text-white transition text-left">Política de Privacidad</button></li>
+            <li><button onclick="openPolicyModal('terms')" class="hover:text-white transition text-left">Términos y Condiciones</button></li>
+            <li><a href="#contacto" class="hover:text-white transition text-left text-slate-400">Atención al Cliente</a></li>
+          </ul>
+          <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
+            <span class="block text-slate-400 font-semibold mb-0.5">Identificación Tributaria</span>
+            <span>RNC: 1-31-89326-4</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- FRANJA DE MARCAS LÍDERES Y ALIADOS TECNOLÓGICOS          -->
+      <!-- ========================================================= -->
+      <div class="my-10 pt-8 border-t border-slate-800">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-wes-gold shadow-[0_0_8px_rgba(245,179,0,0.6)]"></span>
+            <span class="text-xs font-bold text-white uppercase tracking-wider font-brand">Marcas Líderes & Aliados Tecnológicos</span>
+            <span class="hidden sm:inline-block text-[10px] bg-slate-800 text-slate-300 font-semibold px-2.5 py-0.5 rounded-full border border-slate-700">Equipos 100% Originales</span>
+          </div>
+          <span class="text-[11px] text-slate-400">Distribución autorizada, repuestos certificados y garantía oficial WES</span>
+        </div>
+
+        <!-- Banner Blanco de Marcas con Logotipos Nítidos (Estilo E-commerce / Mayorista) -->
+        <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-xl border border-slate-200/90">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 items-center">
+            
+            <!-- Dahua -->
+            <button onclick="filterByBrand('Dahua')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-red-500 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver productos Dahua Technology">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-red-600 tracking-tight text-sm font-sans italic">alhua<span class="text-slate-800 not-italic font-bold text-[10px] ml-1">SECURITY</span></span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-red-600 mt-1 transition">CCTV & Video IP</span>
+            </button>
+
+            <!-- Hikvision -->
+            <button onclick="filterByBrand('Hikvision')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-red-600 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver productos Hikvision">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-slate-900 tracking-tighter text-sm font-sans">HIK<span class="text-red-600">VISION</span></span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-red-600 mt-1 transition">Turbo HD & AcuSense</span>
+            </button>
+
+            <!-- ZKTeco -->
+            <button onclick="filterByBrand('ZKTeco')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-emerald-500 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver soluciones ZKTeco">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-extrabold text-slate-900 tracking-tight text-sm font-sans">ZK<span class="text-emerald-600 font-black">Teco</span></span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-emerald-600 mt-1 transition">Biometría & Acceso</span>
+            </button>
+
+            <!-- CAME -->
+            <button onclick="filterByBrand('CAME')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-blue-600 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver productos CAME Automatización">
+              <div class="h-6 flex items-center justify-center space-x-1">
+                <span class="font-black text-[#0088CC] tracking-wider text-base font-sans">CAME</span>
+                <span class="text-[8px] bg-blue-100 text-blue-800 font-bold px-1 rounded">IT</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-[#0088CC] mt-1 transition">Motores & Portones</span>
+            </button>
+
+            <!-- Provision-ISR -->
+            <button onclick="filterByBrand('Provision')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-red-600 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver soluciones Provision-ISR">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-extrabold text-slate-900 tracking-tight text-xs font-sans">PROVISION<span class="bg-red-600 text-white text-[8px] px-1 py-0.5 rounded font-black ml-1">ISR</span></span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-red-600 mt-1 transition">CCTV & Analítica</span>
+            </button>
+
+            <!-- Sonoff -->
+            <button onclick="filterByBrand('Sonoff')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-cyan-500 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver dispositivos Sonoff Smart Home">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-[#00B4D8] tracking-widest text-sm font-sans">SONOFF</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-[#00B4D8] mt-1 transition">Domótica & IoT</span>
+            </button>
+
+            <!-- Fertec -->
+            <button onclick="filterByBrand('Fertec')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-blue-700 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver cableado Fertec">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-blue-700 tracking-wider text-sm font-sans">FERTEC</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-blue-700 mt-1 transition">Cable UTP & Redes</span>
+            </button>
+
+            <!-- Forza -->
+            <button onclick="filterByBrand('Forza')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-orange-500 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver baterías y UPS Forza">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-[#F37021] tracking-wider text-sm font-sans">FORZA<span class="text-slate-800 text-[9px] font-bold ml-1">POWER</span></span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-[#F37021] mt-1 transition">Baterías AGM & UPS</span>
+            </button>
+
+            <!-- Panduit -->
+            <button onclick="filterByBrand('Panduit')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-slate-800 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver cableado y racks Panduit">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-extrabold text-[#003B71] tracking-wider text-sm font-sans">PANDUIT</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-[#003B71] mt-1 transition">Infraestructura Red</span>
+            </button>
+
+            <!-- Leviton -->
+            <button onclick="filterByBrand('Leviton')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-blue-900 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver tomas y módulos Leviton">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-[#00529B] tracking-wider text-sm font-sans">LEVITON</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-[#00529B] mt-1 transition">Tomas & Cableado</span>
+            </button>
+
+            <!-- APC -->
+            <button onclick="filterByBrand('APC')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-red-600 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver UPS APC by Schneider Electric">
+              <div class="h-6 flex items-center justify-center space-x-1">
+                <span class="font-black text-red-600 tracking-tight text-sm font-sans">APC</span>
+                <span class="text-[8px] font-bold text-emerald-600 leading-none">by Schneider</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-red-600 mt-1 transition">Energía Crítica & UPS</span>
+            </button>
+
+            <!-- Honeywell -->
+            <button onclick="filterByBrand('Honeywell')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-red-600 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver sistemas Honeywell">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-[#EE3124] tracking-tight text-sm font-sans">Honeywell</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-[#EE3124] mt-1 transition">Intrusión & Alarma</span>
+            </button>
+
+            <!-- DSC -->
+            <button onclick="filterByBrand('DSC')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-blue-800 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver paneles DSC">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-[#005DAA] tracking-wider text-base font-sans">DSC</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-[#005DAA] mt-1 transition">Paneles de Seguridad</span>
+            </button>
+
+            <!-- EZVIZ -->
+            <button onclick="filterByBrand('EZVIZ')" class="group flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/80 hover:bg-white hover:border-cyan-600 hover:shadow-md transition-all duration-200 text-center w-full min-h-[68px]" title="Ver cámaras Wi-Fi EZVIZ">
+              <div class="h-6 flex items-center justify-center">
+                <span class="font-black text-[#00A1E4] tracking-tight text-sm font-sans">EZVIZ</span>
+              </div>
+              <span class="text-[10px] text-slate-500 font-semibold group-hover:text-[#00A1E4] mt-1 transition">Cámaras Wi-Fi Smart</span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-500 gap-3">
+        <p>&copy; 2026 Warn Electrical Services, SRL (WES). Todos los derechos reservados.</p>
+        <div class="flex items-center space-x-3">
+          <!-- Indicador de Versión WES -->
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-800 text-wes-gold font-mono text-[10px] font-bold border border-slate-700 shadow-sm" title="Versión de Desarrollo WES">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+            v0.1.100
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================= -->
+  <!-- BOTÓN FLOTANTE DE WHATSAPP ACCESIBLE                      -->
+  <!-- ========================================================= -->
+  <a id="floating-whatsapp" href="https://wa.me/18492075474" target="_blank" class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition duration-300 focus:outline-none" aria-label="Contactar por WhatsApp (849) 207-5474">
+    <i class="fab fa-whatsapp text-3xl"></i>
+  </a>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 1: SISTEMA DE COTIZACIÓN (CARRITO + FORMULARIO)     -->
+  <!-- ========================================================= -->
+  <div id="quote-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+      
+      <!-- Encabezado Modal -->
+      <div class="p-6 bg-wes-blue text-white flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <i class="fas fa-file-invoice text-2xl text-wes-gold"></i>
+          <div>
+            <h3 class="font-bold text-base font-brand">Solicitud de Cotización Formal</h3>
+            <p class="text-xs text-slate-300">Revisa tus productos y completa tus datos para enviarte la propuesta</p>
+          </div>
+        </div>
+        <button onclick="closeQuoteModal()" class="text-slate-400 hover:text-white p-2">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
+        
+        <!-- Lista de Productos en la Cotización -->
+        <div>
+          <h4 class="font-bold text-slate-800 uppercase tracking-wide text-xs mb-3 flex items-center justify-between">
+            <span>Productos en tu lista</span>
+            <span id="quote-total-amount" class="text-wes-blue text-sm font-bold">RD$ 0.00</span>
+          </h4>
+          <div id="quote-items-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+            <!-- Renderizado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Formulario del Cliente -->
+        <form id="quote-form" class="space-y-4 pt-4 border-t border-slate-200">
+          <h4 class="font-bold text-slate-800 uppercase tracking-wide text-xs">Datos del Solicitante</h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Nombre Completo *</label>
+              <input type="text" name="clientName" required placeholder="Tu nombre" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Empresa / Negocio (si aplica)</label>
+              <input type="text" name="company" placeholder="Nombre comercial" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">RNC o Cédula (Opcional)</label>
+              <input type="text" name="taxId" placeholder="1-XX-XXXXX-X" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Tipo de Cliente *</label>
+              <select name="clientType" required class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+                <option value="Personal">Personal / Residencial</option>
+                <option value="Comercial">Comercial / Negocio local</option>
+                <option value="Empresarial">Empresarial / Institucional</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Teléfono Directo *</label>
+              <input type="tel" name="phone" required placeholder="809-000-0000" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">WhatsApp *</label>
+              <input type="tel" name="whatsapp" required placeholder="809-000-0000" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Correo Electrónico *</label>
+              <input type="email" name="email" required placeholder="correo@ejemplo.com" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Ciudad o Dirección *</label>
+              <input type="text" name="city" required placeholder="Moca, Espaillat u otra" class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Método Preferido de Contacto *</label>
+            <select name="contactMethod" required class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue">
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Correo electrónico">Correo electrónico</option>
+              <option value="Llamada telefónica">Llamada telefónica</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Comentarios u Observaciones Especiales</label>
+            <textarea name="comments" rows="2" placeholder="Indícanos si requieres el servicio de instalación, metraje aproximado o fecha estimada de entrega..." class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-1 focus:ring-wes-blue"></textarea>
+          </div>
+
+          <div class="flex items-start space-x-2 pt-2">
+            <input type="checkbox" id="quote-privacy" required class="mt-0.5 w-4 h-4 rounded text-wes-blue focus:ring-wes-blue">
+            <label for="quote-privacy" class="text-[11px] text-slate-600">
+              He leído y acepto la <button type="button" onclick="openPolicyModal('privacy')" class="text-wes-blue underline font-bold">política de privacidad</button> para la tramitación de esta cotización.
+            </label>
+          </div>
+
+          <div class="pt-4 flex items-center justify-end space-x-3">
+            <button type="button" onclick="closeQuoteModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition">
+              Continuar viendo productos
+            </button>
+            <button type="submit" class="px-6 py-2.5 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl shadow-lg transition">
+              Enviar solicitud de cotización
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 2: CONFIRMACIÓN DE SOLICITUD (COTIZACIÓN O SOPORTE) -->
+  <!-- ========================================================= -->
+  <div id="confirmation-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-7 text-center shadow-2xl animate-scaleUp">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+        <i class="fas fa-check"></i>
+      </div>
+      
+      <h3 id="conf-title" class="text-xl font-extrabold text-slate-900 font-brand">¡Solicitud recibida!</h3>
+      
+      <div class="my-4 py-3 px-4 bg-slate-50 rounded-2xl border border-slate-200">
+        <div id="conf-code-label" class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Número de Registro Oficial</div>
+        <div id="conf-code" class="text-2xl font-mono font-extrabold text-wes-blue tracking-wider mt-1">COT-2026-0001</div>
+      </div>
+
+      <div id="conf-message" class="text-xs text-slate-600 leading-relaxed space-y-2 mb-6 text-left bg-slate-50/50 p-4 rounded-xl border border-slate-100">
+        <!-- Contenido dinámico -->
+      </div>
+
+      <div class="space-y-2">
+        <a id="conf-wa-btn" href="#" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-2 transition shadow">
+          <i class="fab fa-whatsapp text-sm"></i>
+          <span>Notificar por WhatsApp de inmediato</span>
+        </a>
+        <button onclick="closeConfirmationModal()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+          Entendido, cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 3: POLÍTICAS Y TÉRMINOS                             -->
+  <!-- ========================================================= -->
+  <div id="policy-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 max-h-[85vh] flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+        <h3 id="policy-title" class="font-bold text-base text-slate-900 font-brand">Política de Privacidad</h3>
+        <button onclick="closePolicyModal()" class="text-slate-400 hover:text-slate-700 p-2"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="policy-content" class="overflow-y-auto text-xs text-slate-600 space-y-3 leading-relaxed flex-1 pr-2">
+        <!-- Inyectado dinámicamente -->
+      </div>
+      <div class="pt-4 border-t border-slate-200 text-right mt-4">
+        <button onclick="closePolicyModal()" class="px-5 py-2 bg-wes-blue text-white rounded-xl text-xs font-bold hover:bg-opacity-90">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 4: VISTA DE DETALLE DE PRODUCTO ESTILO ALIBABA      -->
+  <!-- (MULTI-ÁNGULO, ATRIBUTOS Y RESEÑAS)                      -->
+  <!-- ========================================================= -->
+  <div id="product-detail-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[94vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+      
+      <!-- Encabezado del Modal -->
+      <div class="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-3">
+          <span id="detail-brand-badge" class="px-2.5 py-1 bg-wes-blue text-white rounded-lg text-xs font-bold uppercase tracking-wider">CAME</span>
+          <span id="detail-sku-badge" class="text-xs font-mono text-slate-500 font-semibold">SKU: 604</span>
+          <span class="hidden sm:inline text-slate-300">|</span>
+          <span id="detail-category-badge" class="hidden sm:inline text-xs text-slate-600 font-medium">Controles de Acceso</span>
+        </div>
+        <button onclick="closeProductDetailModal()" class="text-slate-400 hover:text-slate-700 p-2 rounded-xl hover:bg-slate-200/60 transition" aria-label="Cerrar ventana">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Contenido Scrollable -->
+      <div class="p-5 sm:p-7 overflow-y-auto space-y-8 flex-1">
+        
+        <!-- Bloque Superior: Galería Multi-Ángulo y Acciones de Compra -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Columna Izquierda: Galería Interactiva Alibaba-Style (7 cols) -->
+          <div class="lg:col-span-7 space-y-4">
+            
+            <!-- Visor Principal Ampliado -->
+            <div class="relative bg-slate-50 border border-slate-200 rounded-2xl h-80 sm:h-96 flex items-center justify-center p-4 overflow-hidden group">
+              <img id="detail-main-image" src="" alt="Producto" class="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105">
+              <span id="detail-image-badge" class="absolute top-3 left-3 px-3 py-1 bg-slate-900/80 text-white rounded-full text-[11px] font-bold shadow-sm">
+                Vista Frontal
+              </span>
+              <div class="absolute bottom-3 right-3 text-[11px] text-slate-400 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-slate-200">
+                <i class="fas fa-search-plus mr-1"></i>Pasa el cursor para ampliar
+              </div>
+            </div>
+
+            <!-- Carrusel de Miniaturas en Diferentes Escenarios -->
+            <div id="detail-thumbnails-container" class="grid grid-cols-4 gap-2 sm:gap-3">
+              <!-- Renderizado dinámicamente con miniaturas y etiquetas -->
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Información, Precios y Acciones (5 cols) -->
+          <div class="lg:col-span-5 flex flex-col space-y-4">
+            <div>
+              <h2 id="detail-product-title" class="text-xl sm:text-2xl font-extrabold text-slate-900 font-brand leading-tight">
+                MOTOR CAME 800KG
+              </h2>
+              <div class="flex items-center space-x-2 mt-2">
+                <div class="flex text-amber-400 text-xs">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <span id="detail-rating-text" class="text-xs font-bold text-slate-700">4.9 / 5.0</span>
+                <span class="text-xs text-slate-400">•</span>
+                <button type="button" onclick="switchDetailTab('reviews')" class="text-xs text-wes-blue hover:underline font-semibold">
+                  <span id="detail-reviews-count">3</span> reseñas verificadas
+                </button>
+              </div>
+            </div>
+
+            <!-- Precio y Disponibilidad -->
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+              <div id="detail-promo-container" class="hidden items-center gap-2 mb-2 flex-wrap">
+                <span id="detail-promo-badge" class="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-600 text-white shadow-sm flex items-center space-x-1">
+                  <i class="fas fa-fire-alt text-amber-300"></i>
+                  <span id="detail-promo-text">OFERTA ESPECIAL</span>
+                </span>
+                <span id="detail-promo-savings" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800"></span>
+              </div>
+              <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Precio de Referencia Oficial</div>
+              <div class="flex items-baseline space-x-2 mt-1">
+                <span id="detail-product-old-price" class="hidden text-sm sm:text-base line-through text-slate-400 font-bold"></span>
+                <span id="detail-product-price" class="text-2xl sm:text-3xl font-extrabold text-wes-blue font-brand">RD$ 37,445.26</span>
+                <span class="text-xs text-slate-400">/ unidad</span>
+              </div>
+              <div class="mt-2.5 flex items-center space-x-2">
+                <span id="detail-stock-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                  <i class="fas fa-check-circle mr-1"></i>En Inventario Físico (2 uds)
+                </span>
+                <span class="text-[11px] text-slate-500">Moca, Espaillat</span>
+              </div>
+            </div>
+
+            <p id="detail-product-description" class="text-xs text-slate-600 leading-relaxed">
+              <!-- Descripción dinámica -->
+            </p>
+
+            <!-- Garantías y Beneficios WES -->
+            <div class="space-y-2 text-xs text-slate-600 py-2 border-y border-slate-100">
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-shield-alt text-wes-gold text-sm w-4"></i>
+                <span><strong>Garantía Oficial WES:</strong> 2 años contra defectos</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-truck text-emerald-600 text-sm w-4"></i>
+                <span><strong>Envío Especializado:</strong> Moca, Cibao y cobertura nacional</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-tools text-amber-600 text-sm w-4"></i>
+                <span><strong>Servicio Técnico:</strong> Soporte e instalación disponible</span>
+              </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="space-y-2 pt-2">
+              <button id="detail-add-quote-btn" onclick="addCurrentDetailToQuote()" class="w-full py-3.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2 shadow-lg hover:shadow-wes-blue/20 transition">
+                <i class="fas fa-file-invoice"></i>
+                <span>Añadir a Lista de Cotización</span>
+              </button>
+              
+              <a id="detail-wa-btn" href="#" target="_blank" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-sm">
+                <i class="fab fa-whatsapp text-sm"></i>
+                <span>Consultar Disponibilidad por WhatsApp</span>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Bloque Inferior: Pestañas de Especificaciones, Manual y Reseñas -->
+        <div class="border-t border-slate-200 pt-6">
+          
+          <!-- Selector de Pestañas -->
+          <div class="flex space-x-2 border-b border-slate-200 pb-2">
+            <button id="tab-btn-specs" onclick="switchDetailTab('specs')" class="px-4 py-2 font-bold text-xs rounded-xl transition bg-wes-blue text-white">
+              <i class="fas fa-list-ul mr-1.5"></i>Características Principales
+            </button>
+            <button id="tab-btn-manual" onclick="switchDetailTab('manual')" class="px-4 py-2 font-bold text-xs rounded-xl transition text-slate-600 hover:bg-slate-100">
+              <i class="fas fa-file-pdf mr-1.5 text-red-500"></i>Manual de Instalación
+            </button>
+            <button id="tab-btn-reviews" onclick="switchDetailTab('reviews')" class="px-4 py-2 font-bold text-xs rounded-xl transition text-slate-600 hover:bg-slate-100">
+              <i class="fas fa-star mr-1.5 text-amber-400"></i>Reseñas & Calidad (<span id="tab-reviews-badge">3</span>)
+            </button>
+          </div>
+
+          <!-- Pestaña 1: Características Principales (Key Attributes) -->
+          <div id="tab-content-specs" class="pt-5 space-y-4">
+            <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200">
+              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-700 mb-4 flex items-center">
+                <i class="fas fa-microchip text-wes-gold mr-2"></i>Ficha Técnica del Operador
+              </h4>
+              <div id="detail-key-attributes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <!-- Atributos dinámicos estilo Alibaba -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Pestaña 2: Manual Técnico -->
+          <div id="tab-content-manual" class="hidden pt-5 space-y-4">
+            <div class="p-6 bg-red-50/60 border border-red-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-2xl shrink-0">
+                  <i class="fas fa-file-pdf"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-900">Guía de Instalación y Diagrama Eléctrico CAME</h4>
+                  <p class="text-xs text-slate-500">Documento técnico del fabricante con conexiones de placa ZBX y regulaciones mecánicas.</p>
+                </div>
+              </div>
+              <a id="detail-download-manual-btn" href="#" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex items-center space-x-2 shrink-0 transition shadow">
+                <i class="fas fa-download"></i>
+                <span>Descargar Manual Oficial (PDF)</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Pestaña 3: Reseñas y Métricas de Calidad -->
+          <div id="tab-content-reviews" class="hidden pt-5 space-y-6">
+            
+            <!-- Resumen de Métricas de Calidad (3 Pilares) -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 bg-slate-50 rounded-2xl border border-slate-200">
+              <div class="text-center md:border-r border-slate-200 pr-4">
+                <div class="text-4xl font-extrabold text-slate-900 font-brand" id="metric-global-score">4.9</div>
+                <div class="flex justify-center text-amber-400 text-xs my-1">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <div class="text-[11px] text-slate-500">Puntuación General</div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-semibold text-slate-700">
+                  <span>Calidad del Producto</span>
+                  <span id="metric-product-score" class="font-bold text-wes-blue">5.0 / 5.0</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div class="bg-emerald-500 h-full rounded-full" style="width: 100%"></div>
+                </div>
+                <div class="text-[10px] text-slate-400">Materiales y durabilidad</div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-semibold text-slate-700">
+                  <span>Calidad del Envío</span>
+                  <span id="metric-shipping-score" class="font-bold text-wes-blue">4.9 / 5.0</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div class="bg-wes-gold h-full rounded-full" style="width: 98%"></div>
+                </div>
+                <div class="text-[10px] text-slate-400">Puntualidad y embalaje</div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-semibold text-slate-700">
+                  <span>Servicio e Instalación</span>
+                  <span id="metric-service-score" class="font-bold text-wes-blue">5.0 / 5.0</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div class="bg-wes-blue h-full rounded-full" style="width: 100%"></div>
+                </div>
+                <div class="text-[10px] text-slate-400">Asistencia técnica WES</div>
+              </div>
+            </div>
+
+            <!-- Listado de Reseñas -->
+            <div>
+              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-700 mb-3">Opiniones de Clientes Verificados</h4>
+              <div id="detail-reviews-list" class="space-y-3">
+                <!-- Se inyectan las reseñas dinámicamente -->
+              </div>
+            </div>
+
+            <!-- Formulario para Nueva Reseña -->
+            <div class="p-5 bg-white border border-slate-200 rounded-2xl">
+              <h4 class="font-bold text-xs uppercase tracking-wider text-slate-900 mb-1">Escribe tu Opinión sobre este Producto</h4>
+              <p class="text-xs text-slate-500 mb-4">Tu experiencia ayuda a otros clientes de Warn Electrical Services a tomar la mejor decisión.</p>
+              
+              <form id="product-review-form" onsubmit="handleReviewSubmit(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Nombre Completo *</label>
+                    <input type="text" id="review-author" required placeholder="Ej. Ing. Juan Pérez" class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs focus:ring-1 focus:ring-wes-blue">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Ciudad o Localidad</label>
+                    <input type="text" id="review-location" placeholder="Ej. Moca, Rep. Dom." class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs focus:ring-1 focus:ring-wes-blue">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Calidad del Producto</label>
+                    <select id="review-product-quality" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs">
+                      <option value="5">⭐⭐⭐⭐⭐ (5.0 Excelente)</option>
+                      <option value="4">⭐⭐⭐⭐ (4.0 Muy Bueno)</option>
+                      <option value="3">⭐⭐⭐ (3.0 Regular)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Calidad del Envío</label>
+                    <select id="review-shipping-quality" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs">
+                      <option value="5">⭐⭐⭐⭐⭐ (5.0 Rápido y Seguro)</option>
+                      <option value="4">⭐⭐⭐⭐ (4.0 A tiempo)</option>
+                      <option value="3">⭐⭐⭐ (3.0 Regular)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Servicio Técnico WES</label>
+                    <select id="review-service-quality" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs">
+                      <option value="5">⭐⭐⭐⭐⭐ (5.0 Extraordinario)</option>
+                      <option value="4">⭐⭐⭐⭐ (4.0 Muy Bueno)</option>
+                      <option value="3">⭐⭐⭐ (3.0 Aceptable)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Comentario o Reseña *</label>
+                  <textarea id="review-comment" required rows="3" placeholder="Describe tu experiencia con el motor, la instalación o la durabilidad del equipo..." class="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs focus:ring-1 focus:ring-wes-blue"></textarea>
+                </div>
+
+                <div class="text-right">
+                  <button type="submit" class="px-5 py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition shadow">
+                    Publicar Reseña
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: VISOR DE FOTOGRAFÍA DE PROYECTO REAL WES           -->
+  <!-- ========================================================= -->
+  <div id="project-photo-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-2xl w-full max-h-[94vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+      <div class="p-4 bg-slate-800/90 border-b border-slate-700 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-bold text-wes-gold uppercase tracking-wider font-brand">Obra Realizada por Warn Electrical Services</span>
+        </div>
+        <button onclick="closeProjectImageModal()" class="text-slate-400 hover:text-white p-2 text-sm rounded-lg hover:bg-slate-700 transition" aria-label="Cerrar modal">
+          <i class="fas fa-times text-base"></i>
+        </button>
+      </div>
+      <div class="p-4 overflow-y-auto flex flex-col items-center">
+        <div class="w-full max-h-[58vh] flex items-center justify-center bg-black/50 rounded-2xl overflow-hidden p-2 border border-slate-800">
+          <img id="project-modal-img" src="" alt="Fotografía de Proyecto WES" class="max-h-[55vh] w-auto object-contain rounded-xl shadow-2xl">
+        </div>
+        <div class="w-full mt-4 text-left">
+          <h4 id="project-modal-title" class="text-sm sm:text-base font-bold text-white font-brand mb-1"></h4>
+          <p id="project-modal-desc" class="text-xs text-slate-300 leading-relaxed"></p>
+        </div>
+      </div>
+      <div class="p-4 bg-slate-800/80 border-t border-slate-700/80 flex justify-between items-center gap-3">
+        <button onclick="closeProjectImageModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-semibold transition">
+          Cerrar
+        </button>
+        <button onclick="closeProjectImageModal(); openQuoteModal();" class="px-5 py-2.5 bg-wes-gold hover:bg-amber-400 text-wes-dark font-extrabold rounded-xl text-xs uppercase tracking-wider flex items-center space-x-2 shadow-lg transition">
+          <i class="fas fa-clipboard-check"></i>
+          <span>Cotizar Esta Solución</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- AVISO DE COOKIES                                          -->
+  <!-- ========================================================= -->
+  <div id="cookie-banner" class="fixed bottom-0 inset-x-0 z-40 bg-slate-900 text-white p-4 shadow-2xl border-t border-slate-800 hidden flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+    <div class="flex items-center space-x-3">
+      <i class="fas fa-cookie-bite text-wes-gold text-lg"></i>
+      <p class="text-slate-300">
+        Utilizamos cookies técnicas locales para gestionar tu lista de cotización y optimizar tu experiencia en el sitio.
+      </p>
+    </div>
+    <div class="flex space-x-2">
+      <button onclick="acceptCookies()" class="px-4 py-1.5 bg-wes-gold text-wes-dark font-bold rounded-lg hover:bg-wes-gold-light transition">
+        Aceptar
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- CONTENEDOR DE TOAST NOTIFICATIONS                         -->
+  <!-- ========================================================= -->
+  <div id="toast-container" class="fixed bottom-6 left-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Supabase JS Client Oficial para PostgreSQL en la Nube -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/products.js?v=20260928_1438"></script>
+  <script src="js/supabase_client.js?v=20260928_1438"></script>
+  <script src="js/feature_flags.js?v=20260928_1438"></script>
+  <script src="js/app.js?v=20260928_1438"></script>
 </body>
 </html>
