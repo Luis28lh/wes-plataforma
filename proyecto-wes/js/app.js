@@ -33,6 +33,9 @@ function initApp() {
   setupSupportImageUploader();
   checkCookieConsent();
 
+  // Revisar si la URL contiene un enlace directo a un producto (?p=SKU o ?sku=SKU)
+  checkUrlForProduct();
+
   // Reaccionar a cambios de Feature Flags emitidos desde el portal administrativo
   window.addEventListener('wes_flags_changed', () => {
     applyFeatureFlags();
@@ -47,6 +50,11 @@ function initApp() {
         renderProducts();
         if (typeof populateFilterOptions === 'function') {
           populateFilterOptions(remoteProducts);
+        }
+        // Si había una petición de enlace directo pendiente mientras cargaba la base de datos
+        if (window.pendingDeepLinkQuery) {
+          checkUrlForProduct();
+          delete window.pendingDeepLinkQuery;
         }
       }
     }).catch(err => {
@@ -502,10 +510,13 @@ function renderProducts() {
               ${priceHtml}
             </div>
             
-            <div class="flex space-x-2">
-              <a href="${waUrl}" target="_blank" title="Consultar por WhatsApp" class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-sm">
-                <i class="fab fa-whatsapp text-lg"></i>
-              </a>
+            <div class="flex items-center space-x-1.5">
+              <button type="button" onclick="shareProductWhatsAppBySku('${product.code || product.codigo}', event)" title="Compartir este producto con un cliente por WhatsApp" class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-xs">
+                <i class="fab fa-whatsapp text-base"></i>
+              </button>
+              <button type="button" onclick="copyProductLinkBySku('${product.code || product.codigo}', event)" title="Copiar enlace directo para cliente" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 hover:bg-wes-blue hover:text-white flex items-center justify-center transition shadow-xs">
+                <i class="fas fa-link text-xs"></i>
+              </button>
               ${quoteBtnHtml}
             </div>
           </div>
@@ -1717,22 +1728,47 @@ function openProductDetailModal(productId) {
   switchDetailTab('specs');
   loadAndRenderProductReviews(product.id);
 
-  // Mostrar modal
+  // Mostrar modal y actualizar URL sin recargar
   const modal = document.getElementById('product-detail-modal');
   if (modal) {
     modal.classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
+
+    try {
+      const sku = product.code || product.codigo || product.id;
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('p', sku);
+      window.history.replaceState({ modalOpen: true, productId: product.id, sku: sku }, '', currentUrl.toString());
+      document.title = `${product.name || product.nombre} | Warn Electrical Services`;
+    } catch (e) {
+      console.warn('Error actualizando URL de producto:', e);
+    }
   }
 }
 
 /**
- * Cierra el modal de detalle de producto.
+ * Cierra el modal de detalle de producto y restaura la URL.
  */
 function closeProductDetailModal() {
   const modal = document.getElementById('product-detail-modal');
   if (modal) {
     modal.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
+
+    try {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.delete('p');
+      currentUrl.searchParams.delete('sku');
+      currentUrl.searchParams.delete('producto');
+      currentUrl.searchParams.delete('prod');
+      currentUrl.searchParams.delete('id');
+      const cleanSearch = currentUrl.searchParams.toString();
+      const cleanPath = currentUrl.pathname + (cleanSearch ? '?' + cleanSearch : '');
+      window.history.replaceState({}, '', cleanPath);
+      document.title = 'Warn Electrical Services (WES) | Seguridad Electrónica y Automatización';
+    } catch (e) {
+      console.warn('Error restaurando URL limpia:', e);
+    }
   }
 }
 
@@ -1957,4 +1993,225 @@ function closeProjectImageModal() {
     document.body.classList.remove('overflow-hidden');
   }
 }
+
+// ============================================================================
+// SISTEMA DE ENLACES DIRECTOS Y COMPARTIR PRODUCTOS CON CLIENTES (DEEP-LINKING)
+// ============================================================================
+
+/**
+ * Genera la URL pública directa para un producto específico.
+ * @param {Object|string} productOrSku - Producto o código SKU
+ * @returns {string} URL directa (ej: https://web.warnelectricalservices.com/?p=2949)
+ */
+function getProductDirectUrl(productOrSku) {
+  let sku = '';
+  if (typeof productOrSku === 'string') {
+    sku = productOrSku;
+  } else if (productOrSku && typeof productOrSku === 'object') {
+    sku = productOrSku.code || productOrSku.codigo || productOrSku.id;
+  }
+  const cleanSku = String(sku || '').trim();
+  const origin = window.location.origin;
+  const pathname = window.location.pathname;
+  return `${origin}${pathname}?p=${encodeURIComponent(cleanSku)}`;
+}
+
+/**
+ * Copia el enlace directo del producto que está abierto actualmente en el modal.
+ */
+function copyCurrentProductLink() {
+  if (!window.currentDetailProductId) return;
+  const products = StorageService.getProducts();
+  const product = products.find(p => p.id === window.currentDetailProductId || p.code === window.currentDetailProductId || p.codigo === window.currentDetailProductId);
+  if (!product) return;
+
+  const directUrl = getProductDirectUrl(product);
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(directUrl).then(() => {
+      onLinkCopiedSuccess(directUrl);
+    }).catch(() => {
+      fallbackCopyText(directUrl);
+    });
+  } else {
+    fallbackCopyText(directUrl);
+  }
+}
+
+/**
+ * Abre WhatsApp con mensaje pre-redactado para enviar el producto actual al cliente.
+ */
+function shareCurrentProductClientWhatsApp() {
+  if (!window.currentDetailProductId) return;
+  const products = StorageService.getProducts();
+  const product = products.find(p => p.id === window.currentDetailProductId || p.code === window.currentDetailProductId || p.codigo === window.currentDetailProductId);
+  if (!product) return;
+
+  const directUrl = getProductDirectUrl(product);
+  const sku = product.code || product.codigo || '';
+  const price = (product.price || product.precio || 0).toLocaleString('es-DO', { minimumFractionDigits: 2 });
+  const brand = product.brand || product.marca || 'WES';
+
+  const message = `¡Hola! Te comparto este producto de *Warn Electrical Services (WES)*:\n\n` +
+    `📦 *${product.name || product.nombre}*\n` +
+    (sku ? `🔢 Código / SKU: ${sku}\n` : '') +
+    (brand ? `🏷️ Marca: ${brand}\n` : '') +
+    `💰 Precio: RD$ ${price}\n\n` +
+    `👉 Puedes ver las fotos multi-ángulo, ficha técnica y cotizar directamente aquí:\n${directUrl}`;
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+/**
+ * Copia el enlace directo de un producto desde la tarjeta del catálogo.
+ */
+function copyProductLinkBySku(sku, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const products = StorageService.getProducts();
+  const product = products.find(p => p.id === sku || p.code === sku || p.codigo === sku);
+  const directUrl = getProductDirectUrl(product || sku);
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(directUrl).then(() => {
+      showToast(`¡Enlace directo copiado para cliente (SKU: ${sku})!`, 'success');
+    }).catch(() => {
+      fallbackCopyText(directUrl);
+    });
+  } else {
+    fallbackCopyText(directUrl);
+  }
+}
+
+/**
+ * Comparte un producto por WhatsApp desde la tarjeta del catálogo.
+ */
+function shareProductWhatsAppBySku(sku, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const products = StorageService.getProducts();
+  const product = products.find(p => p.id === sku || p.code === sku || p.codigo === sku);
+  if (!product) return;
+
+  const directUrl = getProductDirectUrl(product);
+  const price = (product.price || product.precio || 0).toLocaleString('es-DO', { minimumFractionDigits: 2 });
+
+  const message = `¡Hola! Te comparto este producto de *Warn Electrical Services (WES)*:\n\n` +
+    `📦 *${product.name || product.nombre}*\n` +
+    `🔢 Código / SKU: ${product.code || product.codigo}\n` +
+    `💰 Precio: RD$ ${price}\n\n` +
+    `👉 Puedes ver las fotos y detalles técnicos directamente aquí:\n${directUrl}`;
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+/**
+ * Notificación visual y cambio transitorio del botón al copiar enlace.
+ */
+function onLinkCopiedSuccess(url) {
+  showToast('¡Enlace directo copiado al portapapeles! Puedes enviárselo a tu cliente.', 'success');
+  const badge = document.getElementById('detail-share-copied-badge');
+  if (badge) {
+    badge.classList.remove('hidden');
+    setTimeout(() => badge.classList.add('hidden'), 3500);
+  }
+  const textEl = document.getElementById('detail-copy-link-text');
+  if (textEl) {
+    const orig = textEl.textContent;
+    textEl.textContent = '¡Enlace Copiado!';
+    setTimeout(() => { textEl.textContent = orig; }, 2500);
+  }
+}
+
+/**
+ * Fallback de copia para navegadores sin API clipboard moderna.
+ */
+function fallbackCopyText(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    onLinkCopiedSuccess(text);
+  } catch (e) {
+    prompt('Copia este enlace directo para tu cliente:', text);
+  }
+  document.body.removeChild(ta);
+}
+
+/**
+ * Analiza la URL del navegador al cargar para abrir automáticamente el producto solicitado.
+ * Admite parámetros: ?p=SKU, ?sku=SKU, ?producto=SKU, ?id=ID o hash #p=SKU.
+ */
+function checkUrlForProduct() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    let targetQuery = urlParams.get('p') || urlParams.get('sku') || urlParams.get('producto') || urlParams.get('prod') || urlParams.get('id');
+
+    if (!targetQuery && window.location.hash) {
+      const hash = window.location.hash.replace('#', '');
+      if (hash.startsWith('p=') || hash.startsWith('sku=') || hash.startsWith('producto=')) {
+        targetQuery = hash.split('=')[1];
+      } else if (hash.startsWith('p-') || hash.startsWith('sku-')) {
+        targetQuery = hash.split('-')[1];
+      } else if (!hash.includes('/') && hash.length > 0 && !['store', 'services', 'support', 'contact', 'about', 'catalog'].includes(hash)) {
+        targetQuery = hash;
+      }
+    }
+
+    if (!targetQuery) return false;
+
+    targetQuery = decodeURIComponent(targetQuery).trim().toLowerCase();
+
+    let products = StorageService.getProducts();
+    if (!products || products.length === 0) {
+      products = (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+    }
+
+    const found = products.find(p => {
+      const code = String(p.code || p.codigo || '').toLowerCase();
+      const id = String(p.id || '').toLowerCase();
+      if (code === targetQuery || id === targetQuery) return true;
+      if (id === `odoo-${targetQuery}`) return true;
+      return false;
+    });
+
+    if (found) {
+      setTimeout(() => {
+        openProductDetailModal(found.id);
+        const catalogEl = document.getElementById('store-section') || document.getElementById('catalog-section');
+        if (catalogEl) {
+          catalogEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 250);
+      return true;
+    } else {
+      window.pendingDeepLinkQuery = targetQuery;
+      return false;
+    }
+  } catch (err) {
+    console.warn('[WesApp] Error procesando enlace directo de producto:', err);
+    return false;
+  }
+}
+
+// Escuchar cambios de historial en el navegador (Botón atrás/adelante)
+window.addEventListener('popstate', (e) => {
+  const modal = document.getElementById('product-detail-modal');
+  if (modal && !modal.classList.contains('hidden')) {
+    if (!e.state || !e.state.modalOpen) {
+      closeProductDetailModal();
+    }
+  } else {
+    checkUrlForProduct();
+  }
+});
 

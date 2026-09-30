@@ -1540,6 +1540,15 @@ const AdminApp = {
                         `}
                       </td>
                       <td class="p-3.5 text-right space-x-1 whitespace-nowrap">
+                        <button onclick="AdminApp.shareProductWhatsApp('${code}')" class="p-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition" title="Compartir con Cliente por WhatsApp">
+                          <i class="fab fa-whatsapp text-sm"></i>
+                        </button>
+                        <button onclick="AdminApp.copyProductLink('${code}')" class="p-2 text-wes-blue hover:text-wes-dark hover:bg-blue-50 rounded-lg transition" title="Copiar Enlace Directo para Cliente">
+                          <i class="fas fa-link text-xs"></i>
+                        </button>
+                        <a href="https://web.warnelectricalservices.com/?p=${code}" target="_blank" class="p-2 text-slate-500 hover:text-wes-blue hover:bg-slate-100 rounded-lg transition inline-block" title="Ver en la Web Oficial">
+                          <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
                         <button onclick="AdminApp.openProductModal(${safeId})" class="p-2 text-slate-600 hover:text-wes-blue hover:bg-slate-100 rounded-lg transition" title="Editar">
                           <i class="fas fa-edit"></i>
                         </button>
@@ -1585,6 +1594,44 @@ const AdminApp = {
   setProductPage(page) {
     this.productPage = page;
     this.refreshCurrentView();
+  },
+
+  copyProductLink(code) {
+    const products = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+    const product = products.find(p => p.code === code || p.codigo === code || p.id === code);
+    const sku = (product && (product.code || product.codigo)) ? (product.code || product.codigo) : code;
+    const directUrl = `https://web.warnelectricalservices.com/?p=${encodeURIComponent(sku)}`;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(directUrl).then(() => {
+        showToast(`¡Enlace copiado para cliente: ${directUrl}`, 'success');
+      }).catch(() => {
+        prompt('Copia este enlace directo para tu cliente:', directUrl);
+      });
+    } else {
+      prompt('Copia este enlace directo para tu cliente:', directUrl);
+    }
+  },
+
+  shareProductWhatsApp(code) {
+    const products = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+    const product = products.find(p => p.code === code || p.codigo === code || p.id === code);
+    const sku = (product && (product.code || product.codigo)) ? (product.code || product.codigo) : code;
+    const directUrl = `https://web.warnelectricalservices.com/?p=${encodeURIComponent(sku)}`;
+    const name = product ? (product.name || product.nombre) : `Producto SKU ${sku}`;
+    const price = product ? (product.price || product.precio || 0).toLocaleString('es-DO', { minimumFractionDigits: 2 }) : '';
+
+    const text = `¡Hola! Te comparto este producto de *Warn Electrical Services (WES)*:\n\n` +
+      `📦 *${name}*\n` +
+      `🔢 Código / SKU: ${sku}\n` +
+      (price ? `💰 Precio: RD$ ${price}\n\n` : '\n') +
+      `👉 Puedes ver las fotos, especificaciones completas y cotizar directamente aquí:\n${directUrl}`;
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   },
 
   openProductModal(productId = null) {

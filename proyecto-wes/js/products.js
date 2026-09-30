@@ -9084,89 +9084,130 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-21467",
     "codigo": "3797",
-    "nombre": "MOTOR 2000KG CAME USO INDUSTRIAL PESADO (BK-2200)",
+    "nombre": "MOTOR CORREDERO INDUSTRIAL CAME 2000KG 36V (KIT BKV 8K01MS-024 / BKV20RGS 120V)",
     "marca": "CAME",
     "categoria_id": "acceso",
-    "descripcion": "Operador electromecánico CAME industrial de máxima potencia para puertas correderas de hasta 2,000 kg a 2,200 kg y 23 metros de longitud. Diseñado para puertos secos, industrias pesadas y naves logísticas. Chasis de aleación de aluminio reforzado, piñón módulo 6 y cuadro electrónico ZT6 con control de par y deceleración progresiva.",
+    "descripcion": "Kit de automatización industrial pesada CAME 8K01MS-024 con motorreductor BKV20RGS a 36V DC y alimentación 120V CA, diseñado para cancelas y portones correderos de hasta 2,000 kg y 20 metros de longitud. Equipado con tecnología de par adaptativo (Adaptive Torque), cuadro de control ZN8 con pantalla gráfica y encoder de alta precisión que garantiza detección continua de obstáculos, desaceleración milimétrica y cumplimiento de normas EN 12453 y EN 12445. Ideal para accesos industriales de uso continuo intensivo.",
     "caracteristicas": [
       "SKU: 3797",
-      "Capacidad máxima: 2,000 kg / Longitud máx: 23 metros",
-      "Alimentación: CA 230V - 400V Trifásica / Monofásica",
-      "Potencia de arrastre: 580 W / Fuerza de empuje: 1,500 N",
-      "Ciclo de trabajo: Servicio industrial continuo (50%)",
-      "Piñón de arrastre: Módulo M6 de acero endurecido",
-      "Disponibilidad: 1 unidad en inventario físico WES",
-      "Garantía WES: 2 años oficial certificada CAME",
+      "Kit Comercial CAME: 8K01MS-024 / Motorreductor BKV20RGS (801MS-0340)",
+      "Capacidad de arrastre: Hasta 2,000 kg / Longitud máxima de hoja: 20 metros",
+      "Alimentación: 120V CA (50/60 Hz) / Motorreductor: 36V CC",
+      "Potencia: 250 W / Fuerza de empuje: 900 N (nominal) - 1,350 N (máximo)",
+      "Velocidad de maniobra: 12 m/min con desaceleración electrónica progresiva",
+      "Piñón de tracción: Módulo 4 de acero templado de alta durabilidad",
+      "Ciclo de trabajo: Servicio Continuo Industrial (Heavy Duty / Tráfico Intensivo)",
+      "Central electrónica ZN8: Pantalla gráfica LCD con autodiagnóstico y tecnología CONNECT",
+      "Seguridad activa: Detección inteligente de obstáculos por variación de par (Adaptive Torque)",
+      "Kit incluye: Motor BKV20RGS, fotoceldas DIR10 (10m), luz destellante KLED24, antena TOP-A433N, tarjeta AF43S, 2 controles remotos TOP y 4 tramos de cremallera CGZS",
+      "Grado de protección: IP54 intemperie / Temp. operación: -20°C a +55°C",
+      "Disponibilidad: 1 unidad en inventario físico WES con entrega inmediata",
+      "Garantía oficial WES: 2 años con certificación directa CAME Italia",
       "Manual de Instalación disponible",
-      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
+      "manual_url:assets/manuals/manual-came-bkv-2000kg.pdf"
     ],
     "precio": 78500,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 1,
-    "imagen_url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-    "destacado": false,
+    "imagen_url": "assets/products/came-bkv-2000kg-kit.jpg",
+    "destacado": true,
     "activo": true,
-    "manual_url": "assets/manuals/manual-came-bx-800kg.pdf",
+    "manual_url": "assets/manuals/manual-came-bkv-2000kg.pdf",
     "code": "3797",
-    "name": "MOTOR 2000KG CAME USO INDUSTRIAL PESADO (BK-2200)",
+    "name": "MOTOR CORREDERO INDUSTRIAL CAME 2000KG 36V (KIT BKV 8K01MS-024 / BKV20RGS 120V)",
     "brand": "CAME",
     "category": "Controles de Acceso",
     "price": 78500,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-    "description": "Operador electromecánico CAME industrial de máxima potencia para puertas correderas de hasta 2,000 kg a 2,200 kg y 23 metros de longitud. Diseñado para puertos secos, industrias pesadas y naves logísticas. Chasis de aleación de aluminio reforzado, piñón módulo 6 y cuadro electrónico ZT6 con control de par y deceleración progresiva.",
+    "image": "assets/products/came-bkv-2000kg-kit.jpg",
+    "description": "Kit de automatización industrial pesada CAME 8K01MS-024 con motorreductor BKV20RGS a 36V DC y alimentación 120V CA, diseñado para cancelas y portones correderos de hasta 2,000 kg y 20 metros de longitud. Equipado con tecnología de par adaptativo (Adaptive Torque), cuadro de control ZN8 con pantalla gráfica y encoder de alta precisión que garantiza detección continua de obstáculos, desaceleración milimétrica y cumplimiento de normas EN 12453 y EN 12445. Ideal para accesos industriales de uso continuo intensivo.",
     "features": [
       "SKU: 3797",
-      "Capacidad máxima: 2,000 kg / Longitud máx: 23 metros",
-      "Alimentación: CA 230V - 400V Trifásica / Monofásica",
-      "Potencia de arrastre: 580 W / Fuerza de empuje: 1,500 N",
-      "Ciclo de trabajo: Servicio industrial continuo (50%)",
-      "Piñón de arrastre: Módulo M6 de acero endurecido",
-      "Disponibilidad: 1 unidad en inventario físico WES",
-      "Garantía WES: 2 años oficial certificada CAME",
+      "Kit Comercial CAME: 8K01MS-024 / Motorreductor BKV20RGS (801MS-0340)",
+      "Capacidad de arrastre: Hasta 2,000 kg / Longitud máxima de hoja: 20 metros",
+      "Alimentación: 120V CA (50/60 Hz) / Motorreductor: 36V CC",
+      "Potencia: 250 W / Fuerza de empuje: 900 N (nominal) - 1,350 N (máximo)",
+      "Velocidad de maniobra: 12 m/min con desaceleración electrónica progresiva",
+      "Piñón de tracción: Módulo 4 de acero templado de alta durabilidad",
+      "Ciclo de trabajo: Servicio Continuo Industrial (Heavy Duty / Tráfico Intensivo)",
+      "Central electrónica ZN8: Pantalla gráfica LCD con autodiagnóstico y tecnología CONNECT",
+      "Seguridad activa: Detección inteligente de obstáculos por variación de par (Adaptive Torque)",
+      "Kit incluye: Motor BKV20RGS, fotoceldas DIR10 (10m), luz destellante KLED24, antena TOP-A433N, tarjeta AF43S, 2 controles remotos TOP y 4 tramos de cremallera CGZS",
+      "Grado de protección: IP54 intemperie / Temp. operación: -20°C a +55°C",
+      "Disponibilidad: 1 unidad en inventario físico WES con entrega inmediata",
+      "Garantía oficial WES: 2 años con certificación directa CAME Italia",
       "Manual de Instalación disponible",
-      "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
+      "manual_url:assets/manuals/manual-came-bkv-2000kg.pdf"
     ],
-    "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
-    "featured": false,
+    "manualUrl": "assets/manuals/manual-came-bkv-2000kg.pdf",
+    "featured": true,
     "active": true,
     "gallery_images": [
       {
-        "url": "https://sc04.alicdn.com/kf/Hbd4ddf56abc14d8e984111131c0bf8c0y.jpg_960x960q80.jpg",
-        "title": "Operador Industrial Pesado 2000KG",
-        "badge": "Principal",
-        "caption": "Chasis macizo CAME BK-2200 de tracción extrema para 2,000 kg"
-      },
-      {
-        "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
-        "title": "Kit de Tracción para Parques Industriales",
+        "url": "assets/products/came-bkv-2000kg-kit.jpg",
+        "title": "Kit Completo CAME BKV 2000KG (8K01MS-024)",
         "badge": "Kit Completo",
-        "caption": "Incluye operador 2000kg, fotoceldas DIR10, baliza LED y mandos CAME"
+        "caption": "Paquete industrial completo: Motor BKV20RGS, fotoceldas DIR10, baliza KLED24, antena, cremalleras y mandos"
       },
       {
-        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
-        "title": "Centralita ZT6 con Freno Dinámico",
-        "badge": "Electrónica",
-        "caption": "Placa industrial con freno de inercia y control electrónico de par"
+        "url": "assets/products/came-bkv20rgs-motor.jpg",
+        "title": "Motorreductor CAME BKV20RGS 36V / 120V",
+        "badge": "Motor Principal",
+        "caption": "Operador corredero con chasis reforzado de aluminio inyectado y cuadro ZN8 con display digital"
       },
       {
-        "url": "https://sc04.alicdn.com/kf/Ha03773ecd03149afbfbf6f294ff29859i.jpg_960x960q80.jpg",
-        "title": "Portón de Fábrica de Gran Dimensión",
-        "badge": "En Operación",
-        "caption": "Arrastre suave y potente para cancelas acorazadas y portones pesados"
+        "url": "assets/products/came-bkv-lateral.jpg",
+        "title": "Vista Lateral y Dimensiones BKV",
+        "badge": "Vista Lateral",
+        "caption": "Diseño compacto de alta resistencia con grado de protección IP54 para intemperie severa"
+      },
+      {
+        "url": "assets/products/came-bkv-pinon-desbloqueo.jpg",
+        "title": "Mecanismo de Desbloqueo y Piñón M4",
+        "badge": "Mecánica",
+        "caption": "Palanca de desbloqueo ergonómica con llave personalizada y piñón de tracción módulo M4"
+      },
+      {
+        "url": "assets/products/came-dir10-fotoceldas.jpg",
+        "title": "Par de Fotocélulas Infrarrojas DIR10",
+        "badge": "Seguridad",
+        "caption": "Fotocélulas de seguridad sincronizadas de 10 metros de alcance con carcasa antigolpes"
+      },
+      {
+        "url": "assets/products/came-kled24-luz.jpg",
+        "title": "Lámpara de Señalización LED KLED24",
+        "badge": "Baliza",
+        "caption": "Luz destellante de alta luminosidad a 24V con antena integrada opcional"
+      },
+      {
+        "url": "assets/products/came-top-a433n-antena.jpg",
+        "title": "Antena Sintonizada TOP-A433N",
+        "badge": "Alcance",
+        "caption": "Antena sintonizada a 433.92 MHz con cable coaxial para máxima recepción de radiofrecuencia"
+      },
+      {
+        "url": "assets/products/came-cgzs-cremallera.jpg",
+        "title": "Cremallera de Acero Cincado CGZS",
+        "badge": "Tracción",
+        "caption": "Cremallera galvanizada 30x12 mm módulo 4 con espaciadores y tornillos de soldadura"
       }
     ],
     "key_attributes": {
-      "Capacidad de Arrastre": "2,000 kg (hasta 23 metros)",
-      "Alimentación": "CA 230V / 400V (50-60 Hz)",
-      "Potencia Nominal": "580 W",
-      "Fuerza de Empuje": "1,500 N",
-      "Piñón de Salida": "Módulo 6 en acero forjado",
-      "Ciclo de Trabajo": "Servicio industrial continuo (50%)",
-      "Protección": "IP54 resistente a polvo denso y lluvia",
-      "Garantía WES": "2 años con certificación oficial CAME"
+      "Capacidad Máxima": "2,000 kg",
+      "Longitud Máxima de Hoja": "20 metros",
+      "Modelo del Kit": "CAME 8K01MS-024 (BKV20RGS / 801MS-0340)",
+      "Alimentación Eléctrica": "120V CA (50/60 Hz)",
+      "Motor del Operador": "36V CC con par adaptativo (Adaptive Torque)",
+      "Potencia Nominal": "250 W",
+      "Fuerza de Empuje": "900 N (nominal) / 1,350 N (máximo)",
+      "Velocidad de Maniobra": "12 m/min con deceleración progresiva",
+      "Piñón de Salida": "Módulo 4 en acero templado",
+      "Ciclo de Trabajo": "Servicio Continuo Industrial (Heavy Duty)",
+      "Cuadro de Control": "ZN8 integrado con pantalla gráfica y autodiagnóstico",
+      "Protección Ambiental": "IP54 resistente a polvo denso y lluvia torrencial",
+      "Garantía WES": "2 años oficial CAME Italia"
     }
   },
   {
