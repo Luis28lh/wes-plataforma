@@ -1675,6 +1675,19 @@ const AdminApp = {
 
         form.availability.value = product.availability || product.disponibilidad || 'Disponible';
         form.image.value = product.image || product.imagen_url || '';
+        const thumb = document.getElementById('product-modal-image-thumb');
+        const icon = document.getElementById('product-modal-image-icon');
+        if (thumb && icon) {
+          const imgUrl = product.image || product.imagen_url || '';
+          if (imgUrl) {
+            thumb.src = imgUrl;
+            thumb.classList.remove('hidden');
+            icon.classList.add('hidden');
+          } else {
+            thumb.classList.add('hidden');
+            icon.classList.remove('hidden');
+          }
+        }
         form.description.value = product.description || product.descripcion || '';
         const feats = product.features || product.caracteristicas || [];
         form.features.value = feats.join('\n');
@@ -1683,6 +1696,12 @@ const AdminApp = {
       title.textContent = 'Nuevo Producto en Catálogo';
       if (form.promotional_status) form.promotional_status.value = 'none';
       if (form.precio_anterior) form.precio_anterior.value = '';
+      const thumb = document.getElementById('product-modal-image-thumb');
+      const icon = document.getElementById('product-modal-image-icon');
+      if (thumb && icon) {
+        thumb.classList.add('hidden');
+        icon.classList.remove('hidden');
+      }
     }
 
     modal.classList.remove('hidden');
@@ -1701,13 +1720,22 @@ const AdminApp = {
 
     if (!PermissionsManager.checkOrAlert('productos', action)) return;
 
+    let products = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+
+    let existingProduct = null;
+    if (rawId) {
+      existingProduct = products.find(p => String(p.id) === String(rawId) || String(p.code) === String(rawId) || String(p.codigo) === String(rawId));
+    }
+
     const name = form.name.value.trim();
     const code = form.code.value.trim();
     const brand = form.brand.value.trim();
     const category = form.category.value.trim();
     const price = parseFloat(form.price.value) || 0;
     const availability = form.availability.value;
-    const image = form.image.value.trim();
+    const rawImage = form.image.value.trim();
     const description = form.description.value.trim();
     const features = form.features.value.split('\n').map(f => f.trim()).filter(Boolean);
 
@@ -1715,6 +1743,15 @@ const AdminApp = {
     const precioAnterior = form.precio_anterior ? (parseFloat(form.precio_anterior.value) || null) : null;
     const isOffer = (promoStatus === 'oferta' || promoStatus === 'ambos');
     const isNovelty = (promoStatus === 'novedad' || promoStatus === 'ambos');
+
+    // La imagen es completamente opcional: si el campo está vacío, se conserva la imagen existente
+    let finalImage = rawImage;
+    if (!finalImage && existingProduct) {
+      finalImage = existingProduct.image || existingProduct.imagen_url || '';
+    }
+    if (!finalImage) {
+      finalImage = 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80';
+    }
 
     const productData = {
       id: rawId || `custom-${Date.now()}`,
@@ -1730,28 +1767,28 @@ const AdminApp = {
       precio: price,
       availability: availability,
       disponibilidad: availability,
-      stock: availability === 'Disponible' ? 10 : 0,
-      image: image,
-      imagen_url: image,
+      stock: availability === 'Disponible' ? (existingProduct && existingProduct.stock !== undefined ? existingProduct.stock : 10) : 0,
+      image: finalImage,
+      imagen_url: finalImage,
       description: description,
       descripcion: description,
-      features: features,
-      caracteristicas: features,
+      features: features.length > 0 ? features : (existingProduct && (existingProduct.features || existingProduct.caracteristicas) ? (existingProduct.features || existingProduct.caracteristicas) : []),
+      caracteristicas: features.length > 0 ? features : (existingProduct && (existingProduct.caracteristicas || existingProduct.features) ? (existingProduct.caracteristicas || existingProduct.features) : []),
       active: true,
       activo: true,
       en_oferta: isOffer,
       is_offer: isOffer,
       novedad: isNovelty,
       is_new: isNovelty,
-      precio_anterior: precioAnterior
+      precio_anterior: precioAnterior,
+      gallery_images: (existingProduct && Array.isArray(existingProduct.gallery_images)) ? existingProduct.gallery_images : [],
+      key_attributes: (existingProduct && existingProduct.key_attributes) ? existingProduct.key_attributes : {},
+      manual_url: (existingProduct && (existingProduct.manual_url || existingProduct.manualUrl)) ? (existingProduct.manual_url || existingProduct.manualUrl) : null,
+      manualUrl: (existingProduct && (existingProduct.manualUrl || existingProduct.manual_url)) ? (existingProduct.manualUrl || existingProduct.manual_url) : null
     };
 
-    let products = (typeof StorageService !== 'undefined')
-      ? StorageService.getProducts()
-      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
-
     if (rawId) {
-      const idx = products.findIndex(p => String(p.id) === String(rawId));
+      const idx = products.findIndex(p => String(p.id) === String(rawId) || String(p.code) === String(rawId) || String(p.codigo) === String(rawId));
       if (idx !== -1) {
         products[idx] = Object.assign({}, products[idx], productData);
       }

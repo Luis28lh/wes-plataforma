@@ -10329,7 +10329,7 @@ const StorageService = {
   saveProducts: function(products) {
     if (typeof localStorage !== 'undefined') {
       try {
-        localStorage.setItem('wes_products_v17_catalog', JSON.stringify(products));
+        localStorage.setItem('wes_products_v25_catalog', JSON.stringify(products));
         localStorage.setItem('wes_custom_products', JSON.stringify(products));
       } catch (e) {}
     }
