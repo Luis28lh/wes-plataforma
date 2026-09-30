@@ -1647,15 +1647,26 @@ function openProductDetailModal(productId) {
   }
 
   // 2. Galería de Fotos Multi-Ángulo (Estilo Alibaba)
+  // Protección activa para SKU 3797 y productos enriquecidos: nunca usar enlaces obsoletos
+  let effectiveGallery = product.gallery_images;
+  if (typeof INITIAL_PRODUCTS !== 'undefined' && Array.isArray(INITIAL_PRODUCTS)) {
+    const initMatch = INITIAL_PRODUCTS.find(i => String(i.codigo || i.code) === String(product.codigo || product.code));
+    if (initMatch && Array.isArray(initMatch.gallery_images) && initMatch.gallery_images.length > 0) {
+      if (!effectiveGallery || effectiveGallery.length === 0 || effectiveGallery.some(g => (g.url || '').includes('alicdn') || (g.url || '').includes('unsplash'))) {
+        effectiveGallery = initMatch.gallery_images;
+      }
+    }
+  }
+
   const defaultGallery = [
     {
       url: product.image || product.imagen_url,
       title: 'Vista Frontal y Desbloqueo',
       badge: 'Principal',
-      caption: 'Motor CAME 800KG con base y engranaje de tracción'
+      caption: 'Motor CAME de tracción extrema'
     }
   ];
-  const gallery = (product.gallery_images && product.gallery_images.length > 0) ? product.gallery_images : defaultGallery;
+  const gallery = (effectiveGallery && effectiveGallery.length > 0) ? effectiveGallery : defaultGallery;
 
   const mainImage = document.getElementById('detail-main-image');
   const imageBadge = document.getElementById('detail-image-badge');

@@ -10189,9 +10189,15 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v17_catalog';
+    const versionKey = 'wes_products_v25_catalog';
     let products = null;
     try {
+      if (typeof localStorage !== 'undefined') {
+        // Purgar versiones antiguas para garantizar actualización instantánea en el navegador
+        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog'].forEach(k => {
+          try { localStorage.removeItem(k); } catch(e) {}
+        });
+      }
       const saved = (typeof localStorage !== 'undefined') ? localStorage.getItem(versionKey) : null;
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -10210,6 +10216,23 @@ const StorageService = {
           localStorage.setItem(versionKey, JSON.stringify(INITIAL_PRODUCTS));
           localStorage.setItem('wes_custom_products', JSON.stringify(INITIAL_PRODUCTS));
         } catch (e) {}
+      }
+    } else {
+      // Auto-reparación activa de SKU 3797: nunca permitir fotos obsoletas de Alibaba o BK-2200
+      const p3797 = products.find(p => String(p.codigo || p.code) === '3797');
+      const init3797 = INITIAL_PRODUCTS.find(p => String(p.codigo || p.code) === '3797');
+      if (p3797 && init3797 && (
+        (p3797.image || p3797.imagen_url || '').includes('alicdn') ||
+        (p3797.image || p3797.imagen_url || '').includes('BK-2200') ||
+        (p3797.nombre || '').includes('BK-2200')
+      )) {
+        Object.assign(p3797, init3797);
+        if (typeof localStorage !== 'undefined') {
+          try {
+            localStorage.setItem(versionKey, JSON.stringify(products));
+            localStorage.setItem('wes_custom_products', JSON.stringify(products));
+          } catch (e) {}
+        }
       }
     }
 
