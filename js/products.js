@@ -9267,7 +9267,7 @@ const INITIAL_PRODUCTS = [
       "Manual de Instalación disponible",
       "manual_url:assets/manuals/manual-came-bx-800kg.pdf"
     ],
-    "precio": 41330.76,
+    "precio": 48300,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 1,
@@ -9279,7 +9279,7 @@ const INITIAL_PRODUCTS = [
     "name": "MOTOR CAME 1000KG USO INTENSIVO (BXV10AGS)",
     "brand": "CAME",
     "category": "Controles de Acceso",
-    "price": 41330.76,
+    "price": 48300,
     "currency": "DOP",
     "availability": "Disponible",
     "image": "assets/came-bxv1000kg.jpg",
@@ -10224,12 +10224,12 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v27_catalog';
+    const versionKey = 'wes_products_v28_catalog';
     let products = null;
     try {
       if (typeof localStorage !== 'undefined') {
         // Purgar versiones antiguas para garantizar actualización instantánea en el navegador
-        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog'].forEach(k => {
+        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog', 'wes_products_v27_catalog'].forEach(k => {
           try { localStorage.removeItem(k); } catch(e) {}
         });
       }
@@ -10280,6 +10280,20 @@ const StorageService = {
         !p553.manual_url
       )) {
         Object.assign(p553, init553);
+        if (typeof localStorage !== 'undefined') {
+          try {
+            localStorage.setItem(versionKey, JSON.stringify(products));
+            localStorage.setItem('wes_custom_products', JSON.stringify(products));
+          } catch (e) {}
+        }
+      }
+
+      // Auto-reparación activa de SKU 1390: Motor CAME 1000KG precio actualizado a 48,300
+      const p1390 = products.find(p => String(p.codigo || p.code) === '1390');
+      const init1390 = INITIAL_PRODUCTS.find(p => String(p.codigo || p.code) === '1390');
+      if (p1390 && init1390 && (p1390.precio !== 48300 || p1390.price !== 48300)) {
+        p1390.precio = 48300;
+        p1390.price = 48300;
         if (typeof localStorage !== 'undefined') {
           try {
             localStorage.setItem(versionKey, JSON.stringify(products));
