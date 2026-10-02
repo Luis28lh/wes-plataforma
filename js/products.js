@@ -935,6 +935,8 @@ const INITIAL_PRODUCTS = [
       "✔️ Onda cuasinusoidal: Excelente para aplicaciones residenciales básicas.",
       "✔️ Protección avanzada: Contra alto y bajo voltaje, cuidando tus equipos.",
       "✔️ Durabilidad respaldada: Con 2 años de garantía para tu tranquilidad.",
+      "Manual de Instalación disponible",
+      "manual_url:assets/manuals/manual-inversor-wave-platinum-prostec.pdf",
       "Chasis: 100% Aluminio reforzado para máxima disipación térmica",
       "Potencia: 1.5 KW (1,500 W) / 1.2 KW nominal (Smart Power System)",
       "Cargador Integrado: Selector para Baterías GEL / Ácido Plomo",
@@ -949,7 +951,7 @@ const INITIAL_PRODUCTS = [
     "imagen_url": "assets/products/inversor-prostec-1-5kw-aluminio.jpg",
     "destacado": true,
     "activo": true,
-    "manual_url": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
+    "manual_url": "assets/manuals/manual-inversor-wave-platinum-prostec.pdf",
     "gallery_images": [
       {
         "url": "assets/products/inversor-prostec-1-5kw-aluminio.jpg",
@@ -961,10 +963,11 @@ const INITIAL_PRODUCTS = [
     "key_attributes": {
       "Chasis": "100% Aluminio (Alta Disipación)",
       "Potencia": "1.5 KW (1,500 W) / 1.2 KW continuo",
-      "Voltaje DC (Baterías)": "12 VDC",
-      "Voltaje AC": "120 VAC - 60 Hz",
-      "Tipo de Onda": "Cuasinusoidal (Residencial)",
-      "Cargador": "Selector integrado Baterías GEL",
+      "Voltaje DC (Baterías)": "12 VDC (Mín. 8.0V - Máx. 65V)",
+      "Voltaje AC Entrada": "120 VAC nominal (Rango 60 - 145 VAC)",
+      "Tipo de Onda": "Cuasinusoidal PWM (Residencial)",
+      "Tiempo de Transferencia": "10 - 15 ms (Modo UPS Automático)",
+      "Cargador Inteligente": "3 Etapas con Selector GEL / Ácido Plomo",
       "Protecciones": "Alto y bajo voltaje, sobrecarga y corto circuito",
       "Garantía": "2 Años Oficial WES"
     },
@@ -983,6 +986,8 @@ const INITIAL_PRODUCTS = [
       "✔️ Onda cuasinusoidal: Excelente para aplicaciones residenciales básicas.",
       "✔️ Protección avanzada: Contra alto y bajo voltaje, cuidando tus equipos.",
       "✔️ Durabilidad respaldada: Con 2 años de garantía para tu tranquilidad.",
+      "Manual de Instalación disponible",
+      "manual_url:assets/manuals/manual-inversor-wave-platinum-prostec.pdf",
       "Chasis: 100% Aluminio reforzado para máxima disipación térmica",
       "Potencia: 1.5 KW (1,500 W) / 1.2 KW nominal (Smart Power System)",
       "Cargador Integrado: Selector para Baterías GEL / Ácido Plomo",
@@ -990,7 +995,7 @@ const INITIAL_PRODUCTS = [
       "Disponibilidad: 1 unidad en inventario físico WES con entrega inmediata",
       "Garantía oficial: 2 años con certificación directa WES"
     ],
-    "manualUrl": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
+    "manualUrl": "assets/manuals/manual-inversor-wave-platinum-prostec.pdf",
     "featured": true,
     "active": true
   },
@@ -10219,12 +10224,12 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v26_catalog';
+    const versionKey = 'wes_products_v27_catalog';
     let products = null;
     try {
       if (typeof localStorage !== 'undefined') {
         // Purgar versiones antiguas para garantizar actualización instantánea en el navegador
-        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog'].forEach(k => {
+        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog'].forEach(k => {
           try { localStorage.removeItem(k); } catch(e) {}
         });
       }
@@ -10265,12 +10270,14 @@ const StorageService = {
         }
       }
 
-      // Auto-reparación activa de SKU 553: Inversor PROSTEC Aluminio 1.5KW con características oficiales
+      // Auto-reparación activa de SKU 553: Inversor PROSTEC Aluminio 1.5KW con características y manual oficiales
       const p553 = products.find(p => String(p.codigo || p.code) === '553');
       const init553 = INITIAL_PRODUCTS.find(p => String(p.codigo || p.code) === '553');
       if (p553 && init553 && (
         (p553.image || p553.imagen_url || '').includes('unsplash') ||
-        !(p553.caracteristicas || []).some(c => c.includes('Onda cuasinusoidal') || c.includes('12VDC'))
+        !(p553.caracteristicas || []).some(c => c.includes('Onda cuasinusoidal') || c.includes('12VDC')) ||
+        (p553.manual_url || '').includes('manual_inversores_wes.pdf') ||
+        !p553.manual_url
       )) {
         Object.assign(p553, init553);
         if (typeof localStorage !== 'undefined') {
