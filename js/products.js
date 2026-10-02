@@ -925,43 +925,73 @@ const INITIAL_PRODUCTS = [
   {
     "id": "odoo-1751",
     "codigo": "553",
-    "nombre": "INVERSOR PROSTEC 1.2KW UPS 12V DC 120AC ALU.",
-    "marca": "WES",
+    "nombre": "INVERSOR PROSTEC 1.5KW / 1.2KW UPS 12V DC 120AC (CHASIS ALUMINIO)",
+    "marca": "PROSTEC",
     "categoria_id": "energia",
-    "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "descripcion": "Inversor y cargador inteligente PROSTEC Smart Power System con chasis reforzado 100% de aluminio para óptima disipación térmica y durabilidad. Diseñado para respaldo energético confiable en residencias, comercios y oficinas con bancos de baterías de 12VDC y red comercial de 120VAC. Integra display digital LED indicador de voltaje, selector inteligente para baterías GEL o Ácido Plomo, onda cuasinusoidal eficiente y protecciones integradas contra alto y bajo voltaje.",
     "caracteristicas": [
       "SKU: 553",
-      "Categoría ERP: Inversores",
-      "Disponibilidad: 1 unidades en inventario físico",
-      "Manual de Instalación disponible",
-      "manual_url:https://warnelectricalservices.com/docs/manual_inversores_wes.pdf"
+      "✔️ Ideal para baterías de 12VDC y energía exterior de 120VAC.",
+      "✔️ Onda cuasinusoidal: Excelente para aplicaciones residenciales básicas.",
+      "✔️ Protección avanzada: Contra alto y bajo voltaje, cuidando tus equipos.",
+      "✔️ Durabilidad respaldada: Con 2 años de garantía para tu tranquilidad.",
+      "Chasis: 100% Aluminio reforzado para máxima disipación térmica",
+      "Potencia: 1.5 KW (1,500 W) / 1.2 KW nominal (Smart Power System)",
+      "Cargador Integrado: Selector para Baterías GEL / Ácido Plomo",
+      "Display Digital: Pantalla indicadora de voltaje y estado de operación",
+      "Disponibilidad: 1 unidad en inventario físico WES con entrega inmediata",
+      "Garantía oficial: 2 años con certificación directa WES"
     ],
     "precio": 9100,
     "moneda": "DOP",
     "disponibilidad": "Disponible",
     "stock": 1,
-    "imagen_url": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
-    "destacado": false,
+    "imagen_url": "assets/products/inversor-prostec-1-5kw-aluminio.jpg",
+    "destacado": true,
     "activo": true,
     "manual_url": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
+    "gallery_images": [
+      {
+        "url": "assets/products/inversor-prostec-1-5kw-aluminio.jpg",
+        "title": "Inversor PROSTEC 1.5KW 12VDC Aluminio",
+        "badge": "Foto Oficial",
+        "caption": "Inversor / Cargador PROSTEC Smart Power System ETH 1.5KW con display digital y selector GEL"
+      }
+    ],
+    "key_attributes": {
+      "Chasis": "100% Aluminio (Alta Disipación)",
+      "Potencia": "1.5 KW (1,500 W) / 1.2 KW continuo",
+      "Voltaje DC (Baterías)": "12 VDC",
+      "Voltaje AC": "120 VAC - 60 Hz",
+      "Tipo de Onda": "Cuasinusoidal (Residencial)",
+      "Cargador": "Selector integrado Baterías GEL",
+      "Protecciones": "Alto y bajo voltaje, sobrecarga y corto circuito",
+      "Garantía": "2 Años Oficial WES"
+    },
     "code": "553",
-    "name": "INVERSOR PROSTEC 1.2KW UPS 12V DC 120AC ALU.",
-    "brand": "WES",
+    "name": "INVERSOR PROSTEC 1.5KW / 1.2KW UPS 12V DC 120AC (CHASIS ALUMINIO)",
+    "brand": "PROSTEC",
     "category": "Energía y Respaldo",
     "price": 9100,
     "currency": "DOP",
     "availability": "Disponible",
-    "image": "https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80",
-    "description": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
+    "image": "assets/products/inversor-prostec-1-5kw-aluminio.jpg",
+    "description": "Inversor y cargador inteligente PROSTEC Smart Power System con chasis reforzado 100% de aluminio para óptima disipación térmica y durabilidad. Diseñado para respaldo energético confiable en residencias, comercios y oficinas con bancos de baterías de 12VDC y red comercial de 120VAC. Integra display digital LED indicador de voltaje, selector inteligente para baterías GEL o Ácido Plomo, onda cuasinusoidal eficiente y protecciones integradas contra alto y bajo voltaje.",
     "features": [
       "SKU: 553",
-      "Categoría ERP: Inversores",
-      "Disponibilidad: 1 unidades en inventario físico",
-      "Manual de Instalación disponible",
-      "manual_url:https://warnelectricalservices.com/docs/manual_inversores_wes.pdf"
+      "✔️ Ideal para baterías de 12VDC y energía exterior de 120VAC.",
+      "✔️ Onda cuasinusoidal: Excelente para aplicaciones residenciales básicas.",
+      "✔️ Protección avanzada: Contra alto y bajo voltaje, cuidando tus equipos.",
+      "✔️ Durabilidad respaldada: Con 2 años de garantía para tu tranquilidad.",
+      "Chasis: 100% Aluminio reforzado para máxima disipación térmica",
+      "Potencia: 1.5 KW (1,500 W) / 1.2 KW nominal (Smart Power System)",
+      "Cargador Integrado: Selector para Baterías GEL / Ácido Plomo",
+      "Display Digital: Pantalla indicadora de voltaje y estado de operación",
+      "Disponibilidad: 1 unidad en inventario físico WES con entrega inmediata",
+      "Garantía oficial: 2 años con certificación directa WES"
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
-    "featured": false,
+    "featured": true,
     "active": true
   },
   {
@@ -10189,12 +10219,12 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v25_catalog';
+    const versionKey = 'wes_products_v26_catalog';
     let products = null;
     try {
       if (typeof localStorage !== 'undefined') {
         // Purgar versiones antiguas para garantizar actualización instantánea en el navegador
-        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog'].forEach(k => {
+        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog'].forEach(k => {
           try { localStorage.removeItem(k); } catch(e) {}
         });
       }
@@ -10227,6 +10257,22 @@ const StorageService = {
         (p3797.nombre || '').includes('BK-2200')
       )) {
         Object.assign(p3797, init3797);
+        if (typeof localStorage !== 'undefined') {
+          try {
+            localStorage.setItem(versionKey, JSON.stringify(products));
+            localStorage.setItem('wes_custom_products', JSON.stringify(products));
+          } catch (e) {}
+        }
+      }
+
+      // Auto-reparación activa de SKU 553: Inversor PROSTEC Aluminio 1.5KW con características oficiales
+      const p553 = products.find(p => String(p.codigo || p.code) === '553');
+      const init553 = INITIAL_PRODUCTS.find(p => String(p.codigo || p.code) === '553');
+      if (p553 && init553 && (
+        (p553.image || p553.imagen_url || '').includes('unsplash') ||
+        !(p553.caracteristicas || []).some(c => c.includes('Onda cuasinusoidal') || c.includes('12VDC'))
+      )) {
+        Object.assign(p553, init553);
         if (typeof localStorage !== 'undefined') {
           try {
             localStorage.setItem(versionKey, JSON.stringify(products));
@@ -10329,7 +10375,7 @@ const StorageService = {
   saveProducts: function(products) {
     if (typeof localStorage !== 'undefined') {
       try {
-        localStorage.setItem('wes_products_v25_catalog', JSON.stringify(products));
+        localStorage.setItem('wes_products_v26_catalog', JSON.stringify(products));
         localStorage.setItem('wes_custom_products', JSON.stringify(products));
       } catch (e) {}
     }
