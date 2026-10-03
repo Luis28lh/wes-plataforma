@@ -32,6 +32,7 @@ function initApp() {
   updateCartBadge();
   setupSupportImageUploader();
   checkCookieConsent();
+  initEnergyProjectScenarios();
 
   // Revisar si la URL contiene un enlace directo a un producto (?p=SKU o ?sku=SKU)
   checkUrlForProduct();
@@ -1977,20 +1978,313 @@ function addCurrentDetailToQuote() {
   }
 }
 
+// ============================================================================
+// SISTEMA DE ESCENARIOS INTERACTIVOS Y COTIZACIÓN DE PROYECTOS WES
+// ============================================================================
+
+/**
+ * Catálogo de escenarios reales para el Proyecto 5 (Sistemas de Respaldo Energético)
+ */
+const PROJECT_ENERGY_SCENARIOS = [
+  {
+    id: 'inversor-3600w-8bat',
+    tabLabel: '3.6 kW (8 Bat.)',
+    categoryBadge: 'Energía & Respaldo Crítico',
+    statusBadge: 'Obra Real WES',
+    statusIcon: 'fas fa-camera',
+    location: 'Espaillat / Cibao, Rep. Dominicana',
+    image: 'assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg',
+    imageAlt: 'Instalación de Sistema de Respaldo Energético Crítico: Inversor Wave 3.6 kW y 8 Baterías Interstate',
+    title: 'Instalación de Sistema de Respaldo Energético Crítico: Inversor Onda Senoidal Pura 3.6 kW y Banco de 8 Baterías Interstate',
+    description: 'Diseño, reacondicionamiento e instalación de infraestructura eléctrica de respaldo ininterrumpido (UPS/Inversor), orientada a proteger y mantener en operación continua los activos más sensibles del cliente: el sistema de facturación, la plataforma de videovigilancia y los sistemas de bombeo de agua.',
+    specs: [
+      {
+        icon: 'fas fa-bolt',
+        title: 'Inversor / Cargador:',
+        desc: 'Inversor Inteligente Onda Senoidal Pura (Wave 3.6 kW) de alto rendimiento.'
+      },
+      {
+        icon: 'fas fa-car-battery',
+        title: 'Banco de Baterías:',
+        desc: '8 baterías de ciclo profundo marca Interstate Batteries en base metálica reforzada.'
+      },
+      {
+        icon: 'fas fa-shield-alt',
+        title: 'Protecciones y Control:',
+        desc: 'Centro de carga / caja de breakers dedicada y panel de transferencia para protección contra sobrecargas y cortocircuitos.'
+      },
+      {
+        icon: 'fas fa-server',
+        title: 'Cargas Críticas Respaldadas:',
+        desc: 'Servidores y facturación (cero reinicios ni pérdidas), circuito cerrado (CCTV) y sistemas de bombeo de agua.'
+      }
+    ],
+    quoteButtonText: 'Cotizar Sistema 3.6 kW (8 Baterías)',
+    quoteItem: {
+      id: 'odoo-1776',
+      sku: '3883',
+      name: 'Sistema de Respaldo Crítico 3.6 kW (Inversor Wave Senoidal + Banco 8 Baterías Interstate)',
+      price: 33739.98,
+      brand: 'WES / WAVE',
+      image: 'assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg'
+    }
+  },
+  {
+    id: 'inversor-1500w-2bat',
+    tabLabel: '1.5 kW (2 Bat.)',
+    categoryBadge: 'Respaldo Residencial Esencial',
+    statusBadge: 'Obra en Instalación WES',
+    statusIcon: 'fas fa-tools',
+    location: 'Moca / Cibao, Rep. Dominicana',
+    image: 'assets/projects/sistema-respaldo-inversor-1500w-2bat.jpg',
+    imageAlt: 'Instalación de Sistema de Respaldo Residencial: Inversor PROSTEC 1.5 kW Aluminio y Banco de 2 Baterías',
+    title: 'Instalación de Sistema de Respaldo Residencial: Inversor PROSTEC 1.5 kW (Aluminio) y Banco de 2 Baterías',
+    description: 'Instalación residencial y comercial ligera diseñada para garantizar autonomía continua ante apagones en cargas esenciales del hogar: refrigerador/nevera, iluminación LED, conexión de internet (módem/router), ventilación y equipos de trabajo.',
+    specs: [
+      {
+        icon: 'fas fa-bolt',
+        title: 'Inversor / Cargador:',
+        desc: 'Inversor PROSTEC Smart Power System 1.5 kW / 1.2 kW con chasis 100% de aluminio, display digital LED y selector GEL (SKU 553).'
+      },
+      {
+        icon: 'fas fa-car-battery',
+        title: 'Banco de Baterías:',
+        desc: 'Banco de 2 baterías de ciclo profundo de 12VDC en gabinete de seguridad con cables de alta sección.'
+      },
+      {
+        icon: 'fas fa-shield-alt',
+        title: 'Protecciones Avanzadas:',
+        desc: 'Supresor de picos, corte por alto/bajo voltaje y conmutación automática tipo UPS ultra rápida (10-15 ms).'
+      },
+      {
+        icon: 'fas fa-home',
+        title: 'Cargas Esenciales Respaldadas:',
+        desc: 'Refrigerador/nevera, router de internet, computadoras, iluminación completa de la vivienda y abanicos.'
+      }
+    ],
+    quoteButtonText: 'Cotizar Sistema 1.5 kW (2 Baterías)',
+    quoteItem: {
+      id: 'odoo-1751',
+      sku: '553',
+      name: 'INVERSOR PROSTEC 1.5KW / 1.2KW UPS 12V DC 120AC (CHASIS ALUMINIO) + 2 Baterías',
+      price: 9100,
+      brand: 'PROSTEC',
+      image: 'assets/projects/sistema-respaldo-inversor-1500w-2bat.jpg'
+    }
+  }
+];
+
+let currentEnergyScenarioIndex = 0;
+let modalCurrentScenarioIndex = 0;
+
+/**
+ * Inicializa el componente de proyectos interactivos de energía.
+ */
+function initEnergyProjectScenarios() {
+  const customImg = localStorage.getItem('wes_custom_scenario_2_img');
+  if (customImg && PROJECT_ENERGY_SCENARIOS[1]) {
+    PROJECT_ENERGY_SCENARIOS[1].image = customImg;
+  }
+  switchEnergyProjectScenario(0);
+}
+
+/**
+ * Cambia el escenario activo en la tarjeta del Proyecto 5.
+ */
+function switchEnergyProjectScenario(index) {
+  if (index < 0 || index >= PROJECT_ENERGY_SCENARIOS.length) return;
+  currentEnergyScenarioIndex = index;
+  const scenario = PROJECT_ENERGY_SCENARIOS[index];
+
+  // Actualizar botones de pestaña
+  for (let i = 0; i < PROJECT_ENERGY_SCENARIOS.length; i++) {
+    const btn = document.getElementById(`energy-tab-btn-${i}`);
+    if (btn) {
+      if (i === index) {
+        btn.className = 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all duration-200 flex items-center space-x-1.5 bg-wes-gold text-wes-dark shadow-sm';
+      } else {
+        btn.className = 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all duration-200 flex items-center space-x-1.5 bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80';
+      }
+    }
+  }
+
+  // Actualizar imagen y detalles de tarjeta
+  const cardImg = document.getElementById('energy-project-card-img');
+  const catBadge = document.getElementById('energy-project-category-badge');
+  const statusIcon = document.getElementById('energy-project-status-icon');
+  const statusText = document.getElementById('energy-project-status-text');
+  const locationEl = document.getElementById('energy-project-location');
+  const titleEl = document.getElementById('energy-project-title');
+  const descEl = document.getElementById('energy-project-desc');
+  const specsContainer = document.getElementById('energy-project-specs-container');
+  const quoteBtnText = document.getElementById('energy-project-quote-btn-text');
+
+  if (cardImg) {
+    cardImg.src = scenario.image;
+    cardImg.alt = scenario.imageAlt;
+  }
+  if (catBadge) catBadge.textContent = scenario.categoryBadge;
+  if (statusIcon) statusIcon.className = `${scenario.statusIcon} text-[10px]`;
+  if (statusText) statusText.textContent = scenario.statusBadge;
+  if (locationEl) locationEl.innerHTML = `<i class="fas fa-map-marker-alt text-wes-gold mr-1"></i> ${scenario.location}`;
+  if (titleEl) titleEl.textContent = scenario.title;
+  if (descEl) descEl.textContent = scenario.description;
+  if (quoteBtnText) quoteBtnText.textContent = scenario.quoteButtonText;
+
+  if (specsContainer && scenario.specs) {
+    specsContainer.innerHTML = scenario.specs.map(spec => `
+      <div class="flex items-start space-x-2">
+        <i class="${spec.icon} text-wes-gold text-[11px] mt-0.5 shrink-0"></i>
+        <span><strong class="text-white">${spec.title}</strong> ${spec.desc}</span>
+      </div>
+    `).join('');
+  }
+}
+
+/**
+ * Permite cambiar de escenario desde las flechas de la tarjeta
+ */
+function changeEnergyProjectScenarioCard(delta) {
+  let nextIndex = (currentEnergyScenarioIndex + delta + PROJECT_ENERGY_SCENARIOS.length) % PROJECT_ENERGY_SCENARIOS.length;
+  switchEnergyProjectScenario(nextIndex);
+}
+
+/**
+ * Abre el visor modal para el escenario actualmente activo en la tarjeta.
+ */
+function openCurrentEnergyProjectModal() {
+  openProjectImageModal(null, null, null, currentEnergyScenarioIndex);
+}
+
+/**
+ * Agrega el escenario de respaldo seleccionado a la cotización y abre el formulario.
+ */
+function quoteEnergyProjectScenario(index) {
+  const scenario = PROJECT_ENERGY_SCENARIOS[index] || PROJECT_ENERGY_SCENARIOS[0];
+  const itemData = scenario.quoteItem;
+
+  const existing = AppState.cart.find(i => i.id === itemData.id || (i.code && i.code === itemData.sku));
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    AppState.cart.push({
+      id: itemData.id,
+      name: itemData.name,
+      code: itemData.sku,
+      brand: itemData.brand,
+      price: itemData.price || 0,
+      image: scenario.image,
+      quantity: 1
+    });
+  }
+
+  updateCartBadge();
+  if (typeof showToast === 'function') {
+    showToast(`"${scenario.quoteItem.name}" añadido a tu cotización`, 'success');
+  }
+  openQuoteModal();
+}
+
 /**
  * Abre el visor modal de fotografías de proyectos reales WES.
+ * Soporta navegación interactiva si se especifica scenarioIndex.
  */
-function openProjectImageModal(imgSrc, title, desc) {
+function openProjectImageModal(imgSrc, title, desc, scenarioIndex) {
   const modal = document.getElementById('project-photo-modal');
   const imgEl = document.getElementById('project-modal-img');
   const titleEl = document.getElementById('project-modal-title');
   const descEl = document.getElementById('project-modal-desc');
-  if (modal && imgEl) {
-    imgEl.src = imgSrc;
+  const tabsContainer = document.getElementById('project-modal-scenario-tabs');
+  const prevBtn = document.getElementById('modal-nav-prev');
+  const nextBtn = document.getElementById('modal-nav-next');
+  if (!modal) return;
+
+  if (typeof scenarioIndex === 'number' && PROJECT_ENERGY_SCENARIOS[scenarioIndex]) {
+    modalCurrentScenarioIndex = scenarioIndex;
+    if (tabsContainer) tabsContainer.classList.remove('hidden');
+    if (prevBtn) prevBtn.classList.remove('hidden');
+    if (nextBtn) nextBtn.classList.remove('hidden');
+    updateModalScenarioView();
+  } else {
+    modalCurrentScenarioIndex = -1;
+    if (tabsContainer) tabsContainer.classList.add('hidden');
+    if (prevBtn) prevBtn.classList.add('hidden');
+    if (nextBtn) nextBtn.classList.add('hidden');
+    if (imgEl) imgEl.src = imgSrc || '';
     if (titleEl) titleEl.textContent = title || '';
     if (descEl) descEl.textContent = desc || '';
-    modal.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
+    const quoteBtnText = document.getElementById('project-modal-quote-btn-text');
+    if (quoteBtnText) quoteBtnText.textContent = 'Cotizar Esta Solución';
+  }
+
+  modal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+}
+
+/**
+ * Actualiza la información visual mostrada dentro del modal de fotografía.
+ */
+function updateModalScenarioView() {
+  const scenario = PROJECT_ENERGY_SCENARIOS[modalCurrentScenarioIndex];
+  if (!scenario) return;
+
+  const imgEl = document.getElementById('project-modal-img');
+  const titleEl = document.getElementById('project-modal-title');
+  const descEl = document.getElementById('project-modal-desc');
+  const quoteBtnText = document.getElementById('project-modal-quote-btn-text');
+  const headerTag = document.getElementById('project-modal-header-tag');
+
+  if (imgEl) {
+    imgEl.src = scenario.image;
+    imgEl.alt = scenario.imageAlt;
+  }
+  if (titleEl) titleEl.textContent = scenario.title;
+  if (descEl) descEl.textContent = scenario.description;
+  if (quoteBtnText) quoteBtnText.textContent = `Cotizar ${scenario.tabLabel}`;
+  if (headerTag) headerTag.textContent = `${scenario.statusBadge} — Warn Electrical Services`;
+
+  // Actualizar botones de pestaña en el modal
+  for (let i = 0; i < PROJECT_ENERGY_SCENARIOS.length; i++) {
+    const tab = document.getElementById(`modal-scenario-tab-${i}`);
+    if (tab) {
+      if (i === modalCurrentScenarioIndex) {
+        tab.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-wes-gold text-wes-dark shadow-sm';
+      } else {
+        tab.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-slate-700 text-slate-300 hover:text-white';
+      }
+    }
+  }
+}
+
+/**
+ * Selecciona directamente un escenario dentro del modal.
+ */
+function setModalProjectScenario(index) {
+  if (index >= 0 && index < PROJECT_ENERGY_SCENARIOS.length) {
+    modalCurrentScenarioIndex = index;
+    updateModalScenarioView();
+    switchEnergyProjectScenario(index);
+  }
+}
+
+/**
+ * Alterna entre escenarios hacia adelante o atrás dentro del modal.
+ */
+function changeModalProjectScenario(delta) {
+  if (modalCurrentScenarioIndex < 0) return;
+  let nextIndex = (modalCurrentScenarioIndex + delta + PROJECT_ENERGY_SCENARIOS.length) % PROJECT_ENERGY_SCENARIOS.length;
+  setModalProjectScenario(nextIndex);
+}
+
+/**
+ * Ejecuta la cotización de la solución actualmente visualizada en el modal.
+ */
+function quoteActiveProjectScenario() {
+  closeProjectImageModal();
+  if (modalCurrentScenarioIndex >= 0) {
+    quoteEnergyProjectScenario(modalCurrentScenarioIndex);
+  } else {
+    openQuoteModal();
   }
 }
 
@@ -2004,6 +2298,33 @@ function closeProjectImageModal() {
     document.body.classList.remove('overflow-hidden');
   }
 }
+
+// Navegación con teclado dentro del modal
+document.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('project-photo-modal');
+  if (modal && !modal.classList.contains('hidden')) {
+    if (e.key === 'ArrowLeft') {
+      changeModalProjectScenario(-1);
+    } else if (e.key === 'ArrowRight') {
+      changeModalProjectScenario(1);
+    } else if (e.key === 'Escape') {
+      closeProjectImageModal();
+    }
+  }
+});
+
+// Exponer funciones globales al objeto window para navegación en HTML
+window.PROJECT_ENERGY_SCENARIOS = PROJECT_ENERGY_SCENARIOS;
+window.initEnergyProjectScenarios = initEnergyProjectScenarios;
+window.switchEnergyProjectScenario = switchEnergyProjectScenario;
+window.changeEnergyProjectScenarioCard = changeEnergyProjectScenarioCard;
+window.openCurrentEnergyProjectModal = openCurrentEnergyProjectModal;
+window.quoteEnergyProjectScenario = quoteEnergyProjectScenario;
+window.openProjectImageModal = openProjectImageModal;
+window.setModalProjectScenario = setModalProjectScenario;
+window.changeModalProjectScenario = changeModalProjectScenario;
+window.quoteActiveProjectScenario = quoteActiveProjectScenario;
+window.closeProjectImageModal = closeProjectImageModal;
 
 // ============================================================================
 // SISTEMA DE ENLACES DIRECTOS Y COMPARTIR PRODUCTOS CON CLIENTES (DEEP-LINKING)

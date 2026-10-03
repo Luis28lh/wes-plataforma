@@ -842,35 +842,74 @@
             </div>
           </div>
 
-          <!-- Proyecto 5 -->
-          <div class="bg-slate-800/90 rounded-2xl border border-slate-700/80 overflow-hidden shadow-xl hover:border-wes-gold/50 transition-all duration-300 flex flex-col justify-between group">
+          <!-- Proyecto 5: Sistemas de Respaldo Energético Multi-Escenarios -->
+          <div id="proyecto-energia-respaldo" class="bg-slate-800/90 rounded-2xl border border-slate-700/80 overflow-hidden shadow-xl hover:border-wes-gold/50 transition-all duration-300 flex flex-col justify-between group">
             <div>
-              <div class="relative h-60 overflow-hidden cursor-pointer" onclick="openProjectImageModal('assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg', 'Instalación de Sistema de Respaldo Energético Crítico: Inversor Onda Senoidal Pura 3.6 kW y Banco de 8 Baterías Interstate', 'Diseño, reacondicionamiento e instalación de infraestructura eléctrica de respaldo ininterrumpido (UPS/Inversor), orientada a proteger y mantener en operación continua los activos más sensibles del cliente: el sistema de facturación, la plataforma de videovigilancia y los sistemas de bombeo de agua.')">
-                <img src="assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg" alt="Instalación de Sistema de Respaldo Energético Crítico: Inversor Wave 3.6 kW y 8 Baterías Interstate" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
-                <span class="absolute top-3 left-3 bg-wes-blue/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-wes-gold/30">
+              <!-- Barra de Selección de Escenario -->
+              <div class="bg-slate-900/95 px-3.5 py-2.5 border-b border-slate-700/80 flex items-center justify-between gap-2">
+                <span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider flex items-center">
+                  <i class="fas fa-layer-group text-wes-gold mr-1.5 text-xs"></i>
+                  <span>Escenarios de Respaldo:</span>
+                </span>
+                <div class="flex items-center gap-1.5" id="energy-scenario-tabs">
+                  <button type="button" id="energy-tab-btn-0" onclick="switchEnergyProjectScenario(0)" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all duration-200 flex items-center space-x-1.5 bg-wes-gold text-wes-dark shadow-sm">
+                    <i class="fas fa-bolt text-[10px]"></i>
+                    <span>3.6 kW (8 Bat.)</span>
+                  </button>
+                  <button type="button" id="energy-tab-btn-1" onclick="switchEnergyProjectScenario(1)" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all duration-200 flex items-center space-x-1.5 bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80">
+                    <i class="fas fa-battery-half text-[10px]"></i>
+                    <span>1.5 kW (2 Bat.)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Contenedor de Fotografía con Controles Prev/Next y Zoom -->
+              <div class="relative h-64 overflow-hidden group/img">
+                <img id="energy-project-card-img" src="assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg" alt="Sistema de Respaldo Energético Crítico 3.6 kW" class="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-500 cursor-pointer" onclick="openCurrentEnergyProjectModal()">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent pointer-events-none"></div>
+
+                <!-- Categoría Badge -->
+                <span id="energy-project-category-badge" class="absolute top-3 left-3 bg-wes-blue/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border border-wes-gold/30 shadow-md">
                   Energía & Respaldo Crítico
                 </span>
-                <span class="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-sm text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-400/40 flex items-center space-x-1 shadow-md">
-                  <i class="fas fa-camera text-[10px]"></i>
-                  <span>Obra Real WES</span>
+
+                <!-- Status Badge -->
+                <span id="energy-project-status-badge" class="absolute top-3 right-3 bg-emerald-600/90 backdrop-blur-sm text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-400/40 flex items-center space-x-1 shadow-md">
+                  <i id="energy-project-status-icon" class="fas fa-camera text-[10px]"></i>
+                  <span id="energy-project-status-text">Obra Real WES</span>
                 </span>
-                <span class="absolute bottom-3 left-3 text-xs font-semibold text-slate-200 flex items-center space-x-1">
+
+                <!-- Botones Flechas de Navegación Sobre la Foto -->
+                <button type="button" onclick="changeEnergyProjectScenarioCard(-1); event.stopPropagation();" id="card-nav-prev" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900/85 hover:bg-wes-gold hover:text-wes-dark text-white flex items-center justify-center transition border border-slate-700 shadow-xl text-xs backdrop-blur-sm" title="Escenario anterior">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <button type="button" onclick="changeEnergyProjectScenarioCard(1); event.stopPropagation();" id="card-nav-next" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900/85 hover:bg-wes-gold hover:text-wes-dark text-white flex items-center justify-center transition border border-slate-700 shadow-xl text-xs backdrop-blur-sm" title="Siguiente escenario">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Ubicación -->
+                <span id="energy-project-location" class="absolute bottom-3 left-3 text-xs font-semibold text-slate-200 flex items-center space-x-1 drop-shadow">
                   <i class="fas fa-map-marker-alt text-wes-gold mr-1"></i> Espaillat / Cibao, Rep. Dominicana
                 </span>
-                <span class="absolute bottom-3 right-3 text-[11px] font-bold text-wes-gold/90 bg-slate-900/80 px-2 py-0.5 rounded-lg flex items-center space-x-1 border border-wes-gold/30">
+
+                <!-- Botón Ver Foto / Ampliar -->
+                <button type="button" onclick="openCurrentEnergyProjectModal(); event.stopPropagation();" class="absolute bottom-3 right-3 text-[11px] font-bold text-wes-gold bg-slate-900/90 hover:bg-wes-gold hover:text-wes-dark px-2.5 py-1 rounded-lg flex items-center space-x-1.5 border border-wes-gold/40 shadow-lg transition">
                   <i class="fas fa-search-plus"></i>
                   <span>Ver Foto</span>
-                </span>
+                </button>
               </div>
+
+              <!-- Contenido Técnico del Proyecto -->
               <div class="p-6">
-                <h3 class="text-base font-bold text-white group-hover:text-wes-gold transition mb-2 font-brand leading-snug">
+                <h3 id="energy-project-title" class="text-base font-bold text-white group-hover:text-wes-gold transition mb-2 font-brand leading-snug">
                   Instalación de Sistema de Respaldo Energético Crítico: Inversor Onda Senoidal Pura 3.6 kW y Banco de 8 Baterías Interstate
                 </h3>
-                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                <p id="energy-project-desc" class="text-xs text-slate-300 leading-relaxed mb-4">
                   Diseño, reacondicionamiento e instalación de infraestructura eléctrica de respaldo ininterrumpido (UPS/Inversor), orientada a proteger y mantener en operación continua los activos más sensibles del cliente: el sistema de facturación, la plataforma de videovigilancia y los sistemas de bombeo de agua.
                 </p>
-                <div class="space-y-2 text-[11px] text-slate-300 border-t border-slate-700/60 pt-3">
+
+                <!-- Viñetas de Especificaciones Técnicas -->
+                <div id="energy-project-specs-container" class="space-y-2 text-[11px] text-slate-300 border-t border-slate-700/60 pt-3">
                   <div class="flex items-start space-x-2">
                     <i class="fas fa-bolt text-wes-gold text-[11px] mt-0.5 shrink-0"></i>
                     <span><strong class="text-white">Inversor / Cargador:</strong> Inversor Inteligente Onda Senoidal Pura (Wave 3.6 kW) de alto rendimiento.</span>
@@ -890,10 +929,12 @@
                 </div>
               </div>
             </div>
+
+            <!-- Botón de Cotización Directa según Escenario Seleccionado -->
             <div class="p-6 pt-0">
-              <button onclick="openQuoteModal()" class="w-full py-2.5 bg-slate-700 hover:bg-wes-gold hover:text-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md">
+              <button id="energy-project-quote-btn" type="button" onclick="quoteEnergyProjectScenario(currentEnergyScenarioIndex)" class="w-full py-2.5 bg-wes-blue hover:bg-wes-gold hover:text-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-md">
                 <i class="fas fa-file-invoice"></i>
-                <span>Cotizar Proyecto Similar</span>
+                <span id="energy-project-quote-btn-text">Cotizar Sistema 3.6 kW (8 Baterías)</span>
               </button>
             </div>
           </div>
@@ -2151,16 +2192,39 @@
       <div class="p-4 bg-slate-800/90 border-b border-slate-700 flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-xs font-bold text-wes-gold uppercase tracking-wider font-brand">Obra Realizada por Warn Electrical Services</span>
+          <span id="project-modal-header-tag" class="text-xs font-bold text-wes-gold uppercase tracking-wider font-brand">Obra Realizada por Warn Electrical Services</span>
         </div>
         <button onclick="closeProjectImageModal()" class="text-slate-400 hover:text-white p-2 text-sm rounded-lg hover:bg-slate-700 transition" aria-label="Cerrar modal">
           <i class="fas fa-times text-base"></i>
         </button>
       </div>
       <div class="p-4 overflow-y-auto flex flex-col items-center">
-        <div class="w-full max-h-[58vh] flex items-center justify-center bg-black/50 rounded-2xl overflow-hidden p-2 border border-slate-800">
-          <img id="project-modal-img" src="" alt="Fotografía de Proyecto WES" class="max-h-[55vh] w-auto object-contain rounded-xl shadow-2xl">
+        <!-- Selector de Escenarios dentro del Modal -->
+        <div id="project-modal-scenario-tabs" class="w-full mb-3 flex items-center justify-between bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/70">
+          <span class="text-[11px] font-bold text-slate-300 ml-2 flex items-center">
+            <i class="fas fa-images text-wes-gold mr-1.5"></i> Escenarios Reales:
+          </span>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="modal-scenario-tab-0" onclick="setModalProjectScenario(0)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-wes-gold text-wes-dark shadow-sm">
+              3.6 kW (8 Bat.)
+            </button>
+            <button type="button" id="modal-scenario-tab-1" onclick="setModalProjectScenario(1)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-slate-700 text-slate-300 hover:text-white">
+              1.5 kW (2 Bat.)
+            </button>
+          </div>
         </div>
+
+        <!-- Imagen con Botones de Navegación Flechas -->
+        <div class="w-full relative max-h-[55vh] flex items-center justify-center bg-black/60 rounded-2xl overflow-hidden p-2 border border-slate-800 group">
+          <button type="button" onclick="changeModalProjectScenario(-1)" id="modal-nav-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-wes-gold hover:text-wes-dark text-white flex items-center justify-center transition border border-slate-700 shadow-xl text-sm" title="Fotografía anterior">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <img id="project-modal-img" src="" alt="Fotografía de Proyecto WES" class="max-h-[52vh] w-auto object-contain rounded-xl shadow-2xl transition-opacity duration-300">
+          <button type="button" onclick="changeModalProjectScenario(1)" id="modal-nav-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-wes-gold hover:text-wes-dark text-white flex items-center justify-center transition border border-slate-700 shadow-xl text-sm" title="Siguiente fotografía">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+
         <div class="w-full mt-4 text-left">
           <h4 id="project-modal-title" class="text-sm sm:text-base font-bold text-white font-brand mb-1"></h4>
           <p id="project-modal-desc" class="text-xs text-slate-300 leading-relaxed"></p>
@@ -2170,9 +2234,9 @@
         <button onclick="closeProjectImageModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-semibold transition">
           Cerrar
         </button>
-        <button onclick="closeProjectImageModal(); openQuoteModal();" class="px-5 py-2.5 bg-wes-gold hover:bg-amber-400 text-wes-dark font-extrabold rounded-xl text-xs uppercase tracking-wider flex items-center space-x-2 shadow-lg transition">
+        <button id="project-modal-quote-btn" onclick="quoteActiveProjectScenario()" class="px-5 py-2.5 bg-wes-gold hover:bg-amber-400 text-wes-dark font-extrabold rounded-xl text-xs uppercase tracking-wider flex items-center space-x-2 shadow-lg transition">
           <i class="fas fa-clipboard-check"></i>
-          <span>Cotizar Esta Solución</span>
+          <span id="project-modal-quote-btn-text">Cotizar Esta Solución</span>
         </button>
       </div>
     </div>
@@ -2207,6 +2271,6 @@
   <script src="js/products.js?v=20261003_0810"></script>
   <script src="js/supabase_client.js?v=20261002_0915"></script>
   <script src="js/feature_flags.js?v=20261002_0915"></script>
-  <script src="js/app.js?v=20261002_0915"></script>
+  <script src="js/app.js?v=20261003_0825"></script>
 </body>
 </html>
