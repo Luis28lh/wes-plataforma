@@ -2189,53 +2189,89 @@
   <!-- ========================================================= -->
   <div id="project-photo-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-700/80 rounded-3xl max-w-2xl w-full max-h-[94vh] flex flex-col shadow-2xl overflow-hidden animate-fadeIn">
+      <!-- Encabezado del Modal -->
       <div class="p-4 bg-slate-800/90 border-b border-slate-700 flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span id="project-modal-header-tag" class="text-xs font-bold text-wes-gold uppercase tracking-wider font-brand">Obra Realizada por Warn Electrical Services</span>
         </div>
-        <button onclick="closeProjectImageModal()" class="text-slate-400 hover:text-white p-2 text-sm rounded-lg hover:bg-slate-700 transition" aria-label="Cerrar modal">
+        <button onclick="closeProjectImageModal()" class="text-slate-400 hover:text-white p-2 text-sm rounded-lg hover:bg-slate-700 transition" aria-label="Cerrar visor">
           <i class="fas fa-times text-base"></i>
         </button>
       </div>
-      <div class="p-4 overflow-y-auto flex flex-col items-center">
-        <!-- Selector de Escenarios dentro del Modal -->
-        <div id="project-modal-scenario-tabs" class="w-full mb-3 flex items-center justify-between bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/70">
-          <span class="text-[11px] font-bold text-slate-300 ml-2 flex items-center">
-            <i class="fas fa-images text-wes-gold mr-1.5"></i> Escenarios Reales:
-          </span>
-          <div class="flex items-center gap-1.5">
-            <button type="button" id="modal-scenario-tab-0" onclick="setModalProjectScenario(0)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-wes-gold text-wes-dark shadow-sm">
-              3.6 kW (8 Bat.)
-            </button>
-            <button type="button" id="modal-scenario-tab-1" onclick="setModalProjectScenario(1)" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-slate-700 text-slate-300 hover:text-white">
-              1.5 kW (2 Bat.)
-            </button>
-          </div>
+
+      <!-- Cuerpo del Modal -->
+      <div class="p-4 overflow-y-auto flex flex-col items-center space-y-4">
+        <!-- Selector Rápido de Miniaturas (Moverse entre fotos) -->
+        <div id="project-modal-thumbnails-bar" class="w-full flex items-center justify-center gap-2.5">
+          <button type="button" id="modal-thumb-0" onclick="setModalProjectScenario(0)" class="flex-1 max-w-[240px] p-1.5 rounded-xl border-2 transition-all flex items-center space-x-2 bg-slate-800 border-wes-gold ring-2 ring-wes-gold/30 shadow-md text-left">
+            <img src="assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg" alt="Miniatura 3.6 kW" class="w-12 h-10 object-cover rounded-lg border border-slate-700 shrink-0">
+            <div class="min-w-0">
+              <div class="text-[11px] font-bold text-white truncate">Sistema 3.6 kW</div>
+              <div class="text-[10px] text-wes-gold/90 truncate">8 Baterías Interstate</div>
+            </div>
+          </button>
+          <button type="button" id="modal-thumb-1" onclick="setModalProjectScenario(1)" class="flex-1 max-w-[240px] p-1.5 rounded-xl border-2 transition-all flex items-center space-x-2 bg-slate-800 border-slate-700 opacity-70 hover:opacity-100 shadow-md text-left">
+            <img src="assets/projects/sistema-respaldo-inversor-1500w-2bat.jpg" alt="Miniatura 1.5 kW" class="w-12 h-10 object-cover rounded-lg border border-slate-700 shrink-0">
+            <div class="min-w-0">
+              <div class="text-[11px] font-bold text-white truncate">Sistema 1.5 kW</div>
+              <div class="text-[10px] text-slate-300 truncate">2 Baterías (Aluminio)</div>
+            </div>
+          </button>
         </div>
 
-        <!-- Imagen con Botones de Navegación Flechas -->
-        <div class="w-full relative max-h-[55vh] flex items-center justify-center bg-black/60 rounded-2xl overflow-hidden p-2 border border-slate-800 group">
-          <button type="button" onclick="changeModalProjectScenario(-1)" id="modal-nav-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-wes-gold hover:text-wes-dark text-white flex items-center justify-center transition border border-slate-700 shadow-xl text-sm" title="Fotografía anterior">
+        <!-- Visor de Foto Principal con Flechas y Clic para Avanzar -->
+        <div class="w-full relative max-h-[50vh] flex items-center justify-center bg-black/70 rounded-2xl overflow-hidden p-2 border border-slate-800 group">
+          <button type="button" onclick="changeModalProjectScenario(-1); event.stopPropagation();" id="modal-nav-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-slate-900/85 hover:bg-wes-gold hover:text-wes-dark text-white flex items-center justify-center transition border border-slate-700 shadow-xl text-sm" title="Fotografía anterior">
             <i class="fas fa-chevron-left"></i>
           </button>
-          <img id="project-modal-img" src="" alt="Fotografía de Proyecto WES" class="max-h-[52vh] w-auto object-contain rounded-xl shadow-2xl transition-opacity duration-300">
-          <button type="button" onclick="changeModalProjectScenario(1)" id="modal-nav-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-slate-900/80 hover:bg-wes-gold hover:text-wes-dark text-white flex items-center justify-center transition border border-slate-700 shadow-xl text-sm" title="Siguiente fotografía">
+          
+          <img id="project-modal-img" src="" alt="Fotografía de Proyecto WES" class="max-h-[46vh] w-auto object-contain rounded-xl shadow-2xl transition-all duration-300 cursor-pointer" onclick="changeModalProjectScenario(1)" title="Toca la foto para ver la siguiente instalación">
+          
+          <button type="button" onclick="changeModalProjectScenario(1); event.stopPropagation();" id="modal-nav-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-slate-900/85 hover:bg-wes-gold hover:text-wes-dark text-white flex items-center justify-center transition border border-slate-700 shadow-xl text-sm" title="Siguiente fotografía">
             <i class="fas fa-chevron-right"></i>
           </button>
+
+          <!-- Indicador flotante sobre la foto -->
+          <span id="modal-photo-counter" class="absolute bottom-3 left-3 bg-slate-900/90 backdrop-blur-sm text-wes-gold text-[10px] font-extrabold px-3 py-1 rounded-full border border-wes-gold/40 shadow-lg flex items-center space-x-1">
+            <i class="fas fa-camera text-[9px]"></i>
+            <span id="modal-photo-counter-text">Foto 1 de 2: Sistema 3.6 kW (8 Baterías)</span>
+          </span>
+          <span class="absolute bottom-3 right-3 bg-slate-900/90 backdrop-blur-sm text-slate-300 text-[10px] px-2.5 py-1 rounded-full border border-slate-700 pointer-events-none hidden sm:inline-flex items-center space-x-1">
+            <i class="fas fa-hand-pointer text-[9px] text-wes-gold"></i>
+            <span>Clic en la foto para cambiar</span>
+          </span>
         </div>
 
-        <div class="w-full mt-4 text-left">
+        <!-- Título y Descripción -->
+        <div class="w-full text-left">
           <h4 id="project-modal-title" class="text-sm sm:text-base font-bold text-white font-brand mb-1"></h4>
           <p id="project-modal-desc" class="text-xs text-slate-300 leading-relaxed"></p>
         </div>
+
+        <!-- Sección de Datos Técnicos de la Instalación Seleccionada -->
+        <div id="project-modal-specs-box" class="w-full bg-slate-800/80 rounded-2xl p-4 border border-slate-700/80 text-left">
+          <div class="flex items-center justify-between border-b border-slate-700/70 pb-2 mb-3">
+            <h5 class="text-xs font-bold text-wes-gold uppercase tracking-wider flex items-center">
+              <i class="fas fa-microchip mr-2 text-wes-gold"></i> Datos y Componentes del Sistema
+            </h5>
+            <span id="modal-scenario-status-pill" class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              Obra Real WES
+            </span>
+          </div>
+          <div id="project-modal-specs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-slate-300">
+            <!-- Renderizado dinámico de las 4 especificaciones -->
+          </div>
+        </div>
       </div>
-      <div class="p-4 bg-slate-800/80 border-t border-slate-700/80 flex justify-between items-center gap-3">
-        <button onclick="closeProjectImageModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-semibold transition">
-          Cerrar
+
+      <!-- Pie de Acción del Modal -->
+      <div class="p-4 bg-slate-800/90 border-t border-slate-700/80 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <button onclick="closeProjectImageModal()" class="w-full sm:w-auto px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-xs font-semibold transition text-center">
+          <i class="fas fa-check mr-1.5 text-emerald-400"></i> Ver en la Página
         </button>
-        <button id="project-modal-quote-btn" onclick="quoteActiveProjectScenario()" class="px-5 py-2.5 bg-wes-gold hover:bg-amber-400 text-wes-dark font-extrabold rounded-xl text-xs uppercase tracking-wider flex items-center space-x-2 shadow-lg transition">
-          <i class="fas fa-clipboard-check"></i>
+        <button id="project-modal-quote-btn" onclick="quoteActiveProjectScenario()" class="w-full sm:w-auto px-5 py-2.5 bg-wes-gold hover:bg-amber-400 text-wes-dark font-extrabold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-lg transition">
+          <i class="fas fa-file-invoice"></i>
           <span id="project-modal-quote-btn-text">Cotizar Esta Solución</span>
         </button>
       </div>
@@ -2271,6 +2307,6 @@
   <script src="js/products.js?v=20261003_0810"></script>
   <script src="js/supabase_client.js?v=20261002_0915"></script>
   <script src="js/feature_flags.js?v=20261002_0915"></script>
-  <script src="js/app.js?v=20261003_0825"></script>
+  <script src="js/app.js?v=20261003_0855"></script>
 </body>
 </html>

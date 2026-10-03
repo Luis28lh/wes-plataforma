@@ -2194,20 +2194,26 @@ function openProjectImageModal(imgSrc, title, desc, scenarioIndex) {
   const imgEl = document.getElementById('project-modal-img');
   const titleEl = document.getElementById('project-modal-title');
   const descEl = document.getElementById('project-modal-desc');
-  const tabsContainer = document.getElementById('project-modal-scenario-tabs');
+  const thumbsBar = document.getElementById('project-modal-thumbnails-bar');
+  const specsBox = document.getElementById('project-modal-specs-box');
+  const counterPill = document.getElementById('modal-photo-counter');
   const prevBtn = document.getElementById('modal-nav-prev');
   const nextBtn = document.getElementById('modal-nav-next');
   if (!modal) return;
 
   if (typeof scenarioIndex === 'number' && PROJECT_ENERGY_SCENARIOS[scenarioIndex]) {
     modalCurrentScenarioIndex = scenarioIndex;
-    if (tabsContainer) tabsContainer.classList.remove('hidden');
+    if (thumbsBar) thumbsBar.classList.remove('hidden');
+    if (specsBox) specsBox.classList.remove('hidden');
+    if (counterPill) counterPill.classList.remove('hidden');
     if (prevBtn) prevBtn.classList.remove('hidden');
     if (nextBtn) nextBtn.classList.remove('hidden');
     updateModalScenarioView();
   } else {
     modalCurrentScenarioIndex = -1;
-    if (tabsContainer) tabsContainer.classList.add('hidden');
+    if (thumbsBar) thumbsBar.classList.add('hidden');
+    if (specsBox) specsBox.classList.add('hidden');
+    if (counterPill) counterPill.classList.add('hidden');
     if (prevBtn) prevBtn.classList.add('hidden');
     if (nextBtn) nextBtn.classList.add('hidden');
     if (imgEl) imgEl.src = imgSrc || '';
@@ -2233,6 +2239,9 @@ function updateModalScenarioView() {
   const descEl = document.getElementById('project-modal-desc');
   const quoteBtnText = document.getElementById('project-modal-quote-btn-text');
   const headerTag = document.getElementById('project-modal-header-tag');
+  const counterText = document.getElementById('modal-photo-counter-text');
+  const statusPill = document.getElementById('modal-scenario-status-pill');
+  const modalSpecsContainer = document.getElementById('project-modal-specs-container');
 
   if (imgEl) {
     imgEl.src = scenario.image;
@@ -2242,15 +2251,32 @@ function updateModalScenarioView() {
   if (descEl) descEl.textContent = scenario.description;
   if (quoteBtnText) quoteBtnText.textContent = `Cotizar ${scenario.tabLabel}`;
   if (headerTag) headerTag.textContent = `${scenario.statusBadge} — Warn Electrical Services`;
+  if (counterText) counterText.textContent = `Foto ${modalCurrentScenarioIndex + 1} de 2: ${scenario.tabLabel}`;
+  if (statusPill) statusPill.textContent = scenario.statusBadge;
 
-  // Actualizar botones de pestaña en el modal
+  // Actualizar datos técnicos de la instalación dentro del modal
+  if (modalSpecsContainer && scenario.specs) {
+    modalSpecsContainer.innerHTML = scenario.specs.map(spec => `
+      <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-700/60 flex items-start space-x-2.5">
+        <div class="w-7 h-7 rounded-lg bg-wes-gold/15 text-wes-gold flex items-center justify-center shrink-0 mt-0.5">
+          <i class="${spec.icon} text-xs"></i>
+        </div>
+        <div class="text-[11px] leading-relaxed">
+          <div class="text-white font-bold mb-0.5">${spec.title}</div>
+          <div class="text-slate-300">${spec.desc}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Actualizar miniaturas activas
   for (let i = 0; i < PROJECT_ENERGY_SCENARIOS.length; i++) {
-    const tab = document.getElementById(`modal-scenario-tab-${i}`);
-    if (tab) {
+    const thumb = document.getElementById(`modal-thumb-${i}`);
+    if (thumb) {
       if (i === modalCurrentScenarioIndex) {
-        tab.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-wes-gold text-wes-dark shadow-sm';
+        thumb.className = 'flex-1 max-w-[240px] p-1.5 rounded-xl border-2 transition-all flex items-center space-x-2 bg-slate-800 border-wes-gold ring-2 ring-wes-gold/30 shadow-md text-left opacity-100';
       } else {
-        tab.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-slate-700 text-slate-300 hover:text-white';
+        thumb.className = 'flex-1 max-w-[240px] p-1.5 rounded-xl border-2 transition-all flex items-center space-x-2 bg-slate-800 border-slate-700 opacity-60 hover:opacity-100 shadow-md text-left';
       }
     }
   }
