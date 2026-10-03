@@ -9310,22 +9310,16 @@ const INITIAL_PRODUCTS = [
         "caption": "Motorreductor CAME BXV 1000kg con vista frontal de desbloqueo, piñón trasero y tecnología Encoder anti-aplastamiento"
       },
       {
-        "url": "https://fscompras.com/wp-content/uploads/2019/02/BXV10RGS-002.jpg",
+        "url": "assets/products/came-bxv1000kg-kit.jpg",
+        "title": "Kit Automatización CAME BXV 1000KG",
+        "badge": "Kit Completo",
+        "caption": "Operador CAME BXV serie 1000kg con mandos bicanal TOP, tarjeta receptora y cremallera"
+      },
+      {
+        "url": "assets/products/came-bxv1000kg-chasis.jpg",
         "title": "Chasis Compacto BXV RAL 7024",
         "badge": "Chasis Frontal",
-        "caption": "Diseño ergonómico CAME BXV serie 1000kg en acabado gris grafito RAL 7024"
-      },
-      {
-        "url": "https://fscompras.com/wp-content/uploads/2019/02/BXV04RGS-004.jpg",
-        "title": "Piñón de Arrastre y Final de Carrera",
-        "badge": "Mecanismo Trasero",
-        "caption": "Engranaje módulo 4 en acero templado con resorte sensible de final de carrera"
-      },
-      {
-        "url": "https://sc04.alicdn.com/kf/H8733a0786cb84e018452aa53d4748bccs.jpg_960x960q80.jpg",
-        "title": "Electrónica con Display Digital",
-        "badge": "Electrónica",
-        "caption": "Tarjeta digital con display de programación, terminales separadas y memoria para 250 usuarios"
+        "caption": "Diseño ergonómico CAME BXV serie 1000kg en acabado gris grafito RAL 7024 con protección IP44"
       }
     ],
     "key_attributes": {
@@ -10224,12 +10218,12 @@ const INITIAL_PRODUCTS = [
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v28_catalog';
+    const versionKey = 'wes_products_v29_catalog';
     let products = null;
     try {
       if (typeof localStorage !== 'undefined') {
         // Purgar versiones antiguas para garantizar actualización instantánea en el navegador
-        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog', 'wes_products_v27_catalog'].forEach(k => {
+        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog', 'wes_products_v27_catalog', 'wes_products_v28_catalog'].forEach(k => {
           try { localStorage.removeItem(k); } catch(e) {}
         });
       }
@@ -10288,12 +10282,15 @@ const StorageService = {
         }
       }
 
-      // Auto-reparación activa de SKU 1390: Motor CAME 1000KG precio actualizado a 48,300
+      // Auto-reparación activa de SKU 1390: Motor CAME 1000KG precio actualizado a 48,300 y remoción de medidas ajenas
       const p1390 = products.find(p => String(p.codigo || p.code) === '1390');
       const init1390 = INITIAL_PRODUCTS.find(p => String(p.codigo || p.code) === '1390');
-      if (p1390 && init1390 && (p1390.precio !== 48300 || p1390.price !== 48300)) {
-        p1390.precio = 48300;
-        p1390.price = 48300;
+      if (p1390 && init1390 && (
+        p1390.precio !== 48300 ||
+        p1390.price !== 48300 ||
+        (p1390.gallery_images || []).some(g => (g.url || '').includes('alicdn') || (g.title || '').includes('Display'))
+      )) {
+        Object.assign(p1390, init1390);
         if (typeof localStorage !== 'undefined') {
           try {
             localStorage.setItem(versionKey, JSON.stringify(products));
