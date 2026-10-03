@@ -31,6 +31,7 @@ function initApp() {
   setupEventListeners();
   updateCartBadge();
   setupSupportImageUploader();
+  setupPhoneInputsMask();
   checkCookieConsent();
   initEnergyProjectScenarios();
 
@@ -446,27 +447,20 @@ function renderProducts() {
 
     const quoteBtnHtml = flags.enableQuotes
       ? `
-        <button onclick="addToQuote('${product.id}')" title="Agregar a cotización" class="px-3.5 h-10 rounded-xl bg-wes-blue text-white hover:bg-wes-dark flex items-center space-x-1.5 text-xs font-semibold transition shadow-md hover:shadow-wes-blue/20">
+        <button onclick="addToQuote('${product.id}', event)" title="Agregar a cotización" class="px-3.5 h-10 rounded-xl bg-wes-blue text-white hover:bg-wes-dark flex items-center space-x-1.5 text-xs font-semibold transition shadow-md hover:shadow-wes-blue/20">
           <i class="fas fa-cart-plus"></i>
           <span class="hidden sm:inline">Cotizar</span>
         </button>
       `
       : `
-        <a href="${waUrl}" target="_blank" title="Consultar por WhatsApp" class="px-3.5 h-10 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center space-x-1 text-xs font-semibold transition">
+        <a href="${waUrl}" target="_blank" onclick="event.stopPropagation()" title="Consultar por WhatsApp" class="px-3.5 h-10 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center space-x-1 text-xs font-semibold transition">
           <span>Consultar</span>
         </a>
       `;
 
-    const manualFeat = (product.features || []).find(f => typeof f === 'string' && f.startsWith('manual_url:'));
-    const manualUrl = product.manualUrl || (manualFeat ? manualFeat.replace('manual_url:', '') : null);
-
-    const visibleFeatures = (product.features || [])
-      .filter(f => typeof f === 'string' && !f.startsWith('manual_url:'))
-      .map(f => f.replace(/Código SKU \/ Odoo:/gi, 'SKU:').replace(/\/ Odoo/gi, ''));
-
     return `
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group">
-        <div onclick="openProductDetailModal('${product.id}')" class="relative h-56 bg-white flex items-center justify-center p-3 border-b border-slate-100 overflow-hidden cursor-pointer">
+      <div onclick="openProductDetailModal('${product.id}')" class="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer hover:border-wes-blue/50">
+        <div class="relative h-48 sm:h-52 bg-white flex items-center justify-center p-3 border-b border-slate-100 overflow-hidden">
           <img src="${product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500" loading="lazy">
           ${promoBadgeHtml}
           <span class="absolute top-3 right-3 text-xs font-bold px-2 py-1 bg-slate-900/80 text-white rounded-md shadow-sm">
@@ -474,40 +468,18 @@ function renderProducts() {
           </span>
         </div>
         
-        <div class="p-5 flex-1 flex flex-col">
-          <div class="text-xs font-mono text-slate-500 mb-1 font-semibold">${product.code}</div>
-          <h3 onclick="openProductDetailModal('${product.id}')" class="font-bold text-slate-900 text-base leading-snug line-clamp-2 hover:text-wes-blue transition cursor-pointer">
+        <div class="p-4 sm:p-5 flex-1 flex flex-col">
+          <div class="text-xs font-mono font-bold text-slate-500 mb-1 tracking-wide">
+            SKU: ${product.code || product.codigo || ''}
+          </div>
+          <h3 class="font-bold text-slate-900 text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-wes-blue transition">
             ${product.name}
           </h3>
-          <p class="text-xs text-slate-600 mt-2 line-clamp-2">${product.description}</p>
-          
-          <div class="mt-3 pt-3 border-t border-slate-100 space-y-1">
-            ${visibleFeatures.slice(0, 3).map(feat => `
-              <div class="flex items-start text-xs text-slate-600">
-                <i class="fas fa-check text-wes-gold mr-1.5 mt-0.5 text-[10px]"></i>
-                <span class="line-clamp-1">${feat}</span>
-              </div>
-            `).join('')}
-          </div>
+          <p class="text-xs text-slate-500 mt-2 line-clamp-2">${product.description || ''}</p>
 
-          <!-- Botón de Vista Rápida Estilo Alibaba -->
-          <button type="button" onclick="openProductDetailModal('${product.id}')" class="mt-3 w-full py-1.5 px-3 bg-slate-100 hover:bg-wes-blue hover:text-white text-slate-700 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition">
-            <i class="fas fa-images text-wes-gold"></i>
-            <span>Ver fotos multi-ángulo & opiniones</span>
-          </button>
-
-          ${manualUrl ? `
-            <div class="mt-2">
-              <a href="${manualUrl}" target="_blank" rel="noopener noreferrer" class="w-full py-1.5 px-3 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition">
-                <i class="fas fa-file-pdf text-red-600"></i>
-                <span>Descargar Manual Técnico (PDF)</span>
-              </a>
-            </div>
-          ` : ''}
-
-          <div class="mt-auto pt-4 flex items-center justify-between">
+          <div class="mt-auto pt-3.5 border-t border-slate-100 flex items-center justify-between" onclick="event.stopPropagation()">
             <div>
-              <span class="text-xs text-slate-400 block font-medium">Precio Ref:</span>
+              <span class="text-[11px] text-slate-400 block font-medium">Precio Ref:</span>
               ${priceHtml}
             </div>
             
@@ -670,7 +642,11 @@ function filterByBrand(brandName) {
 window.filterByBrand = filterByBrand;
 
 // 3. Sistema de Carrito / Lista de Cotización
-function addToQuote(productId) {
+function addToQuote(productId, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
   const products = StorageService.getProducts();
   const product = products.find(p => p.id === productId);
   if (!product) return;
@@ -711,6 +687,7 @@ function openQuoteModal() {
   if (!modal) return;
 
   renderQuoteCartItems();
+  setupPhoneInputsMask();
   modal.classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
 }
@@ -809,6 +786,20 @@ async function handleQuoteSubmit(e) {
   const form = e.target;
   const submitBtn = form.querySelector('button[type="submit"]');
   const originalBtnText = submitBtn.innerHTML;
+
+  // Validar formato de teléfono a 10 dígitos (ej. 809-000-0000)
+  const phoneDigits = form.phone ? form.phone.value.replace(/\D/g, '') : '';
+  if (phoneDigits.length !== 10) {
+    showToast('El teléfono directo debe tener 10 dígitos (ej. 809-000-0000).', 'warning');
+    if (form.phone) form.phone.focus();
+    return;
+  }
+  const waDigits = form.whatsapp ? form.whatsapp.value.replace(/\D/g, '') : '';
+  if (waDigits && waDigits.length !== 10) {
+    showToast('El número de WhatsApp debe tener 10 dígitos (ej. 809-000-0000).', 'warning');
+    if (form.whatsapp) form.whatsapp.focus();
+    return;
+  }
 
   // Recolectar datos
   const quotes = StorageService.getQuotes();
@@ -913,6 +904,104 @@ async function handleQuoteSubmit(e) {
     submitBtn.disabled = false;
     submitBtn.innerHTML = originalBtnText;
   }
+}
+
+// ==========================================
+// Máscara y Validación de Teléfono (10 dígitos Dominicano: XXX-XXX-XXXX)
+// ==========================================
+function formatPhoneNumber(val) {
+  if (!val) return '';
+  let digits = String(val).replace(/\D/g, '');
+  if (digits.length === 11 && digits.startsWith('1')) {
+    digits = digits.substring(1);
+  }
+  digits = digits.substring(0, 10);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+}
+
+function attachPhoneMask(input) {
+  if (!input || input._phoneMaskAttached) return;
+  input._phoneMaskAttached = true;
+  input.maxLength = 12;
+  input.inputMode = 'numeric';
+  input.autocomplete = 'tel';
+
+  if (input.value) {
+    input.value = formatPhoneNumber(input.value);
+  }
+
+  // Interceptar borrado sobre el guión para evitar bloqueo del cursor
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace') {
+      const selStart = input.selectionStart;
+      const selEnd = input.selectionEnd;
+      if (selStart === selEnd && selStart > 0 && input.value[selStart - 1] === '-') {
+        e.preventDefault();
+        const val = input.value;
+        const before = val.slice(0, selStart - 2);
+        const after = val.slice(selStart);
+        input.value = before + after;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    } else if (e.key === 'Delete') {
+      const selStart = input.selectionStart;
+      const selEnd = input.selectionEnd;
+      if (selStart === selEnd && selStart < input.value.length && input.value[selStart] === '-') {
+        e.preventDefault();
+        const val = input.value;
+        const before = val.slice(0, selStart);
+        const after = val.slice(selStart + 2);
+        input.value = before + after;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
+  });
+
+  input.addEventListener('input', () => {
+    const raw = input.value;
+    const cursorPos = input.selectionStart || 0;
+    const digitsBefore = raw.slice(0, cursorPos).replace(/\D/g, '').length;
+    const formatted = formatPhoneNumber(raw);
+    input.value = formatted;
+
+    // Calcular posición óptima del cursor basada en dígitos tipeados
+    let newPos = 0;
+    let counted = 0;
+    for (let i = 0; i < formatted.length; i++) {
+      if (formatted[i] !== '-') {
+        counted++;
+      }
+      if (counted === digitsBefore) {
+        newPos = i + 1;
+        break;
+      }
+    }
+    if (newPos < formatted.length && formatted[newPos] === '-') {
+      newPos++;
+    }
+    input.setSelectionRange(newPos, newPos);
+  });
+
+  input.addEventListener('blur', () => {
+    if (input.value) {
+      input.value = formatPhoneNumber(input.value);
+    }
+  });
+}
+
+function setupPhoneInputsMask() {
+  const selectors = [
+    'input.phone-mask-input',
+    '#support-form input[name="phone"]',
+    '#support-form input[name="whatsapp"]',
+    '#contact-form input[name="phone"]',
+    '#quote-form input[name="phone"]',
+    '#quote-form input[name="whatsapp"]'
+  ];
+  const inputs = document.querySelectorAll(selectors.join(', '));
+  inputs.forEach(input => attachPhoneMask(input));
 }
 
 // 5. Carga de Fotografías y Gestión de Soporte
@@ -1080,6 +1169,20 @@ async function handleSupportSubmit(e) {
   const submitBtn = form.querySelector('button[type="submit"]');
   const originalBtnText = submitBtn.innerHTML;
 
+  // Validar formato de teléfono a 10 dígitos (ej. 809-000-0000)
+  const phoneDigits = form.phone ? form.phone.value.replace(/\D/g, '') : '';
+  if (phoneDigits.length !== 10) {
+    showToast('El teléfono de contacto debe tener 10 dígitos (ej. 809-000-0000).', 'warning');
+    if (form.phone) form.phone.focus();
+    return;
+  }
+  const waDigits = form.whatsapp ? form.whatsapp.value.replace(/\D/g, '') : '';
+  if (waDigits && waDigits.length !== 10) {
+    showToast('El número de WhatsApp debe tener 10 dígitos (ej. 809-000-0000).', 'warning');
+    if (form.whatsapp) form.whatsapp.focus();
+    return;
+  }
+
   const tickets = StorageService.getSupportTickets();
   const nextNum = tickets.length + 1;
   const caseId = `SOP-2026-${String(nextNum).padStart(4, '0')}`;
@@ -1197,6 +1300,16 @@ async function handleContactSubmit(e) {
   const email = form.email ? form.email.value.trim() : '';
   const subject = form.subject.value.trim();
   const message = form.message.value.trim();
+
+  // Validar formato de teléfono a 10 dígitos si fue ingresado (opcional en contacto)
+  if (phone) {
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (phoneDigits.length !== 10) {
+      showToast('El número de teléfono debe tener 10 dígitos (ej. 809-000-0000).', 'warning');
+      if (form.phone) form.phone.focus();
+      return;
+    }
+  }
 
   // Generar número de Ticket formal consecutivo
   const contacts = JSON.parse(localStorage.getItem('wes_contact_messages') || '[]');
@@ -1693,16 +1806,33 @@ function openProductDetailModal(productId) {
   // 3. Características Principales (Key Attributes estilo Alibaba)
   const keyAttrsGrid = document.getElementById('detail-key-attributes-grid');
   if (keyAttrsGrid) {
-    const attrs = product.key_attributes || {
+    const baseAttrs = product.key_attributes || {
       "Código / SKU": product.code || product.codigo || 'N/A',
       "Marca": product.brand || product.marca || 'WES Certificado',
-      "Categoría": product.category || product.categoria_id || 'Equipos y Repuestos',
-      "Disponibilidad": (product.stock !== undefined && product.stock > 0) ? `${product.stock} unidades en stock` : 'Disponible bajo pedido',
+      "Categoría ERP": product.category || product.categoria_id || 'Equipos y Repuestos',
+      "Disponibilidad": (product.stock !== undefined && product.stock > 0) ? `${product.stock} unidades en inventario físico` : 'Disponible bajo pedido',
       "Condición": "100% Nuevo Original",
       "Garantía WES": "Garantía oficial Warn Electrical Services",
       "Soporte Técnico": "Asistencia técnica directa WES",
       "Entrega": "Despacho a todo el país (Rep. Dominicana)"
     };
+
+    const attrs = { ...baseAttrs };
+    if (Array.isArray(product.features)) {
+      product.features.forEach(f => {
+        if (typeof f === 'string' && !f.startsWith('manual_url:')) {
+          const cleanF = f.replace(/Código SKU \/ Odoo:/gi, 'SKU:').replace(/\/ Odoo/gi, '');
+          if (cleanF.includes(':')) {
+            const parts = cleanF.split(':');
+            const k = parts[0].trim();
+            const v = parts.slice(1).join(':').trim();
+            if (k && v && !attrs[k]) {
+              attrs[k] = v;
+            }
+          }
+        }
+      });
+    }
 
     keyAttrsGrid.innerHTML = Object.entries(attrs).map(([key, value]) => `
       <div class="p-3 bg-white border border-slate-200/80 rounded-xl">
