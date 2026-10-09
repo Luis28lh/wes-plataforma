@@ -2,10 +2,19 @@
 <html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Warn Electrical Services (WES) | Seguridad Electrónica, Automatización e Instalaciones</title>
   <meta name="description" content="Warn Electrical Services, SRL (WES) — Venta, instalación y soporte técnico de cámaras de seguridad, controles de acceso, cerraduras inteligentes y automatización en Moca, República Dominicana.">
   
+  <!-- Configuración PWA Móvil -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#071836">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="WES">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
   <!-- Favicon con logo WES Búho Guardián -->
   <link rel="icon" type="image/jpeg" href="assets/logo-buho.jpg">
 
@@ -2308,5 +2317,20 @@
   <script src="js/supabase_client.js?v=20261002_0915"></script>
   <script src="js/feature_flags.js?v=20261002_0915"></script>
   <script src="js/app.js?v=20261003_1055"></script>
+
+  <!-- Registro de Service Worker para PWA Móvil -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => {
+            console.log('[WES PWA] Service Worker activo:', reg.scope);
+          })
+          .catch(err => {
+            console.warn('[WES PWA] Error al registrar Service Worker:', err);
+          });
+      });
+    }
+  </script>
 </body>
 </html>

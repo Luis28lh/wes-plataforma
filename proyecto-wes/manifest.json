@@ -1,0 +1,63 @@
+﻿{
+  "name": "Warn Electrical Services - Seguridad y Automatización",
+  "short_name": "WES",
+  "description": "Plataforma empresarial de videovigilancia, controles de acceso, cerrajería digital y automatización de Warn Electrical Services, SRL.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071836",
+  "theme_color": "#071836",
+  "orientation": "portrait-primary",
+  "lang": "es-DO",
+  "categories": ["business", "utilities", "shopping"],
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Catálogo de Soluciones",
+      "short_name": "Catálogo",
+      "description": "Consultar equipos, cámaras y automatización",
+      "url": "/#catalogo",
+      "icons": [{ "src": "/assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Solicitar Cotización",
+      "short_name": "Cotizar",
+      "description": "Crear solicitud de cotización formal",
+      "url": "/#cotizar",
+      "icons": [{ "src": "/assets/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Ticket de Soporte",
+      "short_name": "Soporte",
+      "description": "Reportar incidencia o soporte técnico",
+      "url": "/#soporte",
+      "icons": [{ "src": "/assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
