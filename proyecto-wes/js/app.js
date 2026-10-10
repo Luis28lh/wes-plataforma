@@ -3251,21 +3251,81 @@ function handleRecoveryStep3(e) {
 }
 
 // ----------------------------------------------------------------------------
-// SINCRONIZACIÓN DE INTERFAZ DEL HEADER & DROPDOWN
+// CONTROLADOR DEL ICONO DE LA PERSONA Y MODAL DE PERFIL
+// ----------------------------------------------------------------------------
+function handleUserPersonClick() {
+  if (typeof UserAuth !== 'undefined' && UserAuth.isAuthenticated()) {
+    // Si la sesión YA ESTÁ INICIADA -> Mostrar modal con todos los datos de esa persona
+    openUserProfileModal();
+  } else {
+    // Si NO está iniciada la sesión -> Mandar la inicialización (abrir modal de login)
+    openAuthModal('login');
+  }
+}
+
+function openUserProfileModal() {
+  const modal = document.getElementById('user-profile-modal');
+  if (!modal) return;
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user) {
+    openAuthModal('login');
+    return;
+  }
+
+  const initials = (user.name || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+  const avatarEl = document.getElementById('profile-modal-avatar');
+  const nameEl = document.getElementById('profile-modal-name');
+  const roleEl = document.getElementById('profile-modal-role');
+  const emailEl = document.getElementById('profile-modal-email');
+  const phoneEl = document.getElementById('profile-modal-phone');
+  const adminBtn = document.getElementById('profile-modal-admin-btn');
+  const quotesBtn = document.getElementById('profile-modal-quotes-btn');
+
+  if (avatarEl) avatarEl.textContent = initials;
+  if (nameEl) nameEl.textContent = user.name;
+  if (emailEl) emailEl.textContent = user.email;
+  if (phoneEl) phoneEl.textContent = user.phone || 'No registrado';
+
+  if (roleEl) {
+    roleEl.textContent = user.roleLabel || (user.isEmployee ? 'Personal WES' : 'Cliente WES');
+    roleEl.className = user.isEmployee 
+      ? 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-blue text-wes-gold border border-wes-gold/50 shadow-sm'
+      : 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm';
+  }
+
+  if (adminBtn) {
+    if (user.isEmployee) adminBtn.classList.remove('hidden');
+    else adminBtn.classList.add('hidden');
+  }
+
+  if (quotesBtn) {
+    if (user.isEmployee) quotesBtn.classList.add('hidden');
+    else quotesBtn.classList.remove('hidden');
+  }
+
+  modal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeUserProfileModal() {
+  const modal = document.getElementById('user-profile-modal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+
+// ----------------------------------------------------------------------------
+// SINCRONIZACIÓN DE INTERFAZ DEL HEADER (ICONO DE PERSONA LIMPIO)
 // ----------------------------------------------------------------------------
 function updateAuthHeaderUI() {
   const isAuth = typeof UserAuth !== 'undefined' && UserAuth.isAuthenticated();
   const user = isAuth ? UserAuth.getCurrentUser() : null;
 
-  const loginBtn = document.getElementById('auth-login-btn');
-  const userChip = document.getElementById('auth-user-chip');
-  const avatar = document.getElementById('auth-user-avatar');
-  const nameEl = document.getElementById('auth-user-name');
-  const badgeEl = document.getElementById('auth-user-badge');
-  const dropFullName = document.getElementById('dropdown-user-full-name');
-  const dropEmail = document.getElementById('dropdown-user-email');
-  const dropRoleBadge = document.getElementById('dropdown-user-role-badge');
-  const dropAdminLink = document.getElementById('dropdown-admin-link');
+  const personBtn = document.getElementById('auth-person-btn');
+  const iconLoggedOut = document.getElementById('auth-person-icon-loggedout');
+  const iconLoggedIn = document.getElementById('auth-person-icon-loggedin');
+  const initialsEl = document.getElementById('auth-person-initials');
 
   const mobLoginBtn = document.getElementById('mobile-login-btn');
   const mobLoggedContainer = document.getElementById('mobile-logged-container');
@@ -3277,24 +3337,13 @@ function updateAuthHeaderUI() {
   if (isAuth && user) {
     const initials = (user.name || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
 
-    if (loginBtn) loginBtn.classList.add('hidden');
-    if (userChip) userChip.classList.remove('hidden');
-    if (avatar) avatar.textContent = initials;
-    if (nameEl) nameEl.textContent = user.name.split(' ')[0];
-    if (badgeEl) badgeEl.textContent = user.isEmployee ? 'Personal' : 'Cliente';
-    if (dropFullName) dropFullName.textContent = user.name;
-    if (dropEmail) dropEmail.textContent = user.email;
-    if (dropRoleBadge) {
-      dropRoleBadge.textContent = user.roleLabel || (user.isEmployee ? 'Personal WES' : 'Cliente');
-      dropRoleBadge.className = user.isEmployee 
-        ? 'inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-black uppercase bg-wes-blue text-wes-gold'
-        : 'inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-black uppercase bg-amber-100 text-amber-800';
-    }
-    if (dropAdminLink) {
-      if (user.isEmployee) dropAdminLink.classList.remove('hidden');
-      else dropAdminLink.classList.add('hidden');
-    }
+    // Actualizar icono en la barra principal
+    if (iconLoggedOut) iconLoggedOut.classList.add('hidden');
+    if (iconLoggedIn) iconLoggedIn.classList.remove('hidden');
+    if (initialsEl) initialsEl.textContent = initials;
+    if (personBtn) personBtn.title = `Mi Cuenta: ${user.name} (${user.roleLabel || 'Activa'})`;
 
+    // Drawer Móvil
     if (mobLoginBtn) mobLoginBtn.classList.add('hidden');
     if (mobLoggedContainer) mobLoggedContainer.classList.remove('hidden');
     if (mobAvatar) mobAvatar.textContent = initials;
@@ -3305,22 +3354,14 @@ function updateAuthHeaderUI() {
       else mobAdminLink.classList.add('hidden');
     }
   } else {
-    if (loginBtn) loginBtn.classList.remove('hidden');
-    if (userChip) userChip.classList.add('hidden');
+    // No autenticado
+    if (iconLoggedOut) iconLoggedOut.classList.remove('hidden');
+    if (iconLoggedIn) iconLoggedIn.classList.add('hidden');
+    if (personBtn) personBtn.title = 'Iniciar Sesión / Mi Cuenta';
+
     if (mobLoginBtn) mobLoginBtn.classList.remove('hidden');
     if (mobLoggedContainer) mobLoggedContainer.classList.add('hidden');
-    closeUserDropdown();
   }
-}
-
-function toggleUserDropdown() {
-  const menu = document.getElementById('auth-user-menu');
-  if (menu) menu.classList.toggle('hidden');
-}
-
-function closeUserDropdown() {
-  const menu = document.getElementById('auth-user-menu');
-  if (menu) menu.classList.add('hidden');
 }
 
 function handleLogout() {
@@ -3336,17 +3377,10 @@ function filterByMyQuotes() {
   }
 }
 
-document.addEventListener('click', (e) => {
-  const chip = document.getElementById('auth-user-chip');
-  if (chip && !chip.contains(e.target)) {
-    closeUserDropdown();
-  }
-});
-
 window.addEventListener('wes_user_login', () => updateAuthHeaderUI());
 window.addEventListener('wes_user_logout', () => updateAuthHeaderUI());
 
-// Exponer funciones necesarias al scope global
+// Exponer funciones al scope global
 window.openAuthModal = openAuthModal;
 window.closeAuthModal = closeAuthModal;
 window.switchAuthTab = switchAuthTab;
@@ -3359,10 +3393,12 @@ window.handleRecoveryStep1 = handleRecoveryStep1;
 window.handleRecoveryStep2 = handleRecoveryStep2;
 window.handleRecoveryStep3 = handleRecoveryStep3;
 window.resendRecoveryCode = resendRecoveryCode;
-window.toggleUserDropdown = toggleUserDropdown;
-window.closeUserDropdown = closeUserDropdown;
 window.handleLogout = handleLogout;
 window.filterByMyQuotes = filterByMyQuotes;
 window.updateAuthHeaderUI = updateAuthHeaderUI;
+window.handleUserPersonClick = handleUserPersonClick;
+window.openUserProfileModal = openUserProfileModal;
+window.closeUserProfileModal = closeUserProfileModal;
+
 
 

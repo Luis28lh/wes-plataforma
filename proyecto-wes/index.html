@@ -95,33 +95,6 @@
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-wes-gold selection:text-wes-dark">
 
   <!-- ========================================================= -->
-  <!-- BANNER INTELIGENTE PWA PARA MÓVIL (ANDROID / IOS)          -->
-  <!-- ========================================================= -->
-  <div id="pwa-smart-banner" class="hidden bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 text-white px-3 py-2 text-xs border-b border-wes-gold/40 shadow-sm transition-all duration-300">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
-      <div class="flex items-center space-x-2.5 min-w-0">
-        <img src="assets/icon-192.png" alt="WES App" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg shadow-sm shrink-0 border border-wes-gold/50">
-        <div class="min-w-0">
-          <p class="font-bold text-white text-[11px] sm:text-xs truncate flex items-center">
-            <span>Warn Electrical Services</span>
-            <span class="ml-1.5 text-[9px] bg-wes-gold text-wes-dark px-1.5 py-0.2 rounded font-black uppercase tracking-wider hidden sm:inline">App Oficial</span>
-          </p>
-          <p class="text-[10px] text-slate-300 truncate">Descarga e instala la App en tu teléfono (Android & iOS)</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-1.5 shrink-0">
-        <button onclick="triggerPwaInstall()" class="px-3 py-1 bg-wes-gold hover:bg-amber-400 text-wes-dark font-black rounded-lg text-[11px] shadow-sm transition flex items-center space-x-1">
-          <i class="fas fa-download text-[10px]"></i>
-          <span>Instalar</span>
-        </button>
-        <button onclick="dismissPwaBanner()" class="p-1 text-slate-400 hover:text-white transition" title="Cerrar banner">
-          <i class="fas fa-times text-xs"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================= -->
   <!-- NAVEGACIÓN PRINCIPAL (STICKY NAVBAR)                      -->
   <!-- ========================================================= -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all duration-300">
@@ -158,59 +131,20 @@
         </nav>
 
         <!-- Botones de Acción Rápida (Móvil / Desktop) -->
-        <div class="flex items-center space-x-2 sm:space-x-3">
-          <!-- Botón Superior Oficial de Instalación PWA (Android & iOS) -->
-          <button id="pwa-install-btn" onclick="triggerPwaInstall()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black text-xs shadow-sm hover:shadow-md transition-all duration-200 flex items-center space-x-1.5" title="Instalar aplicación en tu teléfono">
-            <i class="fas fa-mobile-alt text-sm"></i>
-            <span class="hidden xs:inline sm:inline">Instalar App</span>
-            <span class="xs:hidden sm:hidden">App</span>
+        <div class="flex items-center space-x-2">
+          <!-- Botón de Usuario (Icono de la Persona) -->
+          <button id="auth-person-btn" onclick="handleUserPersonClick()" class="w-10 h-10 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center justify-center transition shadow-sm relative group shrink-0" title="Mi Cuenta / Iniciar Sesión" aria-label="Usuario">
+            <!-- Icono cuando NO está iniciada la sesión -->
+            <span id="auth-person-icon-loggedout" class="flex items-center justify-center">
+              <i class="fas fa-user text-sm text-slate-600 group-hover:text-wes-blue transition"></i>
+            </span>
+
+            <!-- Avatar con iniciales cuando SÍ está iniciada la sesión -->
+            <span id="auth-person-icon-loggedin" class="hidden w-full h-full rounded-full bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shadow-inner">
+              <span id="auth-person-initials">U</span>
+              <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white"></span>
+            </span>
           </button>
-
-          <!-- Contenedor de Autenticación Universal (Empleados & Clientes) -->
-          <div id="auth-nav-container" class="relative">
-            <!-- Botón No Autenticado -->
-            <button id="auth-login-btn" onclick="openAuthModal('login')" class="px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue font-bold text-xs shadow-sm transition flex items-center space-x-1.5" title="Iniciar sesión o registrarte">
-              <i class="fas fa-user-circle text-sm text-wes-blue"></i>
-              <span class="hidden sm:inline">Acceder</span>
-            </button>
-
-            <!-- Menú Desplegable Usuario Autenticado -->
-            <div id="auth-user-chip" class="hidden relative">
-              <button onclick="toggleUserDropdown()" class="flex items-center space-x-1.5 sm:space-x-2 py-1 pl-1.5 pr-2.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 transition text-left">
-                <span id="auth-user-avatar" class="w-7 h-7 rounded-lg bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shrink-0 shadow-sm">U</span>
-                <div class="hidden sm:block leading-tight max-w-[100px] truncate">
-                  <span id="auth-user-name" class="text-xs font-bold text-slate-800 block truncate">Usuario</span>
-                  <span id="auth-user-badge" class="text-[9px] text-slate-500 font-semibold block uppercase">Cliente</span>
-                </div>
-                <i class="fas fa-chevron-down text-[10px] text-slate-400"></i>
-              </button>
-
-              <!-- Menú Desplegable Flotante -->
-              <div id="auth-user-menu" class="hidden absolute right-0 top-full mt-2 w-60 bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 z-50 text-xs font-semibold text-slate-700">
-                <div class="px-4 py-2.5 border-b border-slate-100 bg-slate-50/50">
-                  <p id="dropdown-user-full-name" class="font-bold text-slate-900 truncate">Nombre Usuario</p>
-                  <p id="dropdown-user-email" class="text-[11px] text-slate-500 truncate font-normal">usuario@correo.com</p>
-                  <span id="dropdown-user-role-badge" class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-black uppercase bg-amber-100 text-amber-800">Cliente</span>
-                </div>
-
-                <!-- Enlace exclusivo para Empleados -->
-                <a id="dropdown-admin-link" href="admin.html" class="hidden flex items-center px-4 py-2.5 hover:bg-amber-50 text-wes-blue font-bold transition">
-                  <i class="fas fa-shield-alt w-5 text-wes-gold text-sm"></i>
-                  <span>Panel de Control Admin</span>
-                </a>
-
-                <a href="#tienda" onclick="filterByMyQuotes(); closeUserDropdown();" class="flex items-center px-4 py-2.5 hover:bg-slate-50 transition">
-                  <i class="fas fa-receipt w-5 text-slate-400 text-sm"></i>
-                  <span>Mis Cotizaciones</span>
-                </a>
-
-                <button onclick="handleLogout()" class="w-full text-left flex items-center px-4 py-2.5 hover:bg-rose-50 text-rose-600 font-bold border-t border-slate-100 mt-1 transition">
-                  <i class="fas fa-sign-out-alt w-5 text-rose-500 text-sm"></i>
-                  <span>Cerrar Sesión</span>
-                </button>
-              </div>
-            </div>
-          </div>
 
           <!-- Botón Menú Móvil (Hamburger) -->
           <button id="mobile-menu-btn" class="md:hidden p-2.5 text-slate-700 hover:text-wes-blue hover:bg-slate-100 rounded-xl transition" aria-label="Abrir menú">
@@ -2518,6 +2452,100 @@
       <button onclick="closePwaGuideModal()" class="mt-5 w-full py-2.5 bg-wes-blue text-white rounded-xl font-bold text-xs hover:bg-wes-dark transition shadow">
         Cerrar
       </button>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL DE DATOS DEL USUARIO / PERFIL (SESIÓN INICIADA)     -->
+  <!-- ========================================================= -->
+  <div id="user-profile-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-sm w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all transform duration-200">
+      
+      <!-- Botón de Cerrar (X) -->
+      <button onclick="closeUserProfileModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition z-10" title="Cerrar ventana">
+        <i class="fas fa-times text-xs"></i>
+      </button>
+
+      <!-- Cabecera de Perfil -->
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-6 pt-7 pb-6 text-center text-white relative">
+        <div class="relative inline-block mx-auto mb-3">
+          <div id="profile-modal-avatar" class="w-16 h-16 rounded-2xl bg-wes-gold text-wes-dark font-black text-2xl flex items-center justify-center shadow-lg border-2 border-white/20">
+            U
+          </div>
+          <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center" title="Sesión activa">
+            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+          </span>
+        </div>
+        <h3 id="profile-modal-name" class="text-lg font-black text-white font-brand truncate">Nombre Usuario</h3>
+        <div class="mt-1">
+          <span id="profile-modal-role" class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm">
+            Cliente WES
+          </span>
+        </div>
+      </div>
+
+      <!-- Cuerpo con Datos de la Persona -->
+      <div class="p-5 space-y-3.5">
+        <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-200/80 space-y-2.5 text-xs">
+          
+          <!-- Correo -->
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-blue-100 text-wes-blue flex items-center justify-center shrink-0">
+              <i class="fas fa-envelope text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Correo Electrónico</span>
+              <p id="profile-modal-email" class="font-semibold text-slate-800 truncate text-xs">correo@ejemplo.com</p>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <i class="fas fa-phone text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Teléfono / WhatsApp</span>
+              <p id="profile-modal-phone" class="font-semibold text-slate-800 truncate text-xs">No registrado</p>
+            </div>
+          </div>
+
+          <!-- Estado de Sesión -->
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <i class="fas fa-shield-alt text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Estado de Cuenta</span>
+              <p class="font-bold text-emerald-600 text-xs flex items-center space-x-1">
+                <i class="fas fa-check-circle text-[11px]"></i>
+                <span>Sesión Iniciada y Verificada</span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Botón Especial para Empleados (Acceso a admin.html) -->
+        <a id="profile-modal-admin-btn" href="admin.html" class="hidden w-full py-3 bg-gradient-to-r from-wes-blue to-slate-900 hover:from-slate-900 hover:to-wes-blue text-white rounded-xl text-xs font-black shadow-md transition flex items-center justify-center space-x-2 border border-wes-gold/40">
+          <i class="fas fa-shield-alt text-wes-gold text-sm"></i>
+          <span>Acceder al Panel de Control Admin</span>
+        </a>
+
+        <!-- Botón para Clientes (Mis Cotizaciones) -->
+        <button id="profile-modal-quotes-btn" onclick="closeUserProfileModal(); openQuoteModal();" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200/80 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+          <i class="fas fa-file-invoice text-wes-blue"></i>
+          <span>Revisar Mis Cotizaciones</span>
+        </button>
+
+        <!-- Cerrar Sesión -->
+        <button onclick="closeUserProfileModal(); handleLogout();" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-rose-200/60">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </button>
+
+      </div>
+
     </div>
   </div>
 
