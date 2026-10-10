@@ -2,10 +2,19 @@
 <html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Warn Electrical Services (WES) | Seguridad Electrónica, Automatización e Instalaciones</title>
   <meta name="description" content="Warn Electrical Services, SRL (WES) — Venta, instalación y soporte técnico de cámaras de seguridad, controles de acceso, cerraduras inteligentes y automatización en Moca, República Dominicana.">
   
+  <!-- Configuración PWA Móvil -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#071836">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="WES">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
   <!-- Favicon con logo WES Búho Guardián -->
   <link rel="icon" type="image/jpeg" href="assets/logo-buho.jpg">
 
@@ -83,6 +92,33 @@
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-wes-gold selection:text-wes-dark">
 
   <!-- ========================================================= -->
+  <!-- BANNER INTELIGENTE PWA PARA MÓVIL (ANDROID / IOS)          -->
+  <!-- ========================================================= -->
+  <div id="pwa-smart-banner" class="hidden bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 text-white px-3 py-2 text-xs border-b border-wes-gold/40 shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center space-x-2.5 min-w-0">
+        <img src="assets/icon-192.png" alt="WES App" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg shadow-sm shrink-0 border border-wes-gold/50">
+        <div class="min-w-0">
+          <p class="font-bold text-white text-[11px] sm:text-xs truncate flex items-center">
+            <span>Warn Electrical Services</span>
+            <span class="ml-1.5 text-[9px] bg-wes-gold text-wes-dark px-1.5 py-0.2 rounded font-black uppercase tracking-wider hidden sm:inline">App Oficial</span>
+          </p>
+          <p class="text-[10px] text-slate-300 truncate">Descarga e instala la App en tu teléfono (Android & iOS)</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-1.5 shrink-0">
+        <button onclick="triggerPwaInstall()" class="px-3 py-1 bg-wes-gold hover:bg-amber-400 text-wes-dark font-black rounded-lg text-[11px] shadow-sm transition flex items-center space-x-1">
+          <i class="fas fa-download text-[10px]"></i>
+          <span>Instalar</span>
+        </button>
+        <button onclick="dismissPwaBanner()" class="p-1 text-slate-400 hover:text-white transition" title="Cerrar banner">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
   <!-- NAVEGACIÓN PRINCIPAL (STICKY NAVBAR)                      -->
   <!-- ========================================================= -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all duration-300">
@@ -118,8 +154,15 @@
           <a href="#contacto" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Contacto</a>
         </nav>
 
-        <!-- Botones de Acción Rápida (Móvil) -->
+        <!-- Botones de Acción Rápida (Móvil / Desktop) -->
         <div class="flex items-center space-x-2 sm:space-x-3">
+          <!-- Botón Superior Oficial de Instalación PWA (Android & iOS) -->
+          <button id="pwa-install-btn" onclick="triggerPwaInstall()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black text-xs shadow-sm hover:shadow-md transition-all duration-200 flex items-center space-x-1.5" title="Instalar aplicación en tu teléfono">
+            <i class="fas fa-mobile-alt text-sm"></i>
+            <span class="hidden xs:inline sm:inline">Instalar App</span>
+            <span class="xs:hidden sm:hidden">App</span>
+          </button>
+
           <!-- Botón Menú Móvil (Hamburger) -->
           <button id="mobile-menu-btn" class="md:hidden p-2.5 text-slate-700 hover:text-wes-blue hover:bg-slate-100 rounded-xl transition" aria-label="Abrir menú">
             <i class="fas fa-bars text-xl"></i>
@@ -162,6 +205,12 @@
       <a href="#contacto" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Contacto</a>
 
       <div class="pt-6 border-t border-slate-100 space-y-3">
+        <!-- Botón de Instalación en Menú Móvil -->
+        <button id="pwa-drawer-install-btn" onclick="triggerPwaInstall()" class="w-full py-2.5 bg-gradient-to-r from-wes-gold to-amber-500 text-wes-dark font-black rounded-xl text-xs flex items-center justify-center space-x-2 shadow-sm transition hover:shadow">
+          <i class="fas fa-mobile-alt text-sm"></i>
+          <span>Instalar App en este Teléfono</span>
+        </button>
+
         <button onclick="openQuoteModal()" class="w-full py-2.5 bg-wes-blue text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
           <i class="fas fa-file-invoice"></i>
           <span>Revisar Cotización (<span class="cart-count-badge">0</span>)</span>
@@ -2296,6 +2345,99 @@
   </div>
 
   <!-- ========================================================= -->
+  <!-- MODAL DE INSTALACIÓN OFICIAL PARA APPLE iOS (SAFARI)      -->
+  <!-- ========================================================= -->
+  <div id="pwa-ios-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity duration-300">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-6 text-slate-800 shadow-2xl border border-slate-200 relative">
+      <button onclick="closePwaIosModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full">
+        <i class="fas fa-times text-lg"></i>
+      </button>
+
+      <div class="flex items-center space-x-3 mb-4">
+        <img src="assets/icon-192.png" alt="WES App" class="w-14 h-14 rounded-2xl shadow-md border-2 border-wes-gold/40">
+        <div>
+          <h3 class="font-extrabold text-base text-wes-blue font-brand">Instalar WES en iPhone / iPad</h3>
+          <p class="text-xs text-slate-500 font-medium">3 sencillos pasos oficiales de Apple:</p>
+        </div>
+      </div>
+
+      <div class="space-y-3.5 bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-xs">
+        <div class="flex items-start space-x-3">
+          <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center shrink-0 text-xs">1</div>
+          <p class="text-slate-700 leading-snug">
+            Toca el botón de <strong>Compartir</strong> <i class="fas fa-arrow-up-from-bracket text-blue-600 mx-1 text-sm inline-block"></i> (el cuadrado con flecha hacia arriba) en la barra inferior de Safari.
+          </p>
+        </div>
+
+        <div class="flex items-start space-x-3">
+          <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center shrink-0 text-xs">2</div>
+          <p class="text-slate-700 leading-snug">
+            Desliza las opciones y selecciona <strong>"Agregar a pantalla de inicio"</strong> <i class="far fa-plus-square text-slate-800 mx-1 text-sm inline-block"></i>.
+          </p>
+        </div>
+
+        <div class="flex items-start space-x-3">
+          <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center shrink-0 text-xs">3</div>
+          <p class="text-slate-700 leading-snug">
+            Pulsa <strong>"Agregar"</strong> en la esquina superior derecha.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200/70 text-[11px] text-amber-900 flex items-center space-x-2">
+        <i class="fas fa-check-circle text-amber-600 text-base shrink-0"></i>
+        <span>¡Listo! WES correrá a pantalla completa exactamente como una App nativa en tu teléfono.</span>
+      </div>
+
+      <button onclick="closePwaIosModal()" class="mt-5 w-full py-3 bg-wes-blue text-white rounded-xl font-bold text-xs hover:bg-wes-dark transition shadow-md">
+        ¡Entendido!
+      </button>
+
+      <!-- Indicador visual animado hacia la barra inferior de Safari -->
+      <div class="sm:hidden text-center mt-3 text-wes-blue text-xs font-bold animate-bounce flex items-center justify-center space-x-1">
+        <span>Busca el icono de compartir abajo</span>
+        <i class="fas fa-arrow-down"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL DE GUÍA GENERAL PARA NAVEGADORES MÓVILES             -->
+  <!-- ========================================================= -->
+  <div id="pwa-guide-modal" class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity duration-300">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-slate-800 shadow-2xl border border-slate-200 relative">
+      <button onclick="closePwaGuideModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full">
+        <i class="fas fa-times text-lg"></i>
+      </button>
+
+      <div class="text-center mb-4">
+        <img src="assets/icon-192.png" alt="WES App" class="w-16 h-16 rounded-2xl mx-auto shadow-md border-2 border-wes-gold/40 mb-2">
+        <h3 class="font-extrabold text-base text-wes-blue font-brand">Instalar App WES</h3>
+        <p class="text-xs text-slate-500">Para instalarla en tu navegador:</p>
+      </div>
+
+      <div class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-700">
+        <p class="flex items-center space-x-2">
+          <i class="fas fa-ellipsis-v text-wes-blue text-sm w-5 text-center"></i>
+          <span>1. Toca el menú de opciones (<strong>tres puntos ⋮</strong>) de tu navegador.</span>
+        </p>
+        <p class="flex items-center space-x-2">
+          <i class="fas fa-mobile-alt text-wes-gold text-sm w-5 text-center"></i>
+          <span>2. Elige <strong>"Instalar aplicación"</strong> o <strong>"Agregar a inicio"</strong>.</span>
+        </p>
+        <p class="flex items-center space-x-2">
+          <i class="fas fa-check-circle text-emerald-600 text-sm w-5 text-center"></i>
+          <span>3. Confirma para disfrutar de WES a pantalla completa.</span>
+        </p>
+      </div>
+
+      <button onclick="closePwaGuideModal()" class="mt-5 w-full py-2.5 bg-wes-blue text-white rounded-xl font-bold text-xs hover:bg-wes-dark transition shadow">
+        Cerrar
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
   <!-- CONTENEDOR DE TOAST NOTIFICATIONS                         -->
   <!-- ========================================================= -->
   <div id="toast-container" class="fixed bottom-6 left-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
@@ -2308,5 +2450,6 @@
   <script src="js/supabase_client.js?v=20261002_0915"></script>
   <script src="js/feature_flags.js?v=20261002_0915"></script>
   <script src="js/app.js?v=20261003_1055"></script>
+  <script src="js/pwa-install.js?v=20261010_0750"></script>
 </body>
 </html>
