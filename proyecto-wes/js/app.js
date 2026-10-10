@@ -398,28 +398,28 @@ function renderProducts() {
     let promoBadgeHtml = '';
     if (isProductOffer && discountPct) {
       promoBadgeHtml = `
-        <span class="absolute top-3 left-3 text-[11px] font-black px-2.5 py-1 rounded-full bg-rose-600 text-white shadow-md flex items-center space-x-1 animate-pulse z-10">
-          <i class="fas fa-fire-alt text-amber-300"></i>
-          <span>-${discountPct}% OFERTA</span>
+        <span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 text-[9px] sm:text-[11px] font-black px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-rose-600 text-white shadow-xs flex items-center space-x-0.5 sm:space-x-1 animate-pulse z-10">
+          <i class="fas fa-fire-alt text-amber-300 text-[9px] sm:text-xs"></i>
+          <span>-${discountPct}%</span>
         </span>
       `;
     } else if (isProductOffer) {
       promoBadgeHtml = `
-        <span class="absolute top-3 left-3 text-[11px] font-black px-2.5 py-1 rounded-full bg-rose-600 text-white shadow-md flex items-center space-x-1 z-10">
-          <i class="fas fa-fire-alt text-amber-300"></i>
+        <span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 text-[9px] sm:text-[11px] font-black px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-rose-600 text-white shadow-xs flex items-center space-x-0.5 sm:space-x-1 z-10">
+          <i class="fas fa-fire-alt text-amber-300 text-[9px] sm:text-xs"></i>
           <span>OFERTA</span>
         </span>
       `;
     } else if (isProductNew) {
       promoBadgeHtml = `
-        <span class="absolute top-3 left-3 text-[11px] font-black px-2.5 py-1 rounded-full bg-amber-500 text-white shadow-md flex items-center space-x-1 z-10">
-          <i class="fas fa-star text-white"></i>
+        <span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 text-[9px] sm:text-[11px] font-black px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-amber-500 text-white shadow-xs flex items-center space-x-0.5 sm:space-x-1 z-10">
+          <i class="fas fa-star text-white text-[9px] sm:text-xs"></i>
           <span>NOVEDAD</span>
         </span>
       `;
     } else {
       promoBadgeHtml = `
-        <span class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${availClass} backdrop-blur-sm shadow-sm">
+        <span class="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 text-[9px] sm:text-xs font-semibold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full ${availClass} backdrop-blur-sm shadow-2xs">
           ${product.availability}
         </span>
       `;
@@ -430,65 +430,68 @@ function renderProducts() {
       if (hasDiscount) {
         priceHtml = `
           <div class="flex flex-col">
-            <span class="text-xs line-through text-slate-400 font-bold">RD$ ${Number(product.precio_anterior).toLocaleString()}</span>
-            <span class="text-lg font-black text-rose-600 font-brand">RD$ ${(product.price || 0).toLocaleString()}</span>
+            <span class="text-[9px] sm:text-xs line-through text-slate-400 font-bold leading-none sm:leading-tight">RD$ ${Number(product.precio_anterior).toLocaleString()}</span>
+            <span class="text-xs sm:text-lg font-black text-rose-600 font-brand leading-tight">RD$ ${(product.price || 0).toLocaleString()}</span>
           </div>
         `;
       } else {
         priceHtml = `
-          <span class="text-lg font-bold text-wes-blue font-brand">
+          <span class="text-xs sm:text-lg font-bold text-wes-blue font-brand leading-tight block truncate">
             RD$ ${(product.price || 0).toLocaleString()}
           </span>
         `;
       }
     } else {
-      priceHtml = `<span class="text-xs text-slate-500 font-bold italic">Consultar precio</span>`;
+      priceHtml = `<span class="text-[10px] sm:text-xs text-slate-500 font-bold italic leading-tight">Consultar</span>`;
     }
 
     const quoteBtnHtml = flags.enableQuotes
       ? `
-        <button onclick="addToQuote('${product.id}', event)" title="Agregar a cotización" class="px-3.5 h-10 rounded-xl bg-wes-blue text-white hover:bg-wes-dark flex items-center space-x-1.5 text-xs font-semibold transition shadow-md hover:shadow-wes-blue/20">
-          <i class="fas fa-cart-plus"></i>
+        <button onclick="addToQuote('${product.id}', event)" title="Agregar a cotización" class="w-7 h-7 sm:w-auto sm:px-3.5 sm:h-10 rounded-lg sm:rounded-xl bg-wes-blue text-white hover:bg-wes-dark flex items-center justify-center sm:space-x-1.5 text-xs font-semibold transition shadow-2xs sm:shadow-md hover:shadow-wes-blue/20 shrink-0">
+          <i class="fas fa-cart-plus text-xs sm:text-sm"></i>
           <span class="hidden sm:inline">Cotizar</span>
         </button>
       `
       : `
-        <a href="${waUrl}" target="_blank" onclick="event.stopPropagation()" title="Consultar por WhatsApp" class="px-3.5 h-10 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center space-x-1 text-xs font-semibold transition">
-          <span>Consultar</span>
+        <a href="${waUrl}" target="_blank" onclick="event.stopPropagation()" title="Consultar por WhatsApp" class="w-7 h-7 sm:w-auto sm:px-3.5 sm:h-10 rounded-lg sm:rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center sm:space-x-1 text-xs font-semibold transition shrink-0">
+          <i class="fab fa-whatsapp text-xs sm:hidden"></i>
+          <span class="hidden sm:inline">Consultar</span>
         </a>
       `;
 
     return `
-      <div onclick="openProductDetailModal('${product.id}')" class="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer hover:border-wes-blue/50">
-        <div class="relative h-48 sm:h-52 bg-white flex items-center justify-center p-3 border-b border-slate-100 overflow-hidden">
+      <div onclick="openProductDetailModal('${product.id}')" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer hover:border-wes-blue/50">
+        <div class="relative h-28 xs:h-36 sm:h-52 bg-white flex items-center justify-center p-2 sm:p-3 border-b border-slate-100 overflow-hidden">
           <img src="${product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500" loading="lazy">
           ${promoBadgeHtml}
-          <span class="absolute top-3 right-3 text-xs font-bold px-2 py-1 bg-slate-900/80 text-white rounded-md shadow-sm">
+          <span class="absolute top-1.5 right-1.5 sm:top-3 sm:right-3 text-[9px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 bg-slate-900/80 text-white rounded sm:rounded-md shadow-2xs">
             ${product.brand}
           </span>
         </div>
         
-        <div class="p-4 sm:p-5 flex-1 flex flex-col">
-          <div class="text-xs font-mono font-bold text-slate-500 mb-1 tracking-wide">
-            SKU: ${product.code || product.codigo || ''}
+        <div class="p-2 sm:p-5 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="text-[9px] sm:text-xs font-mono font-bold text-slate-400 sm:text-slate-500 mb-0.5 sm:mb-1 tracking-wide truncate">
+              SKU: ${product.code || product.codigo || ''}
+            </div>
+            <h3 class="font-bold text-slate-900 text-xs sm:text-base leading-tight sm:leading-snug line-clamp-2 group-hover:text-wes-blue transition min-h-[28px] sm:min-h-[44px]">
+              ${product.name}
+            </h3>
+            <p class="hidden sm:block text-xs text-slate-500 mt-2 line-clamp-2">${product.description || ''}</p>
           </div>
-          <h3 class="font-bold text-slate-900 text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-wes-blue transition">
-            ${product.name}
-          </h3>
-          <p class="text-xs text-slate-500 mt-2 line-clamp-2">${product.description || ''}</p>
 
-          <div class="mt-auto pt-3.5 border-t border-slate-100 flex items-center justify-between" onclick="event.stopPropagation()">
-            <div>
-              <span class="text-[11px] text-slate-400 block font-medium">Precio Ref:</span>
+          <div class="mt-2 sm:mt-auto pt-2 sm:pt-3.5 border-t border-slate-100 flex items-center justify-between gap-1" onclick="event.stopPropagation()">
+            <div class="min-w-0 flex-1">
+              <span class="text-[8px] sm:text-[11px] text-slate-400 block font-medium uppercase tracking-wider leading-none mb-0.5">Precio Ref:</span>
               ${priceHtml}
             </div>
             
-            <div class="flex items-center space-x-1.5">
-              <button type="button" onclick="shareProductWhatsAppBySku('${product.code || product.codigo}', event)" title="Compartir este producto con un cliente por WhatsApp" class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-xs">
-                <i class="fab fa-whatsapp text-base"></i>
+            <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
+              <button type="button" onclick="shareProductWhatsAppBySku('${product.code || product.codigo}', event)" title="Compartir este producto con un cliente por WhatsApp" class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-2xs">
+                <i class="fab fa-whatsapp text-xs sm:text-base"></i>
               </button>
-              <button type="button" onclick="copyProductLinkBySku('${product.code || product.codigo}', event)" title="Copiar enlace directo para cliente" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 hover:bg-wes-blue hover:text-white flex items-center justify-center transition shadow-xs">
-                <i class="fas fa-link text-xs"></i>
+              <button type="button" onclick="copyProductLinkBySku('${product.code || product.codigo}', event)" title="Copiar enlace directo para cliente" class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-100 text-slate-700 hover:bg-wes-blue hover:text-white items-center justify-center transition shadow-2xs hidden xs:flex">
+                <i class="fas fa-link text-[10px] sm:text-xs"></i>
               </button>
               ${quoteBtnHtml}
             </div>

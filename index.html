@@ -24,6 +24,9 @@
     tailwind.config = {
       theme: {
         extend: {
+          screens: {
+            'xs': '420px'
+          },
           colors: {
             'wes-blue': '#0D2A5C',
             'wes-dark': '#071836',
@@ -615,8 +618,8 @@
     <!-- ========================================================= -->
     <!-- 4. TIENDA Y CATÁLOGO DE PRODUCTOS                         -->
     <!-- ========================================================= -->
-    <section id="tienda" class="py-20 bg-white border-b border-slate-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="tienda" class="py-10 sm:py-20 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         
         <!-- Breadcrumbs Dinámicos de Tienda (Estilo Ofertas y Promociones) -->
         <div id="store-breadcrumb" class="hidden text-xs text-slate-500 font-medium mb-3">
@@ -625,11 +628,11 @@
           <span id="breadcrumb-current" class="text-rose-600 font-bold">Ofertas y promociones</span>
         </div>
 
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 sm:gap-4 mb-4 sm:mb-6">
           <div>
             <span id="store-badge" class="text-xs font-bold tracking-widest text-wes-blue uppercase">Catálogo Comercial</span>
-            <h2 id="store-title" class="text-3xl font-extrabold text-slate-900 mt-1 font-brand">Tienda de Equipos y Accesorios</h2>
-            <p id="store-desc" class="text-sm text-slate-600 mt-1">Selecciona los productos y agrégalos a tu lista para solicitar una cotización formal.</p>
+            <h2 id="store-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1 font-brand">Tienda de Equipos y Accesorios</h2>
+            <p id="store-desc" class="text-xs sm:text-sm text-slate-600 mt-1">Selecciona los productos y agrégalos a tu lista para solicitar una cotización formal.</p>
           </div>
           <div id="products-count" class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg shrink-0">
             Cargando productos...
@@ -658,7 +661,7 @@
         </div>
 
         <!-- Botones Rápidos de Categoría (Pills Bar) -->
-        <div class="flex items-center space-x-2 overflow-x-auto pb-3 mb-6 scrollbar-none text-xs font-bold">
+        <div class="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-3 mb-4 sm:mb-6 scrollbar-none text-xs font-bold">
           <button type="button" onclick="filterByCategory('all')" class="cat-pill px-3.5 py-2 rounded-xl bg-wes-blue text-white shadow-sm shrink-0 hover:bg-wes-dark transition" data-cat="all">
             Todas las Soluciones
           </button>
@@ -685,32 +688,32 @@
         <div id="quote-pause-banner" class="hidden"></div>
 
         <!-- Barra de Búsqueda y Filtros Interactivos -->
-        <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 mb-8 space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div class="bg-slate-50 p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-slate-200 mb-5 sm:mb-8 space-y-3 sm:space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3">
             
             <!-- Buscador -->
             <div class="lg:col-span-2 relative">
               <i class="fas fa-search absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
-              <input type="text" id="search-input" placeholder="Buscar por nombre, código o características..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              <input type="text" id="search-input" placeholder="Buscar por nombre, código o características..." class="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-wes-blue focus:outline-none">
             </div>
 
             <!-- Filtro de Categoría -->
             <div>
-              <select id="category-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              <select id="category-filter" class="w-full py-2 sm:py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
                 <option value="all">Todas las Categorías</option>
               </select>
             </div>
 
             <!-- Filtro de Marca -->
             <div>
-              <select id="brand-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              <select id="brand-filter" class="w-full py-2 sm:py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
                 <option value="all">Todas las Marcas</option>
               </select>
             </div>
 
             <!-- Filtro de Disponibilidad / Orden -->
             <div>
-              <select id="sort-filter" class="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
+              <select id="sort-filter" class="w-full py-2 sm:py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:outline-none">
                 <option value="featured">Destacados</option>
                 <option value="price-asc">Precio: Menor a Mayor</option>
                 <option value="price-desc">Precio: Mayor a Menor</option>
@@ -721,8 +724,8 @@
           </div>
         </div>
 
-        <!-- Malla de Productos -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Malla de Productos: 2 columnas en móvil para ver 4 productos simultáneamente en pantalla -->
+        <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-6">
           <!-- Renderizado dinámicamente mediante app.js -->
         </div>
 
