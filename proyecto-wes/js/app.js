@@ -36,6 +36,7 @@ function initApp() {
   setupPhoneInputsMask();
   checkCookieConsent();
   initEnergyProjectScenarios();
+  updateAuthHeaderUI();
 
   // Revisar si la URL contiene un enlace directo a un producto (?p=SKU o ?sku=SKU)
   checkUrlForProduct();
@@ -775,6 +776,21 @@ function openQuoteModal() {
 
   renderQuoteCartItems();
   setupPhoneInputsMask();
+
+  // Si el cliente o empleado tiene sesión activa, pre-llenar sus datos automáticamente
+  if (typeof UserAuth !== 'undefined' && UserAuth.isAuthenticated()) {
+    const user = UserAuth.getCurrentUser();
+    const form = document.getElementById('quote-form');
+    if (form && user) {
+      if (form.name && !form.name.value) form.name.value = user.name || '';
+      if (form.email && !form.email.value) form.email.value = user.email || '';
+      if (form.phone && !form.phone.value && user.phone) {
+        form.phone.value = user.phone;
+        formatPhoneInputValue(form.phone);
+      }
+    }
+  }
+
   modal.classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
 }
@@ -2794,4 +2810,559 @@ window.addEventListener('popstate', (e) => {
     checkUrlForProduct();
   }
 });
+
+// ============================================================================
+// SISTEMA DE AUTENTICACIÓN UNIVERSAL (UI, MODAL, OTP & SESIÓN)
+// ============================================================================
+
+let recoveryCurrentEmail = '';
+let recoveryDemoCode = '';
+
+function openAuthModal(tab = 'login') {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+
+  switchAuthTab(tab);
+  modal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+  clearAuthAlerts();
+}
+
+function switchAuthTab(tab) {
+  const tabLoginBtn = document.getElementById('auth-tab-btn-login');
+  const tabRegisterBtn = document.getElementById('auth-tab-btn-register');
+  const contentLogin = document.getElementById('auth-content-login');
+  const contentRegister = document.getElementById('auth-content-register');
+  const contentRecovery = document.getElementById('auth-content-recovery');
+  const tabsBar = document.getElementById('auth-tabs-bar');
+  const title = document.getElementById('auth-modal-title');
+  const subtitle = document.getElementById('auth-modal-subtitle');
+
+  if (tabsBar) tabsBar.classList.remove('hidden');
+  if (contentRecovery) contentRecovery.classList.add('hidden');
+  clearAuthAlerts();
+
+  if (tab === 'login') {
+    if (contentLogin) contentLogin.classList.remove('hidden');
+    if (contentRegister) contentRegister.classList.add('hidden');
+    if (tabLoginBtn) {
+      tabLoginBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-wes-blue shadow-sm';
+    }
+    if (tabRegisterBtn) {
+      tabRegisterBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800';
+    }
+    if (title) title.textContent = 'Iniciar Sesión';
+    if (subtitle) subtitle.textContent = 'Acceso unificado para Empleados y Clientes';
+    setTimeout(() => {
+      const input = document.getElementById('login-identifier');
+      if (input) input.focus();
+    }, 150);
+  } else {
+    if (contentLogin) contentLogin.classList.add('hidden');
+    if (contentRegister) contentRegister.classList.remove('hidden');
+    if (tabRegisterBtn) {
+      tabRegisterBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-wes-blue shadow-sm';
+    }
+    if (tabLoginBtn) {
+      tabLoginBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800';
+    }
+    if (title) title.textContent = 'Crear Cuenta WES';
+    if (subtitle) subtitle.textContent = 'Registro opcional para Clientes';
+    setupPhoneInputsMask();
+    setTimeout(() => {
+      const input = document.getElementById('register-name');
+      if (input) input.focus();
+    }, 150);
+  }
+}
+
+function openRecoveryView() {
+  const tabsBar = document.getElementById('auth-tabs-bar');
+  const contentLogin = document.getElementById('auth-content-login');
+  const contentRegister = document.getElementById('auth-content-register');
+  const contentRecovery = document.getElementById('auth-content-recovery');
+  const title = document.getElementById('auth-modal-title');
+  const subtitle = document.getElementById('auth-modal-subtitle');
+
+  if (tabsBar) tabsBar.classList.add('hidden');
+  if (contentLogin) contentLogin.classList.add('hidden');
+  if (contentRegister) contentRegister.classList.add('hidden');
+  if (contentRecovery) contentRecovery.classList.remove('hidden');
+
+  if (title) title.textContent = 'Recuperar Contraseña';
+  if (subtitle) subtitle.textContent = 'Código de seguridad de 4 dígitos por correo';
+
+  showRecoveryStep(1);
+  clearAuthAlerts();
+
+  setTimeout(() => {
+    const input = document.getElementById('recovery-email');
+    if (input) {
+      const loginId = document.getElementById('login-identifier');
+      if (loginId && loginId.value && loginId.value.includes('@')) {
+        input.value = loginId.value.trim();
+      }
+      input.focus();
+    }
+  }, 150);
+}
+
+function showLoginView() {
+  switchAuthTab('login');
+}
+
+function showRecoveryStep(stepNum) {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById(`recovery-step-${i}`);
+    if (el) {
+      if (i === stepNum) el.classList.remove('hidden');
+      else el.classList.add('hidden');
+    }
+  }
+}
+
+function togglePasswordVisibility(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isPass = input.type === 'password';
+  input.type = isPass ? 'text' : 'password';
+  if (btn) {
+    const icon = btn.querySelector('i');
+    if (icon) {
+      icon.className = isPass ? 'fas fa-eye-slash text-xs text-wes-blue' : 'fas fa-eye text-xs';
+    }
+  }
+}
+
+function clearAuthAlerts() {
+  ['login-alert-box', 'register-alert-box', 'recovery-alert-box-1', 'recovery-alert-box-2', 'recovery-alert-box-3'].forEach(id => {
+    const box = document.getElementById(id);
+    if (box) {
+      box.className = 'hidden p-3 rounded-xl text-xs';
+      box.textContent = '';
+    }
+  });
+}
+
+function showAuthAlert(boxId, message, type = 'error') {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+
+  const styles = {
+    error: 'p-3 rounded-xl text-xs bg-rose-50 text-rose-700 border border-rose-200 font-medium',
+    success: 'p-3 rounded-xl text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium',
+    warning: 'p-3 rounded-xl text-xs bg-amber-50 text-amber-800 border border-amber-200 font-medium'
+  };
+
+  box.className = styles[type] || styles.error;
+  box.textContent = message;
+  box.classList.remove('hidden');
+}
+
+// HANDLER DE LOGIN
+function handleUserLoginSubmit(e) {
+  e.preventDefault();
+  clearAuthAlerts();
+
+  const idInput = document.getElementById('login-identifier');
+  const passInput = document.getElementById('login-password');
+  const remInput = document.getElementById('login-remember');
+  const submitBtn = document.getElementById('login-submit-btn');
+
+  if (!idInput || !passInput) return;
+
+  const identifier = idInput.value.trim();
+  const password = passInput.value;
+  const remember = remInput ? remInput.checked : true;
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Iniciando sesión...';
+  }
+
+  setTimeout(() => {
+    try {
+      const res = UserAuth.login(identifier, password, remember);
+
+      if (!res.success) {
+        showAuthAlert('login-alert-box', res.message, 'error');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-1"></i> Iniciar Sesión';
+        }
+        return;
+      }
+
+      closeAuthModal();
+      updateAuthHeaderUI();
+      showToast(res.message, 'success');
+
+      if (res.user && res.user.isEmployee) {
+        setTimeout(() => {
+          showConfirmationModal({
+            title: `¡Hola, ${res.user.name}!`,
+            code: res.user.role.toUpperCase(),
+            message: `
+              <div class="space-y-3">
+                <p class="text-xs text-slate-600">Has iniciado sesión con credenciales de <strong>Personal WES</strong> (${res.user.roleLabel}).</p>
+                <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 font-medium">
+                  Puedes seguir navegando en la tienda o dirigirte a la consola de administración corporativa.
+                </div>
+                <div class="pt-2 flex flex-col sm:flex-row gap-2">
+                  <a href="admin.html" class="flex-1 py-2.5 bg-wes-blue text-white rounded-xl text-center text-xs font-bold hover:bg-wes-dark shadow transition flex items-center justify-center space-x-1.5">
+                    <i class="fas fa-shield-alt text-wes-gold"></i>
+                    <span>Ir al Panel Admin</span>
+                  </a>
+                  <button onclick="closeConfirmationModal()" class="flex-1 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-center text-xs font-bold hover:bg-slate-200 transition">
+                    Permanecer en Tienda
+                  </button>
+                </div>
+              </div>
+            `,
+            type: 'login'
+          });
+        }, 500);
+      }
+    } catch (err) {
+      console.error(err);
+      showAuthAlert('login-alert-box', 'Error al procesar el inicio de sesión.', 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-1"></i> Iniciar Sesión';
+      }
+    }
+  }, 350);
+}
+
+// HANDLER DE REGISTRO DE CLIENTE
+function handleUserRegisterSubmit(e) {
+  e.preventDefault();
+  clearAuthAlerts();
+
+  const name = document.getElementById('register-name').value.trim();
+  const email = document.getElementById('register-email').value.trim();
+  const phone = document.getElementById('register-phone').value.trim();
+  const password = document.getElementById('register-password').value;
+  const passConfirm = document.getElementById('register-password-confirm').value;
+  const submitBtn = document.getElementById('register-submit-btn');
+
+  if (password !== passConfirm) {
+    showAuthAlert('register-alert-box', 'Las contraseñas no coinciden. Por favor verifícalas.', 'error');
+    return;
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Creando cuenta...';
+  }
+
+  setTimeout(() => {
+    try {
+      const res = UserAuth.registerClient({ name, email, phone, password });
+
+      if (!res.success) {
+        showAuthAlert('register-alert-box', res.message, 'error');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Crear Mi Cuenta';
+        }
+        return;
+      }
+
+      closeAuthModal();
+      updateAuthHeaderUI();
+      showToast(res.message, 'success');
+    } catch (err) {
+      showAuthAlert('register-alert-box', 'Error al crear la cuenta.', 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Crear Mi Cuenta';
+      }
+    }
+  }, 400);
+}
+
+// RECUPERACIÓN - PASO 1 (SOLICITAR CÓDIGO)
+async function handleRecoveryStep1(e) {
+  e.preventDefault();
+  clearAuthAlerts();
+
+  const emailInput = document.getElementById('recovery-email');
+  const btn = document.getElementById('btn-send-code');
+  if (!emailInput) return;
+
+  const email = emailInput.value.trim().toLowerCase();
+  recoveryCurrentEmail = email;
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando código...';
+  }
+
+  try {
+    const res = await UserAuth.requestPasswordReset(email);
+
+    if (!res.success) {
+      showAuthAlert('recovery-alert-box-1', res.message, 'error');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Enviar Código de 4 Dígitos';
+      }
+      return;
+    }
+
+    recoveryDemoCode = res.codeDemo || '';
+
+    const displayEmail = document.getElementById('recovery-target-email-display');
+    if (displayEmail) displayEmail.textContent = email;
+
+    const demoBanner = document.getElementById('recovery-demo-code-banner');
+    const demoVal = document.getElementById('recovery-demo-code-val');
+    if (demoBanner && demoVal && res.codeDemo) {
+      demoVal.textContent = res.codeDemo;
+      demoBanner.classList.remove('hidden');
+    }
+
+    showRecoveryStep(2);
+    setupOtpInputs();
+    showToast(`Código de 4 dígitos enviado a ${email}`, 'info');
+
+  } catch (err) {
+    showAuthAlert('recovery-alert-box-1', 'Ocurrió un error al enviar el código.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Enviar Código de 4 Dígitos';
+    }
+  }
+}
+
+// SETUP DE LAS 4 CAJAS NUMÉRICAS OTP
+function setupOtpInputs() {
+  const inputs = [
+    document.getElementById('otp-digit-1'),
+    document.getElementById('otp-digit-2'),
+    document.getElementById('otp-digit-3'),
+    document.getElementById('otp-digit-4')
+  ].filter(Boolean);
+
+  inputs.forEach((input, index) => {
+    input.value = '';
+    
+    input.oninput = (e) => {
+      const val = input.value.replace(/\D/g, '');
+      input.value = val.slice(0, 1);
+      if (val && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    };
+
+    input.onkeydown = (e) => {
+      if (e.key === 'Backspace' && !input.value && index > 0) {
+        inputs[index - 1].focus();
+      }
+    };
+
+    input.onpaste = (e) => {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 4);
+      for (let i = 0; i < paste.length; i++) {
+        if (inputs[i]) inputs[i].value = paste[i];
+      }
+      if (paste.length === 4) {
+        inputs[3].focus();
+      }
+    };
+  });
+
+  if (inputs[0]) inputs[0].focus();
+}
+
+// RECUPERACIÓN - PASO 2 (VERIFICAR CÓDIGO)
+function handleRecoveryStep2(e) {
+  e.preventDefault();
+  clearAuthAlerts();
+
+  const d1 = document.getElementById('otp-digit-1')?.value || '';
+  const d2 = document.getElementById('otp-digit-2')?.value || '';
+  const d3 = document.getElementById('otp-digit-3')?.value || '';
+  const d4 = document.getElementById('otp-digit-4')?.value || '';
+  const fullCode = `${d1}${d2}${d3}${d4}`.trim();
+
+  if (fullCode.length !== 4) {
+    showAuthAlert('recovery-alert-box-2', 'Por favor ingresa los 4 dígitos del código.', 'warning');
+    return;
+  }
+
+  const res = UserAuth.verifyResetCode(recoveryCurrentEmail, fullCode);
+  if (!res.success) {
+    showAuthAlert('recovery-alert-box-2', res.message, 'error');
+    return;
+  }
+
+  showRecoveryStep(3);
+  setTimeout(() => {
+    const input = document.getElementById('new-password');
+    if (input) input.focus();
+  }, 150);
+}
+
+async function resendRecoveryCode() {
+  if (!recoveryCurrentEmail) return;
+  showToast('Reenviando nuevo código de 4 dígitos...', 'info');
+  const res = await UserAuth.requestPasswordReset(recoveryCurrentEmail);
+  if (res.success && res.codeDemo) {
+    recoveryDemoCode = res.codeDemo;
+    const demoVal = document.getElementById('recovery-demo-code-val');
+    if (demoVal) demoVal.textContent = res.codeDemo;
+    showToast(`Nuevo código enviado: ${res.codeDemo}`, 'success');
+  }
+}
+
+// RECUPERACIÓN - PASO 3 (GUARDAR NUEVA CONTRASEÑA)
+function handleRecoveryStep3(e) {
+  e.preventDefault();
+  clearAuthAlerts();
+
+  const newPass = document.getElementById('new-password')?.value || '';
+  const confirmPass = document.getElementById('confirm-new-password')?.value || '';
+  const d1 = document.getElementById('otp-digit-1')?.value || '';
+  const d2 = document.getElementById('otp-digit-2')?.value || '';
+  const d3 = document.getElementById('otp-digit-3')?.value || '';
+  const d4 = document.getElementById('otp-digit-4')?.value || '';
+  const fullCode = `${d1}${d2}${d3}${d4}`.trim();
+
+  const res = UserAuth.resetPassword(recoveryCurrentEmail, fullCode, newPass, confirmPass);
+  if (!res.success) {
+    showAuthAlert('recovery-alert-box-3', res.message, 'error');
+    return;
+  }
+
+  showRecoveryStep(4);
+}
+
+// ----------------------------------------------------------------------------
+// SINCRONIZACIÓN DE INTERFAZ DEL HEADER & DROPDOWN
+// ----------------------------------------------------------------------------
+function updateAuthHeaderUI() {
+  const isAuth = typeof UserAuth !== 'undefined' && UserAuth.isAuthenticated();
+  const user = isAuth ? UserAuth.getCurrentUser() : null;
+
+  const loginBtn = document.getElementById('auth-login-btn');
+  const userChip = document.getElementById('auth-user-chip');
+  const avatar = document.getElementById('auth-user-avatar');
+  const nameEl = document.getElementById('auth-user-name');
+  const badgeEl = document.getElementById('auth-user-badge');
+  const dropFullName = document.getElementById('dropdown-user-full-name');
+  const dropEmail = document.getElementById('dropdown-user-email');
+  const dropRoleBadge = document.getElementById('dropdown-user-role-badge');
+  const dropAdminLink = document.getElementById('dropdown-admin-link');
+
+  const mobLoginBtn = document.getElementById('mobile-login-btn');
+  const mobLoggedContainer = document.getElementById('mobile-logged-container');
+  const mobAvatar = document.getElementById('mobile-user-avatar');
+  const mobName = document.getElementById('mobile-user-name');
+  const mobRole = document.getElementById('mobile-user-role');
+  const mobAdminLink = document.getElementById('mobile-admin-link');
+
+  if (isAuth && user) {
+    const initials = (user.name || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+    if (loginBtn) loginBtn.classList.add('hidden');
+    if (userChip) userChip.classList.remove('hidden');
+    if (avatar) avatar.textContent = initials;
+    if (nameEl) nameEl.textContent = user.name.split(' ')[0];
+    if (badgeEl) badgeEl.textContent = user.isEmployee ? 'Personal' : 'Cliente';
+    if (dropFullName) dropFullName.textContent = user.name;
+    if (dropEmail) dropEmail.textContent = user.email;
+    if (dropRoleBadge) {
+      dropRoleBadge.textContent = user.roleLabel || (user.isEmployee ? 'Personal WES' : 'Cliente');
+      dropRoleBadge.className = user.isEmployee 
+        ? 'inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-black uppercase bg-wes-blue text-wes-gold'
+        : 'inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-black uppercase bg-amber-100 text-amber-800';
+    }
+    if (dropAdminLink) {
+      if (user.isEmployee) dropAdminLink.classList.remove('hidden');
+      else dropAdminLink.classList.add('hidden');
+    }
+
+    if (mobLoginBtn) mobLoginBtn.classList.add('hidden');
+    if (mobLoggedContainer) mobLoggedContainer.classList.remove('hidden');
+    if (mobAvatar) mobAvatar.textContent = initials;
+    if (mobName) mobName.textContent = user.name;
+    if (mobRole) mobRole.textContent = user.roleLabel || 'Cliente WES';
+    if (mobAdminLink) {
+      if (user.isEmployee) mobAdminLink.classList.remove('hidden');
+      else mobAdminLink.classList.add('hidden');
+    }
+  } else {
+    if (loginBtn) loginBtn.classList.remove('hidden');
+    if (userChip) userChip.classList.add('hidden');
+    if (mobLoginBtn) mobLoginBtn.classList.remove('hidden');
+    if (mobLoggedContainer) mobLoggedContainer.classList.add('hidden');
+    closeUserDropdown();
+  }
+}
+
+function toggleUserDropdown() {
+  const menu = document.getElementById('auth-user-menu');
+  if (menu) menu.classList.toggle('hidden');
+}
+
+function closeUserDropdown() {
+  const menu = document.getElementById('auth-user-menu');
+  if (menu) menu.classList.add('hidden');
+}
+
+function handleLogout() {
+  if (typeof UserAuth !== 'undefined') {
+    UserAuth.logout();
+    showToast('Sesión cerrada correctamente.', 'info');
+  }
+}
+
+function filterByMyQuotes() {
+  if (typeof openQuoteModal === 'function') {
+    openQuoteModal();
+  }
+}
+
+document.addEventListener('click', (e) => {
+  const chip = document.getElementById('auth-user-chip');
+  if (chip && !chip.contains(e.target)) {
+    closeUserDropdown();
+  }
+});
+
+window.addEventListener('wes_user_login', () => updateAuthHeaderUI());
+window.addEventListener('wes_user_logout', () => updateAuthHeaderUI());
+
+// Exponer funciones necesarias al scope global
+window.openAuthModal = openAuthModal;
+window.closeAuthModal = closeAuthModal;
+window.switchAuthTab = switchAuthTab;
+window.openRecoveryView = openRecoveryView;
+window.showLoginView = showLoginView;
+window.togglePasswordVisibility = togglePasswordVisibility;
+window.handleUserLoginSubmit = handleUserLoginSubmit;
+window.handleUserRegisterSubmit = handleUserRegisterSubmit;
+window.handleRecoveryStep1 = handleRecoveryStep1;
+window.handleRecoveryStep2 = handleRecoveryStep2;
+window.handleRecoveryStep3 = handleRecoveryStep3;
+window.resendRecoveryCode = resendRecoveryCode;
+window.toggleUserDropdown = toggleUserDropdown;
+window.closeUserDropdown = closeUserDropdown;
+window.handleLogout = handleLogout;
+window.filterByMyQuotes = filterByMyQuotes;
+window.updateAuthHeaderUI = updateAuthHeaderUI;
+
 
