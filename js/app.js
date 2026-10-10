@@ -461,36 +461,35 @@ function renderProducts() {
 
     return `
       <div onclick="openProductDetailModal('${product.id}')" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer hover:border-wes-blue/50">
-        <div class="relative h-28 xs:h-36 sm:h-52 bg-white flex items-center justify-center p-2 sm:p-3 border-b border-slate-100 overflow-hidden">
+        <div class="relative h-28 xs:h-32 sm:h-36 md:h-40 lg:h-44 bg-white flex items-center justify-center p-2 sm:p-2.5 border-b border-slate-100 overflow-hidden">
           <img src="${product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500" loading="lazy">
           ${promoBadgeHtml}
-          <span class="absolute top-1.5 right-1.5 sm:top-3 sm:right-3 text-[9px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 bg-slate-900/80 text-white rounded sm:rounded-md shadow-2xs">
+          <span class="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 bg-slate-900/80 text-white rounded sm:rounded-md shadow-2xs">
             ${product.brand}
           </span>
         </div>
         
-        <div class="p-2 sm:p-5 flex-1 flex flex-col justify-between">
+        <div class="p-2 sm:p-3 flex-1 flex flex-col justify-between">
           <div>
-            <div class="text-[9px] sm:text-xs font-mono font-bold text-slate-400 sm:text-slate-500 mb-0.5 sm:mb-1 tracking-wide truncate">
+            <div class="text-[9px] sm:text-[10px] font-mono font-bold text-slate-400 sm:text-slate-500 mb-0.5 tracking-wide truncate">
               SKU: ${product.code || product.codigo || ''}
             </div>
-            <h3 class="font-bold text-slate-900 text-xs sm:text-base leading-tight sm:leading-snug line-clamp-2 group-hover:text-wes-blue transition min-h-[28px] sm:min-h-[44px]">
+            <h3 class="font-bold text-slate-900 text-xs sm:text-[13px] leading-tight sm:leading-snug line-clamp-2 group-hover:text-wes-blue transition min-h-[28px] sm:min-h-[34px]">
               ${product.name}
             </h3>
-            <p class="hidden sm:block text-xs text-slate-500 mt-2 line-clamp-2">${product.description || ''}</p>
           </div>
 
-          <div class="mt-2 sm:mt-auto pt-2 sm:pt-3.5 border-t border-slate-100 flex items-center justify-between gap-1" onclick="event.stopPropagation()">
+          <div class="mt-2 sm:mt-auto pt-2 sm:pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1" onclick="event.stopPropagation()">
             <div class="min-w-0 flex-1">
-              <span class="text-[8px] sm:text-[11px] text-slate-400 block font-medium uppercase tracking-wider leading-none mb-0.5">Precio Ref:</span>
+              <span class="text-[8px] sm:text-[10px] text-slate-400 block font-medium uppercase tracking-wider leading-none mb-0.5">Precio Ref:</span>
               ${priceHtml}
             </div>
             
-            <div class="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
-              <button type="button" onclick="shareProductWhatsAppBySku('${product.code || product.codigo}', event)" title="Compartir este producto con un cliente por WhatsApp" class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-2xs">
-                <i class="fab fa-whatsapp text-xs sm:text-base"></i>
+            <div class="flex items-center space-x-1 shrink-0">
+              <button type="button" onclick="shareProductWhatsAppBySku('${product.code || product.codigo}', event)" title="Compartir este producto con un cliente por WhatsApp" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition shadow-2xs">
+                <i class="fab fa-whatsapp text-xs sm:text-sm"></i>
               </button>
-              <button type="button" onclick="copyProductLinkBySku('${product.code || product.codigo}', event)" title="Copiar enlace directo para cliente" class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-100 text-slate-700 hover:bg-wes-blue hover:text-white items-center justify-center transition shadow-2xs hidden xs:flex">
+              <button type="button" onclick="copyProductLinkBySku('${product.code || product.codigo}', event)" title="Copiar enlace directo para cliente" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-slate-100 text-slate-700 hover:bg-wes-blue hover:text-white items-center justify-center transition shadow-2xs hidden xs:flex">
                 <i class="fas fa-link text-[10px] sm:text-xs"></i>
               </button>
               ${quoteBtnHtml}
