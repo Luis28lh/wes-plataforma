@@ -16,6 +16,8 @@ const AppState = {
   searchQuery: '',
   sortBy: 'featured',
   offerSubFilter: 'all',
+  catalogPageSize: 24,
+  catalogVisibleCount: 24,
   supportImages: [],
   settings: StorageService.getCompanySettings(),
   backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec'
@@ -369,6 +371,8 @@ function renderProducts() {
     countEl.textContent = `${filtered.length} producto${filtered.length === 1 ? '' : 's'} disponible${filtered.length === 1 ? '' : 's'}`;
   }
 
+  const paginationContainer = document.getElementById('catalog-pagination-container');
+
   if (filtered.length === 0) {
     container.innerHTML = `
       <div class="col-span-full py-16 text-center">
@@ -382,10 +386,21 @@ function renderProducts() {
         </button>
       </div>
     `;
+    if (paginationContainer) paginationContainer.innerHTML = '';
     return;
   }
 
-  container.innerHTML = filtered.map(product => {
+  // Control de paginación progresiva
+  if (!AppState.catalogVisibleCount) {
+    AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
+  }
+
+  const total = filtered.length;
+  const currentVisible = Math.min(AppState.catalogVisibleCount, total);
+  const remaining = total - currentVisible;
+  const visibleProducts = filtered.slice(0, currentVisible);
+
+  container.innerHTML = visibleProducts.map(product => {
     const isAvail = product.availability === 'Disponible';
     const availClass = isAvail ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
     const waUrl = `https://wa.me/${AppState.settings.whatsapp}?text=${encodeURIComponent(`Hola WES, deseo consultar disponibilidad y precio sobre: ${product.name} (Código: ${product.code})`)}`;
@@ -499,7 +514,73 @@ function renderProducts() {
       </div>
     `;
   }).join('');
+
+  // Renderizar la barra de carga progresiva
+  if (paginationContainer) {
+    if (remaining > 0) {
+      const nextBatch = Math.min(AppState.catalogPageSize, remaining);
+      const progressPct = Math.round((currentVisible / total) * 100);
+      paginationContainer.innerHTML = `
+        <div class="max-w-2xl mx-auto bg-slate-50/90 border border-slate-200/90 rounded-2xl p-4 sm:p-6 text-center shadow-xs">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-600 mb-2">
+            <span>Mostrando <strong class="text-wes-blue text-sm">${currentVisible}</strong> de <strong class="text-slate-800">${total}</strong> productos</span>
+            <span class="text-slate-400 font-medium">Quedan ${remaining} equipos</span>
+          </div>
+
+          <!-- Barra de progreso visual -->
+          <div class="w-full bg-slate-200/80 rounded-full h-2 overflow-hidden mb-4 shadow-inner">
+            <div class="bg-gradient-to-r from-wes-blue via-blue-600 to-wes-gold h-full rounded-full transition-all duration-300" style="width: ${progressPct}%"></div>
+          </div>
+
+          <!-- Botones de Acción -->
+          <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+            <button type="button" onclick="loadMoreProducts()" class="px-5 py-2.5 sm:py-3 rounded-xl bg-wes-blue text-white hover:bg-wes-dark shadow-md hover:shadow-lg transition font-bold text-xs sm:text-sm flex items-center space-x-2 group">
+              <i class="fas fa-chevron-circle-down text-wes-gold group-hover:translate-y-0.5 transition-transform text-sm"></i>
+              <span>Mostrar más productos (+${nextBatch})</span>
+            </button>
+
+            <button type="button" onclick="loadAllProducts()" class="px-3.5 py-2.5 sm:py-3 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-300 transition font-semibold text-xs flex items-center space-x-1.5 shadow-2xs">
+              <i class="fas fa-layer-group text-slate-400"></i>
+              <span>Ver todos (${total})</span>
+            </button>
+
+            <a href="#proyectos" class="px-4 py-2.5 sm:py-3 rounded-xl bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition font-bold text-xs flex items-center space-x-1.5 shadow-2xs">
+              <span>⚡ Saltar a Proyectos & Servicios</span>
+              <i class="fas fa-arrow-down text-amber-600"></i>
+            </a>
+          </div>
+        </div>
+      `;
+    } else {
+      paginationContainer.innerHTML = `
+        <div class="max-w-xl mx-auto py-4 text-center">
+          <div class="inline-flex items-center space-x-2 text-xs font-semibold text-slate-600 bg-slate-100 px-4 py-2 rounded-full border border-slate-200 mb-3">
+            <i class="fas fa-check-circle text-emerald-500"></i>
+            <span>Has visualizado todos los ${total} productos</span>
+          </div>
+          <div>
+            <a href="#proyectos" class="inline-flex items-center space-x-1.5 text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+              <span>Continuar a Proyectos y Casos de Éxito</span>
+              <i class="fas fa-arrow-down"></i>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+  }
 }
+
+function loadMoreProducts() {
+  AppState.catalogVisibleCount = (AppState.catalogVisibleCount || AppState.catalogPageSize || 24) + (AppState.catalogPageSize || 24);
+  renderProducts();
+}
+window.loadMoreProducts = loadMoreProducts;
+
+function loadAllProducts() {
+  AppState.catalogVisibleCount = 99999;
+  renderProducts();
+}
+window.loadAllProducts = loadAllProducts;
 
 function populateFilterOptions(products) {
   const catSelect = document.getElementById('category-filter');
@@ -550,6 +631,7 @@ function syncCategoryPillsUI(categoryName) {
 
 function filterByCategory(categoryName, subFilter = null) {
   AppState.selectedCategory = categoryName;
+  AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
   if (subFilter) {
     AppState.offerSubFilter = subFilter;
   }
@@ -576,6 +658,7 @@ window.filterByCategory = filterByCategory;
 
 function setOfferSubFilter(subFilter) {
   AppState.offerSubFilter = subFilter;
+  AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
   
   document.querySelectorAll('.offer-sub-btn').forEach(btn => {
     btn.className = 'offer-sub-btn px-3 py-1.5 rounded-xl bg-white border border-rose-300 text-slate-700 hover:bg-rose-600 hover:text-white transition';
@@ -596,6 +679,7 @@ function resetProductFilters() {
   AppState.searchQuery = '';
   AppState.sortBy = 'featured';
   AppState.offerSubFilter = 'all';
+  AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
 
   const catSelect = document.getElementById('category-filter');
   const brandSelect = document.getElementById('brand-filter');
@@ -634,6 +718,7 @@ function filterByBrand(brandName) {
       AppState.searchQuery = brandName;
       if (searchInput) searchInput.value = brandName;
     }
+    AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
     renderProducts();
   }
 
@@ -1535,6 +1620,7 @@ function setupEventListeners() {
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       AppState.searchQuery = e.target.value;
+      AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
       renderProducts();
     });
   }
@@ -1543,6 +1629,7 @@ function setupEventListeners() {
   if (catSelect) {
     catSelect.addEventListener('change', (e) => {
       AppState.selectedCategory = e.target.value;
+      AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
       syncCategoryPillsUI(e.target.value);
       renderProducts();
     });
@@ -1552,6 +1639,7 @@ function setupEventListeners() {
   if (brandSelect) {
     brandSelect.addEventListener('change', (e) => {
       AppState.selectedBrand = e.target.value;
+      AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
       renderProducts();
     });
   }
@@ -1560,6 +1648,7 @@ function setupEventListeners() {
   if (availSelect) {
     availSelect.addEventListener('change', (e) => {
       AppState.selectedAvailability = e.target.value;
+      AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
       renderProducts();
     });
   }
@@ -1568,6 +1657,7 @@ function setupEventListeners() {
   if (sortSelect) {
     sortSelect.addEventListener('change', (e) => {
       AppState.sortBy = e.target.value;
+      AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
       renderProducts();
     });
   }
