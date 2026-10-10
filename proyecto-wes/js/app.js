@@ -1679,32 +1679,36 @@ function setupEventListeners() {
   }
 
   // Menú móvil
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
-  const mobileMenuClose = document.getElementById('mobile-menu-close');
-
-  if (mobileMenuBtn && mobileMenuDrawer) {
-    mobileMenuBtn.addEventListener('click', () => {
+  window.openMobileMenu = function() {
+    const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+    if (mobileMenuDrawer) {
       mobileMenuDrawer.classList.remove('translate-x-full');
       document.body.classList.add('overflow-hidden');
-    });
-  }
+    }
+  };
 
-  if (mobileMenuClose && mobileMenuDrawer) {
-    mobileMenuClose.addEventListener('click', () => {
+  window.closeMobileMenu = function() {
+    const mobileMenuDrawer = document.getElementById('mobile-menu-drawer');
+    if (mobileMenuDrawer) {
       mobileMenuDrawer.classList.add('translate-x-full');
       document.body.classList.remove('overflow-hidden');
-    });
+    }
+  };
+
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', window.openMobileMenu);
+  }
+
+  if (mobileMenuClose) {
+    mobileMenuClose.addEventListener('click', window.closeMobileMenu);
   }
 
   // Cerrar menú móvil al hacer clic en un enlace
   document.querySelectorAll('.mobile-nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      if (mobileMenuDrawer) {
-        mobileMenuDrawer.classList.add('translate-x-full');
-        document.body.classList.remove('overflow-hidden');
-      }
-    });
+    link.addEventListener('click', window.closeMobileMenu);
   });
 
   // Formularios
@@ -2819,6 +2823,9 @@ let recoveryCurrentEmail = '';
 let recoveryDemoCode = '';
 
 function openAuthModal(tab = 'login') {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+  if (typeof closeUserProfileModal === 'function') closeUserProfileModal();
+
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
 
@@ -3254,6 +3261,8 @@ function handleRecoveryStep3(e) {
 // CONTROLADOR DEL ICONO DE LA PERSONA Y MODAL DE PERFIL
 // ----------------------------------------------------------------------------
 function handleUserPersonClick() {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+
   if (typeof UserAuth !== 'undefined' && UserAuth.isAuthenticated()) {
     // Si la sesión YA ESTÁ INICIADA -> Mostrar modal con todos los datos de esa persona
     openUserProfileModal();
@@ -3264,6 +3273,9 @@ function handleUserPersonClick() {
 }
 
 function openUserProfileModal() {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+  if (typeof closeAuthModal === 'function') closeAuthModal();
+
   const modal = document.getElementById('user-profile-modal');
   if (!modal) return;
 
@@ -3399,6 +3411,14 @@ window.updateAuthHeaderUI = updateAuthHeaderUI;
 window.handleUserPersonClick = handleUserPersonClick;
 window.openUserProfileModal = openUserProfileModal;
 window.closeUserProfileModal = closeUserProfileModal;
+window.openMobileMenu = window.openMobileMenu || function() {
+  const d = document.getElementById('mobile-menu-drawer');
+  if (d) { d.classList.remove('translate-x-full'); document.body.classList.add('overflow-hidden'); }
+};
+window.closeMobileMenu = window.closeMobileMenu || function() {
+  const d = document.getElementById('mobile-menu-drawer');
+  if (d) { d.classList.add('translate-x-full'); document.body.classList.remove('overflow-hidden'); }
+};
 
 
 

@@ -190,19 +190,20 @@
       <!-- Sección de Cuenta en Menú Móvil -->
       <div id="mobile-auth-container" class="pt-3 border-t border-slate-100">
         <!-- Si no está logueado -->
-        <button id="mobile-login-btn" onclick="openAuthModal('login'); closeMobileMenu();" class="w-full py-2.5 px-4 rounded-xl bg-wes-blue text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-sm transition hover:bg-wes-dark">
-          <i class="fas fa-user-circle text-sm"></i>
-          <span>Iniciar Sesión / Registrarme</span>
+        <button id="mobile-login-btn" onclick="openAuthModal('login'); closeMobileMenu();" class="w-full py-3 px-4 rounded-xl bg-wes-blue hover:bg-wes-dark text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-sm transition">
+          <i class="fas fa-user-circle text-base"></i>
+          <span>Iniciar Sesión / Mi Cuenta</span>
         </button>
 
         <!-- Si está logueado -->
         <div id="mobile-logged-container" class="hidden space-y-2">
-          <div class="flex items-center space-x-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
-            <span id="mobile-user-avatar" class="w-8 h-8 rounded-lg bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shrink-0 shadow-sm">U</span>
+          <div onclick="openUserProfileModal(); closeMobileMenu();" class="flex items-center space-x-2.5 p-2.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition" title="Ver mi información y perfil">
+            <span id="mobile-user-avatar" class="w-9 h-9 rounded-lg bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shrink-0 shadow-sm">U</span>
             <div class="min-w-0 flex-1">
               <p id="mobile-user-name" class="font-bold text-slate-900 text-xs truncate">Nombre</p>
               <p id="mobile-user-role" class="text-[10px] text-slate-500 font-semibold uppercase">Cliente WES</p>
             </div>
+            <i class="fas fa-chevron-right text-xs text-slate-400"></i>
           </div>
 
           <a id="mobile-admin-link" href="admin.html" class="hidden w-full py-2 px-3 rounded-lg bg-amber-50 text-wes-blue font-bold text-xs flex items-center space-x-2 border border-amber-200">
@@ -218,13 +219,7 @@
       </div>
 
       <div class="pt-4 border-t border-slate-100 space-y-3">
-        <!-- Botón de Instalación en Menú Móvil -->
-        <button id="pwa-drawer-install-btn" onclick="triggerPwaInstall()" class="w-full py-2.5 bg-gradient-to-r from-wes-gold to-amber-500 text-wes-dark font-black rounded-xl text-xs flex items-center justify-center space-x-2 shadow-sm transition hover:shadow">
-          <i class="fas fa-mobile-alt text-sm"></i>
-          <span>Instalar App en este Teléfono</span>
-        </button>
-
-        <button onclick="openQuoteModal()" class="w-full py-2.5 bg-wes-blue text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
+        <button onclick="openQuoteModal(); closeMobileMenu();" class="w-full py-2.5 bg-wes-blue text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
           <i class="fas fa-file-invoice"></i>
           <span>Revisar Cotización (<span class="cart-count-badge">0</span>)</span>
         </button>
@@ -2458,7 +2453,7 @@
   <!-- ========================================================= -->
   <!-- MODAL DE DATOS DEL USUARIO / PERFIL (SESIÓN INICIADA)     -->
   <!-- ========================================================= -->
-  <div id="user-profile-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+  <div id="user-profile-modal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-sm w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all transform duration-200">
       
       <!-- Botón de Cerrar (X) -->
@@ -2552,7 +2547,7 @@
   <!-- ========================================================= -->
   <!-- MODAL DE AUTENTICACIÓN UNIVERSAL (LOGIN, REGISTRO, OTP)   -->
   <!-- ========================================================= -->
-  <div id="auth-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+  <div id="auth-modal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all transform duration-200">
       
       <!-- Botón de Cerrar (X) -->
