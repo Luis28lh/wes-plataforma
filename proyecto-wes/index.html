@@ -135,12 +135,12 @@
           <!-- Botón de Usuario (Icono de la Persona) -->
           <button id="auth-person-btn" onclick="handleUserPersonClick()" class="w-10 h-10 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center justify-center transition shadow-sm relative group shrink-0" title="Mi Cuenta / Iniciar Sesión" aria-label="Usuario">
             <!-- Icono cuando NO está iniciada la sesión -->
-            <span id="auth-person-icon-loggedout" class="flex items-center justify-center">
+            <span id="auth-person-icon-loggedout" class="flex items-center justify-center pointer-events-none">
               <i class="fas fa-user text-sm text-slate-600 group-hover:text-wes-blue transition"></i>
             </span>
 
             <!-- Avatar con iniciales cuando SÍ está iniciada la sesión -->
-            <span id="auth-person-icon-loggedin" class="hidden w-full h-full rounded-full bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shadow-inner">
+            <span id="auth-person-icon-loggedin" class="hidden w-full h-full rounded-full bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shadow-inner pointer-events-none">
               <span id="auth-person-initials">U</span>
               <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white"></span>
             </span>
@@ -2827,12 +2827,12 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Supabase JS Client Oficial para PostgreSQL en la Nube -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/products.js?v=20261010_1900"></script>
+  <script src="js/products.js?v=20261010_2120"></script>
   <script src="js/supabase_client.js?v=20261002_0915"></script>
   <script src="js/feature_flags.js?v=20261002_0915"></script>
-  <script src="js/admin_auth.js?v=20261010_1900"></script>
-  <script src="js/user_auth.js?v=20261010_1900"></script>
-  <script src="js/app.js?v=20261010_1900"></script>
-  <script src="js/pwa-install.js?v=20261010_1900"></script>
+  <script src="js/admin_auth.js?v=20261010_2120"></script>
+  <script src="js/user_auth.js?v=20261010_2120"></script>
+  <script src="js/app.js?v=20261010_2120"></script>
+  <script src="js/pwa-install.js?v=20261010_2120"></script>
 </body>
 </html>

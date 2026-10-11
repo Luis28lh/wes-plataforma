@@ -1544,18 +1544,21 @@ function showConfirmationModal({ title, code, message, type, data }) {
   // Botón para WhatsApp con la referencia (se oculta en contacto porque se gestiona por correo)
   const waBtn = document.getElementById('conf-wa-btn');
   if (waBtn) {
-    if (type === 'contact') {
+    if (type === 'contact' || type === 'login' || !data) {
       waBtn.classList.add('hidden');
     } else {
       waBtn.classList.remove('hidden');
+      const clientName = (data && data.clientName) ? data.clientName : '';
+      const priority = (data && data.priority) ? data.priority : 'Normal';
       const text = type === 'quote' 
-        ? `Hola WES, acabo de enviar la solicitud de cotización ${code}. Mi nombre es ${data.clientName}.`
-        : `Hola WES, acabo de generar el caso de soporte ${code} con prioridad ${data.priority}. Mi nombre es ${data.clientName}.`;
+        ? `Hola WES, acabo de enviar la solicitud de cotización ${code}. Mi nombre es ${clientName}.`
+        : `Hola WES, acabo de generar el caso de soporte ${code} con prioridad ${priority}. Mi nombre es ${clientName}.`;
       waBtn.href = `https://wa.me/${AppState.settings.whatsapp}?text=${encodeURIComponent(text)}`;
     }
   }
 
   modal.classList.remove('hidden');
+  modal.style.display = 'flex';
   document.body.classList.add('overflow-hidden');
 }
 
@@ -1563,6 +1566,7 @@ function closeConfirmationModal() {
   const modal = document.getElementById('confirmation-modal');
   if (modal) {
     modal.classList.add('hidden');
+    modal.style.display = 'none';
     document.body.classList.remove('overflow-hidden');
   }
 }
@@ -1720,6 +1724,46 @@ function setupEventListeners() {
 
   const contactForm = document.getElementById('contact-form');
   if (contactForm) contactForm.addEventListener('submit', handleContactSubmit);
+
+  // Autenticación universal y Perfil WES
+  const authPersonBtn = document.getElementById('auth-person-btn');
+  if (authPersonBtn) {
+    authPersonBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleUserPersonClick();
+    });
+  }
+
+  const mobileLoginBtn = document.getElementById('mobile-login-btn');
+  if (mobileLoginBtn) {
+    mobileLoginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAuthModal('login');
+      if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+    });
+  }
+
+  const authModal = document.getElementById('auth-modal');
+  if (authModal) {
+    authModal.addEventListener('click', (e) => {
+      if (e.target === authModal) closeAuthModal();
+    });
+  }
+
+  const userProfileModal = document.getElementById('user-profile-modal');
+  if (userProfileModal) {
+    userProfileModal.addEventListener('click', (e) => {
+      if (e.target === userProfileModal) closeUserProfileModal();
+    });
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAuthModal();
+      closeUserProfileModal();
+      closeConfirmationModal();
+    }
+  });
 }
 
 function scrollToSection(id) {
@@ -2833,6 +2877,7 @@ function openAuthModal(tab = 'login') {
 
   switchAuthTab(tab);
   modal.classList.remove('hidden');
+  modal.style.display = 'flex';
   document.body.classList.add('overflow-hidden');
 }
 
@@ -2840,6 +2885,7 @@ function closeAuthModal() {
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
   modal.classList.add('hidden');
+  modal.style.display = 'none';
   document.body.classList.remove('overflow-hidden');
   clearAuthAlerts();
 }
@@ -3384,6 +3430,7 @@ function openUserProfileModal() {
   }
 
   modal.classList.remove('hidden');
+  modal.style.display = 'flex';
   document.body.classList.add('overflow-hidden');
 }
 
@@ -3391,6 +3438,7 @@ function closeUserProfileModal() {
   const modal = document.getElementById('user-profile-modal');
   if (!modal) return;
   modal.classList.add('hidden');
+  modal.style.display = 'none';
   document.body.classList.remove('overflow-hidden');
 }
 

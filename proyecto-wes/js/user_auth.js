@@ -141,23 +141,37 @@ const UserAuth = (function() {
   async function sendEmailCode(email, code, userName = '', purpose = 'recuperacion') {
     const backendUrl = (typeof AppState !== 'undefined' && AppState.backendUrl) ? AppState.backendUrl : BACKEND_URL_DEFAULT;
     
+    const cleanEmail = email.trim();
+    const cleanCode = String(code);
+    const cleanName = userName || 'Usuario WES';
+
+    let subjectText = `Código de Seguridad WES: ${cleanCode}`;
+    let messageText = `Hola ${cleanName},\n\nTu código de verificación de 4 dígitos para tu cuenta en Warn Electrical Services (WES) es:\n\n${cleanCode}\n\nEste código es válido durante los próximos 15 minutos. Si no realizaste esta solicitud, puedes ignorar este mensaje con seguridad.\n\nWarn Electrical Services, SRL (WES)\nSeguridad Electrónica, Automatización e Instalaciones\nMoca, República Dominicana`;
+
+    if (purpose === 'bienvenida') {
+      subjectText = `¡Bienvenido/a a Warn Electrical Services (WES)!`;
+      messageText = `Hola ${cleanName},\n\nTu cuenta ha sido creada exitosamente en Warn Electrical Services (WES). Ya puedes iniciar sesión para acceder a tus cotizaciones y servicios.\n\nWarn Electrical Services, SRL (WES)\nMoca, República Dominicana`;
+    } else if (purpose === 'registro') {
+      subjectText = `Configura tu Contraseña WES – Código: ${cleanCode}`;
+      messageText = `Hola ${cleanName},\n\nTu código de 4 dígitos para completar el registro y configurar tu contraseña en Warn Electrical Services (WES) es:\n\n${cleanCode}\n\nIngresa este código en la pantalla de verificación. Es válido por 15 minutos.\n\nWarn Electrical Services, SRL (WES)`;
+    }
+
     const payload = {
-      action: 'send_auth_code',
+      action: 'nuevoMensaje',
       data: {
-        email: email.trim(),
-        code: String(code),
-        userName: userName || 'Estimado Usuario',
-        purpose: purpose,
-        timestamp: new Date().toISOString()
+        name: cleanName,
+        email: cleanEmail,
+        phone: '8492075474',
+        subject: subjectText,
+        message: messageText
       }
     };
 
-    console.log(`[UserAuth] ✉️ Enviando código de 4 dígitos [${code}] a: ${email}`);
+    console.log(`[UserAuth] ✉️ Enviando correo real con código de 4 dígitos [${cleanCode}] a: ${cleanEmail}`);
 
     try {
       await fetch(backendUrl, {
         method: 'POST',
-        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
       });
