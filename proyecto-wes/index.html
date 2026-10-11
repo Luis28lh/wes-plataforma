@@ -2642,52 +2642,27 @@
         <div id="auth-content-register" class="hidden">
           <div class="mb-4 p-2.5 bg-amber-50 rounded-xl border border-amber-200/80 text-[11px] text-amber-900 flex items-center space-x-2">
             <i class="fas fa-info-circle text-wes-gold shrink-0 text-sm"></i>
-            <span><strong>El registro es 100% opcional.</strong> Te permite guardar cotizaciones y agilizar tus pedidos futuros.</span>
+            <span><strong>El registro es 100% opcional.</strong> Te enviaremos un código de 4 dígitos a tu correo para configurar tu clave.</span>
           </div>
 
-          <form id="form-user-register" onsubmit="handleUserRegisterSubmit(event)" class="space-y-3.5">
+          <form id="form-user-register" onsubmit="handleUserRegisterSubmit(event)" class="space-y-4">
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nombre Completo</label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <i class="fas fa-user text-xs"></i>
                 </span>
-                <input type="text" id="register-name" required placeholder="Juan Pérez" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                <input type="text" id="register-name" required placeholder="Tu nombre y apellido" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo Electrónico</label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <i class="fas fa-envelope text-xs"></i>
                 </span>
-                <input type="email" id="register-email" required placeholder="juan@correo.com" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono o WhatsApp</label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <i class="fas fa-phone text-xs"></i>
-                </span>
-                <input type="tel" id="register-phone" placeholder="(809) 000-0000" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Contraseña</label>
-                <div class="relative">
-                  <input type="password" id="register-password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Confirmar</label>
-                <div class="relative">
-                  <input type="password" id="register-password-confirm" required minlength="6" placeholder="Repite contraseña" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-                </div>
+                <input type="email" id="register-email" required placeholder="tu-correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
               </div>
             </div>
 
@@ -2695,8 +2670,8 @@
             <div id="register-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
 
             <button type="submit" id="register-submit-btn" class="w-full py-3 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
-              <i class="fas fa-check-circle"></i>
-              <span>Crear Mi Cuenta</span>
+              <i class="fas fa-paper-plane text-xs"></i>
+              <span>Continuar con Código de 4 Dígitos</span>
             </button>
           </form>
 
@@ -2826,12 +2801,12 @@
               <i class="fas fa-check"></i>
             </div>
             <div>
-              <h4 class="font-extrabold text-base text-slate-900">¡Contraseña Actualizada!</h4>
-              <p class="text-xs text-slate-600 mt-1 max-w-xs mx-auto leading-relaxed">
+              <h4 id="recovery-step4-title" class="font-extrabold text-base text-slate-900">¡Contraseña Actualizada!</h4>
+              <p id="recovery-step4-desc" class="text-xs text-slate-600 mt-1 max-w-xs mx-auto leading-relaxed">
                 Tu clave ha sido reconfigurada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.
               </p>
             </div>
-            <button type="button" onclick="showLoginView()" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition">
+            <button type="button" id="recovery-step4-btn" onclick="showLoginView()" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition">
               Iniciar Sesión Ahora
             </button>
           </div>

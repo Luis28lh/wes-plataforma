@@ -2820,6 +2820,8 @@ window.addEventListener('popstate', (e) => {
 // ============================================================================
 
 let recoveryCurrentEmail = '';
+let recoveryCurrentName = '';
+let recoveryMode = 'recovery'; // 'recovery' o 'registration'
 let recoveryDemoCode = '';
 
 function openAuthModal(tab = 'login') {
@@ -2891,6 +2893,8 @@ function switchAuthTab(tab) {
 }
 
 function openRecoveryView() {
+  recoveryMode = 'recovery';
+  recoveryCurrentName = '';
   const tabsBar = document.getElementById('auth-tabs-bar');
   const contentLogin = document.getElementById('auth-content-login');
   const contentRegister = document.getElementById('auth-content-register');
@@ -3049,53 +3053,81 @@ function handleUserLoginSubmit(e) {
   }, 350);
 }
 
-// HANDLER DE REGISTRO DE CLIENTE
-function handleUserRegisterSubmit(e) {
+// HANDLER DE REGISTRO DE CLIENTE (SOLO NOMBRE Y CORREO)
+async function handleUserRegisterSubmit(e) {
   e.preventDefault();
   clearAuthAlerts();
 
-  const name = document.getElementById('register-name').value.trim();
-  const email = document.getElementById('register-email').value.trim();
-  const phone = document.getElementById('register-phone').value.trim();
-  const password = document.getElementById('register-password').value;
-  const passConfirm = document.getElementById('register-password-confirm').value;
+  const nameInput = document.getElementById('register-name');
+  const emailInput = document.getElementById('register-email');
   const submitBtn = document.getElementById('register-submit-btn');
 
-  if (password !== passConfirm) {
-    showAuthAlert('register-alert-box', 'Las contraseñas no coinciden. Por favor verifícalas.', 'error');
-    return;
-  }
+  if (!nameInput || !emailInput) return;
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim().toLowerCase();
 
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Creando cuenta...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando código de 4 dígitos...';
   }
 
-  setTimeout(() => {
-    try {
-      const res = UserAuth.registerClient({ name, email, phone, password });
+  try {
+    const res = await UserAuth.requestRegistrationOtp(name, email);
 
-      if (!res.success) {
-        showAuthAlert('register-alert-box', res.message, 'error');
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Crear Mi Cuenta';
-        }
-        return;
-      }
-
-      closeAuthModal();
-      updateAuthHeaderUI();
-      showToast(res.message, 'success');
-    } catch (err) {
-      showAuthAlert('register-alert-box', 'Error al crear la cuenta.', 'error');
-    } finally {
+    if (!res.success) {
+      showAuthAlert('register-alert-box', res.message, 'error');
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Crear Mi Cuenta';
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane text-xs mr-1"></i> Continuar con Código de 4 Dígitos';
       }
+      return;
     }
-  }, 400);
+
+    recoveryCurrentEmail = email;
+    recoveryCurrentName = name;
+    recoveryMode = 'registration';
+    recoveryDemoCode = res.codeDemo || '';
+
+    // Cambiar vista a ingreso de código OTP
+    const tabsBar = document.getElementById('auth-tabs-bar');
+    const contentLogin = document.getElementById('auth-content-login');
+    const contentRegister = document.getElementById('auth-content-register');
+    const contentRecovery = document.getElementById('auth-content-recovery');
+    const title = document.getElementById('auth-modal-title');
+    const subtitle = document.getElementById('auth-modal-subtitle');
+
+    if (tabsBar) tabsBar.classList.add('hidden');
+    if (contentLogin) contentLogin.classList.add('hidden');
+    if (contentRegister) contentRegister.classList.add('hidden');
+    if (contentRecovery) contentRecovery.classList.remove('hidden');
+
+    if (title) title.textContent = 'Configurar Contraseña';
+    if (subtitle) subtitle.textContent = 'Código de seguridad de 4 dígitos enviado por correo';
+
+    const displayEmail = document.getElementById('recovery-target-email-display');
+    if (displayEmail) displayEmail.textContent = email;
+
+    const demoBanner = document.getElementById('recovery-demo-code-banner');
+    const demoVal = document.getElementById('recovery-demo-code-val');
+    if (demoBanner && demoVal && res.codeDemo) {
+      demoVal.textContent = res.codeDemo;
+      demoBanner.classList.remove('hidden');
+    }
+
+    showRecoveryStep(2);
+    setupOtpInputs();
+    showToast(`Código de 4 dígitos enviado a ${email}`, 'info');
+
+  } catch (err) {
+    console.error(err);
+    showAuthAlert('register-alert-box', 'Error al procesar el registro.', 'error');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-paper-plane text-xs mr-1"></i> Continuar con Código de 4 Dígitos';
+    }
+  }
 }
 
 // RECUPERACIÓN - PASO 1 (SOLICITAR CÓDIGO)
@@ -3226,8 +3258,13 @@ function handleRecoveryStep2(e) {
 async function resendRecoveryCode() {
   if (!recoveryCurrentEmail) return;
   showToast('Reenviando nuevo código de 4 dígitos...', 'info');
-  const res = await UserAuth.requestPasswordReset(recoveryCurrentEmail);
-  if (res.success && res.codeDemo) {
+  let res;
+  if (recoveryMode === 'registration') {
+    res = await UserAuth.requestRegistrationOtp(recoveryCurrentName || 'Cliente', recoveryCurrentEmail);
+  } else {
+    res = await UserAuth.requestPasswordReset(recoveryCurrentEmail);
+  }
+  if (res && res.success && res.codeDemo) {
     recoveryDemoCode = res.codeDemo;
     const demoVal = document.getElementById('recovery-demo-code-val');
     if (demoVal) demoVal.textContent = res.codeDemo;
@@ -3235,7 +3272,7 @@ async function resendRecoveryCode() {
   }
 }
 
-// RECUPERACIÓN - PASO 3 (GUARDAR NUEVA CONTRASEÑA)
+// RECUPERACIÓN / CONFIGURACIÓN - PASO 3 (GUARDAR CONTRASEÑA)
 function handleRecoveryStep3(e) {
   e.preventDefault();
   clearAuthAlerts();
@@ -3248,10 +3285,40 @@ function handleRecoveryStep3(e) {
   const d4 = document.getElementById('otp-digit-4')?.value || '';
   const fullCode = `${d1}${d2}${d3}${d4}`.trim();
 
-  const res = UserAuth.resetPassword(recoveryCurrentEmail, fullCode, newPass, confirmPass);
+  let res;
+  if (recoveryMode === 'registration') {
+    res = UserAuth.completeRegistration(recoveryCurrentEmail, fullCode, newPass, confirmPass);
+  } else {
+    res = UserAuth.resetPassword(recoveryCurrentEmail, fullCode, newPass, confirmPass);
+  }
+
   if (!res.success) {
     showAuthAlert('recovery-alert-box-3', res.message, 'error');
     return;
+  }
+
+  updateAuthHeaderUI();
+
+  // Personalizar paso 4 según si fue registro o recuperación
+  const step4Title = document.getElementById('recovery-step4-title');
+  const step4Desc = document.getElementById('recovery-step4-desc');
+  const step4Btn = document.getElementById('recovery-step4-btn');
+
+  if (recoveryMode === 'registration') {
+    if (step4Title) step4Title.textContent = '¡Cuenta Creada Exitosamente!';
+    if (step4Desc) step4Desc.textContent = `Tu contraseña ha sido configurada y tu sesión está iniciada como Cliente WES. ¡Bienvenido/a, ${recoveryCurrentName || ''}!`;
+    if (step4Btn) {
+      step4Btn.textContent = 'Empezar a Explorar la Tienda';
+      step4Btn.onclick = () => closeAuthModal();
+    }
+    showToast(`¡Bienvenido/a a WES, ${recoveryCurrentName || 'Cliente'}!`, 'success');
+  } else {
+    if (step4Title) step4Title.textContent = '¡Contraseña Actualizada!';
+    if (step4Desc) step4Desc.textContent = 'Tu clave ha sido reconfigurada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.';
+    if (step4Btn) {
+      step4Btn.textContent = 'Iniciar Sesión Ahora';
+      step4Btn.onclick = () => showLoginView();
+    }
   }
 
   showRecoveryStep(4);

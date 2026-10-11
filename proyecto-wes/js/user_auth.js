@@ -301,6 +301,109 @@ const UserAuth = (function() {
       };
     },
 
+    async requestRegistrationOtp(name, email) {
+      if (!name || !name.trim()) {
+        return { success: false, message: 'Por favor ingresa tu nombre completo.' };
+      }
+      if (!email || !email.trim() || !email.includes('@')) {
+        return { success: false, message: 'Por favor ingresa un correo electrónico válido.' };
+      }
+
+      const cleanEmail = email.trim().toLowerCase();
+      if (findUserByIdentifier(cleanEmail)) {
+        return { 
+          success: false, 
+          message: 'Este correo electrónico ya está registrado. Por favor inicia sesión o recupera tu contraseña.' 
+        };
+      }
+
+      const code = generate4DigitCode();
+      const expiresAt = Date.now() + (15 * 60 * 1000);
+
+      try {
+        const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+        codes[cleanEmail] = {
+          code: code,
+          expiresAt: expiresAt,
+          createdAt: Date.now(),
+          userName: name.trim(),
+          isRegistration: true
+        };
+        localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
+      } catch (e) {
+        console.warn('[UserAuth] Error guardando código:', e);
+      }
+
+      await sendEmailCode(cleanEmail, code, name.trim(), 'registro');
+
+      return {
+        success: true,
+        email: cleanEmail,
+        userName: name.trim(),
+        codeDemo: code,
+        message: `Código de seguridad de 4 dígitos enviado a ${cleanEmail}.`
+      };
+    },
+
+    completeRegistration(email, code, password, passConfirm) {
+      if (!email) {
+        return { success: false, message: 'Falta el correo electrónico del registro.' };
+      }
+      if (!password || password.length < 6) {
+        return { success: false, message: 'La contraseña debe tener al menos 6 caracteres por seguridad.' };
+      }
+      if (passConfirm && password !== passConfirm) {
+        return { success: false, message: 'Las contraseñas no coinciden. Por favor verifícalas.' };
+      }
+
+      const cleanEmail = email.trim().toLowerCase();
+      const verify = this.verifyResetCode(cleanEmail, code);
+      if (!verify.success) {
+        return verify;
+      }
+
+      let clientName = 'Cliente WES';
+      try {
+        const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+        if (codes[cleanEmail] && codes[cleanEmail].userName) {
+          clientName = codes[cleanEmail].userName;
+        }
+      } catch (e) {}
+
+      const newClient = {
+        id: generateId('CLI'),
+        name: clientName,
+        email: cleanEmail,
+        phone: '',
+        password: password,
+        role: 'cliente',
+        roleLabel: 'Cliente WES',
+        isEmployee: false,
+        createdAt: new Date().toISOString(),
+        verified: true
+      };
+
+      const clients = getRegisteredClients();
+      clients.push(newClient);
+      saveRegisteredClients(clients);
+
+      // Limpiar código
+      try {
+        const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+        delete codes[cleanEmail];
+        localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
+      } catch (e) {}
+
+      const session = this.setSession(newClient, true);
+      sendEmailCode(cleanEmail, '----', newClient.name, 'bienvenida');
+
+      return {
+        success: true,
+        user: session,
+        message: `¡Contraseña configurada con éxito! Bienvenido/a a Warn Electrical Services, ${newClient.name}.`
+      };
+    },
+
     async requestPasswordReset(email) {
       if (!email || !email.trim() || !email.includes('@')) {
         return { success: false, message: 'Por favor ingresa un correo electrónico válido.' };
