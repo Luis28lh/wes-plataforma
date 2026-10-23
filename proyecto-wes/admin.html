@@ -2,19 +2,11 @@
 <html lang="es" class="h-full bg-slate-100">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Estricto: Impedir indexación en buscadores y visibilidad externa -->
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
-  
-  <!-- Configuración PWA Móvil -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#071836">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="assets/icon-192.png">
   
   <title>Portal de Gestión Operativa | Warn Electrical Services, SRL</title>
   
@@ -185,8 +177,13 @@
           <h2 id="admin-view-title" class="text-base font-extrabold text-slate-800 font-brand">Panel Principal</h2>
         </div>
 
-        <!-- Buscador Global y Estado -->
-        <div class="flex items-center space-x-4">
+        <!-- Buscador Global, Acceso KDS y Estado -->
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <a href="servicio-tecnico.html" target="_blank" class="px-3 py-1.5 bg-slate-900 hover:bg-wes-blue text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border border-wes-gold/40 shadow-sm" title="Abrir Tablero KDS de Servicio Técnico en vivo">
+            <i class="fas fa-tv text-wes-gold text-xs"></i>
+            <span class="hidden sm:inline">Servicio Técnico KDS</span>
+          </a>
+
           <div class="relative hidden sm:block w-64">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
               <i class="fas fa-search text-xs"></i>

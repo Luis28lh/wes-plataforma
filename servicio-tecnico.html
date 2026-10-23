@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tablero de Servicio Técnico KDS | Warn Electrical Services</title>
+  <meta name="description" content="Sistema de control operativo y seguimiento de servicio técnico en vivo estilo KDS.">
+  
+  <link rel="icon" type="image/jpeg" href="assets/logo-buho.jpg">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'wes-blue': '#0D2A5C',
+            'wes-dark': '#071836',
+            'wes-gold': '#F5B300',
+            'wes-gold-light': '#FDD835',
+            'wes-amber': '#D97706'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            brand: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace', 'Courier New']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* Estilos de alto contraste optimizados para pantallas KDS */
+    .kds-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .kds-card:hover {
+      transform: translateY(-2px);
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+    .pulse-urgent {
+      animation: pulse-subtle 1.8s infinite;
+    }
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans selection:bg-wes-gold selection:text-slate-900 bg-slate-950 text-slate-100">
+
+  <!-- ==================================================================== -->
+  <!-- BARRA PRINCIPAL KDS: LOGO, RELOJ EN VIVO Y CONTROLES                 -->
+  <!-- ==================================================================== -->
+  <header class="bg-slate-900/90 border-b border-slate-800 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-6 py-3 shrink-0 shadow-lg">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      
+      <!-- Marca y Título -->
+      <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
+        <a href="index.html" class="flex items-center space-x-2.5 group" title="Volver al portal principal WES">
+          <img src="assets/logo-buho.jpg" alt="Logo WES Búho" class="h-9 w-9 rounded-xl object-cover ring-2 ring-wes-gold/60 shadow-md">
+          <div class="leading-tight">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-sm font-black font-brand text-white group-hover:text-wes-gold transition">WES</span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-wes-gold text-slate-950">KDS</span>
+            </div>
+            <span class="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">Tablero de Servicio Técnico</span>
+          </div>
+        </a>
+
+        <!-- Botón Volver a la Tienda (Móvil) -->
+        <a href="index.html" class="md:hidden text-xs font-bold text-slate-400 hover:text-white px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800">
+          <i class="fas fa-arrow-left mr-1"></i> Tienda
+        </a>
+      </div>
+
+      <!-- Reloj Digital en Vivo Estilo KDS -->
+      <div class="flex items-center space-x-3 bg-slate-950 px-4 py-1.5 rounded-2xl border border-slate-800 shadow-inner">
+        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Sistema en línea y sincronizado"></div>
+        <div class="text-center font-mono">
+          <span id="kds-live-clock" class="text-base font-black text-amber-400 tracking-wider">--:--:--</span>
+          <span id="kds-live-date" class="text-[10px] text-slate-400 block font-medium uppercase tracking-tight">Cargando fecha...</span>
+        </div>
+      </div>
+
+      <!-- Botones de Acción Operativa -->
+      <div class="flex items-center space-x-2 w-full md:w-auto justify-end">
+        <!-- Botón Nuevo Servicio -->
+        <button onclick="openNewServiceModal()" class="flex-1 md:flex-none px-4 py-2 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-1.5">
+          <i class="fas fa-plus-circle text-sm"></i>
+          <span>Nuevo Servicio</span>
+        </button>
+
+        <!-- Botón Pantalla Completa (Modo KDS / TV) -->
+        <button onclick="toggleFullscreen()" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl border border-slate-700 text-xs transition" title="Alternar Pantalla Completa (Modo Monitor)">
+          <i id="fullscreen-icon" class="fas fa-expand"></i>
+        </button>
+
+        <!-- Botón Volver al Portal -->
+        <a href="index.html" class="hidden md:inline-flex items-center space-x-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl border border-slate-700 text-xs font-semibold transition" title="Ir a la tienda WES">
+          <i class="fas fa-store text-wes-gold"></i>
+          <span>Tienda WES</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================================================================== -->
+  <!-- BARRA DE MÉTRICAS Y FILTROS ESTILO MCDONALD'S (VERDE, AMARILLO, ROJO) -->
+  <!-- ==================================================================== -->
+  <section class="bg-slate-900 border-b border-slate-800/80 px-4 sm:px-6 py-3 shrink-0">
+    <div class="max-w-7xl mx-auto space-y-3">
+      
+      <!-- Contadores de Estado Semafórico -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 text-xs">
+        
+        <!-- 1. Todos Activos -->
+        <button onclick="setKdsFilter('active')" id="filter-btn-active" class="p-2.5 rounded-xl border bg-slate-800/90 border-wes-gold/60 text-left transition flex items-center justify-between group shadow-sm">
+          <div>
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Activos</span>
+            <span class="text-xs font-bold text-white">En Taller</span>
+          </div>
+          <span id="count-active" class="text-xl font-black text-wes-gold font-mono">0</span>
+        </button>
+
+        <!-- 2. Verde (0-3 Días) -->
+        <button onclick="setKdsFilter('green')" id="filter-btn-green" class="p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-emerald-500 text-left transition flex items-center justify-between group">
+          <div>
+            <span class="text-[10px] text-emerald-400 uppercase tracking-wider block font-black flex items-center">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
+              Al Día
+            </span>
+            <span class="text-[11px] font-semibold text-slate-300">0 a 3 días</span>
+          </div>
+          <span id="count-green" class="text-xl font-black text-emerald-400 font-mono">0</span>
+        </button>
+
+        <!-- 3. Amarillo (3-5 Días) -->
+        <button onclick="setKdsFilter('yellow')" id="filter-btn-yellow" class="p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-amber-400 text-left transition flex items-center justify-between group">
+          <div>
+            <span class="text-[10px] text-amber-400 uppercase tracking-wider block font-black flex items-center">
+              <span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>
+              Atención
+            </span>
+            <span class="text-[11px] font-semibold text-slate-300">3 a 5 días</span>
+          </div>
+          <span id="count-yellow" class="text-xl font-black text-amber-400 font-mono">0</span>
+        </button>
+
+        <!-- 4. Rojo (+5 Días) -->
+        <button onclick="setKdsFilter('red')" id="filter-btn-red" class="p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-rose-500 text-left transition flex items-center justify-between group">
+          <div>
+            <span class="text-[10px] text-rose-400 uppercase tracking-wider block font-black flex items-center">
+              <span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
+              Críticos
+            </span>
+            <span class="text-[11px] font-semibold text-slate-300">+5 días</span>
+          </div>
+          <span id="count-red" class="text-xl font-black text-rose-500 font-mono">0</span>
+        </button>
+
+        <!-- 5. Terminados (Historial) -->
+        <button onclick="setKdsFilter('finished')" id="filter-btn-finished" class="col-span-2 sm:col-span-1 p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-slate-500 text-left transition flex items-center justify-between group">
+          <div>
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold flex items-center">
+              <i class="fas fa-check-circle text-emerald-500 mr-1.5 text-xs"></i>
+              Terminados
+            </span>
+            <span class="text-[11px] font-semibold text-slate-400">Historial</span>
+          </div>
+          <span id="count-finished" class="text-xl font-black text-slate-400 font-mono">0</span>
+        </button>
+
+      </div>
+
+      <!-- Buscador y Filtro Rápido -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-1">
+        <div class="relative w-full sm:w-96">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="fas fa-search text-xs"></i>
+          </span>
+          <input type="text" id="kds-search-input" oninput="handleSearch(this.value)" placeholder="Buscar por cliente, teléfono, ticket o equipo..." class="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold focus:ring-1 focus:ring-wes-gold transition">
+        </div>
+
+        <div class="flex items-center space-x-2 text-xs text-slate-400 w-full sm:w-auto justify-between sm:justify-end">
+          <span class="text-[11px]">Auto-actualización: <strong class="text-emerald-400">Cada 60s</strong></span>
+          <button onclick="renderBoard()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 font-bold transition flex items-center space-x-1">
+            <i class="fas fa-sync-alt text-[10px]"></i>
+            <span>Refrescar</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- TABLERO PRINCIPAL: CUADRÍCULA DE CAJETINES (ESTILO MCDONALD'S)        -->
+  <!-- ==================================================================== -->
+  <main class="flex-1 overflow-y-auto p-4 sm:p-6">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Contenedor dinámico de cajetines -->
+      <div id="kds-tickets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <!-- Los cajetines se inyectan dinámicamente con JavaScript -->
+      </div>
+
+      <!-- Estado vacío -->
+      <div id="kds-empty-state" class="hidden py-16 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-3 text-2xl">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <h3 class="text-base font-bold text-white">No hay servicios en esta vista</h3>
+        <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Todos los servicios de esta categoría han sido atendidos o no coinciden con la búsqueda.</p>
+        <button onclick="setKdsFilter('active')" class="mt-4 px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition">
+          Ver Todos los Servicios Activos
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: REGISTRAR NUEVO SERVICIO TÉCNICO                              -->
+  <!-- ==================================================================== -->
+  <div id="new-service-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden my-6 relative text-white">
+      
+      <!-- Cabecera -->
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 p-5 flex items-center justify-between border-b border-slate-700">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-lg bg-wes-gold text-slate-950 flex items-center justify-center font-black">
+            <i class="fas fa-tools text-sm"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm font-brand text-white">Registrar Nuevo Servicio Técnico</h3>
+            <span class="text-[10px] text-slate-300 block">La fecha de inicio se registra de inmediato al guardar</span>
+          </div>
+        </div>
+        <button onclick="closeNewServiceModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <form id="form-new-service" onsubmit="handleCreateServiceSubmit(event)" class="p-5 space-y-3.5 text-xs">
+        
+        <div>
+          <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Nombre Completo del Cliente *</label>
+          <input type="text" id="new-srv-client" required placeholder="Ej. Ing. Carlos Mendoza" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Teléfono / WhatsApp *</label>
+            <input type="tel" id="new-srv-phone" required placeholder="809-578-0000" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Prioridad Inicial</label>
+            <select id="new-srv-priority" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-wes-gold">
+              <option value="Normal">Normal</option>
+              <option value="Alta">Alta</option>
+              <option value="Urgente">Urgente</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Equipo o Sistema a Atender *</label>
+          <input type="text" id="new-srv-equipment" required placeholder="Ej. Motor Portón CAME BXV 1000KG / Inversor / CCTV" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Ubicación / Dirección</label>
+          <input type="text" id="new-srv-address" placeholder="Ej. Autopista Ramón Cáceres, Moca" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Descripción del Problema o Requerimiento *</label>
+          <textarea id="new-srv-desc" required rows="3" placeholder="Detalle de la falla, revisión técnica o piezas requeridas..." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold"></textarea>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-2">
+          <button type="button" onclick="closeNewServiceModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold transition">
+            Cancelar
+          </button>
+          <button type="submit" class="px-5 py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-extrabold shadow-md transition flex items-center space-x-1.5 border border-wes-gold/40">
+            <i class="fas fa-save text-wes-gold"></i>
+            <span>Ingresar al Tablero</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Contenedor de Notificaciones Toast -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
+
+  <!-- Scripts -->
+  <script src="js/servicio_tecnico.js?v=20261023_1615"></script>
+  <script>
+    let currentFilter = 'active'; // 'active', 'green', 'yellow', 'red', 'finished'
+    let currentSearch = '';
+
+    // Reloj en tiempo real
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      const dateStr = now.toLocaleDateString('es-DO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      
+      const clockEl = document.getElementById('kds-live-clock');
+      const dateEl = document.getElementById('kds-live-date');
+      if (clockEl) clockEl.textContent = timeStr;
+      if (dateEl) dateEl.textContent = dateStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Renderizar todo el tablero
+    function renderBoard() {
+      const services = KDSService.getServices();
+      const grid = document.getElementById('kds-tickets-grid');
+      const emptyState = document.getElementById('kds-empty-state');
+      if (!grid) return;
+
+      // Calcular contadores
+      let countActive = 0;
+      let countGreen = 0;
+      let countYellow = 0;
+      let countRed = 0;
+      let countFinished = 0;
+
+      services.forEach(s => {
+        const state = KDSService.calculateTimeState(s);
+        if (state.isFinished) {
+          countFinished++;
+        } else {
+          countActive++;
+          if (state.key === 'green') countGreen++;
+          else if (state.key === 'yellow') countYellow++;
+          else if (state.key === 'red') countRed++;
+        }
+      });
+
+      document.getElementById('count-active').textContent = countActive;
+      document.getElementById('count-green').textContent = countGreen;
+      document.getElementById('count-yellow').textContent = countYellow;
+      document.getElementById('count-red').textContent = countRed;
+      document.getElementById('count-finished').textContent = countFinished;
+
+      // Filtrar según pestaña seleccionada y búsqueda
+      const filtered = services.filter(s => {
+        const state = KDSService.calculateTimeState(s);
+        
+        // Filtro por pestaña
+        if (currentFilter === 'active' && state.isFinished) return false;
+        if (currentFilter === 'green' && (state.isFinished || state.key !== 'green')) return false;
+        if (currentFilter === 'yellow' && (state.isFinished || state.key !== 'yellow')) return false;
+        if (currentFilter === 'red' && (state.isFinished || state.key !== 'red')) return false;
+        if (currentFilter === 'finished' && !state.isFinished) return false;
+
+        // Filtro por búsqueda
+        if (currentSearch) {
+          const q = currentSearch.toLowerCase();
+          const matchId = (s.id || '').toLowerCase().includes(q);
+          const matchClient = (s.clientName || '').toLowerCase().includes(q);
+          const matchPhone = (s.phone || '').includes(q);
+          const matchEquip = (s.productSystem || '').toLowerCase().includes(q);
+          const matchDesc = (s.description || '').toLowerCase().includes(q);
+          if (!matchId && !matchClient && !matchPhone && !matchEquip && !matchDesc) return false;
+        }
+
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      } else {
+        if (emptyState) emptyState.classList.add('hidden');
+      }
+
+      // Ordenar: primero los más críticos (rojos, luego amarillos, luego verdes)
+      filtered.sort((a, b) => {
+        const stateA = KDSService.calculateTimeState(a);
+        const stateB = KDSService.calculateTimeState(b);
+        if (stateA.isFinished && !stateB.isFinished) return 1;
+        if (!stateA.isFinished && stateB.isFinished) return -1;
+        return (stateB.diffHours || 0) - (stateA.diffHours || 0);
+      });
+
+      grid.innerHTML = filtered.map(s => renderTicketCard(s)).join('');
+    }
+
+    // Render de cada cajetín estilo McDonald's
+    function renderTicketCard(s) {
+      const state = KDSService.calculateTimeState(s);
+      const cleanPhone = (s.phone || '').replace(/\D/g, '');
+      const waUrl = `https://wa.me/1${cleanPhone}?text=${encodeURIComponent(`Hola ${s.clientName}, le escribimos de Warn Electrical Services sobre su servicio técnico ${s.id}.`)}`;
+      const startDateText = KDSService.formatShortDate(s.createdAt || s.date);
+
+      // Prioridad
+      const priorityColors = {
+        'Urgente': 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+        'Alta': 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        'Normal': 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+      };
+      const prioClass = priorityColors[s.priority] || priorityColors['Normal'];
+
+      // Notas previas
+      const notes = Array.isArray(s.internalNotes) ? s.internalNotes : [];
+      const notesHtml = notes.length > 0 
+        ? notes.map(n => `
+          <div class="p-2 bg-slate-950/80 rounded-lg border border-slate-800 text-[11px] leading-relaxed">
+            <div class="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
+              <span class="font-bold text-amber-400">${n.author || 'Técnico'}</span>
+              <span>${KDSService.formatShortDate(n.time)}</span>
+            </div>
+            <p class="text-slate-200">${n.text}</p>
+          </div>
+        `).join('')
+        : '<p class="text-[11px] text-slate-500 italic p-1">Sin notas registradas aún.</p>';
+
+      return `
+        <div class="kds-card flex flex-col bg-slate-900 rounded-2xl border-2 ${state.borderClass} overflow-hidden shadow-lg ${state.pulse ? 'pulse-urgent' : ''}">
+          
+          <!-- Encabezado del Cajetín (Color Semafórico según Días) -->
+          <div class="${state.headerBg} p-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="font-mono font-black text-sm tracking-wider">${s.id}</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/30 backdrop-blur-xs">
+                ${state.label}
+              </span>
+            </div>
+            <span class="text-xs font-bold tracking-tight">
+              ${state.timeText}
+            </span>
+          </div>
+
+          <!-- Cuerpo Principal de la Información -->
+          <div class="p-4 flex-1 flex flex-col space-y-3">
+            
+            <!-- Fecha de inicio y Prioridad -->
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-400 flex items-center">
+                <i class="far fa-calendar-alt mr-1 text-slate-500"></i>
+                Inicio: <strong class="text-slate-200 ml-1">${startDateText}</strong>
+              </span>
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border ${prioClass}">
+                ${s.priority || 'Normal'}
+              </span>
+            </div>
+
+            <!-- Cliente y Contacto -->
+            <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+              <div class="flex items-center justify-between">
+                <div class="min-w-0 flex-1">
+                  <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">Cliente</span>
+                  <h4 class="font-bold text-xs text-white truncate">${s.clientName}</h4>
+                </div>
+                ${cleanPhone ? `
+                  <a href="${waUrl}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/40 text-[10px] font-bold transition flex items-center space-x-1 shrink-0 ml-2" title="Contactar por WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                  </a>
+                ` : ''}
+              </div>
+              <div class="text-[11px] text-slate-400 mt-1 flex items-center">
+                <i class="fas fa-phone-alt text-[10px] mr-1.5 text-slate-500"></i>
+                <a href="tel:${cleanPhone}" class="hover:underline hover:text-wes-gold">${s.phone || 'Sin teléfono'}</a>
+              </div>
+            </div>
+
+            <!-- Equipo o Servicio Solicitado -->
+            <div>
+              <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">Equipo / Servicio</span>
+              <p class="font-extrabold text-xs text-amber-400 leading-snug">${s.productSystem || 'Servicio Técnico'}</p>
+              ${s.address ? `
+                <span class="text-[10px] text-slate-400 flex items-center mt-0.5">
+                  <i class="fas fa-map-marker-alt text-[9px] mr-1 text-slate-500"></i> ${s.address}
+                </span>
+              ` : ''}
+            </div>
+
+            <!-- Detalle / Descripción -->
+            <div class="bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/50 text-[11px]">
+              <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block mb-0.5">Falla o Tarea:</span>
+              <p class="text-slate-300 leading-relaxed">${s.description || 'Sin descripción adicional.'}</p>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- PASO DONDE COGE UNA NOTA PARA PODER ESCRIBIR    -->
+            <!-- ============================================== -->
+            <div class="pt-2 border-t border-slate-800">
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-1.5 flex items-center">
+                <i class="fas fa-sticky-note text-amber-400 mr-1.5"></i>
+                Avances y Notas Técnicas (${notes.length})
+              </span>
+
+              <!-- Lista de notas scrollable -->
+              <div class="max-h-28 overflow-y-auto space-y-1.5 mb-2 pr-1">
+                ${notesHtml}
+              </div>
+
+              <!-- Input para escribir la nota -->
+              <form onsubmit="handleNoteSubmit('${s.id}', event)" class="flex items-center space-x-1.5">
+                <input type="text" id="note-input-${s.id}" placeholder="Escribir avance o nota..." class="flex-1 px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition" required>
+                <button type="submit" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition shrink-0" title="Guardar nota">
+                  <i class="fas fa-paper-plane text-[10px]"></i>
+                </button>
+              </form>
+            </div>
+
+          </div>
+
+          <!-- ============================================== -->
+          <!-- BOTÓN: TERMINADO                               -->
+          <!-- ============================================== -->
+          <div class="p-3 bg-slate-950/80 border-t border-slate-800">
+            ${state.isFinished ? `
+              <div class="flex items-center space-x-2">
+                <button onclick="handleReopenService('${s.id}')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-slate-700">
+                  <i class="fas fa-undo text-[10px]"></i>
+                  <span>Reabrir Servicio</span>
+                </button>
+              </div>
+            ` : `
+              <button onclick="handleFinishService('${s.id}')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-black rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center space-x-2">
+                <i class="fas fa-check-circle text-sm"></i>
+                <span>Terminado</span>
+              </button>
+            `}
+          </div>
+
+        </div>
+      `;
+    }
+
+    // Cambiar filtro
+    function setKdsFilter(filterKey) {
+      currentFilter = filterKey;
+      ['active', 'green', 'yellow', 'red', 'finished'].forEach(k => {
+        const btn = document.getElementById(`filter-btn-${k}`);
+        if (btn) {
+          if (k === filterKey) {
+            btn.className = 'p-2.5 rounded-xl border bg-slate-800 text-left transition flex items-center justify-between group shadow-sm border-wes-gold';
+          } else {
+            btn.className = 'p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-slate-500 text-left transition flex items-center justify-between group';
+          }
+        }
+      });
+      renderBoard();
+    }
+
+    // Buscador
+    function handleSearch(val) {
+      currentSearch = val.trim();
+      renderBoard();
+    }
+
+    // Agregar nota a un servicio
+    function handleNoteSubmit(serviceId, e) {
+      e.preventDefault();
+      const input = document.getElementById(`note-input-${serviceId}`);
+      if (!input || !input.value.trim()) return;
+
+      const noteText = input.value.trim();
+      KDSService.addNote(serviceId, noteText);
+      input.value = '';
+      showToast('Nota registrada correctamente.', 'success');
+      renderBoard();
+    }
+
+    // Marcar como Terminado
+    function handleFinishService(serviceId) {
+      if (!confirm(`¿Marcar el servicio ${serviceId} como TERMINADO?`)) return;
+
+      KDSService.markAsFinished(serviceId);
+      showToast(`¡Servicio ${serviceId} marcado como TERMINADO!`, 'success');
+      renderBoard();
+    }
+
+    // Reabrir servicio
+    function handleReopenService(serviceId) {
+      KDSService.reopenService(serviceId);
+      showToast(`Servicio ${serviceId} reabierto.`, 'info');
+      renderBoard();
+    }
+
+    // Modal Nuevo Servicio
+    function openNewServiceModal() {
+      const modal = document.getElementById('new-service-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        document.body.classList.add('overflow-hidden');
+        setTimeout(() => document.getElementById('new-srv-client')?.focus(), 150);
+      }
+    }
+
+    function closeNewServiceModal() {
+      const modal = document.getElementById('new-service-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    // Guardar nuevo servicio
+    function handleCreateServiceSubmit(e) {
+      e.preventDefault();
+      const client = document.getElementById('new-srv-client').value;
+      const phone = document.getElementById('new-srv-phone').value;
+      const equipment = document.getElementById('new-srv-equipment').value;
+      const address = document.getElementById('new-srv-address').value;
+      const description = document.getElementById('new-srv-desc').value;
+      const priority = document.getElementById('new-srv-priority').value;
+
+      const res = KDSService.createService({
+        clientName: client,
+        phone,
+        productSystem: equipment,
+        address,
+        description,
+        priority
+      });
+
+      if (res.success) {
+        closeNewServiceModal();
+        document.getElementById('form-new-service').reset();
+        showToast(`¡Servicio ${res.service.id} ingresado con fecha de inicio!`, 'success');
+        setKdsFilter('active');
+        renderBoard();
+      } else {
+        alert(res.message || 'Error al guardar');
+      }
+    }
+
+    // Pantalla completa (Modo KDS / TV)
+    function toggleFullscreen() {
+      const icon = document.getElementById('fullscreen-icon');
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        if (icon) icon.className = 'fas fa-compress';
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        if (icon) icon.className = 'fas fa-expand';
+      }
+    }
+
+    // Toast
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      const bg = type === 'success' ? 'bg-emerald-600' : (type === 'warning' ? 'bg-amber-600' : 'bg-wes-blue');
+      toast.className = `${bg} text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-xl border border-white/20 transition transform duration-300 pointer-events-auto flex items-center space-x-2`;
+      toast.innerHTML = `<i class="fas fa-info-circle text-xs"></i><span>${msg}</span>`;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Auto-actualización cada 60 segundos
+    setInterval(renderBoard, 60000);
+
+    // Inicializar al cargar
+    document.addEventListener('DOMContentLoaded', () => {
+      renderBoard();
+    });
+
+    // Cerrar modal con tecla Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeNewServiceModal();
+    });
+  </script>
+</body>
+</html>

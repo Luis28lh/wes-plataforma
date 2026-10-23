@@ -224,6 +224,7 @@ const AdminApp = {
       { header: 'Solicitudes y Clientes' },
       { id: 'cotizaciones', name: 'Cotizaciones', icon: 'fa-file-invoice-dollar', module: 'cotizaciones' },
       { id: 'soportes', name: 'Soporte Técnico', icon: 'fa-tools', module: 'soportes' },
+      { id: 'kds_servicio', name: 'KDS Servicio Técnico', icon: 'fa-tv', href: 'servicio-tecnico.html', module: 'soportes' },
       { id: 'contactos', name: 'Mensajes Contacto', icon: 'fa-envelope-open-text', module: 'contactos' },
       { header: 'Inventario y Contenido' },
       { id: 'productos', name: 'Catálogo Productos', icon: 'fa-boxes', module: 'productos' },
@@ -246,6 +247,19 @@ const AdminApp = {
       // Si no es dashboard, comprobar si tiene permiso de 'ver'
       if (item.module !== 'dashboard' && !PermissionsManager.hasPermission(item.module, 'ver', user)) {
         return; // Se oculta del menú si no tiene autorización
+      }
+
+      if (item.href) {
+        html += `
+          <a href="${item.href}" target="_blank" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs transition duration-150 text-slate-700 hover:bg-slate-100 hover:text-wes-blue font-semibold group">
+            <span class="flex items-center space-x-3">
+              <i class="fas ${item.icon} w-4 text-center text-wes-gold"></i>
+              <span>${item.name}</span>
+            </span>
+            <span class="text-[9px] bg-emerald-500 text-white px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider">KDS</span>
+          </a>
+        `;
+        return;
       }
 
       const isActive = this.activeModule === item.id;
@@ -900,6 +914,10 @@ const AdminApp = {
             </select>
           </div>
           <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+            <a href="servicio-tecnico.html" target="_blank" class="px-3.5 py-2 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs shadow-sm transition flex items-center space-x-1.5 shrink-0" title="Ver en Pantalla KDS estilo McDonald's">
+              <i class="fas fa-tv text-xs"></i>
+              <span>Tablero KDS (McDonald's)</span>
+            </a>
             <button onclick="AdminApp.exportSupportCSV()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center space-x-1.5 transition">
               <i class="fas fa-file-excel text-emerald-600"></i>
               <span>Exportar CSV</span>
