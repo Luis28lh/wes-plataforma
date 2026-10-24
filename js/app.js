@@ -1291,9 +1291,11 @@ async function handleSupportSubmit(e) {
   const caseId = `SOP-2026-${String(nextNum).padStart(4, '0')}`;
   const now = new Date().toISOString().replace('T', ' ').slice(0, 19);
 
+  const isoNow = new Date().toISOString();
   const ticketData = {
     id: caseId,
     date: now,
+    createdAt: isoNow,
     clientName: form.clientName.value.trim(),
     company: form.company.value.trim() || 'N/A',
     phone: form.phone.value.trim(),
@@ -1324,6 +1326,8 @@ async function handleSupportSubmit(e) {
     // 1. Guardar localmente
     tickets.unshift(ticketData);
     StorageService.saveSupportTickets(tickets);
+    window.dispatchEvent(new CustomEvent('wes_kds_updated', { detail: tickets }));
+    if (typeof updateNavOngoingBadge === 'function') updateNavOngoingBadge();
 
     // 1b. Si Supabase PostgreSQL está activo, registrar ticket y fotos en la nube
     if (window.WesDB && WesDB.isConfigured()) {
