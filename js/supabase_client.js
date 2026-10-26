@@ -109,18 +109,7 @@ const WesDB = (function() {
             // Mapear campos garantizando que category sea legible y categoria_id sea el slug
             return data.map(p => {
               const catName = CATEGORY_NAMES[p.categoria_id] || p.categoria_id || 'Accesorios de Instalación';
-              return {
-                id: p.id,
-                name: p.nombre,
-                nombre: p.nombre,
-                code: p.codigo,
-                codigo: p.codigo,
-                brand: p.marca,
-                marca: p.marca,
-                category: catName,
-                categoria_id: p.categoria_id,
-                description: p.descripcion,
-                descripcion: p.descripcion,
+
                 const localRef = (typeof INITIAL_PRODUCTS !== 'undefined' && Array.isArray(INITIAL_PRODUCTS))
                   ? INITIAL_PRODUCTS.find(i => (i.codigo && (i.codigo === p.codigo || i.codigo === p.code)) || (i.code && (i.code === p.codigo || i.code === p.code)) || i.id === p.id)
                   : null;
