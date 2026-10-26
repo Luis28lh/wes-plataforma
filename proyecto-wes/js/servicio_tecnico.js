@@ -6,6 +6,161 @@
 
 const KDSService = (function() {
   const STORAGE_KEY = 'wes_support_tickets';
+  const CLIENTS_STORAGE_KEY = 'wes_kds_clients_directory';
+
+  function normalizeClientKey(name) {
+    if (!name) return '';
+    return name.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function getInitialClientsDirectory() {
+    return {
+      "gondola gonzalez": {
+        name: "Góndola González",
+        phone: "(809) 578-4320",
+        locations: ["Moca, Rep. Dominicana"]
+      },
+      "coopcibao (banco tuntir)": {
+        name: "Coopcibao (Banco Tuntir)",
+        phone: "(809) 578-5520",
+        locations: ["Sucursal Coopcibao, Moca"]
+      },
+      "supermercado central moca": {
+        name: "Supermercado Central Moca",
+        phone: "(809) 578-8899",
+        locations: ["Autopista Duarte Km 2, Moca"]
+      }
+    };
+  }
+
+  // Directorio maestro de clientes con soporte para múltiples ubicaciones
+  function getClientsDirectory() {
+    try {
+      let dir = {};
+      const raw = localStorage.getItem(CLIENTS_STORAGE_KEY);
+      if (raw) {
+        dir = JSON.parse(raw);
+      } else {
+        dir = getInitialClientsDirectory();
+      }
+
+      // Sincronizar automáticamente con los tickets existentes para no omitir registros previos
+      const allSrv = getAllServices();
+      let changed = false;
+      allSrv.forEach(s => {
+        if (!s.clientName) return;
+        const key = normalizeClientKey(s.clientName);
+        if (!key) return;
+        if (!dir[key]) {
+          dir[key] = {
+            name: s.clientName.trim(),
+            phone: s.phone || '',
+            locations: s.address && s.address.trim() ? [s.address.trim()] : []
+          };
+          changed = true;
+        } else {
+          if (!dir[key].phone && s.phone) {
+            dir[key].phone = s.phone.trim();
+            changed = true;
+          }
+          if (s.address && s.address.trim()) {
+            if (!Array.isArray(dir[key].locations)) dir[key].locations = [];
+            const locTrim = s.address.trim();
+            const exists = dir[key].locations.some(l => l.toLowerCase() === locTrim.toLowerCase());
+            if (!exists) {
+              dir[key].locations.push(locTrim);
+              changed = true;
+            }
+          }
+        }
+      });
+
+      if (changed || !raw) {
+        localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(dir));
+      }
+
+      return dir;
+    } catch (e) {
+      console.warn('[KDSService] Error cargando directorio de clientes:', e);
+      return getInitialClientsDirectory();
+    }
+  }
+
+  function saveClientsDirectory(dir) {
+    try {
+      localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(dir));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('wes_clients_updated', { detail: dir }));
+      }
+    } catch (e) {
+      console.error('[KDSService] Error guardando directorio de clientes:', e);
+    }
+  }
+
+  function getClientList() {
+    const dir = getClientsDirectory();
+    return Object.values(dir).sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
+  }
+
+  function findClient(query) {
+    if (!query || !query.trim()) return null;
+    const norm = normalizeClientKey(query);
+    const dir = getClientsDirectory();
+
+    // 1. Coincidencia exacta por clave normalizada
+    if (dir[norm]) return dir[norm];
+
+    // 2. Coincidencia exacta por nombre completo
+    const list = Object.values(dir);
+    const exact = list.find(c => normalizeClientKey(c.name) === norm);
+    if (exact) return exact;
+
+    // 3. Comienza con o contiene si la consulta tiene 3 o más caracteres
+    if (norm.length >= 3) {
+      const starts = list.find(c => normalizeClientKey(c.name).startsWith(norm));
+      if (starts) return starts;
+
+      const incl = list.find(c => normalizeClientKey(c.name).includes(norm));
+      if (incl) return incl;
+    }
+
+    return null;
+  }
+
+  // Registrar cliente y agregar una nueva ubicación al historial de ese cliente
+  function recordClientLocation(clientName, phone, location) {
+    if (!clientName || !clientName.trim()) return null;
+    const dir = getClientsDirectory();
+    const cleanName = clientName.trim();
+    const key = normalizeClientKey(cleanName);
+    const cleanPhone = (phone || '').trim();
+    const cleanLoc = (location || '').trim();
+
+    if (!dir[key]) {
+      dir[key] = {
+        name: cleanName,
+        phone: cleanPhone,
+        locations: cleanLoc ? [cleanLoc] : []
+      };
+    } else {
+      dir[key].name = cleanName;
+      if (cleanPhone) {
+        dir[key].phone = cleanPhone;
+      }
+      if (!Array.isArray(dir[key].locations)) {
+        dir[key].locations = [];
+      }
+      if (cleanLoc) {
+        const exists = dir[key].locations.some(l => l.toLowerCase() === cleanLoc.toLowerCase());
+        if (!exists) {
+          dir[key].locations.push(cleanLoc);
+        }
+      }
+    }
+
+    saveClientsDirectory(dir);
+    return dir[key];
+  }
 
   // Datos de muestra iniciales (proyectos formales WES)
   function getSampleServices() {
@@ -240,6 +395,9 @@ const KDSService = (function() {
         return { success: false, message: 'Ingresa el teléfono de contacto.' };
       }
 
+      // Registrar o actualizar cliente y registrar su nueva ubicación en el directorio WES
+      recordClientLocation(clientName, phone, address);
+
       const services = getAllServices();
       const nextNum = services.length + 1;
       const caseId = `SRV-2026-${String(nextNum).padStart(4, '0')}`;
@@ -357,6 +515,12 @@ const KDSService = (function() {
       return true;
     },
 
+    // Directorio de Clientes y Gestión de Múltiples Ubicaciones
+    getClientsDirectory,
+    getClientList,
+    findClient,
+    recordClientLocation,
+
     // Métodos para el Chip de Menú y Modal "Soporte en Curso"
     updateNavOngoingBadge,
     openOngoingSupportModal,
@@ -418,6 +582,157 @@ function updateNavOngoingBadge() {
   }
 }
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function selectSavedLocation(prefix, encodedLoc) {
+  const loc = decodeURIComponent(encodedLoc);
+  const addressInput = document.getElementById(`${prefix}-address`);
+  if (addressInput) {
+    addressInput.value = loc;
+    addressInput.focus();
+    addressInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+    setTimeout(() => {
+      addressInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+    }, 1200);
+  }
+}
+
+// Configurar autocompletado inteligente de cliente, teléfono y filtro estricto de ubicaciones
+function setupClientFormAutofill(prefix) {
+  if (typeof document === 'undefined') return;
+  const clientInput = document.getElementById(`${prefix}-client`);
+  const clientDatalist = document.getElementById(`${prefix}-client-datalist`);
+  const phoneInput = document.getElementById(`${prefix}-phone`);
+  const phoneBadge = document.getElementById(`${prefix}-phone-badge`);
+  const addressInput = document.getElementById(`${prefix}-address`);
+  const addressDatalist = document.getElementById(`${prefix}-address-datalist`);
+  const locContainer = document.getElementById(`${prefix}-locations-container`);
+
+  if (!clientInput) return;
+
+  // 1. Poblar datalist de clientes con todos los registrados
+  if (clientDatalist) {
+    const clients = KDSService.getClientList();
+    clientDatalist.innerHTML = clients.map(c => `
+      <option value="${escapeHtml(c.name)}">${escapeHtml(c.name)} ${c.phone ? '— ' + escapeHtml(c.phone) : ''}</option>
+    `).join('');
+  }
+
+  function handleClientLookup() {
+    const query = clientInput.value.trim();
+    if (!query) {
+      if (phoneBadge) phoneBadge.classList.add('hidden');
+      if (addressDatalist) addressDatalist.innerHTML = '';
+      if (locContainer) locContainer.innerHTML = '';
+      return;
+    }
+
+    const matched = KDSService.findClient(query);
+
+    if (matched) {
+      // 1. Teléfono sube solo automáticamente
+      if (phoneInput && matched.phone) {
+        if (!phoneInput.value || phoneInput.dataset.autofilled === 'true' || phoneInput.value !== matched.phone) {
+          phoneInput.value = matched.phone;
+          phoneInput.dataset.autofilled = 'true';
+          phoneInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+          setTimeout(() => {
+            phoneInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+          }, 1200);
+        }
+      }
+      if (phoneBadge) {
+        phoneBadge.classList.remove('hidden');
+      }
+
+      // 2. Conectar datalist de ubicaciones SOLAMENTE con las existentes de este cliente
+      const locations = Array.isArray(matched.locations) ? matched.locations.filter(Boolean) : [];
+      if (addressDatalist) {
+        addressDatalist.innerHTML = locations.map(loc => `<option value="${escapeHtml(loc)}"></option>`).join('');
+      }
+
+      // Si el cliente tiene exactamente 1 ubicación y el campo de dirección está vacío, pre-llenarlo
+      if (addressInput && !addressInput.value.trim() && locations.length === 1) {
+        addressInput.value = locations[0];
+        addressInput.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+        setTimeout(() => {
+          addressInput.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+        }, 1200);
+      }
+
+      // 3. Renderizar botones interactivos para cada ubicación existente del cliente
+      if (locContainer) {
+        if (locations.length > 0) {
+          locContainer.innerHTML = `
+            <div class="mt-2 p-2.5 bg-amber-50/80 border border-amber-200/90 rounded-xl">
+              <div class="flex items-center justify-between mb-1.5 text-[10px] text-amber-950 font-bold uppercase tracking-wider">
+                <span class="flex items-center space-x-1">
+                  <i class="fas fa-map-marker-alt text-amber-600"></i>
+                  <span>Ubicaciones de este cliente (${locations.length}):</span>
+                </span>
+                <span class="text-[9px] text-slate-500 font-normal">Toca para seleccionar o escribe nueva</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                ${locations.map(loc => `
+                  <button type="button" onclick="selectSavedLocation('${prefix}', '${encodeURIComponent(loc)}')"
+                    class="px-2.5 py-1 bg-white hover:bg-amber-100 active:bg-amber-200 border border-amber-300 hover:border-amber-400 text-slate-800 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 shadow-xs group cursor-pointer">
+                    <i class="fas fa-location-dot text-amber-600 text-[10px] group-hover:scale-110 transition-transform"></i>
+                    <span>${escapeHtml(loc)}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        } else {
+          locContainer.innerHTML = `
+            <div class="mt-1.5 text-[10px] text-slate-500 flex items-center space-x-1">
+              <i class="fas fa-info-circle text-amber-500"></i>
+              <span>Este cliente aún no tiene ubicaciones registradas. Escribe una para guardarla.</span>
+            </div>
+          `;
+        }
+      }
+    } else {
+      // Cliente nuevo
+      if (phoneBadge) phoneBadge.classList.add('hidden');
+      if (addressDatalist) addressDatalist.innerHTML = '';
+      if (locContainer) {
+        if (query.length >= 3) {
+          locContainer.innerHTML = `
+            <div class="mt-1.5 p-2 bg-blue-50/70 border border-blue-200/60 rounded-xl text-[10px] text-blue-900 flex items-center space-x-1.5">
+              <i class="fas fa-user-plus text-wes-blue text-xs shrink-0"></i>
+              <span><strong>Cliente nuevo:</strong> al guardar, su teléfono y ubicación quedarán memorizados para futuros soportes.</span>
+            </div>
+          `;
+        } else {
+          locContainer.innerHTML = '';
+        }
+      }
+    }
+  }
+
+  // Prevenir vincular listeners múltiples veces
+  if (!clientInput.dataset.autofillBound) {
+    clientInput.dataset.autofillBound = 'true';
+    clientInput.addEventListener('input', handleClientLookup);
+    clientInput.addEventListener('change', handleClientLookup);
+    clientInput.addEventListener('blur', handleClientLookup);
+  }
+
+  // Si ya tiene valor, disparar búsqueda
+  if (clientInput.value) {
+    handleClientLookup();
+  }
+}
+
 function openOngoingSupportModal() {
   const modal = document.getElementById('ongoing-support-modal');
   if (modal) {
@@ -425,6 +740,7 @@ function openOngoingSupportModal() {
     modal.style.display = 'flex';
     document.body.classList.add('overflow-hidden');
     renderOngoingSupportModal();
+    setupClientFormAutofill('quick-srv');
   } else {
     window.location.href = 'servicio-tecnico.html';
   }
@@ -444,7 +760,8 @@ function toggleQuickNewServiceForm() {
   if (formContainer) {
     formContainer.classList.toggle('hidden');
     if (!formContainer.classList.contains('hidden')) {
-      document.getElementById('quick-srv-client')?.focus();
+      setupClientFormAutofill('quick-srv');
+      setTimeout(() => document.getElementById('quick-srv-client')?.focus(), 100);
     }
   }
 }
@@ -676,6 +993,7 @@ function handleQuickServiceSubmit(e) {
   const client = document.getElementById('quick-srv-client').value;
   const phone = document.getElementById('quick-srv-phone').value;
   const equipment = document.getElementById('quick-srv-equipment').value;
+  const address = document.getElementById('quick-srv-address')?.value || '';
   const description = document.getElementById('quick-srv-desc').value;
   const priority = document.getElementById('quick-srv-priority').value;
 
@@ -683,12 +1001,17 @@ function handleQuickServiceSubmit(e) {
     clientName: client,
     phone,
     productSystem: equipment,
+    address,
     description,
     priority
   });
 
   if (res.success) {
     document.getElementById('form-quick-new-service').reset();
+    const locCont = document.getElementById('quick-srv-locations-container');
+    if (locCont) locCont.innerHTML = '';
+    const phoneBadge = document.getElementById('quick-srv-phone-badge');
+    if (phoneBadge) phoneBadge.classList.add('hidden');
     toggleQuickNewServiceForm();
     updateNavOngoingBadge();
     renderOngoingSupportModal();
@@ -700,6 +1023,9 @@ function handleQuickServiceSubmit(e) {
 
 if (typeof window !== 'undefined') {
   window.KDSService = KDSService;
+  window.escapeHtml = escapeHtml;
+  window.selectSavedLocation = selectSavedLocation;
+  window.setupClientFormAutofill = setupClientFormAutofill;
   window.openOngoingSupportModal = openOngoingSupportModal;
   window.closeOngoingSupportModal = closeOngoingSupportModal;
   window.renderOngoingSupportModal = renderOngoingSupportModal;
@@ -712,6 +1038,10 @@ if (typeof window !== 'undefined') {
   window.updateNavOngoingBadge = updateNavOngoingBadge;
   if (typeof window.addEventListener === 'function') {
     window.addEventListener('wes_kds_updated', updateNavOngoingBadge);
+    window.addEventListener('wes_clients_updated', () => {
+      setupClientFormAutofill('new-srv');
+      setupClientFormAutofill('quick-srv');
+    });
   }
 }
 

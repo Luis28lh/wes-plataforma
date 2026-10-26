@@ -2666,11 +2666,17 @@
           <form id="form-quick-new-service" onsubmit="handleQuickServiceSubmit(event)" class="space-y-2.5 text-xs">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div>
-                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Nombre Principal (Cliente / Solicitante) *</label>
-                <input type="text" id="quick-srv-client" required placeholder="Ej. Juan Pérez / Empresa X" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white">
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1 flex items-center justify-between">
+                  <span>Nombre Principal (Cliente / Solicitante) *</span>
+                </label>
+                <input type="text" id="quick-srv-client" list="quick-srv-client-datalist" autocomplete="off" required placeholder="Ej. Góndola González / Coopcibao" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white">
+                <datalist id="quick-srv-client-datalist"></datalist>
               </div>
               <div>
-                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Teléfono o WhatsApp *</label>
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1 flex items-center justify-between">
+                  <span>Teléfono o WhatsApp *</span>
+                  <span id="quick-srv-phone-badge" class="text-[9px] text-emerald-600 font-bold hidden">✓ Registrado</span>
+                </label>
                 <input type="tel" id="quick-srv-phone" required placeholder="809-578-0000" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white">
               </div>
             </div>
@@ -2687,6 +2693,15 @@
                   <option value="Urgente">Urgente</option>
                 </select>
               </div>
+            </div>
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1 flex items-center justify-between">
+                <span>Ubicación / Dirección</span>
+                <span class="text-[9px] text-slate-400 font-normal">Múltiples ubicaciones por cliente</span>
+              </label>
+              <input type="text" id="quick-srv-address" list="quick-srv-address-datalist" autocomplete="off" placeholder="Ej. Sucursal Moca / Autopista Duarte Km 2" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white">
+              <datalist id="quick-srv-address-datalist"></datalist>
+              <div id="quick-srv-locations-container"></div>
             </div>
             <div>
               <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Breve Descripción de la Falla o Requerimiento *</label>
@@ -3049,7 +3064,7 @@
   <script src="js/feature_flags.js?v=20261002_0915"></script>
   <script src="js/admin_auth.js?v=20261010_2120"></script>
   <script src="js/user_auth.js?v=20261010_2120"></script>
-  <script src="js/servicio_tecnico.js?v=20261026_0955"></script>
+  <script src="js/servicio_tecnico.js?v=20261026_1500"></script>
   <script src="js/app.js?v=20261010_2120"></script>
   <script src="js/pwa-install.js?v=20261010_2120"></script>
 </body>
