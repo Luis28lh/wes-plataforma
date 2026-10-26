@@ -131,89 +131,128 @@
   </header>
 
   <!-- ==================================================================== -->
-  <!-- BARRA DE MÉTRICAS Y FILTROS ESTILO MCDONALD'S (VERDE, AMARILLO, ROJO) -->
+  <!-- BARRA DE MÉTRICAS Y FILTROS ESTILO MCDONALD'S (PLEGABLE EN MÓVIL)     -->
   <!-- ==================================================================== -->
-  <section class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 shrink-0 shadow-xs">
-    <div class="max-w-7xl mx-auto space-y-3">
+  <section class="bg-white border-b border-slate-200 px-3 sm:px-6 py-2 sm:py-3 shrink-0 shadow-xs transition-all duration-300">
+    <div class="max-w-7xl mx-auto space-y-2.5">
       
-      <!-- Contadores de Estado Semafórico -->
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 text-xs">
+      <!-- Barra Superior de Control: Título, Mini Resumen y Botón Recoger / Desplegar -->
+      <div class="flex items-center justify-between gap-2 pb-0.5">
         
-        <!-- 1. Todos Activos -->
-        <button onclick="setKdsFilter('active')" id="filter-btn-active" class="p-2.5 rounded-xl border-2 bg-white border-wes-gold text-left transition flex items-center justify-between group shadow-sm ring-2 ring-wes-gold/20">
-          <div>
-            <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">Activos</span>
-            <span class="text-xs font-bold text-slate-900">En Taller</span>
+        <!-- Lado Izquierdo: Título y Mini Resumen Compacto cuando está recogido -->
+        <div class="flex items-center space-x-2 min-w-0 flex-1">
+          <div class="flex items-center space-x-1.5 shrink-0 text-slate-800">
+            <div class="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs shadow-2xs">
+              <i class="fas fa-filter"></i>
+            </div>
+            <span class="text-xs font-black uppercase tracking-wider hidden sm:inline">Métricas & Filtros</span>
           </div>
-          <span id="count-active" class="text-xl font-black text-amber-600 font-mono">0</span>
-        </button>
 
-        <!-- 2. Verde (0-2 Días) -->
-        <button onclick="setKdsFilter('green')" id="filter-btn-green" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-emerald-500 text-left transition flex items-center justify-between group">
-          <div>
-            <span class="text-[10px] text-emerald-700 uppercase tracking-wider block font-black flex items-center">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
-              Al Día
+          <!-- Mini resumen en una línea (visible cuando el usuario recoge el panel) -->
+          <div id="metrics-mini-summary" onclick="toggleMetricsPanel()" class="hidden flex items-center space-x-1.5 overflow-x-auto py-0.5 cursor-pointer" title="Haga clic para desplegar filtros completos">
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 shrink-0">
+              <strong id="mini-count-active" class="font-mono font-black text-amber-700">0</strong> Activos
             </span>
-            <span class="text-[11px] font-semibold text-slate-600">0 a 2 días</span>
+            <span id="mini-alert-pill" class="hidden px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200 shrink-0 animate-pulse">
+              <strong id="mini-count-red" class="font-mono text-rose-600">0</strong> Atrasados
+            </span>
+            <span id="mini-current-filter-badge" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
+              Filtro: Activos
+            </span>
           </div>
-          <span id="count-green" class="text-xl font-black text-emerald-600 font-mono">0</span>
-        </button>
+        </div>
 
-        <!-- 3. Amarillo (2-4 Días) -->
-        <button onclick="setKdsFilter('yellow')" id="filter-btn-yellow" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-amber-400 text-left transition flex items-center justify-between group">
-          <div>
-            <span class="text-[10px] text-amber-700 uppercase tracking-wider block font-black flex items-center">
-              <span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>
-              Atención
-            </span>
-            <span class="text-[11px] font-semibold text-slate-600">2 a 4 días</span>
-          </div>
-          <span id="count-yellow" class="text-xl font-black text-amber-600 font-mono">0</span>
-        </button>
-
-        <!-- 4. Rojo (+4 Días Atrasado) -->
-        <button onclick="setKdsFilter('red')" id="filter-btn-red" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-rose-500 text-left transition flex items-center justify-between group">
-          <div>
-            <span class="text-[10px] text-rose-700 uppercase tracking-wider block font-black flex items-center">
-              <span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
-              Atrasados
-            </span>
-            <span class="text-[11px] font-semibold text-slate-600">+4 días</span>
-          </div>
-          <span id="count-red" class="text-xl font-black text-rose-600 font-mono">0</span>
-        </button>
-
-        <!-- 5. Terminados (Historial) -->
-        <button onclick="setKdsFilter('finished')" id="filter-btn-finished" class="col-span-2 sm:col-span-1 p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-slate-400 text-left transition flex items-center justify-between group">
-          <div>
-            <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-bold flex items-center">
-              <i class="fas fa-check-circle text-emerald-500 mr-1.5 text-xs"></i>
-              Terminados
-            </span>
-            <span class="text-[11px] font-semibold text-slate-500">Historial</span>
-          </div>
-          <span id="count-finished" class="text-xl font-black text-slate-500 font-mono">0</span>
+        <!-- Botón de Alternancia: Recoger / Desplegar para dar espacio en el celular -->
+        <button type="button" onclick="toggleMetricsPanel()" id="btn-toggle-metrics" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 text-xs font-bold transition flex items-center space-x-1.5 shrink-0 shadow-2xs active:scale-95" title="Recoger o desplegar filtros para tener más espacio en la pantalla">
+          <span id="btn-toggle-metrics-text">Recoger</span>
+          <i id="btn-toggle-metrics-icon" class="fas fa-chevron-up text-[10px] text-slate-500 transition-transform duration-200"></i>
         </button>
 
       </div>
 
-      <!-- Buscador y Filtro Rápido -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-1">
-        <div class="relative w-full sm:w-96">
-          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-            <i class="fas fa-search text-xs"></i>
-          </span>
-          <input type="text" id="kds-search-input" oninput="handleSearch(this.value)" placeholder="Buscar por cliente, ticket o equipo..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white focus:ring-2 focus:ring-wes-gold/20 transition shadow-inner">
+      <!-- Contenedor Desplegable / Plegable: Botones de Estado y Buscador -->
+      <div id="metrics-collapsible-content" class="space-y-3 pt-1 transition-all duration-300">
+        
+        <!-- Contadores de Estado Semafórico -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 text-xs">
+          
+          <!-- 1. Todos Activos -->
+          <button onclick="setKdsFilter('active')" id="filter-btn-active" class="p-2.5 rounded-xl border-2 bg-white border-wes-gold text-left transition flex items-center justify-between group shadow-sm ring-2 ring-wes-gold/20">
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">Activos</span>
+              <span class="text-xs font-bold text-slate-900">En Taller</span>
+            </div>
+            <span id="count-active" class="text-xl font-black text-amber-600 font-mono">0</span>
+          </button>
+
+          <!-- 2. Verde (0-2 Días) -->
+          <button onclick="setKdsFilter('green')" id="filter-btn-green" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-emerald-500 text-left transition flex items-center justify-between group">
+            <div>
+              <span class="text-[10px] text-emerald-700 uppercase tracking-wider block font-black flex items-center">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
+                Al Día
+              </span>
+              <span class="text-[11px] font-semibold text-slate-600">0 a 2 días</span>
+            </div>
+            <span id="count-green" class="text-xl font-black text-emerald-600 font-mono">0</span>
+          </button>
+
+          <!-- 3. Amarillo (2-4 Días) -->
+          <button onclick="setKdsFilter('yellow')" id="filter-btn-yellow" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-amber-400 text-left transition flex items-center justify-between group">
+            <div>
+              <span class="text-[10px] text-amber-700 uppercase tracking-wider block font-black flex items-center">
+                <span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>
+                Atención
+              </span>
+              <span class="text-[11px] font-semibold text-slate-600">2 a 4 días</span>
+            </div>
+            <span id="count-yellow" class="text-xl font-black text-amber-600 font-mono">0</span>
+          </button>
+
+          <!-- 4. Rojo (+4 Días Atrasado) -->
+          <button onclick="setKdsFilter('red')" id="filter-btn-red" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-rose-500 text-left transition flex items-center justify-between group">
+            <div>
+              <span class="text-[10px] text-rose-700 uppercase tracking-wider block font-black flex items-center">
+                <span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
+                Atrasados
+              </span>
+              <span class="text-[11px] font-semibold text-slate-600">+4 días</span>
+            </div>
+            <span id="count-red" class="text-xl font-black text-rose-600 font-mono">0</span>
+          </button>
+
+          <!-- 5. Terminados (Historial) -->
+          <button onclick="setKdsFilter('finished')" id="filter-btn-finished" class="col-span-2 sm:col-span-1 p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-slate-400 text-left transition flex items-center justify-between group">
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-bold flex items-center">
+                <i class="fas fa-check-circle text-emerald-500 mr-1.5 text-xs"></i>
+                Terminados
+              </span>
+              <span class="text-[11px] font-semibold text-slate-500">Historial</span>
+            </div>
+            <span id="count-finished" class="text-xl font-black text-slate-500 font-mono">0</span>
+          </button>
+
         </div>
 
-        <div class="flex items-center space-x-2 text-xs text-slate-500 w-full sm:w-auto justify-between sm:justify-end">
-          <span class="text-[11px]">Auto-actualización: <strong class="text-emerald-600">Cada 60s</strong></span>
-          <button onclick="renderBoard()" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-200 font-bold transition flex items-center space-x-1 shadow-xs">
-            <i class="fas fa-sync-alt text-[10px]"></i>
-            <span>Refrescar</span>
-          </button>
+        <!-- Buscador y Filtro Rápido -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-1">
+          <div class="relative w-full sm:w-96">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i class="fas fa-search text-xs"></i>
+            </span>
+            <input type="text" id="kds-search-input" oninput="handleSearch(this.value)" placeholder="Buscar por cliente, ticket o equipo..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white focus:ring-2 focus:ring-wes-gold/20 transition shadow-inner">
+          </div>
+
+          <div class="flex items-center space-x-2 text-xs text-slate-500 w-full sm:w-auto justify-between sm:justify-end">
+            <span class="text-[11px]">Auto-actualización: <strong class="text-emerald-600">Cada 60s</strong></span>
+            <button onclick="renderBoard()" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-200 font-bold transition flex items-center space-x-1 shadow-xs">
+              <i class="fas fa-sync-alt text-[10px]"></i>
+              <span>Refrescar</span>
+            </button>
+          </div>
         </div>
+
       </div>
 
     </div>
@@ -369,11 +408,30 @@
         }
       });
 
-      document.getElementById('count-active').textContent = countActive;
-      document.getElementById('count-green').textContent = countGreen;
-      document.getElementById('count-yellow').textContent = countYellow;
-      document.getElementById('count-red').textContent = countRed;
-      document.getElementById('count-finished').textContent = countFinished;
+      const elActive = document.getElementById('count-active');
+      const elGreen = document.getElementById('count-green');
+      const elYellow = document.getElementById('count-yellow');
+      const elRed = document.getElementById('count-red');
+      const elFinished = document.getElementById('count-finished');
+      if (elActive) elActive.textContent = countActive;
+      if (elGreen) elGreen.textContent = countGreen;
+      if (elYellow) elYellow.textContent = countYellow;
+      if (elRed) elRed.textContent = countRed;
+      if (elFinished) elFinished.textContent = countFinished;
+
+      // Actualizar también el mini-resumen de la barra plegable
+      const miniActive = document.getElementById('mini-count-active');
+      const miniRed = document.getElementById('mini-count-red');
+      const miniAlertPill = document.getElementById('mini-alert-pill');
+      if (miniActive) miniActive.textContent = countActive;
+      if (miniRed) miniRed.textContent = countRed;
+      if (miniAlertPill) {
+        if (countRed > 0) {
+          miniAlertPill.classList.remove('hidden');
+        } else {
+          miniAlertPill.classList.add('hidden');
+        }
+      }
 
       // Filtrar según pestaña seleccionada y búsqueda
       const filtered = services.filter(s => {
@@ -566,6 +624,19 @@
           }
         }
       });
+      // Actualizar etiqueta del filtro en el mini-resumen recogido
+      const filterLabels = {
+        'active': 'Activos',
+        'green': '🟢 Al Día',
+        'yellow': '🟡 Atención',
+        'red': '🔴 Atrasados',
+        'finished': '✅ Terminados'
+      };
+      const miniFilterBadge = document.getElementById('mini-current-filter-badge');
+      if (miniFilterBadge) {
+        miniFilterBadge.textContent = 'Filtro: ' + (filterLabels[filterKey] || 'Activos');
+      }
+
       renderBoard();
     }
 
@@ -573,6 +644,56 @@
     function handleSearch(val) {
       currentSearch = val.trim();
       renderBoard();
+    }
+
+    // Alternar visibilidad de las métricas para dar más espacio a los servicios en celular
+    function toggleMetricsPanel() {
+      const content = document.getElementById('metrics-collapsible-content');
+      const miniSummary = document.getElementById('metrics-mini-summary');
+      const btnText = document.getElementById('btn-toggle-metrics-text');
+      const btnIcon = document.getElementById('btn-toggle-metrics-icon');
+      if (!content) return;
+
+      const isHidden = content.classList.contains('hidden');
+      if (isHidden) {
+        // Desplegar panel completo
+        content.classList.remove('hidden');
+        if (miniSummary) miniSummary.classList.add('hidden');
+        if (btnText) btnText.textContent = 'Recoger';
+        if (btnIcon) {
+          btnIcon.classList.remove('fa-chevron-down');
+          btnIcon.classList.add('fa-chevron-up');
+        }
+        localStorage.setItem('wes_kds_metrics_collapsed', 'false');
+      } else {
+        // Recoger panel para ganar espacio en la pantalla
+        content.classList.add('hidden');
+        if (miniSummary) miniSummary.classList.remove('hidden');
+        if (btnText) btnText.textContent = 'Desplegar';
+        if (btnIcon) {
+          btnIcon.classList.remove('fa-chevron-up');
+          btnIcon.classList.add('fa-chevron-down');
+        }
+        localStorage.setItem('wes_kds_metrics_collapsed', 'true');
+      }
+    }
+
+    // Inicializar estado recogido si fue guardado previamente
+    function initMetricsCollapse() {
+      const saved = localStorage.getItem('wes_kds_metrics_collapsed');
+      if (saved === 'true') {
+        const content = document.getElementById('metrics-collapsible-content');
+        const miniSummary = document.getElementById('metrics-mini-summary');
+        const btnText = document.getElementById('btn-toggle-metrics-text');
+        const btnIcon = document.getElementById('btn-toggle-metrics-icon');
+        if (content) content.classList.add('hidden');
+        if (miniSummary) miniSummary.classList.remove('hidden');
+        if (btnText) btnText.textContent = 'Desplegar';
+        if (btnIcon) {
+          btnIcon.classList.remove('fa-chevron-up');
+          btnIcon.classList.add('fa-chevron-down');
+        }
+      }
     }
 
     // Agregar nota a un servicio
@@ -688,6 +809,7 @@
 
     // Inicializar al cargar
     document.addEventListener('DOMContentLoaded', () => {
+      initMetricsCollapse();
       renderBoard();
     });
 
