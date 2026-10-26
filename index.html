@@ -95,33 +95,6 @@
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-wes-gold selection:text-wes-dark">
 
   <!-- ========================================================= -->
-  <!-- BANNER INTELIGENTE PWA PARA MÓVIL (ANDROID / IOS)          -->
-  <!-- ========================================================= -->
-  <div id="pwa-smart-banner" class="hidden bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 text-white px-3 py-2 text-xs border-b border-wes-gold/40 shadow-sm transition-all duration-300">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
-      <div class="flex items-center space-x-2.5 min-w-0">
-        <img src="assets/icon-192.png" alt="WES App" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg shadow-sm shrink-0 border border-wes-gold/50">
-        <div class="min-w-0">
-          <p class="font-bold text-white text-[11px] sm:text-xs truncate flex items-center">
-            <span>Warn Electrical Services</span>
-            <span class="ml-1.5 text-[9px] bg-wes-gold text-wes-dark px-1.5 py-0.2 rounded font-black uppercase tracking-wider hidden sm:inline">App Oficial</span>
-          </p>
-          <p class="text-[10px] text-slate-300 truncate">Descarga e instala la App en tu teléfono (Android & iOS)</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-1.5 shrink-0">
-        <button onclick="triggerPwaInstall()" class="px-3 py-1 bg-wes-gold hover:bg-amber-400 text-wes-dark font-black rounded-lg text-[11px] shadow-sm transition flex items-center space-x-1">
-          <i class="fas fa-download text-[10px]"></i>
-          <span>Instalar</span>
-        </button>
-        <button onclick="dismissPwaBanner()" class="p-1 text-slate-400 hover:text-white transition" title="Cerrar banner">
-          <i class="fas fa-times text-xs"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================= -->
   <!-- NAVEGACIÓN PRINCIPAL (STICKY NAVBAR)                      -->
   <!-- ========================================================= -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all duration-300">
@@ -150,6 +123,14 @@
           </a>
           <a href="#proyectos" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Proyectos</a>
           <a href="#servicios" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Servicios</a>
+          
+          <!-- Chip Abreviado: Soporte en Curso (Para Técnicos WES) -->
+          <button type="button" onclick="openOngoingSupportModal()" class="px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs transition flex items-center space-x-1.5 shadow-sm border border-slate-700/80 group shrink-0" title="Ver Solicitudes de Soporte en Curso en Tiempo Real">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="tracking-tight">En Curso</span>
+            <span id="nav-ongoing-badge" class="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs">0</span>
+          </button>
+          
           <a href="#soporte" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition text-amber-600 font-bold">
             <i class="fas fa-tools mr-1"></i>Soporte
           </a>
@@ -157,12 +138,26 @@
         </nav>
 
         <!-- Botones de Acción Rápida (Móvil / Desktop) -->
-        <div class="flex items-center space-x-2 sm:space-x-3">
-          <!-- Botón Superior Oficial de Instalación PWA (Android & iOS) -->
-          <button id="pwa-install-btn" onclick="triggerPwaInstall()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black text-xs shadow-sm hover:shadow-md transition-all duration-200 flex items-center space-x-1.5" title="Instalar aplicación en tu teléfono">
-            <i class="fas fa-mobile-alt text-sm"></i>
-            <span class="hidden xs:inline sm:inline">Instalar App</span>
-            <span class="xs:hidden sm:hidden">App</span>
+        <div class="flex items-center space-x-2">
+          <!-- Botón de Usuario (Icono de la Persona) -->
+          <button id="auth-person-btn" onclick="handleUserPersonClick()" class="w-10 h-10 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center justify-center transition shadow-sm relative group shrink-0" title="Mi Cuenta / Iniciar Sesión" aria-label="Usuario">
+            <!-- Icono cuando NO está iniciada la sesión -->
+            <span id="auth-person-icon-loggedout" class="flex items-center justify-center pointer-events-none">
+              <i class="fas fa-user text-sm text-slate-600 group-hover:text-wes-blue transition"></i>
+            </span>
+
+            <!-- Avatar con iniciales cuando SÍ está iniciada la sesión -->
+            <span id="auth-person-icon-loggedin" class="hidden w-full h-full rounded-full bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shadow-inner pointer-events-none">
+              <span id="auth-person-initials">U</span>
+              <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white"></span>
+            </span>
+          </button>
+
+          <!-- Chip Móvil En Curso -->
+          <button type="button" onclick="openOngoingSupportModal()" class="md:hidden px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm border border-slate-800 shrink-0" title="Soporte en Curso">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>En Curso</span>
+            <span id="nav-ongoing-badge-mobile" class="px-1.5 py-0.2 rounded-full text-[9px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs">0</span>
           </button>
 
           <!-- Botón Menú Móvil (Hamburger) -->
@@ -200,19 +195,51 @@
       </a>
       <a href="#proyectos" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Proyectos Realizados</a>
       <a href="#servicios" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Servicios</a>
+      
+      <!-- Soporte en Curso (Móvil) -->
+      <button type="button" onclick="openOngoingSupportModal(); closeMobileMenu();" class="mobile-nav-link w-full p-2.5 rounded-xl bg-slate-900 hover:bg-wes-blue text-white font-bold flex items-center justify-between shadow-sm my-1 text-xs transition">
+        <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>Soporte en Curso</span>
+        <span id="drawer-ongoing-badge" class="text-[9px] bg-wes-gold text-slate-950 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">0 Activos</span>
+      </button>
+      
       <a href="#soporte" class="mobile-nav-link block p-2.5 rounded-lg bg-amber-50 text-amber-700">
         <i class="fas fa-tools mr-2"></i>Solicitar Soporte Técnico
       </a>
       <a href="#contacto" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Contacto</a>
 
-      <div class="pt-6 border-t border-slate-100 space-y-3">
-        <!-- Botón de Instalación en Menú Móvil -->
-        <button id="pwa-drawer-install-btn" onclick="triggerPwaInstall()" class="w-full py-2.5 bg-gradient-to-r from-wes-gold to-amber-500 text-wes-dark font-black rounded-xl text-xs flex items-center justify-center space-x-2 shadow-sm transition hover:shadow">
-          <i class="fas fa-mobile-alt text-sm"></i>
-          <span>Instalar App en este Teléfono</span>
+      <!-- Sección de Cuenta en Menú Móvil -->
+      <div id="mobile-auth-container" class="pt-3 border-t border-slate-100">
+        <!-- Si no está logueado -->
+        <button id="mobile-login-btn" onclick="openAuthModal('login'); closeMobileMenu();" class="w-full py-3 px-4 rounded-xl bg-wes-blue hover:bg-wes-dark text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-sm transition">
+          <i class="fas fa-user-circle text-base"></i>
+          <span>Iniciar Sesión / Mi Cuenta</span>
         </button>
 
-        <button onclick="openQuoteModal()" class="w-full py-2.5 bg-wes-blue text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
+        <!-- Si está logueado -->
+        <div id="mobile-logged-container" class="hidden space-y-2">
+          <div onclick="openUserProfileModal(); closeMobileMenu();" class="flex items-center space-x-2.5 p-2.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition" title="Ver mi información y perfil">
+            <span id="mobile-user-avatar" class="w-9 h-9 rounded-lg bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shrink-0 shadow-sm">U</span>
+            <div class="min-w-0 flex-1">
+              <p id="mobile-user-name" class="font-bold text-slate-900 text-xs truncate">Nombre</p>
+              <p id="mobile-user-role" class="text-[10px] text-slate-500 font-semibold uppercase">Cliente WES</p>
+            </div>
+            <i class="fas fa-chevron-right text-xs text-slate-400"></i>
+          </div>
+
+          <a id="mobile-admin-link" href="admin.html" class="hidden w-full py-2 px-3 rounded-lg bg-amber-50 text-wes-blue font-bold text-xs flex items-center space-x-2 border border-amber-200">
+            <i class="fas fa-shield-alt text-wes-gold"></i>
+            <span>Acceder al Panel Admin</span>
+          </a>
+
+          <button onclick="handleLogout(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg text-rose-600 hover:bg-rose-50 font-bold text-xs flex items-center justify-center space-x-1.5 transition">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-100 space-y-3">
+        <button onclick="openQuoteModal(); closeMobileMenu();" class="w-full py-2.5 bg-wes-blue text-white rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
           <i class="fas fa-file-invoice"></i>
           <span>Revisar Cotización (<span class="cart-count-badge">0</span>)</span>
         </button>
@@ -1542,6 +1569,7 @@
             <li><a href="#tienda" class="hover:text-white transition">Catálogo de Productos</a></li>
             <li><a href="#proyectos" class="hover:text-white transition text-wes-gold">Proyectos Realizados</a></li>
             <li><a href="#servicios" class="hover:text-white transition">Servicios e Instalación</a></li>
+            <li><a href="servicio-tecnico.html" target="_blank" class="hover:text-white transition text-wes-gold flex items-center space-x-1.5"><i class="fas fa-tv text-xs"></i><span>Servicio Técnico (KDS en Vivo)</span></a></li>
             <li><a href="#soporte" class="hover:text-white transition text-amber-400">Módulo de Soporte Técnico</a></li>
           </ul>
         </div>
@@ -2444,6 +2472,530 @@
   </div>
 
   <!-- ========================================================= -->
+  <!-- MODAL DE DATOS DEL USUARIO / PERFIL (SESIÓN INICIADA)     -->
+  <!-- ========================================================= -->
+  <div id="user-profile-modal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-sm w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all transform duration-200">
+      
+      <!-- Botón de Cerrar (X) -->
+      <button onclick="closeUserProfileModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition z-10" title="Cerrar ventana">
+        <i class="fas fa-times text-xs"></i>
+      </button>
+
+      <!-- Cabecera de Perfil -->
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-6 pt-7 pb-6 text-center text-white relative">
+        <div class="relative inline-block mx-auto mb-3">
+          <div id="profile-modal-avatar" class="w-16 h-16 rounded-2xl bg-wes-gold text-wes-dark font-black text-2xl flex items-center justify-center shadow-lg border-2 border-white/20">
+            U
+          </div>
+          <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center" title="Sesión activa">
+            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+          </span>
+        </div>
+        <h3 id="profile-modal-name" class="text-lg font-black text-white font-brand truncate">Nombre Usuario</h3>
+        <div class="mt-1">
+          <span id="profile-modal-role" class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm">
+            Cliente WES
+          </span>
+        </div>
+      </div>
+
+      <!-- Cuerpo con Datos de la Persona -->
+      <div class="p-5 space-y-3.5">
+        <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-200/80 space-y-2.5 text-xs">
+          
+          <!-- Correo -->
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-blue-100 text-wes-blue flex items-center justify-center shrink-0">
+              <i class="fas fa-envelope text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Correo Electrónico</span>
+              <p id="profile-modal-email" class="font-semibold text-slate-800 truncate text-xs">correo@ejemplo.com</p>
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <i class="fas fa-phone text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Teléfono / WhatsApp</span>
+              <p id="profile-modal-phone" class="font-semibold text-slate-800 truncate text-xs">No registrado</p>
+            </div>
+          </div>
+
+          <!-- Estado de Sesión -->
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <i class="fas fa-shield-alt text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Estado de Cuenta</span>
+              <p class="font-bold text-emerald-600 text-xs flex items-center space-x-1">
+                <i class="fas fa-check-circle text-[11px]"></i>
+                <span>Sesión Iniciada y Verificada</span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Botón Especial para Empleados (Acceso a admin.html) -->
+        <a id="profile-modal-admin-btn" href="admin.html" class="hidden w-full py-3 bg-gradient-to-r from-wes-blue to-slate-900 hover:from-slate-900 hover:to-wes-blue text-white rounded-xl text-xs font-black shadow-md transition flex items-center justify-center space-x-2 border border-wes-gold/40">
+          <i class="fas fa-shield-alt text-wes-gold text-sm"></i>
+          <span>Acceder al Panel de Control Admin</span>
+        </a>
+
+        <!-- Botón para Tablero KDS de Servicio Técnico -->
+        <a href="servicio-tecnico.html" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-wes-blue text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/30 shadow-sm">
+          <i class="fas fa-tv text-wes-gold"></i>
+          <span>Tablero de Servicio Técnico (KDS)</span>
+        </a>
+
+        <!-- Botón para Clientes (Mis Cotizaciones) -->
+        <button id="profile-modal-quotes-btn" onclick="closeUserProfileModal(); openQuoteModal();" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200/80 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+          <i class="fas fa-file-invoice text-wes-blue"></i>
+          <span>Revisar Mis Cotizaciones</span>
+        </button>
+
+        <!-- Cerrar Sesión -->
+        <button onclick="closeUserProfileModal(); handleLogout();" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-rose-200/60">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Cerrar Sesión</span>
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL / PANEL: SOPORTE TÉCNICO EN CURSO (CONTROL SEMAFÓRICO EN VIVO) -->
+  <!-- ==================================================================== -->
+  <div id="ongoing-support-modal" class="fixed inset-0 z-[75] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-slate-100 border border-slate-200 rounded-3xl max-w-4xl w-full shadow-2xl overflow-hidden my-4 relative text-slate-800 max-h-[92vh] flex flex-col">
+      
+      <!-- Cabecera del Panel -->
+      <div class="bg-white p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 font-black shadow-xs shrink-0">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 class="font-black text-sm sm:text-base font-brand text-slate-900">Soporte en Curso</h3>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-wes-gold text-slate-950">Semáforo WES</span>
+            </div>
+            <p class="text-[11px] text-slate-500">Control operativo en vivo: 🟢 0-2d Al Día &bull; 🟡 2-4d Atención &bull; 🔴 +4d Atrasado</p>
+          </div>
+        </div>
+
+        <!-- Botones de Acción Superior -->
+        <div class="flex items-center space-x-2 justify-end">
+          <button type="button" onclick="toggleQuickNewServiceForm()" class="px-3 py-1.5 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs shadow-xs transition flex items-center space-x-1.5">
+            <i class="fas fa-plus text-xs"></i>
+            <span>Nueva Solicitud</span>
+          </button>
+          
+          <a href="servicio-tecnico.html" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1 border border-slate-200" title="Ver Pantalla KDS Completa (Modo Taller/TV)">
+            <i class="fas fa-tv text-amber-600 text-xs"></i>
+            <span class="hidden sm:inline">Pantalla KDS</span>
+            <i class="fas fa-external-link-alt text-[9px] text-slate-400 ml-0.5"></i>
+          </a>
+
+          <button type="button" onclick="closeOngoingSupportModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition" title="Cerrar ventana">
+            <i class="fas fa-times text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario Rápido Desplegable para Agregar Solicitud al Instante -->
+      <div id="ongoing-quick-form-container" class="hidden bg-white border-b border-slate-200 p-4 transition-all shadow-inner">
+        <div class="max-w-2xl mx-auto space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h4 class="text-xs font-extrabold text-amber-700 uppercase tracking-wider flex items-center space-x-1.5">
+              <i class="fas fa-bolt"></i>
+              <span>Ingresar Solicitud con Fecha Actual Inmediata</span>
+            </h4>
+            <button type="button" onclick="toggleQuickNewServiceForm()" class="text-slate-400 hover:text-slate-700 text-xs">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <form id="form-quick-new-service" onsubmit="handleQuickServiceSubmit(event)" class="space-y-2.5 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Nombre Principal (Cliente / Solicitante) *</label>
+                <input type="text" id="quick-srv-client" required placeholder="Ej. Juan Pérez / Empresa X" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white">
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Teléfono o WhatsApp *</label>
+                <input type="tel" id="quick-srv-phone" required placeholder="809-578-0000" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div class="sm:col-span-2">
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Equipo o Sistema *</label>
+                <input type="text" id="quick-srv-equipment" required placeholder="Ej. Motor Portón / Inversor / Cámaras CCTV" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white">
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Prioridad</label>
+                <select id="quick-srv-priority" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-wes-gold focus:bg-white">
+                  <option value="Normal">Normal</option>
+                  <option value="Alta">Alta</option>
+                  <option value="Urgente">Urgente</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Breve Descripción de la Falla o Requerimiento *</label>
+              <textarea id="quick-srv-desc" required rows="2" placeholder="Detalle resumido del problema..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white"></textarea>
+            </div>
+            <div class="flex items-center justify-end space-x-2 pt-1">
+              <button type="button" onclick="toggleQuickNewServiceForm()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold transition">Cancelar</button>
+              <button type="submit" class="px-4 py-1.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-black shadow-md border border-wes-gold/40 transition flex items-center space-x-1.5">
+                <i class="fas fa-check text-wes-gold text-xs"></i>
+                <span>Subir y Empezar a Correr Tiempo</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Filtros Semafóricos y Buscador -->
+      <div class="bg-white px-4 sm:px-5 py-3 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0">
+        <!-- Pestañas de Filtro Semafórico -->
+        <div class="flex items-center space-x-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 text-xs">
+          <button type="button" onclick="setOngoingFilter('all')" id="ongoing-flt-all" class="px-3 py-1.5 rounded-xl border-2 bg-white border-wes-gold text-slate-900 font-bold text-xs transition flex items-center space-x-1.5 shadow-sm ring-2 ring-wes-gold/20">
+            <span>Todos</span>
+            <span id="ongoing-count-all" class="px-1.5 py-0.2 rounded-md bg-slate-100 text-slate-800 text-[10px] font-mono">0</span>
+          </button>
+          
+          <button type="button" onclick="setOngoingFilter('green')" id="ongoing-flt-green" class="px-3 py-1.5 rounded-xl border bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 font-medium text-xs transition flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>Al Día (0-2d)</span>
+            <span id="ongoing-count-green" class="px-1.5 py-0.2 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-mono">0</span>
+          </button>
+
+          <button type="button" onclick="setOngoingFilter('yellow')" id="ongoing-flt-yellow" class="px-3 py-1.5 rounded-xl border bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 font-medium text-xs transition flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span>Atención (2-4d)</span>
+            <span id="ongoing-count-yellow" class="px-1.5 py-0.2 rounded-md bg-amber-50 text-amber-700 text-[10px] font-mono">0</span>
+          </button>
+
+          <button type="button" onclick="setOngoingFilter('red')" id="ongoing-flt-red" class="px-3 py-1.5 rounded-xl border bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 font-medium text-xs transition flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+            <span>Atrasados (+4d)</span>
+            <span id="ongoing-count-red" class="px-1.5 py-0.2 rounded-md bg-rose-50 text-rose-700 text-[10px] font-mono">0</span>
+          </button>
+        </div>
+
+        <!-- Buscador Rápido -->
+        <div class="relative w-full sm:w-64">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <i class="fas fa-search text-xs"></i>
+          </span>
+          <input type="text" oninput="handleOngoingSearch(this.value)" placeholder="Buscar cliente, equipo o falla..." class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white">
+        </div>
+      </div>
+
+      <!-- Lista Scrollable de Solicitudes en Curso -->
+      <div class="p-4 sm:p-5 overflow-y-auto flex-1 bg-slate-100">
+        <div id="ongoing-tickets-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Renderizado dinámico con JavaScript -->
+        </div>
+      </div>
+
+      <!-- Pie del Modal -->
+      <div class="p-3 bg-white border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500 shrink-0">
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Actualización semafórica automática en tiempo real</span>
+        </div>
+        <button type="button" onclick="closeOngoingSupportModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition border border-slate-200">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL DE AUTENTICACIÓN UNIVERSAL (LOGIN, REGISTRO, OTP)   -->
+  <!-- ========================================================= -->
+  <div id="auth-modal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all transform duration-200">
+      
+      <!-- Botón de Cerrar (X) -->
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition z-10" title="Cerrar ventana">
+        <i class="fas fa-times text-sm"></i>
+      </button>
+
+      <!-- Cabecera Corporativa WES -->
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-6 pt-7 pb-6 text-center text-white relative">
+        <div class="inline-flex items-center space-x-2 bg-white/10 px-3 py-1 rounded-full backdrop-blur-md mb-2.5">
+          <img src="assets/logo-wes.png" alt="WES" class="h-4 w-auto object-contain brightness-0 invert">
+          <span class="text-[10px] font-black uppercase tracking-wider text-wes-gold">Acceso Universal WES</span>
+        </div>
+        <h3 id="auth-modal-title" class="text-xl font-extrabold text-white font-brand">Iniciar Sesión</h3>
+        <p id="auth-modal-subtitle" class="text-xs text-slate-300 mt-1 max-w-xs mx-auto">Acceso unificado para Empleados y Clientes</p>
+      </div>
+
+      <!-- Barra de Pestañas (Tabs: Login | Registro) -->
+      <div id="auth-tabs-bar" class="flex border-b border-slate-200 bg-slate-50/80 p-1.5 gap-1.5">
+        <button id="auth-tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-wes-blue shadow-sm">
+          <i class="fas fa-sign-in-alt mr-1"></i> Iniciar Sesión
+        </button>
+        <button id="auth-tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800">
+          <i class="fas fa-user-plus mr-1"></i> Crear Cuenta
+        </button>
+      </div>
+
+      <div class="p-6">
+
+        <!-- ============================================== -->
+        <!-- PESTAÑA 1: INICIAR SESIÓN                      -->
+        <!-- ============================================== -->
+        <div id="auth-content-login">
+          <form id="form-user-login" onsubmit="handleUserLoginSubmit(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo Electrónico o Usuario</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fas fa-envelope text-xs"></i>
+                </span>
+                <input type="text" id="login-identifier" required placeholder="correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Contraseña</label>
+                <button type="button" onclick="openRecoveryView()" class="text-[11px] font-bold text-wes-gold hover:text-amber-600 transition">
+                  ¿Olvidaste tu contraseña?
+                </button>
+              </div>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fas fa-lock text-xs"></i>
+                </span>
+                <input type="password" id="login-password" required placeholder="••••••••" class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                  <i class="fas fa-eye text-xs"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs">
+              <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
+                <input type="checkbox" id="login-remember" checked class="w-4 h-4 rounded text-wes-blue focus:ring-wes-blue border-slate-300">
+                <span>Recordarme en este equipo</span>
+              </label>
+            </div>
+
+            <!-- Alerta dinámica -->
+            <div id="login-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
+
+            <button type="submit" id="login-submit-btn" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Iniciar Sesión</span>
+            </button>
+          </form>
+
+          <div class="mt-5 pt-4 border-t border-slate-100 text-center">
+            <p class="text-xs text-slate-500">
+              ¿No tienes cuenta?
+              <button onclick="switchAuthTab('register')" class="font-bold text-wes-blue hover:underline ml-1">
+                Regístrate como Cliente (Opcional)
+              </button>
+            </p>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- PESTAÑA 2: REGISTRO DE CLIENTE                 -->
+        <!-- ============================================== -->
+        <div id="auth-content-register" class="hidden">
+          <div class="mb-4 p-2.5 bg-amber-50 rounded-xl border border-amber-200/80 text-[11px] text-amber-900 flex items-center space-x-2">
+            <i class="fas fa-info-circle text-wes-gold shrink-0 text-sm"></i>
+            <span><strong>El registro es 100% opcional.</strong> Te enviaremos un código de 4 dígitos a tu correo para configurar tu clave.</span>
+          </div>
+
+          <form id="form-user-register" onsubmit="handleUserRegisterSubmit(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nombre Completo</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fas fa-user text-xs"></i>
+                </span>
+                <input type="text" id="register-name" required placeholder="Tu nombre y apellido" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo Electrónico</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fas fa-envelope text-xs"></i>
+                </span>
+                <input type="email" id="register-email" required placeholder="tu-correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+              </div>
+            </div>
+
+            <!-- Alerta dinámica -->
+            <div id="register-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
+
+            <button type="submit" id="register-submit-btn" class="w-full py-3 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
+              <i class="fas fa-paper-plane text-xs"></i>
+              <span>Continuar con Código de 4 Dígitos</span>
+            </button>
+          </form>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 text-center">
+            <p class="text-xs text-slate-500">
+              ¿Ya estás registrado?
+              <button onclick="switchAuthTab('login')" class="font-bold text-wes-blue hover:underline ml-1">
+                Iniciar Sesión
+              </button>
+            </p>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VISTA DE RECUPERACIÓN (CÓDIGO DE 4 DÍGITOS OTP)-->
+        <!-- ============================================== -->
+        <div id="auth-content-recovery" class="hidden">
+          
+          <!-- Botón Volver -->
+          <button type="button" onclick="showLoginView()" class="inline-flex items-center space-x-1.5 text-xs font-bold text-slate-500 hover:text-wes-blue mb-4 transition">
+            <i class="fas fa-arrow-left"></i>
+            <span>Volver al inicio de sesión</span>
+          </button>
+
+          <!-- PASO 1: Ingresar Correo -->
+          <div id="recovery-step-1">
+            <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+              Ingresa el correo electrónico asociado a tu cuenta. Te enviaremos un <strong>código de seguridad de 4 dígitos</strong> para que puedas crear una nueva contraseña.
+            </p>
+
+            <form id="form-recovery-step1" onsubmit="handleRecoveryStep1(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo Electrónico</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fas fa-envelope text-xs"></i>
+                  </span>
+                  <input type="email" id="recovery-email" required placeholder="correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                </div>
+              </div>
+
+              <div id="recovery-alert-box-1" class="hidden p-3 rounded-xl text-xs"></div>
+
+              <button type="submit" id="btn-send-code" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
+                <i class="fas fa-paper-plane"></i>
+                <span>Enviar Código de 4 Dígitos</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- PASO 2: Ingresar Código de 4 Dígitos OTP -->
+          <div id="recovery-step-2" class="hidden">
+            <div class="text-center mb-5">
+              <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-2 text-xl shadow-sm">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h4 class="font-extrabold text-sm text-slate-900">Ingresa tu Código de 4 Dígitos</h4>
+              <p class="text-xs text-slate-500 mt-1">
+                Enviado a <span id="recovery-target-email-display" class="font-bold text-slate-800">correo@ejemplo.com</span>
+              </p>
+            </div>
+
+            <form id="form-recovery-step2" onsubmit="handleRecoveryStep2(event)" class="space-y-4">
+              <!-- Cajas numéricas OTP -->
+              <div class="flex justify-center items-center space-x-3 my-2">
+                <input type="text" id="otp-digit-1" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-12 h-14 text-center text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition" required>
+                <input type="text" id="otp-digit-2" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-12 h-14 text-center text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition" required>
+                <input type="text" id="otp-digit-3" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-12 h-14 text-center text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition" required>
+                <input type="text" id="otp-digit-4" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-12 h-14 text-center text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition" required>
+              </div>
+
+              <!-- Banner de código para facilitar pruebas en test -->
+              <div id="recovery-demo-code-banner" class="hidden p-2.5 bg-blue-50 border border-blue-200 rounded-xl text-center text-[11px] text-blue-900">
+                <span>Código para pruebas: <strong id="recovery-demo-code-val" class="text-sm font-black tracking-widest text-wes-blue">----</strong></span>
+              </div>
+
+              <div id="recovery-alert-box-2" class="hidden p-3 rounded-xl text-xs"></div>
+
+              <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+                <span>¿No recibiste el correo?</span>
+                <button type="button" onclick="resendRecoveryCode()" class="font-bold text-wes-gold hover:text-amber-600 transition">
+                  Reenviar Código
+                </button>
+              </div>
+
+              <button type="submit" id="btn-verify-otp" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
+                <i class="fas fa-check"></i>
+                <span>Verificar Código</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- PASO 3: Nueva Contraseña -->
+          <div id="recovery-step-3" class="hidden">
+            <div class="mb-4 text-center">
+              <h4 class="font-extrabold text-sm text-slate-900">Configura tu Nueva Contraseña</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Ingresa tu nueva clave de acceso seguro.</p>
+            </div>
+
+            <form id="form-recovery-step3" onsubmit="handleRecoveryStep3(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nueva Contraseña</label>
+                <div class="relative">
+                  <input type="password" id="new-password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Confirmar Nueva Contraseña</label>
+                <div class="relative">
+                  <input type="password" id="confirm-new-password" required minlength="6" placeholder="Repite la nueva contraseña" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                </div>
+              </div>
+
+              <div id="recovery-alert-box-3" class="hidden p-3 rounded-xl text-xs"></div>
+
+              <button type="submit" id="btn-save-new-password" class="w-full py-3 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
+                <i class="fas fa-save"></i>
+                <span>Guardar Nueva Contraseña</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- PASO 4: Éxito Total -->
+          <div id="recovery-step-4" class="hidden text-center py-4 space-y-4">
+            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl shadow-inner">
+              <i class="fas fa-check"></i>
+            </div>
+            <div>
+              <h4 id="recovery-step4-title" class="font-extrabold text-base text-slate-900">¡Contraseña Actualizada!</h4>
+              <p id="recovery-step4-desc" class="text-xs text-slate-600 mt-1 max-w-xs mx-auto leading-relaxed">
+                Tu clave ha sido reconfigurada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.
+              </p>
+            </div>
+            <button type="button" id="recovery-step4-btn" onclick="showLoginView()" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition">
+              Iniciar Sesión Ahora
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
   <!-- CONTENEDOR DE TOAST NOTIFICATIONS                         -->
   <!-- ========================================================= -->
   <div id="toast-container" class="fixed bottom-6 left-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
@@ -2452,10 +3004,13 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Supabase JS Client Oficial para PostgreSQL en la Nube -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/products.js?v=20261010_1825"></script>
+  <script src="js/products.js?v=20261010_2120"></script>
   <script src="js/supabase_client.js?v=20261002_0915"></script>
   <script src="js/feature_flags.js?v=20261002_0915"></script>
-  <script src="js/app.js?v=20261010_1825"></script>
-  <script src="js/pwa-install.js?v=20261010_1825"></script>
+  <script src="js/admin_auth.js?v=20261010_2120"></script>
+  <script src="js/user_auth.js?v=20261010_2120"></script>
+  <script src="js/servicio_tecnico.js?v=20261024_1400"></script>
+  <script src="js/app.js?v=20261010_2120"></script>
+  <script src="js/pwa-install.js?v=20261010_2120"></script>
 </body>
 </html>

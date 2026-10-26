@@ -1,5 +1,5 @@
 // Service Worker Oficial de Warn Electrical Services (WES) PWA
-const CACHE_NAME = 'wes-pwa-v1';
+const CACHE_NAME = 'wes-pwa-v20261010_2120';
 const CORE_ASSETS = [
   './',
   'index.html',
@@ -11,7 +11,9 @@ const CORE_ASSETS = [
   'js/app.js',
   'js/products.js',
   'js/feature_flags.js',
-  'js/supabase_client.js'
+  'js/supabase_client.js',
+  'js/admin_auth.js',
+  'js/user_auth.js'
 ];
 
 // Instalación: Precargar recursos esenciales

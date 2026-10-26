@@ -69,6 +69,10 @@ function doPost(e) {
         response = { success: true, message: 'Ajustes sincronizados en WES' };
         break;
 
+      case 'send_auth_code':
+        response = procesarEnvioCodigoAuth(payload.data);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -866,3 +870,87 @@ function procesarNuevoMensajeContacto(data) {
     return { success: false, message: err.toString() };
   }
 }
+
+/**
+ * Enviar código OTP de 4 dígitos para autenticación y recuperación de contraseña
+ */
+function procesarEnvioCodigoAuth(data) {
+  try {
+    if (!data || !data.email || !data.code) {
+      return { success: false, message: 'Datos incompletos para enviar el código.' };
+    }
+
+    const email = data.email.trim();
+    const code = String(data.code);
+    const userName = data.userName || 'Usuario WES';
+    const purpose = data.purpose || 'recuperacion';
+    
+    let subject = `Tu código de seguridad WES: ${code}`;
+    let titulo = 'Código de Seguridad y Verificación';
+    let descripcion = 'Has solicitado un código de verificación para configurar o restablecer tu contraseña de acceso a la plataforma de Warn Electrical Services.';
+
+    if (purpose === 'bienvenida') {
+      subject = '¡Bienvenido/a a Warn Electrical Services (WES)!';
+      titulo = 'Cuenta Creada Exitosamente';
+      descripcion = 'Tu cuenta de cliente ha sido creada satisfactoriamente. Ya puedes iniciar sesión para gestionar tus cotizaciones y solicitudes técnicas.';
+    }
+
+    const htmlBody = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; color: #1e293b; }
+          .card { max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+          .header { background: #071836; padding: 28px 24px; text-align: center; }
+          .title { color: #f5b300; font-size: 20px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+          .subtitle { color: #ffffff; font-size: 13px; margin-top: 4px; opacity: 0.9; }
+          .content { padding: 32px 28px; }
+          .code-box { background: #f8fafc; border: 2px dashed #f5b300; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0; }
+          .code-digits { font-size: 38px; font-weight: 900; letter-spacing: 10px; color: #0D2A5C; font-family: monospace; }
+          .footer { background: #f1f5f9; padding: 18px; text-align: center; font-size: 12px; color: #64748b; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="header">
+            <h1 class="title">WARN ELECTRICAL SERVICES</h1>
+            <div class="subtitle">Seguridad Electrónica, Automatización e Instalaciones</div>
+          </div>
+          <div class="content">
+            <h2 style="font-size: 18px; color: #0f172a; margin-top: 0;">Hola, ${userName}</h2>
+            <p style="font-size: 14px; line-height: 1.6; color: #475569;">${descripcion}</p>
+            ${code !== '----' ? `
+              <div class="code-box">
+                <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;">Tu Código de 4 Dígitos</div>
+                <div class="code-digits">${code}</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">Válido durante los próximos 15 minutos</div>
+              </div>
+            ` : ''}
+            <p style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
+              Si tú no realizaste esta solicitud, puedes ignorar este mensaje con seguridad. Nadie puede acceder a tu cuenta sin este código.
+            </p>
+          </div>
+          <div class="footer">
+            Warn Electrical Services, SRL (WES) &bull; Moca, República Dominicana<br>
+            Soporte: wes.inform@gmail.com &bull; Tel: (849) 207-5474
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    MailApp.sendEmail({
+      to: email,
+      subject: subject,
+      htmlBody: htmlBody
+    });
+
+    return { success: true, message: 'Código de seguridad enviado con éxito a ' + email };
+  } catch (error) {
+    console.error('Error enviando código de seguridad:', error);
+    return { success: false, message: 'Error enviando código: ' + error.toString() };
+  }
+}
+

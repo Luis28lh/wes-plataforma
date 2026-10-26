@@ -9,7 +9,7 @@ echo ADVERTENCIA:
 echo Este proceso tomara todos los cambios probados en la app de pruebas
 echo y los publicara en la web oficial de PRODUCCION (web.warnelectricalservices.com).
 echo.
-set /p confirmacion="¿Deseas publicar los cambios a produccion ahora? (S/N): "
+set /p confirmacion="Â¿Deseas publicar los cambios a produccion ahora? (S/N): "
 if /i not "%confirmacion%"=="S" (
     echo Operacion cancelada por el usuario.
     pause
@@ -41,12 +41,13 @@ if %errorlevel% neq 0 (
 echo.
 echo 4. Publicando a produccion en la nube...
 git push origin main
+git push v1 main
 echo.
 echo 5. Regresando a la rama de pruebas (test) para trabajo seguro...
 git checkout test
 echo.
 echo ======================================================================
-echo [EXITO TOTAL] ¡Plataforma publicada en produccion oficialmente!
+echo [EXITO TOTAL] Â¡Plataforma publicada en produccion oficialmente!
 echo Tu entorno local quedo configurado nuevamente en 'test' para que
 echo sigas probando seguro sin alterar produccion.
 echo ======================================================================
