@@ -479,30 +479,16 @@
               </span>
             </div>
 
-            <!-- Cliente y Botones Rápidos (Solo Nombre de Cliente + Iconos de Acción al Final) -->
-            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <!-- Cliente (Nombre Completo en una sola línea + Icono pequeño de llamada) -->
+            <div class="bg-slate-50 px-3 py-2 rounded-xl border border-slate-200">
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-0.5">Cliente</span>
               <div class="flex items-center justify-between gap-2">
-                <div class="min-w-0 flex-1">
-                  <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Cliente</span>
-                  <h4 class="font-black text-sm text-slate-900 truncate" title="${s.clientName}">${s.clientName}</h4>
-                </div>
-                
-                <!-- Botoncitos de acción al final: Llamar (icono teléfono), WhatsApp, Copiar -->
-                <div class="flex items-center space-x-1 shrink-0">
-                  ${cleanPhone ? `
-                    <a href="tel:${cleanPhone}" class="w-8 h-8 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200 flex items-center justify-center transition shadow-xs" title="Llamar a ${s.clientName} (${s.phone})">
-                      <i class="fas fa-phone-alt text-xs"></i>
-                    </a>
-                    <a href="${waUrl}" target="_blank" class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white border border-emerald-200 flex items-center justify-center transition shadow-xs" title="WhatsApp a ${s.clientName}">
-                      <i class="fab fa-whatsapp text-sm"></i>
-                    </a>
-                    <button type="button" onclick="if(navigator.clipboard){navigator.clipboard.writeText('${cleanPhone}');}if(typeof showToast==='function')showToast('Teléfono copiado: ${cleanPhone}','info');" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 flex items-center justify-center transition shadow-xs" title="Copiar teléfono (${s.phone})">
-                      <i class="fas fa-copy text-xs"></i>
-                    </button>
-                  ` : `
-                    <span class="text-[10px] text-slate-400 italic">Sin teléfono</span>
-                  `}
-                </div>
+                <h4 class="font-extrabold text-xs sm:text-sm text-slate-900 leading-snug flex-1" title="${s.clientName}">${s.clientName}</h4>
+                ${cleanPhone ? `
+                  <a href="tel:${cleanPhone}" class="w-6 h-6 rounded-md bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200 flex items-center justify-center transition shrink-0 ml-1.5" title="Llamar: ${s.phone}">
+                    <i class="fas fa-phone-alt text-[9px]"></i>
+                  </a>
+                ` : ''}
               </div>
             </div>
 

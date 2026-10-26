@@ -7,7 +7,7 @@
 const KDSService = (function() {
   const STORAGE_KEY = 'wes_support_tickets';
 
-  // Datos de muestra iniciales (si no hay tickets registrados)
+  // Datos de muestra iniciales (proyectos formales WES)
   function getSampleServices() {
     const now = Date.now();
     const h = 3600 * 1000;
@@ -16,39 +16,39 @@ const KDSService = (function() {
     return [
       {
         id: 'SRV-2026-0001',
-        clientName: 'Ing. Carlos Mendoza',
-        phone: '(809) 578-1234',
-        whatsapp: '18095781234',
-        email: 'carlos.mendoza@gmail.com',
-        productSystem: 'Motor Portón CAME BXV 1000KG',
+        clientName: 'Góndola González',
+        phone: '(809) 578-4320',
+        whatsapp: '18095784320',
+        email: 'gondolagonzalez@gmail.com',
+        productSystem: 'Levantamiento para Cotización de Motor CAME 800 kg',
         category: 'Motores y Portones',
-        address: 'Av. Ramón Cáceres #45, Moca',
-        description: 'Instalación de motor corredizo y programación de 4 controles remotos TOPD4RBS.',
+        address: 'Moca, Rep. Dominicana',
+        description: 'Levantamiento para cotización de motor CAME 800 kg. Recepción informó que el cliente está solicitando levantamiento para instalación de motor.',
         priority: 'Normal',
         status: 'Nuevo',
         createdAt: new Date(now - (5 * h)).toISOString(), // Hace 5 horas (VERDE)
         date: new Date(now - (5 * h)).toISOString(),
         internalNotes: [
-          { text: 'Equipo recibido en almacén. Técnico asignado: Wilson R.', time: new Date(now - (4 * h)).toISOString(), author: 'Recepción' }
+          { text: 'Recepción informó que el cliente está solicitando levantamiento para instalación de motor.', time: new Date(now - (4 * h)).toISOString(), author: 'Recepción' }
         ]
       },
       {
         id: 'SRV-2026-0002',
-        clientName: 'Dra. Patricia Almanzar',
-        phone: '(849) 220-4567',
-        whatsapp: '18492204567',
-        email: 'clinica.almanzar@gmail.com',
-        productSystem: 'Inversor Prostec 1.5kW Onda Pura',
+        clientName: 'Coopcibao (Banco Tuntir)',
+        phone: '(809) 578-5520',
+        whatsapp: '18095785520',
+        email: 'soporte@coopcibao.com',
+        productSystem: 'Inversor Trace 4 Kilo',
         category: 'Energía y Respaldo',
-        address: 'Calle Sánchez #12, Centro de Moca',
-        description: 'El inversor no conmuta a baterías durante corte de luz. Alarma sonora activa.',
+        address: 'Sucursal Coopcibao, Moca',
+        description: 'Mantenimiento de inversor en laboratorio y pruebas reinstalación de inversor. Se desmontó del espacio porque uno de los ventiladores estaba fuera de funcionamiento. Diagnóstico del técnico para revisión y laboratorio y cambio de componente en mantenimiento.',
         priority: 'Alta',
-        status: 'En diagnóstico',
+        status: 'En laboratorio',
         createdAt: new Date(now - (2.5 * d)).toISOString(), // Hace 2.5 días (AMARILLO: 2 a 4 días)
         date: new Date(now - (2.5 * d)).toISOString(),
         internalNotes: [
-          { text: 'Se desmontó en sitio y se llevó al taller técnico WES.', time: new Date(now - (2 * d)).toISOString(), author: 'Téc. Soporte' },
-          { text: 'Verificada etapa de conmutación. Esperando fusible térmico.', time: new Date(now - (1 * d)).toISOString(), author: 'Téc. Soporte' }
+          { text: 'Se desmontó del espacio porque uno de los ventiladores estaba fuera de funcionamiento. Diagnóstico técnico para revisión en laboratorio y cambio de componente en mantenimiento.', time: new Date(now - (2 * d)).toISOString(), author: 'Téc. Soporte' },
+          { text: 'Inversor en banco de pruebas. En proceso de mantenimiento y reemplazo de ventilador.', time: new Date(now - (1 * d)).toISOString(), author: 'Laboratorio WES' }
         ]
       },
       {
@@ -66,7 +66,7 @@ const KDSService = (function() {
         createdAt: new Date(now - (4.8 * d)).toISOString(), // Hace 4.8 días (ROJO: +4 DÍAS ATRASADO)
         date: new Date(now - (4.8 * d)).toISOString(),
         internalNotes: [
-          { text: 'Reportado por gerencia. Switch PoE con puerto quemado.', time: new Date(now - (5.5 * d)).toISOString(), author: 'Wilson R.' },
+          { text: 'Reportado por gerencia. Switch PoE con puerto quemado.', time: new Date(now - (4.8 * d)).toISOString(), author: 'Wilson R.' },
           { text: 'Se cotizó reemplazo de switch PoE Dahua 8 puertos.', time: new Date(now - (2 * d)).toISOString(), author: 'Ventas WES' }
         ]
       }
@@ -82,10 +82,28 @@ const KDSService = (function() {
         tickets = JSON.parse(rawSupport);
       }
 
-      // Si no hay tickets, inicializar con los ejemplos realistas
+      // Si no hay tickets, inicializar con los proyectos formales
       if (!Array.isArray(tickets) || tickets.length === 0) {
         tickets = getSampleServices();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(tickets));
+      } else {
+        // Migración automática al actualizar proyectos formales
+        const samples = getSampleServices();
+        let changed = false;
+        tickets = tickets.map(t => {
+          if (t.id === 'SRV-2026-0001' && (t.clientName === 'Ing. Carlos Mendoza' || !t.clientName)) {
+            changed = true;
+            return { ...t, clientName: samples[0].clientName, productSystem: samples[0].productSystem, description: samples[0].description, internalNotes: samples[0].internalNotes };
+          }
+          if (t.id === 'SRV-2026-0002' && (t.clientName === 'Dra. Patricia Almanzar' || !t.clientName)) {
+            changed = true;
+            return { ...t, clientName: samples[1].clientName, productSystem: samples[1].productSystem, description: samples[1].description, internalNotes: samples[1].internalNotes };
+          }
+          return t;
+        });
+        if (changed) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(tickets));
+        }
       }
 
       return tickets;
@@ -588,28 +606,18 @@ function renderOngoingSupportModal(filterKey) {
             <p class="text-slate-700 leading-relaxed text-xs">${s.description || 'Sin descripción adicional.'}</p>
           </div>
 
-          <!-- Cliente y Botones de Acción al Final (Solo Nombre + Botones Rápidos con Iconos) -->
-          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
-            <div class="min-w-0 flex-1">
-              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Contacto</span>
-              <span class="font-bold text-xs text-slate-800 truncate block">${s.clientName}</span>
-            </div>
-            
-            <div class="flex items-center space-x-1 shrink-0">
+          <!-- Cliente (Nombre Completo en una sola línea + Icono pequeño de llamada) -->
+          <div class="bg-slate-50 px-3 py-2 rounded-xl border border-slate-200">
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-0.5">Cliente</span>
+            <div class="flex items-center justify-between gap-2">
+              <h4 class="font-extrabold text-xs sm:text-sm text-slate-900 leading-snug flex-1" title="${s.clientName}">${s.clientName}</h4>
               ${cleanPhone ? `
-                <a href="tel:${cleanPhone}" class="w-8 h-8 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200 flex items-center justify-center transition shadow-xs" title="Llamar a ${s.clientName} (${s.phone})">
-                  <i class="fas fa-phone-alt text-xs"></i>
+                <a href="tel:${cleanPhone}" class="w-6 h-6 rounded-md bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200 flex items-center justify-center transition shrink-0 ml-1.5" title="Llamar: ${s.phone}">
+                  <i class="fas fa-phone-alt text-[9px]"></i>
                 </a>
-                <a href="${waUrl}" target="_blank" class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white border border-emerald-200 flex items-center justify-center transition shadow-xs" title="WhatsApp a ${s.clientName}">
-                  <i class="fab fa-whatsapp text-sm"></i>
-                </a>
-                <button type="button" onclick="if(navigator.clipboard){navigator.clipboard.writeText('${cleanPhone}');}if(typeof showToast==='function')showToast('Teléfono copiado: ${cleanPhone}','info');" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 flex items-center justify-center transition shadow-xs" title="Copiar teléfono (${s.phone})">
-                  <i class="fas fa-copy text-xs"></i>
-                </button>
-              ` : `
-                <span class="text-[10px] text-slate-400 italic">Sin teléfono</span>
-              `}
+              ` : ''}
             </div>
+            ${s.company && s.company !== 'N/A' ? `<span class="text-[10px] text-slate-500 font-medium block mt-0.5">${s.company}</span>` : ''}
           </div>
 
           <!-- Paso para escribir notas -->
