@@ -124,12 +124,12 @@
           <a href="#proyectos" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Proyectos</a>
           <a href="#servicios" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Servicios</a>
           
-          <!-- Chip Abreviado: Soporte en Curso (Para Técnicos WES) -->
-          <button type="button" onclick="openOngoingSupportModal()" class="px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs transition flex items-center space-x-1.5 shadow-sm border border-slate-700/80 group shrink-0" title="Ver Solicitudes de Soporte en Curso en Tiempo Real">
+          <!-- Acceso Directo: Servicio Técnico (Tablero KDS en Tiempo Real) -->
+          <a href="servicio-tecnico.html" class="px-3 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs transition flex items-center space-x-1.5 shadow-sm border border-slate-700/80 group shrink-0" title="Entrar al Tablero de Servicio Técnico (Estilo McDonald's)">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="tracking-tight">En Curso</span>
+            <span class="tracking-tight">Servicio Técnico</span>
             <span id="nav-ongoing-badge" class="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs">0</span>
-          </button>
+          </a>
           
           <a href="#soporte" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition text-amber-600 font-bold">
             <i class="fas fa-tools mr-1"></i>Soporte
@@ -153,12 +153,13 @@
             </span>
           </button>
 
-          <!-- Chip Móvil En Curso -->
-          <button type="button" onclick="openOngoingSupportModal()" class="md:hidden px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm border border-slate-800 shrink-0" title="Soporte en Curso">
+          <!-- Chip Móvil Servicio Técnico -->
+          <a href="servicio-tecnico.html" class="md:hidden px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm border border-slate-800 shrink-0" title="Entrar a Servicio Técnico (Tablero KDS)">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>En Curso</span>
+            <span class="hidden sm:inline">Servicio Técnico</span>
+            <span class="sm:hidden">Servicio</span>
             <span id="nav-ongoing-badge-mobile" class="px-1.5 py-0.2 rounded-full text-[9px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs">0</span>
-          </button>
+          </a>
 
           <!-- Botón Menú Móvil (Hamburger) -->
           <button id="mobile-menu-btn" class="md:hidden p-2.5 text-slate-700 hover:text-wes-blue hover:bg-slate-100 rounded-xl transition" aria-label="Abrir menú">
@@ -194,13 +195,13 @@
         <span class="text-[9px] bg-rose-600 text-white px-1.5 py-0.5 rounded-full font-black uppercase">Hot</span>
       </a>
       <a href="#proyectos" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Proyectos Realizados</a>
-      <a href="#servicios" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Servicios</a>
+      <a href="#servicios" onclick="closeMobileMenu()" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Servicios Comerciales</a>
       
-      <!-- Soporte en Curso (Móvil) -->
-      <button type="button" onclick="openOngoingSupportModal(); closeMobileMenu();" class="mobile-nav-link w-full p-2.5 rounded-xl bg-slate-900 hover:bg-wes-blue text-white font-bold flex items-center justify-between shadow-sm my-1 text-xs transition">
-        <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>Soporte en Curso</span>
+      <!-- Servicio Técnico KDS (Móvil) -->
+      <a href="servicio-tecnico.html" class="mobile-nav-link w-full p-2.5 rounded-xl bg-slate-900 hover:bg-wes-blue text-white font-bold flex items-center justify-between shadow-sm my-1 text-xs transition">
+        <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>Tablero Servicio Técnico (KDS)</span>
         <span id="drawer-ongoing-badge" class="text-[9px] bg-wes-gold text-slate-950 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">0 Activos</span>
-      </button>
+      </a>
       
       <a href="#soporte" class="mobile-nav-link block p-2.5 rounded-lg bg-amber-50 text-amber-700">
         <i class="fas fa-tools mr-2"></i>Solicitar Soporte Técnico
@@ -1099,6 +1100,31 @@
           </p>
         </div>
 
+        <!-- Banner Principal de Acceso Directo al Tablero KDS de Servicio Técnico -->
+        <div class="mb-12 bg-white rounded-2xl border-2 border-wes-gold shadow-md hover:shadow-xl transition-all duration-300 p-5 sm:p-7 flex flex-col lg:flex-row items-center justify-between gap-6 bg-gradient-to-r from-amber-500/10 via-white to-amber-500/5">
+          <div class="flex items-start sm:items-center space-x-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-wes-gold to-amber-500 text-slate-950 flex items-center justify-center text-2xl font-black shadow-md shrink-0">
+              <i class="fas fa-tools"></i>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h3 class="text-base sm:text-lg font-black text-slate-900 font-brand">Tablero de Servicio Técnico y Taller WES</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-white shadow-xs animate-pulse">KDS En Vivo</span>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+                Control semafórico operativo en vivo estilo McDonald's para monitorear solicitudes de servicio técnico (🟢 0-2d Al Día, 🟡 2-4d Atención, 🔴 +4d Atrasado), diagnósticos y notas de avance.
+              </p>
+            </div>
+          </div>
+          <div class="w-full lg:w-auto shrink-0 flex items-center">
+            <a href="servicio-tecnico.html" class="w-full sm:w-auto px-6 py-3.5 bg-wes-blue hover:bg-wes-dark text-white font-black rounded-xl text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition flex items-center justify-center space-x-2.5 group">
+              <i class="fas fa-desktop text-amber-400 group-hover:scale-110 transition-transform"></i>
+              <span>Entrar a Servicio Técnico</span>
+              <i class="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+            </a>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           
           <!-- Servicio 1 -->
@@ -1197,10 +1223,16 @@
                 Diagnóstico técnico especializado, mantenimiento preventivo y corrección de averías en equipos y cableados preexistentes.
               </p>
             </div>
-            <a href="#contacto" class="mt-4 inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
-              <span>Solicitar evaluación</span>
-              <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
-            </a>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <a href="#contacto" class="inline-flex items-center text-xs font-bold text-wes-blue hover:text-wes-gold transition">
+                <span>Solicitar evaluación</span>
+                <i class="fas fa-arrow-right ml-1.5 text-[10px]"></i>
+              </a>
+              <a href="servicio-tecnico.html" class="inline-flex items-center text-xs font-black text-amber-600 hover:text-amber-700 transition" title="Ver Solicitudes en Vivo">
+                <i class="fas fa-desktop mr-1 text-[11px]"></i>
+                <span>Tablero KDS</span>
+              </a>
+            </div>
           </div>
 
         </div>
@@ -1228,6 +1260,14 @@
         <div class="bg-slate-50 rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm">
           <!-- Banner de Pausa de Soporte (Activado vía Feature Flags) -->
           <div id="support-pause-banner" class="hidden"></div>
+
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-6 pb-4 border-b border-slate-200">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Crear nueva orden o solicitud</span>
+            <a href="servicio-tecnico.html" class="inline-flex items-center text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3.5 py-1.5 rounded-xl transition shadow-2xs">
+              <i class="fas fa-desktop mr-1.5 text-amber-600"></i>
+              <span>Ver Tablero KDS de Solicitudes en Curso &rarr;</span>
+            </a>
+          </div>
 
           <form id="support-form" class="space-y-6">
             
@@ -3005,11 +3045,11 @@
   <!-- Supabase JS Client Oficial para PostgreSQL en la Nube -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/products.js?v=20261010_2120"></script>
-  <script src="js/supabase_client.js?v=20261002_0915"></script>
+  <script src="js/supabase_client.js?v=20261026_0955"></script>
   <script src="js/feature_flags.js?v=20261002_0915"></script>
   <script src="js/admin_auth.js?v=20261010_2120"></script>
   <script src="js/user_auth.js?v=20261010_2120"></script>
-  <script src="js/servicio_tecnico.js?v=20261026_0800"></script>
+  <script src="js/servicio_tecnico.js?v=20261026_0955"></script>
   <script src="js/app.js?v=20261010_2120"></script>
   <script src="js/pwa-install.js?v=20261010_2120"></script>
 </body>
