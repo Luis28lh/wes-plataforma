@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-950 text-slate-100">
+<html lang="es" class="h-full bg-slate-100 text-slate-800">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tablero de Servicio Técnico KDS | Warn Electrical Services</title>
   <meta name="description" content="Sistema de control operativo y seguimiento de servicio técnico en vivo estilo KDS.">
   
-  <link rel="icon" type="image/jpeg" href="assets/logo-buho.jpg">
+  <link rel="icon" type="image/png" href="assets/logo-wes.png">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
 
   <!-- Tailwind CSS CDN -->
@@ -55,75 +55,74 @@
     .pulse-urgent {
       animation: pulse-subtle 1.8s infinite;
     }
-    /* Scrollbar personalizada */
+    /* Scrollbar personalizada para tema claro */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
     }
     ::-webkit-scrollbar-track {
-      background: #0f172a;
+      background: #f1f5f9;
     }
     ::-webkit-scrollbar-thumb {
-      background: #334155;
+      background: #cbd5e1;
       border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
+      background: #94a3b8;
     }
   </style>
 </head>
-<body class="h-full flex flex-col font-sans selection:bg-wes-gold selection:text-slate-900 bg-slate-950 text-slate-100">
+<body class="h-full flex flex-col font-sans selection:bg-wes-gold selection:text-slate-900 bg-slate-100 text-slate-800">
 
   <!-- ==================================================================== -->
-  <!-- BARRA PRINCIPAL KDS: LOGO, RELOJ EN VIVO Y CONTROLES                 -->
+  <!-- BARRA PRINCIPAL KDS: RELOJ EN VIVO Y CONTROLES                       -->
   <!-- ==================================================================== -->
-  <header class="bg-slate-900/90 border-b border-slate-800 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-6 py-3 shrink-0 shadow-lg">
+  <header class="bg-white/95 border-b border-slate-200 backdrop-blur-md sticky top-0 z-40 px-4 sm:px-6 py-3 shrink-0 shadow-xs">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
       
-      <!-- Marca y Título -->
+      <!-- Marca y Título (Sin logo de imagen duplicado ya que dice WES al lado) -->
       <div class="flex items-center space-x-3 w-full md:w-auto justify-between md:justify-start">
-        <a href="index.html" class="flex items-center space-x-2.5 group" title="Volver al portal principal WES">
-          <img src="assets/logo-wes.png" alt="Logo WES" class="h-8 w-auto">
+        <a href="index.html" class="flex items-center space-x-2 group" title="Volver al portal principal WES">
           <div class="leading-tight">
             <div class="flex items-center space-x-1.5">
-              <span class="text-sm font-black font-brand text-white group-hover:text-wes-gold transition">WES</span>
-              <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-wes-gold text-slate-950">KDS</span>
+              <span class="text-base font-black font-brand text-wes-blue group-hover:text-amber-600 transition tracking-tight">WES</span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-wes-gold text-slate-950 shadow-xs">KDS</span>
             </div>
-            <span class="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">Tablero de Servicio Técnico</span>
+            <span class="text-[10px] text-slate-500 font-bold block uppercase tracking-wider">Tablero de Servicio Técnico</span>
           </div>
         </a>
 
         <!-- Botón Volver a la Tienda (Móvil) -->
-        <a href="index.html" class="md:hidden text-xs font-bold text-slate-400 hover:text-white px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800">
+        <a href="index.html" class="md:hidden text-xs font-bold text-slate-600 hover:text-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-100">
           <i class="fas fa-arrow-left mr-1"></i> Tienda
         </a>
       </div>
 
       <!-- Reloj Digital en Vivo Estilo KDS -->
-      <div class="flex items-center space-x-3 bg-slate-950 px-4 py-1.5 rounded-2xl border border-slate-800 shadow-inner">
+      <div class="flex items-center space-x-3 bg-slate-50 px-3.5 py-1.5 rounded-2xl border border-slate-200 shadow-inner">
         <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Sistema en línea y sincronizado"></div>
         <div class="text-center font-mono">
-          <span id="kds-live-clock" class="text-base font-black text-amber-400 tracking-wider">--:--:--</span>
-          <span id="kds-live-date" class="text-[10px] text-slate-400 block font-medium uppercase tracking-tight">Cargando fecha...</span>
+          <span id="kds-live-clock" class="text-base font-black text-slate-800 tracking-wider">--:--:--</span>
+          <span id="kds-live-date" class="text-[10px] text-slate-500 block font-semibold uppercase tracking-tight">Cargando fecha...</span>
         </div>
       </div>
 
       <!-- Botones de Acción Operativa -->
       <div class="flex items-center space-x-2 w-full md:w-auto justify-end">
         <!-- Botón Nuevo Servicio -->
-        <button onclick="openNewServiceModal()" class="flex-1 md:flex-none px-4 py-2 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-1.5">
+        <button onclick="openNewServiceModal()" class="flex-1 md:flex-none px-4 py-2 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs shadow-xs transition flex items-center justify-center space-x-1.5">
           <i class="fas fa-plus-circle text-sm"></i>
           <span>Nuevo Servicio</span>
         </button>
 
         <!-- Botón Pantalla Completa (Modo KDS / TV) -->
-        <button onclick="toggleFullscreen()" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl border border-slate-700 text-xs transition" title="Alternar Pantalla Completa (Modo Monitor)">
+        <button onclick="toggleFullscreen()" class="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 text-xs transition shadow-xs" title="Alternar Pantalla Completa (Modo Monitor)">
           <i id="fullscreen-icon" class="fas fa-expand"></i>
         </button>
 
         <!-- Botón Volver al Portal -->
-        <a href="index.html" class="hidden md:inline-flex items-center space-x-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl border border-slate-700 text-xs font-semibold transition" title="Ir a la tienda WES">
-          <i class="fas fa-store text-wes-gold"></i>
+        <a href="index.html" class="hidden md:inline-flex items-center space-x-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-xl border border-slate-200 text-xs font-semibold transition shadow-xs" title="Ir a la tienda WES">
+          <i class="fas fa-store text-amber-600"></i>
           <span>Tienda WES</span>
         </a>
       </div>
@@ -134,67 +133,67 @@
   <!-- ==================================================================== -->
   <!-- BARRA DE MÉTRICAS Y FILTROS ESTILO MCDONALD'S (VERDE, AMARILLO, ROJO) -->
   <!-- ==================================================================== -->
-  <section class="bg-slate-900 border-b border-slate-800/80 px-4 sm:px-6 py-3 shrink-0">
+  <section class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 shrink-0 shadow-xs">
     <div class="max-w-7xl mx-auto space-y-3">
       
       <!-- Contadores de Estado Semafórico -->
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 text-xs">
         
         <!-- 1. Todos Activos -->
-        <button onclick="setKdsFilter('active')" id="filter-btn-active" class="p-2.5 rounded-xl border bg-slate-800/90 border-wes-gold/60 text-left transition flex items-center justify-between group shadow-sm">
+        <button onclick="setKdsFilter('active')" id="filter-btn-active" class="p-2.5 rounded-xl border-2 bg-white border-wes-gold text-left transition flex items-center justify-between group shadow-sm ring-2 ring-wes-gold/20">
           <div>
-            <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">Activos</span>
-            <span class="text-xs font-bold text-white">En Taller</span>
+            <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-bold">Activos</span>
+            <span class="text-xs font-bold text-slate-900">En Taller</span>
           </div>
-          <span id="count-active" class="text-xl font-black text-wes-gold font-mono">0</span>
+          <span id="count-active" class="text-xl font-black text-amber-600 font-mono">0</span>
         </button>
 
         <!-- 2. Verde (0-2 Días) -->
-        <button onclick="setKdsFilter('green')" id="filter-btn-green" class="p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-emerald-500 text-left transition flex items-center justify-between group">
+        <button onclick="setKdsFilter('green')" id="filter-btn-green" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-emerald-500 text-left transition flex items-center justify-between group">
           <div>
-            <span class="text-[10px] text-emerald-400 uppercase tracking-wider block font-black flex items-center">
+            <span class="text-[10px] text-emerald-700 uppercase tracking-wider block font-black flex items-center">
               <span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
               Al Día
             </span>
-            <span class="text-[11px] font-semibold text-slate-300">0 a 2 días</span>
+            <span class="text-[11px] font-semibold text-slate-600">0 a 2 días</span>
           </div>
-          <span id="count-green" class="text-xl font-black text-emerald-400 font-mono">0</span>
+          <span id="count-green" class="text-xl font-black text-emerald-600 font-mono">0</span>
         </button>
 
         <!-- 3. Amarillo (2-4 Días) -->
-        <button onclick="setKdsFilter('yellow')" id="filter-btn-yellow" class="p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-amber-400 text-left transition flex items-center justify-between group">
+        <button onclick="setKdsFilter('yellow')" id="filter-btn-yellow" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-amber-400 text-left transition flex items-center justify-between group">
           <div>
-            <span class="text-[10px] text-amber-400 uppercase tracking-wider block font-black flex items-center">
+            <span class="text-[10px] text-amber-700 uppercase tracking-wider block font-black flex items-center">
               <span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>
               Atención
             </span>
-            <span class="text-[11px] font-semibold text-slate-300">2 a 4 días</span>
+            <span class="text-[11px] font-semibold text-slate-600">2 a 4 días</span>
           </div>
-          <span id="count-yellow" class="text-xl font-black text-amber-400 font-mono">0</span>
+          <span id="count-yellow" class="text-xl font-black text-amber-600 font-mono">0</span>
         </button>
 
         <!-- 4. Rojo (+4 Días Atrasado) -->
-        <button onclick="setKdsFilter('red')" id="filter-btn-red" class="p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-rose-500 text-left transition flex items-center justify-between group">
+        <button onclick="setKdsFilter('red')" id="filter-btn-red" class="p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-rose-500 text-left transition flex items-center justify-between group">
           <div>
-            <span class="text-[10px] text-rose-400 uppercase tracking-wider block font-black flex items-center">
+            <span class="text-[10px] text-rose-700 uppercase tracking-wider block font-black flex items-center">
               <span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5 animate-pulse"></span>
               Atrasados
             </span>
-            <span class="text-[11px] font-semibold text-slate-300">+4 días</span>
+            <span class="text-[11px] font-semibold text-slate-600">+4 días</span>
           </div>
-          <span id="count-red" class="text-xl font-black text-rose-500 font-mono">0</span>
+          <span id="count-red" class="text-xl font-black text-rose-600 font-mono">0</span>
         </button>
 
         <!-- 5. Terminados (Historial) -->
-        <button onclick="setKdsFilter('finished')" id="filter-btn-finished" class="col-span-2 sm:col-span-1 p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-slate-500 text-left transition flex items-center justify-between group">
+        <button onclick="setKdsFilter('finished')" id="filter-btn-finished" class="col-span-2 sm:col-span-1 p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-slate-400 text-left transition flex items-center justify-between group">
           <div>
-            <span class="text-[10px] text-slate-400 uppercase tracking-wider block font-bold flex items-center">
+            <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-bold flex items-center">
               <i class="fas fa-check-circle text-emerald-500 mr-1.5 text-xs"></i>
               Terminados
             </span>
-            <span class="text-[11px] font-semibold text-slate-400">Historial</span>
+            <span class="text-[11px] font-semibold text-slate-500">Historial</span>
           </div>
-          <span id="count-finished" class="text-xl font-black text-slate-400 font-mono">0</span>
+          <span id="count-finished" class="text-xl font-black text-slate-500 font-mono">0</span>
         </button>
 
       </div>
@@ -205,12 +204,12 @@
           <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
             <i class="fas fa-search text-xs"></i>
           </span>
-          <input type="text" id="kds-search-input" oninput="handleSearch(this.value)" placeholder="Buscar por cliente, teléfono, ticket o equipo..." class="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold focus:ring-1 focus:ring-wes-gold transition">
+          <input type="text" id="kds-search-input" oninput="handleSearch(this.value)" placeholder="Buscar por cliente, ticket o equipo..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white focus:ring-2 focus:ring-wes-gold/20 transition shadow-inner">
         </div>
 
-        <div class="flex items-center space-x-2 text-xs text-slate-400 w-full sm:w-auto justify-between sm:justify-end">
-          <span class="text-[11px]">Auto-actualización: <strong class="text-emerald-400">Cada 60s</strong></span>
-          <button onclick="renderBoard()" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 font-bold transition flex items-center space-x-1">
+        <div class="flex items-center space-x-2 text-xs text-slate-500 w-full sm:w-auto justify-between sm:justify-end">
+          <span class="text-[11px]">Auto-actualización: <strong class="text-emerald-600">Cada 60s</strong></span>
+          <button onclick="renderBoard()" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-200 font-bold transition flex items-center space-x-1 shadow-xs">
             <i class="fas fa-sync-alt text-[10px]"></i>
             <span>Refrescar</span>
           </button>
@@ -223,7 +222,7 @@
   <!-- ==================================================================== -->
   <!-- TABLERO PRINCIPAL: CUADRÍCULA DE CAJETINES (ESTILO MCDONALD'S)        -->
   <!-- ==================================================================== -->
-  <main class="flex-1 overflow-y-auto p-4 sm:p-6">
+  <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-100">
     <div class="max-w-7xl mx-auto">
       
       <!-- Contenedor dinámico de cajetines -->
@@ -233,12 +232,12 @@
 
       <!-- Estado vacío -->
       <div id="kds-empty-state" class="hidden py-16 text-center">
-        <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-3 text-2xl">
+        <div class="w-16 h-16 rounded-2xl bg-white border border-slate-200 text-slate-400 flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm">
           <i class="fas fa-clipboard-check"></i>
         </div>
-        <h3 class="text-base font-bold text-white">No hay servicios en esta vista</h3>
-        <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Todos los servicios de esta categoría han sido atendidos o no coinciden con la búsqueda.</p>
-        <button onclick="setKdsFilter('active')" class="mt-4 px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition">
+        <h3 class="text-base font-bold text-slate-800">No hay servicios en esta vista</h3>
+        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Todos los servicios de esta categoría han sido atendidos o no coinciden con la búsqueda.</p>
+        <button onclick="setKdsFilter('active')" class="mt-4 px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition shadow-sm">
           Ver Todos los Servicios Activos
         </button>
       </div>
@@ -249,11 +248,11 @@
   <!-- ==================================================================== -->
   <!-- MODAL: REGISTRAR NUEVO SERVICIO TÉCNICO                              -->
   <!-- ==================================================================== -->
-  <div id="new-service-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden my-6 relative text-white">
+  <div id="new-service-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden my-6 relative text-slate-800">
       
       <!-- Cabecera -->
-      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 p-5 flex items-center justify-between border-b border-slate-700">
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 p-5 flex items-center justify-between text-white">
         <div class="flex items-center space-x-2.5">
           <div class="w-8 h-8 rounded-lg bg-wes-gold text-slate-950 flex items-center justify-center font-black">
             <i class="fas fa-tools text-sm"></i>
@@ -272,18 +271,18 @@
       <form id="form-new-service" onsubmit="handleCreateServiceSubmit(event)" class="p-5 space-y-3.5 text-xs">
         
         <div>
-          <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Nombre Completo del Cliente *</label>
-          <input type="text" id="new-srv-client" required placeholder="Ej. Ing. Carlos Mendoza" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold">
+          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo del Cliente *</label>
+          <input type="text" id="new-srv-client" required placeholder="Ej. Ing. Carlos Mendoza" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Teléfono / WhatsApp *</label>
-            <input type="tel" id="new-srv-phone" required placeholder="809-578-0000" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold">
+            <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono / WhatsApp *</label>
+            <input type="tel" id="new-srv-phone" required placeholder="809-578-0000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
           </div>
           <div>
-            <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Prioridad Inicial</label>
-            <select id="new-srv-priority" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-wes-gold">
+            <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Prioridad Inicial</label>
+            <select id="new-srv-priority" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-wes-gold focus:bg-white transition">
               <option value="Normal">Normal</option>
               <option value="Alta">Alta</option>
               <option value="Urgente">Urgente</option>
@@ -292,22 +291,22 @@
         </div>
 
         <div>
-          <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Equipo o Sistema a Atender *</label>
-          <input type="text" id="new-srv-equipment" required placeholder="Ej. Motor Portón CAME BXV 1000KG / Inversor / CCTV" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold">
+          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Equipo o Sistema a Atender *</label>
+          <input type="text" id="new-srv-equipment" required placeholder="Ej. Motor Portón CAME BXV 1000KG / Inversor / CCTV" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
         </div>
 
         <div>
-          <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Ubicación / Dirección</label>
-          <input type="text" id="new-srv-address" placeholder="Ej. Autopista Ramón Cáceres, Moca" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold">
+          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Ubicación / Dirección</label>
+          <input type="text" id="new-srv-address" placeholder="Ej. Autopista Ramón Cáceres, Moca" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
         </div>
 
         <div>
-          <label class="block font-bold text-slate-300 uppercase tracking-wider mb-1">Descripción del Problema o Requerimiento *</label>
-          <textarea id="new-srv-desc" required rows="3" placeholder="Detalle de la falla, revisión técnica o piezas requeridas..." class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-wes-gold"></textarea>
+          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Descripción del Problema o Requerimiento *</label>
+          <textarea id="new-srv-desc" required rows="3" placeholder="Detalle de la falla, revisión técnica o piezas requeridas..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition"></textarea>
         </div>
 
         <div class="pt-2 flex items-center justify-end space-x-2">
-          <button type="button" onclick="closeNewServiceModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold transition">
+          <button type="button" onclick="closeNewServiceModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition border border-slate-200">
             Cancelar
           </button>
           <button type="submit" class="px-5 py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-extrabold shadow-md transition flex items-center space-x-1.5 border border-wes-gold/40">
@@ -430,9 +429,9 @@
 
       // Prioridad
       const priorityColors = {
-        'Urgente': 'bg-rose-500/20 text-rose-300 border-rose-500/40',
-        'Alta': 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-        'Normal': 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+        'Urgente': 'bg-rose-50 text-rose-700 border-rose-200',
+        'Alta': 'bg-amber-50 text-amber-700 border-amber-200',
+        'Normal': 'bg-blue-50 text-blue-700 border-blue-200'
       };
       const prioClass = priorityColors[s.priority] || priorityColors['Normal'];
 
@@ -440,24 +439,24 @@
       const notes = Array.isArray(s.internalNotes) ? s.internalNotes : [];
       const notesHtml = notes.length > 0 
         ? notes.map(n => `
-          <div class="p-2 bg-slate-950/80 rounded-lg border border-slate-800 text-[11px] leading-relaxed">
-            <div class="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
-              <span class="font-bold text-amber-400">${n.author || 'Técnico'}</span>
+          <div class="p-2 bg-slate-100 rounded-lg border border-slate-200 text-[11px] leading-relaxed">
+            <div class="flex items-center justify-between text-[10px] text-slate-500 mb-0.5">
+              <span class="font-bold text-amber-700">${n.author || 'Técnico'}</span>
               <span>${KDSService.formatShortDate(n.time)}</span>
             </div>
-            <p class="text-slate-200">${n.text}</p>
+            <p class="text-slate-700">${n.text}</p>
           </div>
         `).join('')
-        : '<p class="text-[11px] text-slate-500 italic p-1">Sin notas registradas aún.</p>';
+        : '<p class="text-[11px] text-slate-400 italic p-1">Sin notas registradas aún.</p>';
 
       return `
-        <div class="kds-card flex flex-col bg-slate-900 rounded-2xl border-2 ${state.borderClass} overflow-hidden shadow-lg ${state.pulse ? 'pulse-urgent' : ''}">
+        <div class="kds-card flex flex-col bg-white rounded-2xl border-2 ${state.borderClass} overflow-hidden shadow-sm hover:shadow-md ${state.pulse ? 'pulse-urgent' : ''}">
           
           <!-- Encabezado del Cajetín (Color Semafórico según Días) -->
           <div class="${state.headerBg} p-3.5 flex items-center justify-between">
             <div class="flex items-center space-x-2">
               <span class="font-mono font-black text-sm tracking-wider">${s.id}</span>
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/30 backdrop-blur-xs">
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/25 backdrop-blur-xs">
                 ${state.label}
               </span>
             </div>
@@ -471,58 +470,63 @@
             
             <!-- Fecha de inicio y Prioridad -->
             <div class="flex items-center justify-between text-[11px]">
-              <span class="text-slate-400 flex items-center">
-                <i class="far fa-calendar-alt mr-1 text-slate-500"></i>
-                Inicio: <strong class="text-slate-200 ml-1">${startDateText}</strong>
+              <span class="text-slate-500 flex items-center">
+                <i class="far fa-calendar-alt mr-1 text-slate-400"></i>
+                Inicio: <strong class="text-slate-800 ml-1">${startDateText}</strong>
               </span>
               <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border ${prioClass}">
                 ${s.priority || 'Normal'}
               </span>
             </div>
 
-            <!-- Cliente y Contacto -->
-            <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-              <div class="flex items-center justify-between">
+            <!-- Cliente y Botones Rápidos (Solo Nombre de Cliente + Iconos de Acción al Final) -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+              <div class="flex items-center justify-between gap-2">
                 <div class="min-w-0 flex-1">
-                  <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">Cliente</span>
-                  <h4 class="font-bold text-xs text-white truncate">${s.clientName}</h4>
+                  <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Cliente</span>
+                  <h4 class="font-black text-sm text-slate-900 truncate" title="${s.clientName}">${s.clientName}</h4>
                 </div>
-                ${cleanPhone ? `
-                  <a href="${waUrl}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/40 text-[10px] font-bold transition flex items-center space-x-1 shrink-0 ml-2" title="Contactar por WhatsApp">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>WhatsApp</span>
-                  </a>
-                ` : ''}
-              </div>
-              <div class="text-[11px] text-slate-400 mt-1 flex items-center">
-                <i class="fas fa-phone-alt text-[10px] mr-1.5 text-slate-500"></i>
-                <a href="tel:${cleanPhone}" class="hover:underline hover:text-wes-gold">${s.phone || 'Sin teléfono'}</a>
+                
+                <!-- Botoncitos de acción al final: Llamar (icono teléfono), WhatsApp, Copiar -->
+                <div class="flex items-center space-x-1 shrink-0">
+                  ${cleanPhone ? `
+                    <a href="tel:${cleanPhone}" class="w-8 h-8 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200 flex items-center justify-center transition shadow-xs" title="Llamar a ${s.clientName} (${s.phone})">
+                      <i class="fas fa-phone-alt text-xs"></i>
+                    </a>
+                    <a href="${waUrl}" target="_blank" class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white border border-emerald-200 flex items-center justify-center transition shadow-xs" title="WhatsApp a ${s.clientName}">
+                      <i class="fab fa-whatsapp text-sm"></i>
+                    </a>
+                    <button type="button" onclick="if(navigator.clipboard){navigator.clipboard.writeText('${cleanPhone}');}if(typeof showToast==='function')showToast('Teléfono copiado: ${cleanPhone}','info');" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 flex items-center justify-center transition shadow-xs" title="Copiar teléfono (${s.phone})">
+                      <i class="fas fa-copy text-xs"></i>
+                    </button>
+                  ` : `
+                    <span class="text-[10px] text-slate-400 italic">Sin teléfono</span>
+                  `}
+                </div>
               </div>
             </div>
 
             <!-- Equipo o Servicio Solicitado -->
             <div>
-              <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">Equipo / Servicio</span>
-              <p class="font-extrabold text-xs text-amber-400 leading-snug">${s.productSystem || 'Servicio Técnico'}</p>
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Equipo / Servicio</span>
+              <p class="font-extrabold text-xs text-wes-blue leading-snug">${s.productSystem || 'Servicio Técnico'}</p>
               ${s.address ? `
-                <span class="text-[10px] text-slate-400 flex items-center mt-0.5">
-                  <i class="fas fa-map-marker-alt text-[9px] mr-1 text-slate-500"></i> ${s.address}
+                <span class="text-[10px] text-slate-500 flex items-center mt-0.5">
+                  <i class="fas fa-map-marker-alt text-[9px] mr-1 text-slate-400"></i> ${s.address}
                 </span>
               ` : ''}
             </div>
 
             <!-- Detalle / Descripción -->
-            <div class="bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/50 text-[11px]">
-              <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block mb-0.5">Falla o Tarea:</span>
-              <p class="text-slate-300 leading-relaxed">${s.description || 'Sin descripción adicional.'}</p>
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-[11px]">
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-0.5">Falla o Tarea:</span>
+              <p class="text-slate-700 leading-relaxed">${s.description || 'Sin descripción adicional.'}</p>
             </div>
 
-            <!-- ============================================== -->
-            <!-- PASO DONDE COGE UNA NOTA PARA PODER ESCRIBIR    -->
-            <!-- ============================================== -->
-            <div class="pt-2 border-t border-slate-800">
-              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-1.5 flex items-center">
-                <i class="fas fa-sticky-note text-amber-400 mr-1.5"></i>
+            <!-- Paso donde coge una nota para poder escribir -->
+            <div class="pt-2 border-t border-slate-200">
+              <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block mb-1.5 flex items-center">
+                <i class="fas fa-sticky-note text-amber-500 mr-1.5"></i>
                 Avances y Notas Técnicas (${notes.length})
               </span>
 
@@ -533,8 +537,8 @@
 
               <!-- Input para escribir la nota -->
               <form onsubmit="handleNoteSubmit('${s.id}', event)" class="flex items-center space-x-1.5">
-                <input type="text" id="note-input-${s.id}" placeholder="Escribir avance o nota..." class="flex-1 px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition" required>
-                <button type="submit" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition shrink-0" title="Guardar nota">
+                <input type="text" id="note-input-${s.id}" placeholder="Escribir avance o nota..." class="flex-1 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition shadow-xs" required>
+                <button type="submit" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition shrink-0 shadow-xs" title="Guardar nota">
                   <i class="fas fa-paper-plane text-[10px]"></i>
                 </button>
               </form>
@@ -542,13 +546,11 @@
 
           </div>
 
-          <!-- ============================================== -->
-          <!-- BOTÓN: TERMINADO                               -->
-          <!-- ============================================== -->
-          <div class="p-3 bg-slate-950/80 border-t border-slate-800">
+          <!-- Botón: Terminado -->
+          <div class="p-3 bg-slate-50 border-t border-slate-200">
             ${state.isFinished ? `
               <div class="flex items-center space-x-2">
-                <button onclick="handleReopenService('${s.id}')" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-slate-700">
+                <button onclick="handleReopenService('${s.id}')" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-slate-200">
                   <i class="fas fa-undo text-[10px]"></i>
                   <span>Reabrir Servicio</span>
                 </button>
@@ -572,9 +574,9 @@
         const btn = document.getElementById(`filter-btn-${k}`);
         if (btn) {
           if (k === filterKey) {
-            btn.className = 'p-2.5 rounded-xl border bg-slate-800 text-left transition flex items-center justify-between group shadow-sm border-wes-gold';
+            btn.className = 'p-2.5 rounded-xl border-2 bg-white text-left transition flex items-center justify-between group shadow-sm border-wes-gold ring-2 ring-wes-gold/20';
           } else {
-            btn.className = 'p-2.5 rounded-xl border bg-slate-800/40 border-slate-700 hover:border-slate-500 text-left transition flex items-center justify-between group';
+            btn.className = 'p-2.5 rounded-xl border bg-slate-50 border-slate-200 hover:border-slate-300 text-left transition flex items-center justify-between group';
           }
         }
       });

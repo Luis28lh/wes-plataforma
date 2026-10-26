@@ -437,9 +437,9 @@ function setOngoingFilter(key) {
     const btn = document.getElementById(`ongoing-flt-${k}`);
     if (btn) {
       if (k === key) {
-        btn.className = 'px-3 py-1.5 rounded-xl border bg-slate-800 border-wes-gold text-white font-bold text-xs transition flex items-center space-x-1.5 shadow-sm';
+        btn.className = 'px-3 py-1.5 rounded-xl border-2 bg-white border-wes-gold text-slate-900 font-bold text-xs transition flex items-center space-x-1.5 shadow-sm ring-2 ring-wes-gold/20';
       } else {
-        btn.className = 'px-3 py-1.5 rounded-xl border bg-slate-900/60 border-slate-700/80 text-slate-400 hover:text-white font-medium text-xs transition flex items-center space-x-1.5';
+        btn.className = 'px-3 py-1.5 rounded-xl border bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900 font-medium text-xs transition flex items-center space-x-1.5';
       }
     }
   });
@@ -511,12 +511,12 @@ function renderOngoingSupportModal(filterKey) {
 
   if (activeTickets.length === 0) {
     container.innerHTML = `
-      <div class="py-12 text-center text-slate-400">
-        <div class="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-3 text-2xl">
-          <i class="fas fa-check-double text-emerald-400"></i>
+      <div class="py-12 text-center text-slate-500 col-span-1 md:col-span-2">
+        <div class="w-14 h-14 rounded-2xl bg-white border border-slate-200 text-slate-400 flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm">
+          <i class="fas fa-check-double text-emerald-500"></i>
         </div>
-        <p class="font-bold text-sm text-white">No hay solicitudes pendientes en esta vista</p>
-        <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto">Todo el soporte técnico de esta categoría se encuentra al día o completado.</p>
+        <p class="font-bold text-sm text-slate-800">No hay solicitudes pendientes en esta vista</p>
+        <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Todo el soporte técnico de esta categoría se encuentra al día o completado.</p>
       </div>
     `;
     return;
@@ -531,24 +531,24 @@ function renderOngoingSupportModal(filterKey) {
 
     const notesHtml = notes.length > 0 
       ? notes.map(n => `
-        <div class="p-2 bg-slate-950/90 rounded-lg border border-slate-800/80 text-[11px] leading-relaxed">
-          <div class="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
-            <span class="font-bold text-amber-400">${n.author || 'Técnico'}</span>
+        <div class="p-2 bg-slate-100 rounded-lg border border-slate-200 text-[11px] leading-relaxed">
+          <div class="flex items-center justify-between text-[10px] text-slate-500 mb-0.5">
+            <span class="font-bold text-amber-700">${n.author || 'Técnico'}</span>
             <span>${KDSService.formatShortDate(n.time)}</span>
           </div>
-          <p class="text-slate-200">${n.text}</p>
+          <p class="text-slate-700">${n.text}</p>
         </div>
       `).join('')
-      : '<p class="text-[11px] text-slate-500 italic p-1">Sin notas registradas aún.</p>';
+      : '<p class="text-[11px] text-slate-400 italic p-1">Sin notas registradas aún.</p>';
 
     return `
-      <div class="bg-slate-900 rounded-2xl border-2 ${state.borderClass} overflow-hidden shadow-lg flex flex-col transition hover:shadow-2xl">
+      <div class="bg-white rounded-2xl border-2 ${state.borderClass} overflow-hidden shadow-sm hover:shadow-md flex flex-col transition">
         
         <!-- Encabezado Semafórico -->
         <div class="${state.headerBg} px-3.5 py-2.5 flex items-center justify-between">
           <div class="flex items-center space-x-2">
             <span class="font-mono font-black text-xs tracking-wider">${s.id}</span>
-            <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/35 backdrop-blur-xs">
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-black/25 backdrop-blur-xs">
               ${state.label}
             </span>
           </div>
@@ -558,19 +558,19 @@ function renderOngoingSupportModal(filterKey) {
         </div>
 
         <!-- Contenido Principal -->
-        <div class="p-4 flex-1 space-y-3 text-xs">
+        <div class="p-4 flex-1 space-y-3 text-xs bg-white text-slate-800">
           
           <!-- Nombre Principal del Cliente y Fecha de Inicio -->
-          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1 border-b border-slate-800/80 pb-2.5">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1 border-b border-slate-100 pb-2.5">
             <div class="min-w-0 flex-1">
-              <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">Nombre Principal / Solicitante</span>
-              <h4 class="font-black text-sm text-white truncate">${s.clientName}</h4>
-              ${s.company && s.company !== 'N/A' ? `<span class="text-[11px] text-slate-400 font-medium">${s.company}</span>` : ''}
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Nombre Principal / Solicitante</span>
+              <h4 class="font-black text-sm text-slate-900 truncate" title="${s.clientName}">${s.clientName}</h4>
+              ${s.company && s.company !== 'N/A' ? `<span class="text-[11px] text-slate-500 font-medium">${s.company}</span>` : ''}
             </div>
-            <div class="text-[11px] text-slate-400 shrink-0 text-left sm:text-right">
-              <span class="block text-[10px] text-slate-500 font-bold uppercase">Fecha de Inicio</span>
-              <span class="text-slate-200 font-semibold flex items-center sm:justify-end">
-                <i class="far fa-calendar-alt text-[10px] mr-1 text-slate-500"></i>
+            <div class="text-[11px] text-slate-500 shrink-0 text-left sm:text-right">
+              <span class="block text-[10px] text-slate-400 font-bold uppercase">Fecha de Inicio</span>
+              <span class="text-slate-700 font-semibold flex items-center sm:justify-end">
+                <i class="far fa-calendar-alt text-[10px] mr-1 text-slate-400"></i>
                 ${startDateText}
               </span>
             </div>
@@ -578,42 +578,52 @@ function renderOngoingSupportModal(filterKey) {
 
           <!-- Equipo o Sistema -->
           <div>
-            <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block">Equipo / Sistema</span>
-            <p class="font-bold text-xs text-amber-400 leading-snug">${s.productSystem || 'Servicio Técnico WES'}</p>
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Equipo / Sistema</span>
+            <p class="font-extrabold text-xs text-wes-blue leading-snug">${s.productSystem || 'Servicio Técnico WES'}</p>
           </div>
 
           <!-- Breve Descripción -->
-          <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800/80">
-            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-1">Breve Descripción del Problema:</span>
-            <p class="text-slate-300 leading-relaxed text-xs">${s.description || 'Sin descripción adicional.'}</p>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block mb-1">Breve Descripción del Problema:</span>
+            <p class="text-slate-700 leading-relaxed text-xs">${s.description || 'Sin descripción adicional.'}</p>
           </div>
 
-          <!-- Contacto Rápido -->
-          <div class="flex items-center justify-between bg-slate-950/40 p-2 rounded-xl border border-slate-800/50">
-            <div class="text-[11px] text-slate-300 flex items-center">
-              <i class="fas fa-phone-alt text-[10px] mr-1.5 text-slate-500"></i>
-              <a href="tel:${cleanPhone}" class="hover:underline hover:text-wes-gold font-semibold">${s.phone || 'Sin teléfono'}</a>
+          <!-- Cliente y Botones de Acción al Final (Solo Nombre + Botones Rápidos con Iconos) -->
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+            <div class="min-w-0 flex-1">
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block">Contacto</span>
+              <span class="font-bold text-xs text-slate-800 truncate block">${s.clientName}</span>
             </div>
-            ${cleanPhone ? `
-              <a href="${waUrl}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/40 text-[10px] font-bold transition flex items-center space-x-1 shrink-0">
-                <i class="fab fa-whatsapp"></i>
-                <span>WhatsApp</span>
-              </a>
-            ` : ''}
+            
+            <div class="flex items-center space-x-1 shrink-0">
+              ${cleanPhone ? `
+                <a href="tel:${cleanPhone}" class="w-8 h-8 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-200 flex items-center justify-center transition shadow-xs" title="Llamar a ${s.clientName} (${s.phone})">
+                  <i class="fas fa-phone-alt text-xs"></i>
+                </a>
+                <a href="${waUrl}" target="_blank" class="w-8 h-8 rounded-xl bg-emerald-50 hover:bg-emerald-600 text-emerald-600 hover:text-white border border-emerald-200 flex items-center justify-center transition shadow-xs" title="WhatsApp a ${s.clientName}">
+                  <i class="fab fa-whatsapp text-sm"></i>
+                </a>
+                <button type="button" onclick="if(navigator.clipboard){navigator.clipboard.writeText('${cleanPhone}');}if(typeof showToast==='function')showToast('Teléfono copiado: ${cleanPhone}','info');" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 flex items-center justify-center transition shadow-xs" title="Copiar teléfono (${s.phone})">
+                  <i class="fas fa-copy text-xs"></i>
+                </button>
+              ` : `
+                <span class="text-[10px] text-slate-400 italic">Sin teléfono</span>
+              `}
+            </div>
           </div>
 
           <!-- Paso para escribir notas -->
-          <div class="pt-2 border-t border-slate-800/80">
-            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-1.5 flex items-center">
-              <i class="fas fa-sticky-note text-amber-400 mr-1.5"></i>
+          <div class="pt-2 border-t border-slate-200">
+            <span class="text-[10px] uppercase tracking-wider text-slate-500 font-bold block mb-1.5 flex items-center">
+              <i class="fas fa-sticky-note text-amber-500 mr-1.5"></i>
               Notas y Avances del Trabajo (${notes.length})
             </span>
             <div class="max-h-24 overflow-y-auto space-y-1 mb-2 pr-1">
               ${notesHtml}
             </div>
             <form onsubmit="handleOngoingNoteSubmit('${s.id}', event)" class="flex items-center space-x-1.5">
-              <input type="text" id="ongoing-note-input-${s.id}" placeholder="Escribir avance técnico..." required class="flex-1 px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition">
-              <button type="submit" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition shrink-0" title="Guardar nota">
+              <input type="text" id="ongoing-note-input-${s.id}" placeholder="Escribir avance técnico..." required class="flex-1 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition shadow-xs">
+              <button type="submit" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs transition shrink-0 shadow-xs" title="Guardar nota">
                 <i class="fas fa-paper-plane text-[10px]"></i>
               </button>
             </form>
@@ -622,7 +632,7 @@ function renderOngoingSupportModal(filterKey) {
         </div>
 
         <!-- Botón Terminado -->
-        <div class="p-3 bg-slate-950/90 border-t border-slate-800">
+        <div class="p-3 bg-slate-50 border-t border-slate-200">
           <button onclick="handleOngoingFinish('${s.id}')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-98 text-white font-black rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center space-x-2">
             <i class="fas fa-check-circle text-sm"></i>
             <span>Terminado</span>
@@ -680,21 +690,25 @@ function handleQuickServiceSubmit(e) {
   }
 }
 
-// Inicialización automática y reactiva
-window.KDSService = KDSService;
-window.openOngoingSupportModal = openOngoingSupportModal;
-window.closeOngoingSupportModal = closeOngoingSupportModal;
-window.renderOngoingSupportModal = renderOngoingSupportModal;
-window.setOngoingFilter = setOngoingFilter;
-window.handleOngoingSearch = handleOngoingSearch;
-window.toggleQuickNewServiceForm = toggleQuickNewServiceForm;
-window.handleQuickServiceSubmit = handleQuickServiceSubmit;
-window.handleOngoingNoteSubmit = handleOngoingNoteSubmit;
-window.handleOngoingFinish = handleOngoingFinish;
-window.updateNavOngoingBadge = updateNavOngoingBadge;
+if (typeof window !== 'undefined') {
+  window.KDSService = KDSService;
+  window.openOngoingSupportModal = openOngoingSupportModal;
+  window.closeOngoingSupportModal = closeOngoingSupportModal;
+  window.renderOngoingSupportModal = renderOngoingSupportModal;
+  window.setOngoingFilter = setOngoingFilter;
+  window.handleOngoingSearch = handleOngoingSearch;
+  window.toggleQuickNewServiceForm = toggleQuickNewServiceForm;
+  window.handleQuickServiceSubmit = handleQuickServiceSubmit;
+  window.handleOngoingNoteSubmit = handleOngoingNoteSubmit;
+  window.handleOngoingFinish = handleOngoingFinish;
+  window.updateNavOngoingBadge = updateNavOngoingBadge;
+  if (typeof window.addEventListener === 'function') {
+    window.addEventListener('wes_kds_updated', updateNavOngoingBadge);
+  }
+}
 
-if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
-  window.addEventListener('wes_kds_updated', updateNavOngoingBadge);
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { KDSService };
 }
 
 if (typeof document !== 'undefined') {
