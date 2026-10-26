@@ -310,13 +310,20 @@
       <form id="form-new-service" onsubmit="handleCreateServiceSubmit(event)" class="p-5 space-y-3.5 text-xs">
         
         <div>
-          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo del Cliente *</label>
-          <input type="text" id="new-srv-client" required placeholder="Ej. Ing. Carlos Mendoza" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
+          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center justify-between">
+            <span>Nombre Completo del Cliente *</span>
+            <span class="text-[10px] text-wes-blue font-semibold normal-case">Escribe o selecciona de la lista</span>
+          </label>
+          <input type="text" id="new-srv-client" list="new-srv-client-datalist" autocomplete="off" required placeholder="Ej. Góndola González / Coopcibao" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
+          <datalist id="new-srv-client-datalist"></datalist>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono / WhatsApp *</label>
+            <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center justify-between">
+              <span>Teléfono / WhatsApp *</span>
+              <span id="new-srv-phone-badge" class="text-[10px] text-emerald-600 font-bold hidden">✓ Registrado</span>
+            </label>
             <input type="tel" id="new-srv-phone" required placeholder="809-578-0000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
           </div>
           <div>
@@ -335,8 +342,13 @@
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1">Ubicación / Dirección</label>
-          <input type="text" id="new-srv-address" placeholder="Ej. Autopista Ramón Cáceres, Moca" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
+          <label class="block font-bold text-slate-700 uppercase tracking-wider mb-1 flex items-center justify-between">
+            <span>Ubicación / Dirección</span>
+            <span class="text-[10px] text-slate-500 font-normal normal-case">Múltiples ubicaciones por cliente</span>
+          </label>
+          <input type="text" id="new-srv-address" list="new-srv-address-datalist" autocomplete="off" placeholder="Ej. Autopista Ramón Cáceres, Moca" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition">
+          <datalist id="new-srv-address-datalist"></datalist>
+          <div id="new-srv-locations-container"></div>
         </div>
 
         <div>
@@ -363,7 +375,7 @@
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
 
   <!-- Scripts -->
-  <script src="js/servicio_tecnico.js?v=20261026_0955"></script>
+  <script src="js/servicio_tecnico.js?v=20261026_1500"></script>
   <script>
     let currentFilter = 'active'; // 'active', 'green', 'yellow', 'red', 'finished'
     let currentSearch = '';
@@ -732,6 +744,9 @@
         modal.classList.remove('hidden');
         modal.style.display = 'flex';
         document.body.classList.add('overflow-hidden');
+        if (typeof setupClientFormAutofill === 'function') {
+          setupClientFormAutofill('new-srv');
+        }
         setTimeout(() => document.getElementById('new-srv-client')?.focus(), 150);
       }
     }
@@ -767,6 +782,10 @@
       if (res.success) {
         closeNewServiceModal();
         document.getElementById('form-new-service').reset();
+        const locCont = document.getElementById('new-srv-locations-container');
+        if (locCont) locCont.innerHTML = '';
+        const phoneBadge = document.getElementById('new-srv-phone-badge');
+        if (phoneBadge) phoneBadge.classList.add('hidden');
         showToast(`¡Servicio ${res.service.id} ingresado con fecha de inicio!`, 'success');
         setKdsFilter('active');
         renderBoard();
@@ -811,6 +830,9 @@
     document.addEventListener('DOMContentLoaded', () => {
       initMetricsCollapse();
       renderBoard();
+      if (typeof setupClientFormAutofill === 'function') {
+        setupClientFormAutofill('new-srv');
+      }
     });
 
     // Cerrar modal con tecla Escape
