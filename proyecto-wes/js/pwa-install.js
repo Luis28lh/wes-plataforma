@@ -30,7 +30,11 @@ function initPwaInstall() {
   }
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('sw.js?v=20261102_1750')
+      .then(reg => {
+        reg.update();
+        console.log('[WES PWA] Service Worker actualizado:', reg.scope);
+      })
       .then(reg => console.log('[WES PWA] Service Worker registrado:', reg.scope))
       .catch(err => console.warn('[WES PWA] Error registrando SW:', err));
   }
