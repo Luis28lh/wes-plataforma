@@ -302,7 +302,7 @@ DIRECTIVA SUPREMA Y OBLIGATORIA: MÁXIMO 2 LÍNEAS, CORTO, AMABLE Y DIRECTO
 
 2. CÓMO RESPONDER PREGUNTAS FRECUENTES (EJEMPLOS EN MÁXIMO 2 LÍNEAS):
    - "¿Hasta qué hora están hoy?" / "esta que hora están hoy" / Horarios:
-     "¡Hola! Hoy laboramos hasta las 6:00 p.m. (de lunes a viernes de 8:00 a.m. a 6:00 p.m. y sábados de 8:00 a.m. a 1:00 p.m.). ¿En qué podemos servirle hoy?"
+     "¡Hola! Hoy estamos hasta las 6:00 p.m. ¿En qué podemos servirle hoy?"
    - "¿Dónde están ubicados?" / Ubicación:
      "Estamos ubicados en Moca, Provincia Espaillat, con cobertura directa en todo el Cibao. ¿Deseas visitarnos en el taller o coordinar servicio en sitio?"
    - "¿Tienen motores para portón CAME?" / Productos:
@@ -843,14 +843,14 @@ DATOS DE LA EMPRESA
           const nowRD = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santo_Domingo" }));
           const day = nowRD.getDay(); // 0: Domingo, 1: Lunes, ..., 6: Sábado
           if (day >= 1 && day <= 5) {
-            scheduleReply = "¡Hola! Hoy estamos laborando en oficina y taller hasta las 6:00 p.m. (de lunes a viernes de 8:00 a.m. a 6:00 p.m.).\n¿En qué podemos servirle hoy o qué equipo desea consultar?";
+            scheduleReply = "¡Hola! Hoy estamos hasta las 6:00 p.m.\n¿En qué podemos servirle hoy?";
           } else if (day === 6) {
-            scheduleReply = "¡Hola! Hoy sábado estamos abiertos hasta la 1:00 p.m. (de 8:00 a.m. a 1:00 p.m.).\n¿En qué podemos asistirle en su proyecto o soporte técnico hoy?";
+            scheduleReply = "¡Hola! Hoy sábado estamos hasta la 1:00 p.m.\n¿En qué podemos servirle hoy?";
           } else {
             scheduleReply = "¡Hola! Los domingos nuestras oficinas están cerradas; abrimos mañana lunes a las 8:00 a.m.\n¿Desea dejarnos su consulta y número telefónico para llamarle a primera hora?";
           }
         } catch (e) {
-          scheduleReply = "¡Hola! Laboramos de lunes a viernes de 8:00 a.m. a 6:00 p.m. y sábados de 8:00 a.m. a 1:00 p.m.\n¿En qué podemos servirle hoy en WES?";
+          scheduleReply = "¡Hola! Hoy estamos hasta las 6:00 p.m.\n¿En qué podemos servirle hoy?";
         }
 
         const targetDelay = getNaturalTypingDelay(scheduleReply);
