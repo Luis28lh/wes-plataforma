@@ -1,5 +1,5 @@
 // Service Worker Oficial de Warn Electrical Services (WES) PWA
-const CACHE_NAME = 'wes-pwa-v20261102_1750';
+const CACHE_NAME = 'wes-pwa-v20261102_1830';
 const CORE_ASSETS = [
   './',
   'index.html',
@@ -69,4 +69,10 @@ self.addEventListener('fetch', event => {
         });
       })
   );
+});
+// Escuchar mensajes del cliente para forzar actualización inmediata
+self.addEventListener('message', event => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });

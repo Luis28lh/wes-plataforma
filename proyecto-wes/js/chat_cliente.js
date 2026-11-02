@@ -85,7 +85,7 @@
       </div>
 
       <!-- Ventana Flotante del Chat de Clientes -->
-      <div id="wes-chat-modal" class="fixed bottom-6 right-4 sm:bottom-24 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[400px] h-[580px] max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex-col overflow-hidden hidden transition-all duration-300 animate-fadeIn text-slate-800 font-sans">
+      <div id="wes-chat-modal" class="fixed bottom-3 right-2 sm:bottom-24 sm:right-6 z-50 w-[calc(100vw-1rem)] sm:w-[400px] h-[82dvh] sm:h-[580px] max-h-[85vh] sm:max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex-col overflow-hidden hidden transition-all duration-300 animate-fadeIn text-slate-800 font-sans">
         
         <!-- Encabezado del Chat -->
         <div class="p-4 bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 text-white flex items-center justify-between shadow-md shrink-0">
@@ -132,7 +132,7 @@
 
         <!-- Formulario de Entrada de Texto -->
         <form id="wes-chat-input-form" onsubmit="handleChatSubmit(event)" class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2 shrink-0">
-          <input type="text" id="wes-chat-user-input" placeholder="Escribe tu consulta o número de ticket..." autocomplete="off" class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition shadow-inner">
+          <input type="text" id="wes-chat-user-input" placeholder="Escribe tu consulta o número de ticket..." autocomplete="off" class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition shadow-inner">
           <button type="submit" class="w-10 h-10 bg-wes-blue hover:bg-wes-dark active:scale-95 text-wes-gold rounded-xl flex items-center justify-center transition shadow-md border border-wes-gold/40 shrink-0" title="Enviar mensaje">
             <i class="fas fa-paper-plane text-xs"></i>
           </button>

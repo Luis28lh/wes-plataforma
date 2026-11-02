@@ -29,14 +29,42 @@ function initPwaInstall() {
     smartBanner.classList.remove('hidden');
   }
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js?v=20261102_1750')
+    if ('serviceWorker' in navigator) {
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!refreshing) {
+        refreshing = true;
+        console.log('[WES PWA] Nueva versión activa, recargando aplicación móvil...');
+        window.location.reload();
+      }
+    });
+
+    navigator.serviceWorker.register('sw.js?v=20261102_1830')
       .then(reg => {
+        console.log('[WES PWA] Service Worker registrado:', reg.scope);
         reg.update();
-        console.log('[WES PWA] Service Worker actualizado:', reg.scope);
+
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('[WES PWA] Actualización lista, forzando activación...');
+                newWorker.postMessage({ action: 'skipWaiting' });
+              }
+            });
+          }
+        });
       })
-      .then(reg => console.log('[WES PWA] Service Worker registrado:', reg.scope))
       .catch(err => console.warn('[WES PWA] Error registrando SW:', err));
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        navigator.serviceWorker.getRegistration().then(reg => {
+          if (reg) reg.update();
+        });
+      }
+    });
   }
 
   window.addEventListener('beforeinstallprompt', (e) => {

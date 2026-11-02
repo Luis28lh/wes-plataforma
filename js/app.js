@@ -3601,3 +3601,23 @@ window.closeMobileMenu = window.closeMobileMenu || function() {
 
 
 
+
+// Función de sincronización y limpieza de caché para aplicaciones móviles PWA
+function forceRefreshApp() {
+  if (window.showToast) window.showToast('Actualizando aplicación móvil WES...', 'info');
+  if ('caches' in window) {
+    caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))))
+      .then(() => {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(regs => {
+            regs.forEach(r => r.unregister());
+            setTimeout(() => { window.location.reload(true); }, 300);
+          });
+        } else {
+          setTimeout(() => { window.location.reload(true); }, 300);
+        }
+      });
+  } else {
+    window.location.reload(true);
+  }
+}
