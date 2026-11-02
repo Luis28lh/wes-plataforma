@@ -20,11 +20,13 @@ const AdminApp = {
   init() {
     this.bindEvents();
     this.checkAuthUI();
+    this.initAdminNotifications();
   },
 
   bindEvents() {
     window.addEventListener('wes_admin_logout', () => {
       this.checkAuthUI();
+    this.initAdminNotifications();
     });
 
     window.addEventListener('wes_flags_changed', () => {
@@ -108,6 +110,7 @@ const AdminApp = {
 
     if (result.success) {
       this.checkAuthUI();
+    this.initAdminNotifications();
       showToast('¡Bienvenido al portal administrativo WES!', 'success');
     } else if (result.require2FA) {
       this.show2FAModal(result.demoCode);
@@ -140,6 +143,7 @@ const AdminApp = {
       const modal = document.getElementById('modal-2fa');
       if (modal) modal.classList.add('hidden');
       this.checkAuthUI();
+    this.initAdminNotifications();
       showToast('Verificación en dos pasos completada con éxito.', 'success');
     } else {
       showToast(result.message, 'error');
@@ -1960,100 +1964,549 @@ const AdminApp = {
     showToast(`Categoría "${categoryName}" ${isChecked ? 'activada' : 'ocultada'} en la web pública.`, 'success');
   },
 
-  // ========================================================================
-  // VISTA: USUARIOS Y ROLES (7 ROLES)
+    // ========================================================================
+  // VISTA: USUARIOS, DASHBOARD DE REGISTROS TEMPORAL Y ASIGNACIÓN DE VISTAS
   // ========================================================================
   renderUsuarios(container) {
-    const users = AdminAuth.getUsers();
+    if (!container) return;
+
+    // Filtros de temporalidad
+    this.currentRegMonth = this.currentRegMonth || '';
+    this.currentRegWeek = this.currentRegWeek || 'all';
+    this.currentRegSearch = this.currentRegSearch || '';
+    this.currentUsersSubtab = this.currentUsersSubtab || 'registros'; // 'registros' | 'corporativo'
+
+    // Obtener estadísticas dinámicas
+    const stats = (typeof UserAuth !== 'undefined' && typeof UserAuth.getRegistrationStats === 'function')
+      ? UserAuth.getRegistrationStats(this.currentRegMonth, this.currentRegWeek)
+      : {
+          totalAllTime: 0,
+          availableMonths: [],
+          activeMonth: '',
+          activeWeek: 'all',
+          filteredCount: 0,
+          weekCounts: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+          roleCounts: { cliente: 0, tecnico_interno: 0, tecnico_externo: 0, administrador: 0 },
+          users: []
+        };
+
+    const adminUsers = AdminAuth.getUsers();
+
+    // Mes formateado legible (ej. 2026-11 -> Noviembre 2026)
+    const monthNames = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const formatMonthKey = (key) => {
+      if (!key) return 'Todos los Meses';
+      const parts = key.split('-');
+      if (parts.length < 2) return key;
+      const y = parts[0];
+      const mIdx = parseInt(parts[1], 10);
+      return `${monthNames[mIdx] || parts[1]} ${y}`;
+    };
+
+    // Filtrar por búsqueda
+    const searchTerm = (this.currentRegSearch || '').toLowerCase().trim();
+    const displayRegistered = stats.users.filter(u => {
+      if (!searchTerm) return true;
+      return (u.name && u.name.toLowerCase().includes(searchTerm)) ||
+             (u.email && u.email.toLowerCase().includes(searchTerm)) ||
+             (u.phone && u.phone.toLowerCase().includes(searchTerm));
+    });
+
+    // Calcular máximo para escala del gráfico semanal
+    const maxWeekCount = Math.max(1, ...Object.values(stats.weekCounts));
 
     container.innerHTML = `
-      <div class="space-y-4">
-        <!-- Barra de Control -->
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="space-y-5 animate-fadeIn">
+        
+        <!-- Barra de Control Superior -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <h3 class="text-sm font-bold text-slate-800 font-brand">Directorio de Usuarios y Acceso</h3>
-            <p class="text-xs text-slate-500">Gestión de cuentas para los 7 roles definidos en la organización.</p>
+            <div class="flex items-center space-x-2">
+              <span class="w-8 h-8 rounded-xl bg-wes-blue text-wes-gold flex items-center justify-center font-bold text-sm shadow-xs">
+                <i class="fas fa-users-cog"></i>
+              </span>
+              <h2 class="text-base font-extrabold text-slate-800 font-brand">Control de Usuarios & Dashboard de Registros</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Monitorea el crecimiento de registros por mes y semana, y asigna vistas personalizadas (Técnico Interno, Técnico Externo o Cliente).</p>
           </div>
-          <button onclick="AdminApp.openUserModal()" class="px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
-            <i class="fas fa-user-plus"></i>
-            <span>Nuevo Usuario</span>
-          </button>
+          
+          <div class="flex items-center space-x-2 w-full md:w-auto">
+            <!-- Selector de Sub-pestañas -->
+            <div class="bg-slate-100 p-1 rounded-2xl flex items-center space-x-1 border border-slate-200 text-xs font-bold">
+              <button onclick="AdminApp.switchUsersSubtab('registros')" class="px-3.5 py-1.5 rounded-xl transition ${this.currentUsersSubtab === 'registros' ? 'bg-white text-wes-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
+                <i class="fas fa-chart-line mr-1"></i> Dashboard Registros (${stats.totalAllTime})
+              </button>
+              <button onclick="AdminApp.switchUsersSubtab('corporativo')" class="px-3.5 py-1.5 rounded-xl transition ${this.currentUsersSubtab === 'corporativo' ? 'bg-white text-wes-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
+                <i class="fas fa-user-shield mr-1"></i> Personal Fijo (${adminUsers.length})
+              </button>
+            </div>
+
+            ${this.currentUsersSubtab === 'corporativo' ? `
+              <button onclick="AdminApp.openUserModal()" class="px-3.5 py-2 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
+                <i class="fas fa-user-plus"></i>
+                <span>Nuevo Empleado</span>
+              </button>
+            ` : `
+              <button onclick="AdminApp.openNewClientManualModal()" class="px-3.5 py-2 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs flex items-center space-x-1.5 transition shadow-sm">
+                <i class="fas fa-plus"></i>
+                <span>Registrar Usuario</span>
+              </button>
+            `}
+          </div>
         </div>
 
-        <!-- Tabla de Usuarios -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
-                  <th class="p-3.5">Usuario</th>
-                  <th class="p-3.5">Contacto</th>
-                  <th class="p-3.5">Rol Corporativo</th>
-                  <th class="p-3.5 text-center">2FA</th>
-                  <th class="p-3.5 text-center">Estado</th>
-                  <th class="p-3.5">Último Acceso</th>
-                  <th class="p-3.5 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                ${users.map(u => {
-                  const roleDef = ROLE_DEFINITIONS[u.role] || { name: u.role, badgeClass: 'bg-slate-100 text-slate-800' };
-                  return `
-                    <tr class="hover:bg-slate-50/80 transition">
-                      <td class="p-3.5">
-                        <div class="flex items-center space-x-3">
-                          <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs uppercase">
-                            ${u.name.slice(0, 2)}
-                          </div>
-                          <div>
-                            <div class="font-bold text-slate-800">${u.name}</div>
-                            <div class="text-[11px] text-slate-400 font-mono">@${u.username}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="p-3.5">
-                        <div class="text-slate-700">${u.email}</div>
-                        <div class="text-[11px] text-slate-400">${u.phone || ''}</div>
-                      </td>
-                      <td class="p-3.5">
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border ${roleDef.badgeClass}">
-                          ${roleDef.name}
-                        </span>
-                      </td>
-                      <td class="p-3.5 text-center">
-                        ${u.twoFactorEnabled ? `
-                          <span class="text-emerald-600 font-bold text-[11px]"><i class="fas fa-check-shield"></i> Activo</span>
-                        ` : `
-                          <span class="text-slate-400 text-[11px]">Inactivo</span>
-                        `}
-                      </td>
-                      <td class="p-3.5 text-center">
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${u.status === 'activo' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
-                          ${u.status === 'activo' ? 'Activo' : 'Desactivado'}
-                        </span>
-                      </td>
-                      <td class="p-3.5 text-slate-500 text-[11px]">
-                        ${u.lastLogin ? new Date(u.lastLogin).toLocaleString('es-DO') : 'Sin registros'}
-                      </td>
-                      <td class="p-3.5 text-right space-x-1 whitespace-nowrap">
-                        ${u.role !== 'propietario' ? `
-                          <button onclick="AdminApp.toggleUserStatus('${u.id}')" class="p-1.5 text-slate-500 hover:text-amber-600 rounded transition" title="Alternar Activo/Inactivo">
-                            <i class="fas fa-power-off"></i>
-                          </button>
-                        ` : ''}
-                        <button onclick="AdminApp.openResetPasswordModal('${u.id}')" class="p-1.5 text-slate-500 hover:text-wes-blue rounded transition" title="Restablecer Contraseña">
-                          <i class="fas fa-key"></i>
-                        </button>
+        ${this.currentUsersSubtab === 'registros' ? `
+          <!-- ============================================================== -->
+          <!-- PESTAÑA: DASHBOARD DE REGISTROS Y ASIGNACIÓN DE VISTAS         -->
+          <!-- ============================================================== -->
+          
+          <!-- FILTROS TEMPORALES (MES Y SEMANA) + BUSCADOR -->
+          <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <!-- Filtro de Mes -->
+              <div class="flex items-center space-x-1.5">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"><i class="fas fa-calendar-alt text-amber-500 mr-1"></i>Mes:</label>
+                <select id="reg-filter-month" onchange="AdminApp.handleRegFilterChange(this.value, null)" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                  ${stats.availableMonths.map(m => `
+                    <option value="${m}" ${stats.activeMonth === m ? 'selected' : ''}>${formatMonthKey(m)}</option>
+                  `).join('')}
+                  <option value="all" ${stats.activeMonth === 'all' ? 'selected' : ''}>Todos los Meses Acumulados</option>
+                </select>
+              </div>
+
+              <!-- Filtro de Semana -->
+              <div class="flex items-center space-x-1.5">
+                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"><i class="fas fa-clock text-wes-blue mr-1"></i>Semana:</label>
+                <select id="reg-filter-week" onchange="AdminApp.handleRegFilterChange(null, this.value)" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                  <option value="all" ${stats.activeWeek === 'all' ? 'selected' : ''}>Todas las Semanas del Mes</option>
+                  <option value="1" ${stats.activeWeek === '1' ? 'selected' : ''}>Semana 1 (Días 1 al 7)</option>
+                  <option value="2" ${stats.activeWeek === '2' ? 'selected' : ''}>Semana 2 (Días 8 al 14)</option>
+                  <option value="3" ${stats.activeWeek === '3' ? 'selected' : ''}>Semana 3 (Días 15 al 21)</option>
+                  <option value="4" ${stats.activeWeek === '4' ? 'selected' : ''}>Semana 4 (Días 22 al 28)</option>
+                  <option value="5" ${stats.activeWeek === '5' ? 'selected' : ''}>Semana 5 (Días 29 al fin de mes)</option>
+                </select>
+              </div>
+
+              ${(this.currentRegMonth || (this.currentRegWeek && this.currentRegWeek !== 'all')) ? `
+                <button onclick="AdminApp.resetRegFilters()" class="text-xs text-rose-600 hover:underline font-bold px-2 py-1 rounded-lg hover:bg-rose-50 transition" title="Restablecer filtros">
+                  <i class="fas fa-times-circle mr-1"></i> Ver Todo
+                </button>
+              ` : ''}
+            </div>
+
+            <!-- Buscador en tiempo real -->
+            <div class="relative w-full lg:w-72">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <i class="fas fa-search text-xs"></i>
+              </span>
+              <input type="text" id="reg-search-input" value="${escapeHtml(this.currentRegSearch || '')}" oninput="AdminApp.handleRegSearch(this.value)" placeholder="Buscar por nombre, correo..." class="w-full pl-8 pr-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+            </div>
+          </div>
+
+          <!-- TARJETAS KPI DE REGISTROS -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+            <!-- Total General -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Registrados</span>
+                <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs"><i class="fas fa-users"></i></span>
+              </div>
+              <div class="text-2xl font-black text-slate-900">${stats.totalAllTime}</div>
+              <div class="text-[10px] text-slate-500 mt-1">Cuentas creadas</div>
+            </div>
+
+            <!-- En este Período -->
+            <div class="bg-gradient-to-br from-amber-50 to-amber-100/60 p-4 rounded-2xl border border-amber-300/80 shadow-xs">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-black text-amber-900 uppercase tracking-wider">En Este Período</span>
+                <span class="w-7 h-7 rounded-lg bg-amber-200/80 text-amber-800 flex items-center justify-center text-xs"><i class="fas fa-filter"></i></span>
+              </div>
+              <div class="text-2xl font-black text-amber-900">${stats.filteredCount}</div>
+              <div class="text-[10px] text-amber-800 mt-1 font-semibold">${stats.activeWeek !== 'all' ? `Semana ${stats.activeWeek}` : formatMonthKey(stats.activeMonth)}</div>
+            </div>
+
+            <!-- Clientes -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Vista Cliente</span>
+                <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs"><i class="fas fa-user-check"></i></span>
+              </div>
+              <div class="text-2xl font-black text-emerald-700">${stats.roleCounts.cliente}</div>
+              <div class="text-[10px] text-slate-400 mt-1">Seguimiento personal</div>
+            </div>
+
+            <!-- Técnicos Internos -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Técnicos Internos</span>
+                <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs"><i class="fas fa-tools"></i></span>
+              </div>
+              <div class="text-2xl font-black text-blue-700">${stats.roleCounts.tecnico_interno}</div>
+              <div class="text-[10px] text-slate-400 mt-1">Laboratorio & Taller WES</div>
+            </div>
+
+            <!-- Técnicos Externos -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs col-span-2 sm:col-span-1">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Técnicos Externos</span>
+                <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xs"><i class="fas fa-car-side"></i></span>
+              </div>
+              <div class="text-2xl font-black text-amber-700">${stats.roleCounts.tecnico_externo}</div>
+              <div class="text-[10px] text-slate-400 mt-1">Campo & Instalaciones</div>
+            </div>
+          </div>
+
+          <!-- GRÁFICO DE DISTRIBUCIÓN POR SEMANAS DEL MES -->
+          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="font-bold text-xs text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
+                  <i class="fas fa-chart-bar text-wes-blue"></i>
+                  <span>Distribución de Registros por Semana &bull; ${formatMonthKey(stats.activeMonth)}</span>
+                </h4>
+                <p class="text-[11px] text-slate-500">Haz clic en cualquier semana para filtrar los usuarios registrados de ese período.</p>
+              </div>
+              <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">
+                ${Object.values(stats.weekCounts).reduce((a, b) => a + b, 0)} registros este mes
+              </span>
+            </div>
+
+            <div class="grid grid-cols-5 gap-3 pt-2">
+              ${[1, 2, 3, 4, 5].map(wk => {
+                const count = stats.weekCounts[wk] || 0;
+                const pct = Math.round((count / maxWeekCount) * 100);
+                const isSelected = stats.activeWeek === String(wk);
+                const weekRanges = { 1: 'Días 1 - 7', 2: 'Días 8 - 14', 3: 'Días 15 - 21', 4: 'Días 22 - 28', 5: 'Días 29 - 31' };
+                return `
+                  <button type="button" onclick="AdminApp.handleRegFilterChange(null, '${wk}')" class="p-3 rounded-2xl border transition text-left flex flex-col justify-between h-36 group ${isSelected ? 'border-wes-blue bg-blue-50/60 ring-2 ring-wes-blue/20' : 'border-slate-200 hover:border-wes-gold hover:bg-slate-50/60'}">
+                    <div>
+                      <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold ${isSelected ? 'text-wes-blue' : 'text-slate-700'}">Semana ${wk}</span>
+                        ${isSelected ? `<span class="w-2 h-2 rounded-full bg-wes-blue"></span>` : ''}
+                      </div>
+                      <span class="text-[10px] text-slate-400 block">${weekRanges[wk]}</span>
+                    </div>
+
+                    <div>
+                      <div class="flex items-baseline space-x-1 mb-1.5">
+                        <span class="text-xl font-black ${count > 0 ? (isSelected ? 'text-wes-blue' : 'text-slate-800') : 'text-slate-300'}">${count}</span>
+                        <span class="text-[10px] text-slate-400">usuarios</span>
+                      </div>
+                      <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div class="h-2 rounded-full transition-all duration-500 ${isSelected ? 'bg-wes-blue' : (count > 0 ? 'bg-amber-500 group-hover:bg-wes-gold' : 'bg-transparent')}" style="width: ${Math.max(pct, count > 0 ? 12 : 0)}%;"></div>
+                      </div>
+                    </div>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- TABLA DE USUARIOS REGISTRADOS Y ASIGNADOR DE VISTAS -->
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="font-bold text-xs text-slate-800 font-brand">Listado de Personas Registradas</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-100 text-slate-700">${displayRegistered.length}</span>
+              </div>
+              <div class="text-[11px] text-slate-500 italic">
+                Cambia la vista de un usuario en el desplegable de la columna derecha para adaptar sus privilegios.
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                    <th class="p-3.5">Persona Registrada</th>
+                    <th class="p-3.5">Contacto</th>
+                    <th class="p-3.5">Fecha de Registro</th>
+                    <th class="p-3.5">Vista Asignada Actual</th>
+                    <th class="p-3.5 text-right">Asignar Nueva Vista</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  ${displayRegistered.length === 0 ? `
+                    <tr>
+                      <td colspan="5" class="p-8 text-center text-slate-400">
+                        <i class="fas fa-user-slash text-2xl mb-2 text-slate-300 block"></i>
+                        No se encontraron registros para los filtros seleccionados.
                       </td>
                     </tr>
-                  `;
-                }).join('')}
-              </tbody>
-            </table>
+                  ` : displayRegistered.map(u => {
+                    const regDate = u.createdAt ? new Date(u.createdAt).toLocaleString('es-DO', {
+                      dateStyle: 'medium',
+                      timeStyle: 'short'
+                    }) : 'Fecha no registrada';
+
+                    const roleBadges = {
+                      cliente: { label: 'Vista Cliente', class: 'bg-emerald-100 text-emerald-800 border-emerald-300', icon: 'fa-user' },
+                      tecnico_interno: { label: 'Técnico Interno WES', class: 'bg-blue-100 text-blue-800 border-blue-300', icon: 'fa-tools' },
+                      tecnico_externo: { label: 'Técnico Externo', class: 'bg-amber-100 text-amber-800 border-amber-300', icon: 'fa-car-side' },
+                      administrador: { label: 'Administrador WES', class: 'bg-purple-100 text-purple-800 border-purple-300', icon: 'fa-shield-alt' }
+                    };
+                    const badge = roleBadges[u.role] || roleBadges.cliente;
+                    const initials = (u.name || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+                    return `
+                      <tr class="hover:bg-slate-50/80 transition">
+                        <!-- Persona -->
+                        <td class="p-3.5">
+                          <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-wes-dark to-wes-blue text-wes-gold flex items-center justify-center font-black text-xs uppercase shadow-xs shrink-0">
+                              ${initials}
+                            </div>
+                            <div class="min-w-0">
+                              <div class="font-bold text-slate-800 truncate">${escapeHtml(u.name || 'Usuario')}</div>
+                              <div class="text-[11px] text-slate-500 font-mono truncate">${escapeHtml(u.email)}</div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <!-- Contacto -->
+                        <td class="p-3.5 whitespace-nowrap">
+                          <div class="text-slate-700 font-medium">${escapeHtml(u.phone || 'Sin teléfono')}</div>
+                          <a href="mailto:${escapeHtml(u.email)}" class="text-[10px] text-wes-blue hover:underline">Enviar correo</a>
+                        </td>
+
+                        <!-- Fecha de Registro -->
+                        <td class="p-3.5 whitespace-nowrap text-slate-600">
+                          <div class="font-medium text-slate-800">${regDate}</div>
+                          <span class="text-[10px] text-slate-400">ID: ${escapeHtml(u.id || '')}</span>
+                        </td>
+
+                        <!-- Vista Actual -->
+                        <td class="p-3.5 whitespace-nowrap">
+                          <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-bold border ${badge.class}">
+                            <i class="fas ${badge.icon} text-[10px]"></i>
+                            <span>${badge.label}</span>
+                          </span>
+                        </td>
+
+                        <!-- Asignador de Vista -->
+                        <td class="p-3.5 text-right whitespace-nowrap">
+                          <select onchange="AdminApp.handleUserRoleChange('${escapeHtml(u.email)}', this.value)" class="px-3 py-1.5 bg-slate-50 hover:bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:outline-none transition cursor-pointer shadow-xs">
+                            <option value="cliente" ${u.role === 'cliente' ? 'selected' : ''}>👤 Vista Cliente</option>
+                            <option value="tecnico_interno" ${u.role === 'tecnico_interno' ? 'selected' : ''}>🛠️ Técnico Interno WES</option>
+                            <option value="tecnico_externo" ${u.role === 'tecnico_externo' ? 'selected' : ''}>🚗 Técnico Externo</option>
+                            <option value="administrador" ${u.role === 'administrador' ? 'selected' : ''}>⚡ Administrador</option>
+                          </select>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        ` : `
+          <!-- ============================================================== -->
+          <!-- PESTAÑA: PERSONAL ADMINISTRATIVO FIJO (7 ROLES CORPORATIVOS)   -->
+          <!-- ============================================================== -->
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <h4 class="font-bold text-xs text-slate-800 uppercase tracking-wider">Directorio de Empleados y Cuentas Corporativas</h4>
+                <p class="text-[11px] text-slate-500">Cuentas con acceso a funciones administrativas según la matriz RBAC.</p>
+              </div>
+              <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">${adminUsers.length} Empleados</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                    <th class="p-3.5">Usuario</th>
+                    <th class="p-3.5">Contacto</th>
+                    <th class="p-3.5">Rol Corporativo</th>
+                    <th class="p-3.5 text-center">2FA</th>
+                    <th class="p-3.5 text-center">Estado</th>
+                    <th class="p-3.5">Último Acceso</th>
+                    <th class="p-3.5 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  ${adminUsers.map(u => {
+                    const roleDef = ROLE_DEFINITIONS[u.role] || { name: u.role, badgeClass: 'bg-slate-100 text-slate-800' };
+                    return `
+                      <tr class="hover:bg-slate-50/80 transition">
+                        <td class="p-3.5">
+                          <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs uppercase">
+                              ${u.name.slice(0, 2)}
+                            </div>
+                            <div>
+                              <div class="font-bold text-slate-800">${escapeHtml(u.name)}</div>
+                              <div class="text-[11px] text-slate-400 font-mono">@${escapeHtml(u.username)}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="p-3.5">
+                          <div class="text-slate-700">${escapeHtml(u.email)}</div>
+                          <div class="text-[11px] text-slate-400">${escapeHtml(u.phone || '')}</div>
+                        </td>
+                        <td class="p-3.5">
+                          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold border ${roleDef.badgeClass}">
+                            ${roleDef.name}
+                          </span>
+                        </td>
+                        <td class="p-3.5 text-center">
+                          ${u.twoFactorEnabled ? `
+                            <span class="text-emerald-600 font-bold text-[11px]"><i class="fas fa-check-shield"></i> Activo</span>
+                          ` : `
+                            <span class="text-slate-400 text-[11px]">Inactivo</span>
+                          `}
+                        </td>
+                        <td class="p-3.5 text-center">
+                          <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${u.status === 'activo' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                            ${u.status === 'activo' ? 'Activo' : 'Desactivado'}
+                          </span>
+                        </td>
+                        <td class="p-3.5 text-slate-500 text-[11px]">
+                          ${u.lastLogin ? new Date(u.lastLogin).toLocaleString('es-DO') : 'Sin registros'}
+                        </td>
+                        <td class="p-3.5 text-right space-x-1 whitespace-nowrap">
+                          ${u.role !== 'propietario' ? `
+                            <button onclick="AdminApp.toggleUserStatus('${u.id}')" class="p-1.5 text-slate-500 hover:text-amber-600 rounded transition" title="Alternar Activo/Inactivo">
+                              <i class="fas fa-power-off"></i>
+                            </button>
+                          ` : ''}
+                          <button onclick="AdminApp.openResetPasswordModal('${u.id}')" class="p-1.5 text-slate-500 hover:text-wes-blue rounded transition" title="Restablecer Contraseña">
+                            <i class="fas fa-key"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `}
+
       </div>
     `;
+  },
+
+  
+  // ========================================================================
+  // NOTIFICACIONES Y GESTIÓN DE ROLES / VISTAS (USERAUTH)
+  // ========================================================================
+  switchUsersSubtab(subtab) {
+    this.currentUsersSubtab = subtab;
+    const container = document.getElementById('admin-dynamic-content');
+    if (container) this.renderUsuarios(container);
+  },
+
+  handleRegFilterChange(monthVal, weekVal) {
+    if (monthVal !== null && monthVal !== undefined) this.currentRegMonth = monthVal;
+    if (weekVal !== null && weekVal !== undefined) this.currentRegWeek = weekVal;
+    const container = document.getElementById('admin-dynamic-content');
+    if (container) this.renderUsuarios(container);
+  },
+
+  handleRegSearch(term) {
+    this.currentRegSearch = term;
+    const container = document.getElementById('admin-dynamic-content');
+    if (container) this.renderUsuarios(container);
+  },
+
+  resetRegFilters() {
+    this.currentRegMonth = '';
+    this.currentRegWeek = 'all';
+    this.currentRegSearch = '';
+    const container = document.getElementById('admin-dynamic-content');
+    if (container) this.renderUsuarios(container);
+  },
+
+  handleUserRoleChange(email, newRole) {
+    if (typeof UserAuth === 'undefined' || typeof UserAuth.updateUserRole !== 'function') {
+      if (window.showToast) window.showToast('Error: Servicio de usuarios no disponible', 'error');
+      return;
+    }
+    const res = UserAuth.updateUserRole(email, newRole);
+    if (res.success) {
+      if (window.showToast) window.showToast(`✅ Vista de "${email}" actualizada a: ${res.roleLabel}`, 'success');
+      const container = document.getElementById('admin-dynamic-content');
+      if (container) this.renderUsuarios(container);
+    } else {
+      if (window.showToast) window.showToast(res.message || 'Error al actualizar vista', 'error');
+    }
+  },
+
+  openNewClientManualModal() {
+    const name = prompt('Nombre completo del nuevo usuario:');
+    if (!name || !name.trim()) return;
+    const email = prompt('Correo electrónico:');
+    if (!email || !email.trim() || !email.includes('@')) {
+      alert('Correo no válido.');
+      return;
+    }
+    const pass = prompt('Contraseña inicial (mínimo 6 caracteres):', 'User2026!');
+    if (!pass || pass.length < 6) {
+      alert('La contraseña debe tener mínimo 6 caracteres.');
+      return;
+    }
+    const res = UserAuth.registerClient({ name, email, phone: '', password: pass, confirmPassword: pass });
+    if (res.success) {
+      if (window.showToast) window.showToast(`Usuario ${name} registrado con éxito.`, 'success');
+      const container = document.getElementById('admin-dynamic-content');
+      if (container) this.renderUsuarios(container);
+    } else {
+      if (window.showToast) window.showToast(res.message, 'error');
+    }
+  },
+
+  initAdminNotifications() {
+    if (typeof UserAuth === 'undefined') return;
+    const notifs = UserAuth.getAdminNotifications();
+    const unread = notifs.filter(n => !n.read).length;
+    const badge = document.getElementById('admin-notif-badge');
+    if (badge) {
+      if (unread > 0) {
+        badge.textContent = unread > 9 ? '9+' : unread;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+  },
+
+  toggleNotificationsPanel() {
+    const dropdown = document.getElementById('admin-notif-dropdown');
+    if (!dropdown) return;
+    dropdown.classList.toggle('hidden');
+
+    if (!dropdown.classList.contains('hidden')) {
+      this.renderNotificationList();
+    }
+  },
+
+  renderNotificationList() {
+    const listEl = document.getElementById('admin-notif-list');
+    if (!listEl || typeof UserAuth === 'undefined') return;
+    const notifs = UserAuth.getAdminNotifications();
+    if (notifs.length === 0) {
+      listEl.innerHTML = `<div class="p-4 text-center text-slate-400 text-xs">No hay notificaciones recientes.</div>`;
+      return;
+    }
+    listEl.innerHTML = notifs.map(n => `
+      <div class="p-2.5 rounded-xl transition ${n.read ? 'bg-white opacity-75' : 'bg-amber-50/80 border border-amber-200'}">
+        <div class="flex items-center justify-between mb-0.5">
+          <span class="font-bold text-[11px] text-slate-800">${escapeHtml(n.title)}</span>
+          <span class="text-[9px] text-slate-400">${new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+        <p class="text-[11px] text-slate-600 leading-snug">${escapeHtml(n.message)}</p>
+      </div>
+    `).join('');
+  },
+
+  markNotificationsAsRead() {
+    if (typeof UserAuth !== 'undefined') {
+      UserAuth.markAdminNotificationsRead();
+      this.initAdminNotifications();
+      this.renderNotificationList();
+    }
   },
 
   openUserModal() {

@@ -573,36 +573,27 @@ E. TALLER DE SERVICIO Y TABLERO KDS DE TICKETS:
       appendBotMessage(`
         <p class="font-bold text-slate-900 mb-1">⚡ Motores para Portones Eléctricos CAME</p>
         <p class="text-slate-600 mb-2">${WES_KB.servicios[0].detalle}</p>
-        <div class="p-2.5 bg-amber-50/80 border border-amber-200 rounded-xl space-y-1 text-slate-700 mb-2">
+        <div class="p-2.5 bg-amber-50/80 border border-amber-200 rounded-xl space-y-1 text-slate-700 mb-2 text-xs">
           <div>• <strong>CAME BXV 400kg / 600kg:</strong> Residencial rápido y silencioso.</div>
           <div>• <strong>CAME BXV 800kg / 1000kg:</strong> Alto tráfico y condominios.</div>
         </div>
-        <a href="${WES_KB.empresa.whatsappUrl}?text=${encodeURIComponent('Hola WES, deseo información y cotización para motor de portón CAME.')}" target="_blank" class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs transition shadow-xs">
-          <i class="fab fa-whatsapp"></i>
-          <span>Cotizar Motor por WhatsApp</span>
-        </a>
+        <p class="text-slate-600 text-xs">¿Deseas una cotización para un modelo específico? Indícanos por aquí si tu portón es corredizo o batiente y tus datos de contacto; uno de nuestros asesores comerciales te llamará para preparar tu cotización formal.</p>
       `);
     } else if (topic === 'inversores') {
       appendUserMessage('¿Dan mantenimiento a inversores en laboratorio?');
       appendBotMessage(`
         <p class="font-bold text-slate-900 mb-1">🔋 Laboratorio Especializado de Inversores WES</p>
         <p class="text-slate-600 mb-2">${WES_KB.servicios[1].detalle}</p>
-        <p class="text-slate-600 mb-2">Contamos con banco de pruebas y técnicos certificados para marcas como <strong>Trace Engineering, Magnum Energy y Outback</strong>.</p>
-        <button type="button" onclick="startServiceRequestFlow('Inversor')" class="px-3 py-1.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold text-xs transition border border-wes-gold/40">
-          <i class="fas fa-wrench mr-1 text-wes-gold"></i> Solicitar Revisión de Inversor
-        </button>
+        <p class="text-slate-600 mb-2 text-xs">Contamos con banco de pruebas y técnicos certificados para marcas como <strong>Trace Engineering, Magnum Energy y Outback</strong>.</p>
+        <p class="text-slate-600 text-xs">Si tu equipo presenta fallas o requiere mantenimiento preventivo, déjanos por aquí la marca, modelo y tu número telefónico, y coordinamos la recepción técnica en nuestro laboratorio.</p>
       `);
     } else if (topic === 'horarios') {
       appendUserMessage('¿Cuáles son los horarios y ubicación del taller WES?');
       appendBotMessage(`
         <p class="font-bold text-slate-900 mb-1">📍 Warn Electrical Services, SRL</p>
-        <p class="text-slate-700 mb-1.5"><strong>Dirección:</strong> ${WES_KB.empresa.ubicacion}</p>
-        <p class="text-slate-700 mb-2"><strong>Horario de Atención:</strong><br>${WES_KB.empresa.horario}</p>
-        <p class="text-slate-600 mb-3">Brindamos cobertura directa para Moca, Santiago, Licey, Salcedo, La Vega y toda la región del Cibao.</p>
-        <a href="#contacto" onclick="toggleClientChat()" class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold text-xs transition">
-          <i class="fas fa-map-marked-alt text-wes-gold"></i>
-          <span>Ver Mapa en la Página</span>
-        </a>
+        <p class="text-slate-700 mb-1.5 text-xs"><strong>Dirección:</strong> ${WES_KB.empresa.ubicacion}</p>
+        <p class="text-slate-700 mb-2 text-xs"><strong>Horario de Atención:</strong><br>${WES_KB.empresa.horario}</p>
+        <p class="text-slate-600 text-xs">Brindamos cobertura directa para Moca, Santiago, Licey, Salcedo, La Vega y toda la región del Cibao. ¿En qué más podemos ayudarte hoy?</p>
       `);
     } else if (topic === 'soporte') {
       appendUserMessage('Necesito solicitar un servicio técnico.');

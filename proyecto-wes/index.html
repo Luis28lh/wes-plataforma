@@ -2576,23 +2576,85 @@
 
         </div>
 
-        <!-- Botón Especial para Empleados (Acceso a admin.html) -->
-        <a id="profile-modal-admin-btn" href="admin.html" class="hidden w-full py-3 bg-gradient-to-r from-wes-blue to-slate-900 hover:from-slate-900 hover:to-wes-blue text-white rounded-xl text-xs font-black shadow-md transition flex items-center justify-center space-x-2 border border-wes-gold/40">
-          <i class="fas fa-shield-alt text-wes-gold text-sm"></i>
-          <span>Acceder al Panel de Control Admin</span>
-        </a>
+        <!-- ============================================== -->
+        <!-- VISTAS TAILORED SEGÚN ROL ASIGNADO POR ADMIN     -->
+        <!-- ============================================== -->
 
-        <!-- Botón para Tablero KDS de Servicio Técnico -->
-        <a href="servicio-tecnico.html" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-wes-blue text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/30 shadow-sm">
-          <i class="fas fa-tv text-wes-gold"></i>
-          <span>Tablero de Servicio Técnico (KDS)</span>
-        </a>
+        <!-- 1. VISTA CLIENTE -->
+        <div id="profile-view-cliente" class="space-y-2.5">
+          <div class="p-3 bg-blue-50/90 border border-blue-200 rounded-2xl flex items-center space-x-2.5 text-xs text-blue-950">
+            <i class="fas fa-user-circle text-wes-blue text-base shrink-0"></i>
+            <div>
+              <span class="font-extrabold block">Vista Cliente WES</span>
+              <span class="text-[11px] text-blue-800">Espacio limpio y personal para tus cotizaciones y solicitudes de soporte.</span>
+            </div>
+          </div>
+          <button id="profile-modal-quotes-btn" onclick="closeUserProfileModal(); openQuoteModal();" class="w-full py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
+            <i class="fas fa-file-invoice text-wes-gold"></i>
+            <span>Mis Cotizaciones y Solicitudes</span>
+          </button>
+          <button onclick="closeUserProfileModal(); openOngoingSupportModal();" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200/80 text-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-slate-200">
+            <i class="fas fa-wrench text-amber-600"></i>
+            <span>Rastrear mis Reparaciones de Taller</span>
+          </button>
+        </div>
 
-        <!-- Botón para Clientes (Mis Cotizaciones) -->
-        <button id="profile-modal-quotes-btn" onclick="closeUserProfileModal(); openQuoteModal();" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200/80 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
-          <i class="fas fa-file-invoice text-wes-blue"></i>
-          <span>Revisar Mis Cotizaciones</span>
-        </button>
+        <!-- 2. VISTA TÉCNICO INTERNO WES (Taller & Laboratorio) -->
+        <div id="profile-view-tecnico-interno" class="hidden space-y-2.5">
+          <div class="p-3 bg-amber-50/90 border border-amber-300 rounded-2xl flex items-center space-x-2.5 text-xs text-amber-950">
+            <i class="fas fa-flask text-amber-700 text-base shrink-0"></i>
+            <div>
+              <span class="font-extrabold block">Vista Técnico Interno WES</span>
+              <span class="text-[11px] text-amber-800">Laboratorio de tarjetas, banco de pruebas de inversores y tablero de taller.</span>
+            </div>
+          </div>
+          <a href="servicio-tecnico.html" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-wes-blue text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/40 shadow-xs">
+            <i class="fas fa-tv text-wes-gold"></i>
+            <span>Abrir Tablero KDS de Taller</span>
+          </a>
+          <button onclick="closeUserProfileModal(); openOngoingSupportModal();" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
+            <i class="fas fa-traffic-light"></i>
+            <span>Control Semafórico en Vivo (Inversores)</span>
+          </button>
+        </div>
+
+        <!-- 3. VISTA TÉCNICO EXTERNO (Operaciones de Campo) -->
+        <div id="profile-view-tecnico-externo" class="hidden space-y-2.5">
+          <div class="p-3 bg-emerald-50/90 border border-emerald-300 rounded-2xl flex items-center space-x-2.5 text-xs text-emerald-950">
+            <i class="fas fa-truck-pickup text-emerald-700 text-base shrink-0"></i>
+            <div>
+              <span class="font-extrabold block">Vista Técnico Externo WES</span>
+              <span class="text-[11px] text-emerald-800">Operaciones en terreno, motores CAME, CCTV e instalaciones en sitio.</span>
+            </div>
+          </div>
+          <button onclick="closeUserProfileModal(); openTecnicoExternoPortal();" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Portal de Operaciones en Terreno</span>
+          </button>
+        </div>
+
+        <!-- 4. VISTA ADMINISTRADOR / PROPIETARIO -->
+        <div id="profile-view-admin" class="hidden space-y-2.5">
+          <div class="p-3 bg-indigo-50/90 border border-indigo-200 rounded-2xl flex items-center space-x-2.5 text-xs text-indigo-950">
+            <i class="fas fa-shield-alt text-indigo-600 text-base shrink-0"></i>
+            <div>
+              <span class="font-extrabold block">Vista Administrador General</span>
+              <span class="text-[11px] text-indigo-800">Acceso integral a dashboard de registros, métricas y control de permisos.</span>
+            </div>
+          </div>
+          <a id="profile-modal-admin-btn" href="admin.html" class="w-full py-3 bg-gradient-to-r from-wes-blue to-slate-900 hover:from-slate-900 hover:to-wes-blue text-white rounded-xl text-xs font-black shadow-md transition flex items-center justify-center space-x-2 border border-wes-gold/40">
+            <i class="fas fa-tachometer-alt text-wes-gold text-sm"></i>
+            <span>Acceder al Panel de Control Admin</span>
+          </a>
+          <a href="servicio-tecnico.html" target="_blank" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+            <i class="fas fa-tv text-wes-gold"></i>
+            <span>Tablero KDS de Taller</span>
+          </a>
+          <button onclick="closeUserProfileModal(); openTecnicoExternoPortal();" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+            <i class="fas fa-truck-pickup text-emerald-600"></i>
+            <span>Ver Portal de Campo</span>
+          </button>
+        </div>
 
         <!-- Cerrar Sesión -->
         <button onclick="closeUserProfileModal(); handleLogout();" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-rose-200/60">
@@ -2866,14 +2928,16 @@
         <!-- PESTAÑA 2: REGISTRO DE CLIENTE                 -->
         <!-- ============================================== -->
         <div id="auth-content-register" class="hidden">
-          <div class="mb-4 p-2.5 bg-amber-50 rounded-xl border border-amber-200/80 text-[11px] text-amber-900 flex items-center space-x-2">
-            <i class="fas fa-info-circle text-wes-gold shrink-0 text-sm"></i>
-            <span><strong>El registro es 100% opcional.</strong> Te enviaremos un código de 4 dígitos a tu correo para configurar tu clave.</span>
+                    <div class="mb-4 p-3 bg-gradient-to-r from-amber-50 to-blue-50 border border-amber-200/80 rounded-2xl flex items-center space-x-2.5 text-xs text-slate-700 shadow-xs">
+            <span class="w-7 h-7 rounded-lg bg-wes-blue text-wes-gold flex items-center justify-center shrink-0 text-xs">
+              <i class="fas fa-shield-alt"></i>
+            </span>
+            <span><strong>Acceso Inmediato WES:</strong> Ingresa tus datos y contraseña dos veces para entrar automáticamente al sistema y habilitar tu vista personalizada.</span>
           </div>
 
-          <form id="form-user-register" onsubmit="handleUserRegisterSubmit(event)" class="space-y-4">
+          <form id="form-user-register" onsubmit="handleUserRegisterSubmit(event)" class="space-y-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nombre Completo</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo *</label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <i class="fas fa-user text-xs"></i>
@@ -2883,7 +2947,7 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo Electrónico</label>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico *</label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <i class="fas fa-envelope text-xs"></i>
@@ -2892,12 +2956,44 @@
               </div>
             </div>
 
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono o WhatsApp <span class="text-slate-400 font-normal">(Recomendado)</span></label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fas fa-phone text-xs"></i>
+                </span>
+                <input type="tel" id="register-phone" placeholder="809-000-0000" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Crear Contraseña *</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fas fa-lock text-xs"></i>
+                  </span>
+                  <input type="password" id="register-password" required minlength="6" placeholder="Mínimo 6 car." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Repetir Contraseña *</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fas fa-check-double text-xs"></i>
+                  </span>
+                  <input type="password" id="register-password-confirm" required minlength="6" placeholder="Confirmar clave" class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                </div>
+              </div>
+            </div>
+
             <!-- Alerta dinámica -->
             <div id="register-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
 
-            <button type="submit" id="register-submit-btn" class="w-full py-3 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
-              <i class="fas fa-paper-plane text-xs"></i>
-              <span>Continuar con Código de 4 Dígitos</span>
+            <button type="submit" id="register-submit-btn" class="w-full py-3 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2 mt-2">
+              <i class="fas fa-user-check text-xs"></i>
+              <span>Crear Cuenta y Acceder Directamente</span>
             </button>
           </form>
 
@@ -3045,6 +3141,154 @@
   </div>
 
   <!-- ========================================================= -->
+  <!-- MODAL / PORTAL: VISTA TÉCNICO EXTERNO (OPERACIONES CAMPO) -->
+  <!-- ========================================================= -->
+  <div id="modal-tecnico-externo" class="fixed inset-0 z-[75] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all flex flex-col max-h-[90vh]">
+      
+      <!-- Encabezado -->
+      <div class="bg-gradient-to-r from-emerald-800 via-slate-900 to-wes-dark px-6 py-5 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center text-lg shadow-inner">
+            <i class="fas fa-truck-pickup"></i>
+          </span>
+          <div>
+            <h3 class="text-base font-extrabold font-brand text-white flex items-center space-x-2">
+              <span>Portal Técnico de Campo WES</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-400 text-slate-950">Operaciones en Terreno</span>
+            </h3>
+            <p class="text-xs text-slate-300">Órdenes de servicio asignadas, checklists de instalación y subida de evidencia técnica.</p>
+          </div>
+        </div>
+        <button onclick="closeTecnicoExternoPortal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition" title="Cerrar ventana">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Contenido Scrollable -->
+      <div class="p-6 space-y-5 overflow-y-auto flex-1 bg-slate-50/50">
+        
+        <!-- Tarjeta de Estado del Técnico -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div>
+              <div id="ext-tech-name" class="font-bold text-slate-800 text-sm">Técnico Externo Asignado</div>
+              <div class="text-xs text-emerald-600 font-semibold flex items-center space-x-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>En servicio / Moca y región del Cibao</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-xs text-slate-500 font-mono bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+            Fecha: <span class="font-bold text-slate-700">Noviembre 2026</span>
+          </div>
+        </div>
+
+        <!-- Órdenes de Terreno Asignadas -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5">
+              <i class="fas fa-clipboard-list text-emerald-600"></i>
+              <span>Órdenes de Trabajo en Terreno Asignadas</span>
+            </h4>
+            <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">2 Pendientes</span>
+          </div>
+
+          <div class="space-y-3">
+            <!-- Orden 1 -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs hover:border-emerald-300 transition space-y-3">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="font-mono text-xs font-extrabold text-wes-blue">OT-2026-F01</span>
+                  <h5 class="text-xs font-bold text-slate-800 mt-0.5">Instalación y Configuración Motor CAME BXV 600kg</h5>
+                  <p class="text-[11px] text-slate-500">Cliente: Don Carlos Peña • Calle Duarte #45, Moca</p>
+                </div>
+                <span class="px-2 py-0.5 bg-amber-100 text-amber-800 font-bold text-[10px] rounded-full">En Progreso</span>
+              </div>
+
+              <!-- Checklist rápido -->
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+                <div class="font-bold text-slate-700 text-[11px]">Checklist de Calidad en Sitio:</div>
+                <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
+                  <input type="checkbox" checked class="rounded text-emerald-600 focus:ring-emerald-500">
+                  <span>Alineación y fijación de cremallera metálica</span>
+                </label>
+                <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
+                  <input type="checkbox" checked class="rounded text-emerald-600 focus:ring-emerald-500">
+                  <span>Conexión de fotoceldas de seguridad DIR10</span>
+                </label>
+                <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
+                  <input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500">
+                  <span>Memorización de controles remotos y prueba de paro suave</span>
+                </label>
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <label class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer transition">
+                  <i class="fas fa-camera text-slate-500"></i>
+                  <span>Subir Evidencia Foto</span>
+                  <input type="file" accept="image/*" class="hidden" onchange="showToast('Evidencia fotográfica adjuntada correctamente', 'success')">
+                </label>
+                <button type="button" onclick="showToast('Orden OT-2026-F01 completada exitosamente', 'success')" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-xs">
+                  <i class="fas fa-check mr-1"></i> Finalizar Trabajo
+                </button>
+              </div>
+            </div>
+
+            <!-- Orden 2 -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs hover:border-emerald-300 transition space-y-3">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="font-mono text-xs font-extrabold text-wes-blue">OT-2026-F02</span>
+                  <h5 class="text-xs font-bold text-slate-800 mt-0.5">Mantenimiento Preventivo CCTV Dahua ColorVu (8 Cámaras)</h5>
+                  <p class="text-[11px] text-slate-500">Cliente: Ferretería El Progreso • Licey al Medio</p>
+                </div>
+                <span class="px-2 py-0.5 bg-blue-100 text-blue-800 font-bold text-[10px] rounded-full">Programada Hoy</span>
+              </div>
+
+              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+                <div class="font-bold text-slate-700 text-[11px]">Checklist de Calidad en Sitio:</div>
+                <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
+                  <input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500">
+                  <span>Limpieza de lentes y ajuste de ángulos de cobertura</span>
+                </label>
+                <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
+                  <input type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500">
+                  <span>Verificación de disco duro del NVR y sincronización de hora</span>
+                </label>
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <label class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer transition">
+                  <i class="fas fa-camera text-slate-500"></i>
+                  <span>Subir Evidencia Foto</span>
+                  <input type="file" accept="image/*" class="hidden" onchange="showToast('Evidencia fotográfica adjuntada correctamente', 'success')">
+                </label>
+                <button type="button" onclick="showToast('Orden OT-2026-F02 completada exitosamente', 'success')" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-xs">
+                  <i class="fas fa-check mr-1"></i> Finalizar Trabajo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pie -->
+      <div class="p-4 bg-white border-t border-slate-200 flex items-center justify-between shrink-0">
+        <span class="text-xs text-slate-500">WES Sistema de Gestión Móvil para Técnicos en Terreno</span>
+        <button onclick="closeTecnicoExternoPortal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
   <!-- CONTENEDOR DE TOAST NOTIFICATIONS                         -->
   <!-- ========================================================= -->
   <div id="toast-container" class="fixed bottom-6 left-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
@@ -3057,10 +3301,10 @@
   <script src="js/supabase_client.js?v=20261026_0955"></script>
   <script src="js/feature_flags.js?v=20261031_1355"></script>
   <script src="js/admin_auth.js?v=20261010_2120"></script>
-  <script src="js/user_auth.js?v=20261010_2120"></script>
+  <script src="js/user_auth.js?v=20261102_1000"></script>
   <script src="js/servicio_tecnico.js?v=20261026_1500"></script>
-  <script src="js/chat_cliente.js?v=20261101_2330"></script>
-  <script src="js/app.js?v=20261010_2120"></script>
+  <script src="js/chat_cliente.js?v=20261102_1000"></script>
+  <script src="js/app.js?v=20261102_1000"></script>
   <script src="js/pwa-install.js?v=20261010_2120"></script>
 </body>
 </html>

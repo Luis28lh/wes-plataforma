@@ -52,7 +52,28 @@ const ROLE_DEFINITIONS = {
     description: 'Acceso en modo solo lectura para auditorías y revisiones de información.',
     badgeClass: 'bg-slate-100 text-slate-700 border-slate-300',
     color: '#475569'
-  }
+  },
+  tecnico_interno: {
+    id: 'tecnico_interno',
+    name: 'Técnico Interno WES',
+    description: 'Acceso a Laboratorio y Taller KDS de WES para diagnóstico, pruebas y reparación.',
+    badgeClass: 'bg-blue-100 text-blue-800 border-blue-300',
+    color: '#0284C7'
+  },
+  tecnico_externo: {
+    id: 'tecnico_externo',
+    name: 'Técnico Externo',
+    description: 'Acceso a Portal de Campo para visitas técnicas, instalación y evidencias fotográficas.',
+    badgeClass: 'bg-amber-100 text-amber-800 border-amber-300',
+    color: '#D97706'
+  },
+  cliente: {
+    id: 'cliente',
+    name: 'Cliente WES',
+    description: 'Acceso a portal de cliente: seguimiento de cotizaciones y consulta de tickets propios.',
+    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+    color: '#059669'
+  },
 };
 
 const MODULE_DEFINITIONS = [
@@ -62,7 +83,7 @@ const MODULE_DEFINITIONS = [
   { id: 'soportes', name: 'Soporte Técnico', icon: 'fa-tools' },
   { id: 'contactos', name: 'Mensajes Contacto', icon: 'fa-envelope-open-text' },
   { id: 'contenido', name: 'Contenido Web', icon: 'fa-edit' },
-  { id: 'usuarios', name: 'Usuarios y Roles', icon: 'fa-users-cog' },
+  { id: 'usuarios', name: 'Usuarios & Registros', icon: 'fa-users' },
   { id: 'ajustes', name: 'Ajustes & Toggles', icon: 'fa-sliders-h' },
   { id: 'auditoria', name: 'Historial Auditoría', icon: 'fa-history' }
 ];

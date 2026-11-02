@@ -3103,83 +3103,88 @@ function handleUserLoginSubmit(e) {
   }, 350);
 }
 
-// HANDLER DE REGISTRO DE CLIENTE (SOLO NOMBRE Y CORREO)
+// REGISTRO DIRECTO DE CLIENTE CON CONTRASEÑA (DOBLE CONFIRMACIÓN Y ACCESO INMEDIATO)
 async function handleUserRegisterSubmit(e) {
   e.preventDefault();
   clearAuthAlerts();
 
   const nameInput = document.getElementById('register-name');
   const emailInput = document.getElementById('register-email');
+  const phoneInput = document.getElementById('register-phone');
+  const passInput = document.getElementById('register-password');
+  const passConfirmInput = document.getElementById('register-password-confirm');
   const submitBtn = document.getElementById('register-submit-btn');
 
-  if (!nameInput || !emailInput) return;
+  if (!nameInput || !emailInput || !passInput || !passConfirmInput) return;
 
   const name = nameInput.value.trim();
   const email = emailInput.value.trim().toLowerCase();
+  const phone = phoneInput ? phoneInput.value.trim() : '';
+  const password = passInput.value;
+  const confirmPassword = passConfirmInput.value;
+
+  if (password.length < 6) {
+    showAuthAlert('register-alert-box', 'La contraseña debe tener un mínimo de 6 caracteres.', 'warning');
+    passInput.focus();
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showAuthAlert('register-alert-box', 'Las contraseñas no coinciden. Por favor verifícalas.', 'warning');
+    passConfirmInput.focus();
+    return;
+  }
 
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando código de 4 dígitos...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Creando cuenta e iniciando sesión...';
   }
 
   try {
-    const res = await UserAuth.requestRegistrationOtp(name, email);
+    const res = await UserAuth.registerClient({
+      name,
+      email,
+      phone,
+      password,
+      confirmPassword
+    });
 
     if (!res.success) {
-      showAuthAlert('register-alert-box', res.message, 'error');
+      showAuthAlert('register-alert-box', res.message || 'Error al completar el registro.', 'error');
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-paper-plane text-xs mr-1"></i> Continuar con Código de 4 Dígitos';
+        submitBtn.innerHTML = '<i class="fas fa-user-check text-xs mr-1"></i> Crear Cuenta y Acceder Directamente';
       }
       return;
     }
 
-    recoveryCurrentEmail = email;
-    recoveryCurrentName = name;
-    recoveryMode = 'registration';
-    recoveryDemoCode = res.codeDemo || '';
+    // Registro y login automático completado
+    closeAuthModal();
+    updateAuthHeaderUI();
+    showToast(`¡Bienvenido a Warn Electrical Services, ${res.user.name || 'Cliente'}!`, 'success');
 
-    // Cambiar vista a ingreso de código OTP
-    const tabsBar = document.getElementById('auth-tabs-bar');
-    const contentLogin = document.getElementById('auth-content-login');
-    const contentRegister = document.getElementById('auth-content-register');
-    const contentRecovery = document.getElementById('auth-content-recovery');
-    const title = document.getElementById('auth-modal-title');
-    const subtitle = document.getElementById('auth-modal-subtitle');
+    // Limpiar campos del formulario
+    nameInput.value = '';
+    emailInput.value = '';
+    if (phoneInput) phoneInput.value = '';
+    passInput.value = '';
+    passConfirmInput.value = '';
 
-    if (tabsBar) tabsBar.classList.add('hidden');
-    if (contentLogin) contentLogin.classList.add('hidden');
-    if (contentRegister) contentRegister.classList.add('hidden');
-    if (contentRecovery) contentRecovery.classList.remove('hidden');
-
-    if (title) title.textContent = 'Configurar Contraseña';
-    if (subtitle) subtitle.textContent = 'Código de seguridad de 4 dígitos enviado por correo';
-
-    const displayEmail = document.getElementById('recovery-target-email-display');
-    if (displayEmail) displayEmail.textContent = email;
-
-    const demoBanner = document.getElementById('recovery-demo-code-banner');
-    const demoVal = document.getElementById('recovery-demo-code-val');
-    if (demoBanner && demoVal && res.codeDemo) {
-      demoVal.textContent = res.codeDemo;
-      demoBanner.classList.remove('hidden');
-    }
-
-    showRecoveryStep(2);
-    setupOtpInputs();
-    showToast(`Código de 4 dígitos enviado a ${email}`, 'info');
+    // Abrir directamente la vista personalizada correspondiente
+    setTimeout(() => {
+      openUserProfileModal();
+    }, 350);
 
   } catch (err) {
     console.error(err);
-    showAuthAlert('register-alert-box', 'Error al procesar el registro.', 'error');
+    showAuthAlert('register-alert-box', 'Error inesperado al procesar el registro.', 'error');
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fas fa-paper-plane text-xs mr-1"></i> Continuar con Código de 4 Dígitos';
+      submitBtn.innerHTML = '<i class="fas fa-user-check text-xs mr-1"></i> Crear Cuenta y Acceder Directamente';
     }
   }
 }
-
 // RECUPERACIÓN - PASO 1 (SOLICITAR CÓDIGO)
 async function handleRecoveryStep1(e) {
   e.preventDefault();
@@ -3408,30 +3413,56 @@ function openUserProfileModal() {
   const roleEl = document.getElementById('profile-modal-role');
   const emailEl = document.getElementById('profile-modal-email');
   const phoneEl = document.getElementById('profile-modal-phone');
-  const adminBtn = document.getElementById('profile-modal-admin-btn');
-  const quotesBtn = document.getElementById('profile-modal-quotes-btn');
 
   if (avatarEl) avatarEl.textContent = initials;
-  if (nameEl) nameEl.textContent = user.name;
-  if (emailEl) emailEl.textContent = user.email;
+  if (nameEl) nameEl.textContent = user.name || 'Usuario WES';
+  if (emailEl) emailEl.textContent = user.email || '';
   if (phoneEl) phoneEl.textContent = user.phone || 'No registrado';
 
+  // Determinar rol activo: cliente | tecnico_interno | tecnico_externo | administrador
+  const userRole = (user.role || (user.isEmployee ? 'administrador' : 'cliente')).toLowerCase();
+
   if (roleEl) {
-    roleEl.textContent = user.roleLabel || (user.isEmployee ? 'Personal WES' : 'Cliente WES');
-    roleEl.className = user.isEmployee 
-      ? 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-blue text-wes-gold border border-wes-gold/50 shadow-sm'
-      : 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm';
+    if (userRole === 'tecnico_interno') {
+      roleEl.textContent = '🔬 Técnico Interno WES';
+      roleEl.className = 'inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 shadow-sm';
+    } else if (userRole === 'tecnico_externo') {
+      roleEl.textContent = '🚗 Técnico Externo';
+      roleEl.className = 'inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-slate-950 shadow-sm';
+    } else if (userRole === 'administrador' || userRole === 'propietario' || user.isEmployee) {
+      roleEl.textContent = '🛡️ Administrador General';
+      roleEl.className = 'inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-blue text-wes-gold border border-wes-gold/50 shadow-sm';
+    } else {
+      roleEl.textContent = '👤 Cliente Registrado';
+      roleEl.className = 'inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm';
+    }
   }
 
-  if (adminBtn) {
-    if (user.isEmployee) adminBtn.classList.remove('hidden');
-    else adminBtn.classList.add('hidden');
+  // Activar contenedor de vista correspondiente para evitar abrumar al usuario
+  const viewCliente = document.getElementById('profile-view-cliente');
+  const viewTecInterno = document.getElementById('profile-view-tecnico-interno');
+  const viewTecExterno = document.getElementById('profile-view-tecnico-externo');
+  const viewAdmin = document.getElementById('profile-view-admin');
+
+  if (viewCliente) viewCliente.classList.add('hidden');
+  if (viewTecInterno) viewTecInterno.classList.add('hidden');
+  if (viewTecExterno) viewTecExterno.classList.add('hidden');
+  if (viewAdmin) viewAdmin.classList.add('hidden');
+
+  if (userRole === 'tecnico_interno') {
+    if (viewTecInterno) viewTecInterno.classList.remove('hidden');
+  } else if (userRole === 'tecnico_externo') {
+    if (viewTecExterno) viewTecExterno.classList.remove('hidden');
+  } else if (userRole === 'administrador' || userRole === 'propietario' || user.isEmployee) {
+    if (viewAdmin) viewAdmin.classList.remove('hidden');
+  } else {
+    // Vista Cliente por defecto
+    if (viewCliente) viewCliente.classList.remove('hidden');
   }
 
-  if (quotesBtn) {
-    if (user.isEmployee) quotesBtn.classList.add('hidden');
-    else quotesBtn.classList.remove('hidden');
-  }
+  // Actualizar nombre en el portal externo si aplica
+  const extName = document.getElementById('ext-tech-name');
+  if (extName) extName.textContent = user.name || 'Técnico Externo WES';
 
   modal.classList.remove('hidden');
   modal.style.display = 'flex';
@@ -3440,6 +3471,35 @@ function openUserProfileModal() {
 
 function closeUserProfileModal() {
   const modal = document.getElementById('user-profile-modal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
+  document.body.classList.remove('overflow-hidden');
+}
+
+// ----------------------------------------------------------------------------
+// PORTAL DE TÉCNICO EXTERNO (VISTA DE CAMPO)
+// ----------------------------------------------------------------------------
+function openTecnicoExternoPortal() {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+  if (typeof closeUserProfileModal === 'function') closeUserProfileModal();
+
+  const modal = document.getElementById('modal-tecnico-externo');
+  if (!modal) return;
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  const extName = document.getElementById('ext-tech-name');
+  if (extName && user) {
+    extName.textContent = user.name || 'Técnico Externo Asignado';
+  }
+
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeTecnicoExternoPortal() {
+  const modal = document.getElementById('modal-tecnico-externo');
   if (!modal) return;
   modal.classList.add('hidden');
   modal.style.display = 'none';
