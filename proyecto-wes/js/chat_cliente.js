@@ -247,18 +247,23 @@
     const msgContainer = document.getElementById('wes-chat-messages');
     if (!msgContainer) return null;
 
+    const existing = document.getElementById('wes-chat-typing');
+    if (existing) return existing;
+
     const div = document.createElement('div');
     div.id = 'wes-chat-typing';
     div.className = 'flex items-start space-x-2 animate-fadeIn';
     div.innerHTML = `
-      <div class="w-7 h-7 rounded-full bg-wes-blue text-wes-gold flex items-center justify-center text-xs shrink-0 mt-0.5 shadow-xs">
+      <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-wes-dark via-wes-blue to-slate-900 text-wes-gold flex items-center justify-center text-xs shrink-0 mt-0.5 shadow-xs border border-wes-gold/30">
         <i class="fas fa-robot animate-pulse"></i>
       </div>
-      <div class="bg-white px-3.5 py-2.5 rounded-2xl rounded-tl-none border border-slate-200/90 shadow-xs text-slate-500 text-xs flex items-center space-x-1.5">
-        <span class="w-1.5 h-1.5 bg-wes-gold rounded-full animate-bounce"></span>
-        <span class="w-1.5 h-1.5 bg-wes-gold rounded-full animate-bounce [animation-delay:0.15s]"></span>
-        <span class="w-1.5 h-1.5 bg-wes-gold rounded-full animate-bounce [animation-delay:0.3s]"></span>
-        <span class="ml-1 text-[11px] text-slate-500 font-medium">Asistente WES consultando...</span>
+      <div class="bg-white px-3.5 py-2.5 rounded-2xl rounded-tl-none border border-slate-200/90 shadow-xs text-slate-600 text-xs flex items-center space-x-2">
+        <div class="flex items-center space-x-1">
+          <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0s;"></span>
+          <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.18s;"></span>
+          <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.36s;"></span>
+        </div>
+        <span class="text-[11px] font-medium text-slate-500">Asistente WES está escribiendo...</span>
       </div>
     `;
     msgContainer.appendChild(div);
@@ -271,6 +276,19 @@
     if (el) el.remove();
   }
 
+  // Simular tiempo de digitación / razonamiento natural humano (entre 3.5s y 5.5s, promedio ~4.5s - 5s)
+  function getNaturalTypingDelay(replyText = '') {
+    const textLen = replyText ? replyText.length : 150;
+    if (textLen < 120) {
+      return 3200 + Math.floor(Math.random() * 1000); // 3.2s a 4.2s
+    } else if (textLen > 400) {
+      return 4500 + Math.floor(Math.random() * 1200); // 4.5s a 5.7s (~5 segundos)
+    } else {
+      return 3800 + Math.floor(Math.random() * 1400); // 3.8s a 5.2s (~5 segundos)
+    }
+  }
+
+  const PROMPT_VERSION = '3.1 - WES Conversacional & Escalación';
   const DEFAULT_SYSTEM_PROMPT = `Eres el Asistente Técnico y Asesor Comercial Oficial de Warn Electrical Services, SRL (WES). Atiendes a cada cliente en Moca y toda la República Dominicana con la misma calidez, seriedad, profesionalismo y vocación de servicio que el equipo fundador de la empresa (Luis Miguel Lizardo, Gerente General; Stephano Vásquez, Director de Ventas; y Yaneiry Díaz, Directora Administrativa).
 
 Tu misión es representar fielmente a Warn Electrical Services: escuchar con atención la necesidad del cliente, asesorarlo con dominio técnico en nuestras soluciones, resolver sus dudas con empatía y orientarlo para solicitar una cotización, programar una visita técnica o ingresar su equipo a nuestro taller.
@@ -283,7 +301,7 @@ Tu misión es representar fielmente a Warn Electrical Services: escuchar con ate
 - Sede Principal: Moca, Provincia Espaillat, República Dominicana.
 - Cobertura Geográfica: Moca, Licey al Medio, Santiago, La Vega, Salcedo, San Francisco de Macorís y toda la región del Cibao (con capacidad para proyectos en todo el país).
 - Teléfono Oficial de Oficina: (809) 578-0000.
-- WhatsApp Directo de Ventas y Soporte: +1 (849) 207-5474 (enlace directo: https://wa.me/18492075474).
+- WhatsApp Directo de Ventas y Soporte: +1 (849) 207-5474.
 - Horarios de Operación: Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM.
 - Liderazgo de la Empresa:
   * Luis Miguel Lizardo: Fundador & Gerente General (Dirección estratégica e ingeniería).
@@ -329,19 +347,40 @@ E. TALLER DE SERVICIO Y TABLERO KDS DE TICKETS:
 ════════════════════════════════════════════════════════════════
 3. REGLAS DE ATENCIÓN Y COMPORTAMIENTO (COMO SI FUERAS EL DUEÑO)
 ════════════════════════════════════════════════════════════════
-1. Habla en Primera Persona del Plural: Habla como miembro activo de Warn Electrical Services ("En WES le ofrecemos...", "Con gusto le coordinamos una visita...", "Nuestros técnicos en Moca...", "Para nosotros es un honor servirle...").
-2. Calidez y Cortesía Dominicana: Saluda de forma entusiasta, respetuosa y profesional. Muestra disposición genuina de ayudar al cliente en todo momento.
-3. Si el cliente pregunta "¿En qué me puede ayudar?", "¿Qué hacen?" o hace una consulta general:
-   - Dale una bienvenida cordial y afectuosa a Warn Electrical Services (WES).
-   - Explícale de forma ordenada y atractiva nuestras 4 soluciones clave (Motores CAME para portones, Taller de reparación de inversores y baterías, Cámaras de seguridad CCTV, y Controles de acceso/electricidad).
-   - Hazle una pregunta de cierre cordial para conocer su caso: "¿Tiene en mente algún proyecto en particular o requiere asistencia técnica para algún equipo en su hogar o negocio?".
-4. Precios y Cotizaciones:
-   - Nunca inventes un precio cerrado sin conocer los datos del proyecto.
-   - Explica con transparencia que en WES cada instalación se calcula a la medida para garantizar que el equipo sea el adecuado y dure muchos años (por ejemplo: el motor depende del peso y uso del portón; las cámaras, de la cantidad de áreas y distancias; los inversores, de la carga eléctrica).
-   - Invítalo amablemente a cotizar sin costo ni compromiso enviándonos fotos o detalles a nuestro WhatsApp (849) 207-5474 o solicitando una visita técnica en sitio.
-5. Reporte de Averías o Reparaciones:
-   - Si el cliente dice que un motor, inversor o cámara no funciona, escúchalo con empatía, pídele detalles del síntoma (marca, modelo, qué hace o qué no hace) y dile que con gusto nuestros técnicos en Moca pueden revisarlo a fondo en nuestro laboratorio o agendar una revisión en su domicilio.
-6. Formato de Respuesta:
+1. Habla en Primera Persona del Plural: Habla como miembro activo de Warn Electrical Services ("En WES le ofrecemos...", "Con gusto le coordinamos...", "Nuestros técnicos en Moca...", "Para nosotros es un honor servirle...").
+2. Calidez, Cortesía Dominicana y Profesionalismo: Saluda de forma entusiasta, respetuosa y atenta. Muestra disposición genuina de ayudar al cliente en todo momento.
+
+3. RETENCIÓN MÁXIMA EN EL CHAT WEB (INTERACCIÓN NATIVA):
+   - Mantén la conversación fluida y activa dentro de este chat lo más que se pueda. Atiende y asesora al cliente directamente aquí sin desviarlo prematuramente a WhatsApp ni a enlaces externos.
+   - NUNCA digas "haz clic en los botones de abajo", "presiona el botón", "haz clic en Hablar con un Asesor" ni nada semejante, ya que la interfaz no tiene botones externos; toda la interacción se realiza de forma puramente conversacional por texto.
+   - Responde con amplitud y dominio técnico a consultas sobre motores CAME (BXV 400 a 1000kg, batientes), inversores (Trace, Magnum, Outback), cámaras CCTV (Dahua, Hikvision, DMSS), controles de acceso (ZKTeco) y tickets de taller (SRV-YYYY-XXXX).
+
+4. PROTOCOLO DE COTIZACIÓN Y VENTAS (SOLICITUD DE PRESUPUESTO O PRECIOS FORMALES):
+   - Nunca inventes precios cerrados de instalaciones complejas sin datos del proyecto.
+   - Explica de forma general los factores que determinan el costo (peso del portón, capacidad del inversor, cantidad de cámaras).
+   - Para prepararle una cotización formal y personalizada, solicita amablemente sus datos dentro del chat:
+     * Nombre completo
+     * Teléfono o WhatsApp de contacto
+     * Ubicación del proyecto o propiedad (Moca, Santiago, etc.)
+     * Detalles específicos de lo que desea instalar o cotizar
+   - Una vez el cliente te brinde sus datos o confirme su interés, dile exactamente con cortesía y profesionalismo:
+     "Uno de nuestros asesores comerciales le estará llamando directamente para validar y contrastar la información que nos ha brindado y entregarle su cotización formal personalizada."
+
+5. PROTOCOLO DE SOPORTE TÉCNICO, AVERÍAS O VISITAS TÉCNICAS:
+   - Si el cliente reporta que un equipo no funciona o solicita servicio técnico o revisión en sitio:
+     * Escúchale con empatía y recopila dentro del chat los detalles necesarios:
+       * Nombre completo
+       * Teléfono o WhatsApp de contacto
+       * Marca y modelo del equipo
+       * Falla o síntoma que presenta
+       * Dirección o ubicación del lugar
+   - Una vez recopilados los datos (o cuando se coordine la atención técnica), dile exactamente:
+     "Uno de nuestros técnicos humanos y de proyectos le estará llamando para contrastar la información técnica que nos ha brindado y coordinar la atención, revisión o visita técnica correspondiente."
+
+6. LÍMITES DE CONOCIMIENTO (LO QUE EL ASISTENTE NO DOMINE):
+   - Si el cliente pregunta algo muy especializado, atípico o fuera del alcance de la base de conocimientos, no improvises. Dile con honestidad y cortesía que con gusto tomas su Nombre y Teléfono, y que "uno de nuestros especialistas le estará llamando para contrastar sus requerimientos y brindarle una solución precisa".
+
+7. FORMATO DE RESPUESTA:
    - Estructura las respuestas con viñetas limpias, buena puntuación y emojis sobrios y profesionales.
    - Entrega SIEMPRE respuestas completas, fluidas y bien redactadas. Jamás cortes una respuesta a la mitad.`;
 
@@ -371,9 +410,16 @@ E. TALLER DE SERVICIO Y TABLERO KDS DE TICKETS:
           preferredModel = 'gemini-2.0-flash';
         }
 
-        // Si el prompt guardado es breve o versión vieja, usar el prompt empresarial 3.0
+        // Si el prompt guardado es breve o versión anterior, actualizar a la versión 3.1
+        const targetPromptVer = '3.1 - WES Conversacional & Escalación';
         const rawPrompt = aiConfig.systemPrompt || '';
-        const systemPrompt = (rawPrompt.length > 500) ? rawPrompt : DEFAULT_SYSTEM_PROMPT;
+        const needsUpgrade = !aiConfig.promptVersion || aiConfig.promptVersion !== targetPromptVer || rawPrompt.length < 500;
+        const systemPrompt = needsUpgrade ? DEFAULT_SYSTEM_PROMPT : rawPrompt;
+        if (needsUpgrade) {
+          aiConfig.promptVersion = targetPromptVer;
+          aiConfig.systemPrompt = DEFAULT_SYSTEM_PROMPT;
+          try { localStorage.setItem('wes_ai_config', JSON.stringify(aiConfig)); } catch (e) {}
+        }
         const temperature = aiConfig.temperature !== undefined ? Number(aiConfig.temperature) : 0.7;
         const maxTokens = Math.max(Number(aiConfig.maxTokens) || 800, 800);
 
@@ -610,12 +656,7 @@ E. TALLER DE SERVICIO Y TABLERO KDS DE TICKETS:
           <p class="text-[11px] text-rose-700">Verifica el número de orden (ej. <code>SRV-2026-0001</code>) o el teléfono con el que fue registrado.</p>
         </div>
         <p class="text-slate-600">¿Deseas que un técnico de recepción te asista directamente?</p>
-        <div class="pt-2 flex items-center space-x-2">
-          <a href="${WES_KB.empresa.whatsappUrl}?text=${encodeURIComponent('Hola WES, quisiera consultar el estatus de mi orden pero no tengo a mano el código exacto.')}" target="_blank" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs transition inline-flex items-center space-x-1">
-            <i class="fab fa-whatsapp"></i>
-            <span>Consultar por WhatsApp</span>
-          </a>
-        </div>
+        <p class="text-[11px] text-slate-600 mt-2">Si no recuerda su número de ticket, por favor indíquenos en este chat su Nombre completo y Teléfono registrado para ayudarle a ubicar su equipo en el taller.</p>
       `);
       return;
     }
@@ -662,10 +703,7 @@ E. TALLER DE SERVICIO Y TABLERO KDS DE TICKETS:
         </div>
         <div class="pt-1 flex items-center justify-between text-[10px]">
           <span class="text-slate-400 font-medium">Prioridad: <strong>${escapeHtml(ticket.priority || 'Normal')}</strong></span>
-          <a href="${WES_KB.empresa.whatsappUrl}?text=${encodeURIComponent(`Hola WES, estoy consultando mi orden ${ticket.id} (${ticket.clientName}) y quisiera una actualización.`)}" target="_blank" class="text-emerald-700 font-bold hover:underline flex items-center space-x-1">
-            <i class="fab fa-whatsapp"></i>
-            <span>Hablar con el Taller</span>
-          </a>
+          <span class="text-slate-500 font-semibold">Taller WES Moca</span>
         </div>
       </div>
     `);
@@ -794,161 +832,150 @@ E. TALLER DE SERVICIO Y TABLERO KDS DE TICKETS:
   async function handleChatSubmit(e) {
     if (e && e.preventDefault) e.preventDefault();
     const input = document.getElementById('wes-chat-user-input');
+    const submitBtn = document.querySelector('#wes-chat-input-form button[type="submit"]');
     if (!input || !input.value.trim()) return;
 
     const query = input.value.trim();
     input.value = '';
+
+    // Bloquear controles mientras el asistente analiza y escribe la respuesta
+    input.disabled = true;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+    const origPlaceholder = input.placeholder || 'Escribe tu consulta o número de ticket...';
+    input.placeholder = 'Asistente WES está escribiendo...';
+
     appendUserMessage(query);
 
-    // 1. Si estábamos esperando el código del ticket
-    if (chatSession.step === 'awaiting_ticket_query') {
-      executeTicketSearch(query);
-      return;
-    }
-
-    // 2. Si estábamos en el flujo de borrador de ticket
-    if (chatSession.step === 'drafting_ticket') {
-      handleDraftParsing(query);
-      return;
-    }
-
-    const lower = query.toLowerCase();
-
-    // 3. Detección automática si el usuario escribió un código de ticket directamente
-    if (/^(SRV|TKT|\d{4})/i.test(query) || (lower.includes('srv-') && lower.match(/srv-\d{4}-\d{4}/i))) {
-      executeTicketSearch(query);
-      return;
-    }
-
-    // 4. Saludos
-    if (/(hola|buenos d|buenas t|buenas n|saludos|hey|klk)/i.test(lower)) {
-      appendBotMessage(`
-        <p>¡Hola! Un placer saludarte. Soy el Asistente de <strong>Warn Electrical Services (WES)</strong> en Moca.</p>
-        <p class="text-slate-600 mt-1">¿Deseas consultar un ticket técnico, cotizar un motor de portón, o pedir información de inversores y cámaras?</p>
-      `);
-      return;
-    }
-
-    // 5. Intención de consultar ticket
-    if (/(ticket|estatus|estado|mi orden|como va|reparacion|mi equipo)/i.test(lower)) {
-      chatSession.step = 'awaiting_ticket_query';
-      appendBotMessage(`
-        <p class="font-bold text-slate-900 mb-1">🔍 Consulta de Ticket Técnico</p>
-        <p class="text-slate-600">Por favor indícame el <strong>código de tu ticket</strong> (ej. <code>SRV-2026-0001</code>) o tu número de teléfono registrado:</p>
-      `);
-      return;
-    }
-
-    // 6. Intención de motores o portones
-    if (/(motor|porton|came|corredizo|batiente|bxv|cremallera)/i.test(lower)) {
-      handleQuickChipClick('motores');
-      return;
-    }
-
-    // 7. Intención de inversores o energía
-    if (/(inversor|bateria|trace|magnum|outback|energia|planta|solar)/i.test(lower)) {
-      handleQuickChipClick('inversores');
-      return;
-    }
-
-    // 8. Intención de cámaras, CCTV o alarmas
-    if (/(camara|cctv|dahua|hikvision|alarma|sensor|nvr|dvr)/i.test(lower)) {
-      appendBotMessage(`
-        <p class="font-bold text-slate-900 mb-1">📹 Seguridad Electrónica & Cámaras CCTV</p>
-        <p class="text-slate-600 mb-2">${WES_KB.servicios[2].detalle}</p>
-        <p class="text-slate-600 mb-2">Instalamos kits completos con acceso en vivo desde tu teléfono Android o iPhone en cualquier parte del mundo.</p>
-        <a href="${WES_KB.empresa.whatsappUrl}?text=${encodeURIComponent('Hola WES, quisiera cotizar una instalación de cámaras de seguridad.')}" target="_blank" class="inline-flex items-center space-x-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs transition">
-          <i class="fab fa-whatsapp"></i>
-          <span>Cotizar Sistema CCTV</span>
-        </a>
-      `);
-      return;
-    }
-
-    // 9. Horarios o ubicación
-    if (/(horario|donde estan|ubicacion|direccion|moca|abierto|telefono|contacto)/i.test(lower)) {
-      handleQuickChipClick('horarios');
-      return;
-    }
-
-    // 10. Solicitud de nuevo servicio o reparación
-    if (/(reparar|arreglar|falla|dañado|no prende|no abre|mantenimiento|servicio)/i.test(lower)) {
-      startServiceRequestFlow();
-      return;
-    }
-
-    // Consultar al backend de IA (Cloudflare Pages Function /api/chat)
+    const startTime = Date.now();
     appendTypingIndicator();
-    const aiResult = await queryAIBackend(query);
-    removeTypingIndicator();
 
-    if (aiResult && aiResult.ok && aiResult.reply) {
+    try {
+      // 1. Si estábamos esperando el código del ticket
+      if (chatSession.step === 'awaiting_ticket_query') {
+        const targetDelay = 2200 + Math.floor(Math.random() * 800);
+        const elapsed = Date.now() - startTime;
+        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
+        removeTypingIndicator();
+        executeTicketSearch(query);
+        return;
+      }
+
+      // 2. Si estábamos en el flujo de borrador de ticket
+      if (chatSession.step === 'drafting_ticket') {
+        const targetDelay = 2200 + Math.floor(Math.random() * 800);
+        const elapsed = Date.now() - startTime;
+        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
+        removeTypingIndicator();
+        handleDraftParsing(query);
+        return;
+      }
+
+      const lower = query.toLowerCase().trim();
+
+      // 3. Detección automática si el usuario escribió un código de ticket directamente
+      if (/^(SRV|TKT|\d{4})/i.test(query) || (lower.includes('srv-') && lower.match(/srv-\d{4}-\d{4}/i))) {
+        const targetDelay = 2200 + Math.floor(Math.random() * 800);
+        const elapsed = Date.now() - startTime;
+        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
+        removeTypingIndicator();
+        executeTicketSearch(query);
+        return;
+      }
+
+      // 4. Intención explícita de consultar ticket o estado de orden técnica
+      if (/(consultar ticket|ver ticket|estado de ticket|estatus de orden|consultar orden|ver mi orden|como va mi equipo)/i.test(lower)) {
+        const targetDelay = 2000 + Math.floor(Math.random() * 800);
+        const elapsed = Date.now() - startTime;
+        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
+        removeTypingIndicator();
+        chatSession.step = 'awaiting_ticket_query';
+        appendBotMessage(`
+          <p class="font-bold text-slate-900 mb-1">🔍 Consulta de Ticket Técnico WES</p>
+          <p class="text-slate-600">Por favor indíqueme el <strong>código de su ticket</strong> (ejemplo: <code>SRV-2026-0001</code> o solo <code>0001</code>) o su número de teléfono registrado en el taller:</p>
+        `);
+        return;
+      }
+
+      // 5. Toda consulta conversacional va al backend de Inteligencia Artificial (Google Gemini)
+      const aiResult = await queryAIBackend(query);
+
+      // Calcular tiempo de digitación / razonamiento natural (entre 3.5s y 5.5s, "muchas veces 5 segundos")
+      const replyContent = (aiResult && aiResult.ok && aiResult.reply) ? aiResult.reply : '';
+      const targetDelay = getNaturalTypingDelay(replyContent);
+      const elapsed = Date.now() - startTime;
+      const remaining = targetDelay - elapsed;
+
+      if (remaining > 0) {
+        await new Promise(resolve => setTimeout(resolve, remaining));
+      }
+
+      removeTypingIndicator();
+
+      if (aiResult && aiResult.ok && aiResult.reply) {
+        // Respuesta puramente conversacional en burbuja limpia, SIN botones externos
+        appendBotMessage(`
+          <div class="space-y-2">
+            <div class="flex items-center space-x-1.5 text-[10px] text-amber-700 font-bold uppercase tracking-wider mb-1">
+              <i class="fas fa-sparkles text-amber-500"></i>
+              <span>Respuesta Asistente WES IA</span>
+            </div>
+            <div class="leading-relaxed text-slate-800">
+              ${escapeHtml(aiResult.reply).replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')}
+            </div>
+          </div>
+        `);
+        return;
+      }
+
+      // 6. Respuesta general inteligente y corporativa por defecto de WES (SIN botones externos)
       appendBotMessage(`
-        <div class="space-y-2">
-          <div class="flex items-center space-x-1.5 text-[10px] text-amber-700 font-bold uppercase tracking-wider mb-1">
-            <i class="fas fa-sparkles text-amber-500"></i>
-            <span>Respuesta Asistente WES IA</span>
+        <div class="space-y-3">
+          <div class="p-3 bg-blue-50/80 border border-blue-200 rounded-2xl text-xs space-y-2">
+            <p class="font-bold text-slate-900">
+              ¡Hola! Es un placer saludarle de parte de <strong>Warn Electrical Services, SRL (WES)</strong> en Moca.
+            </p>
+            <p class="text-slate-600 leading-relaxed">
+              Somos especialistas líderes en automatización, seguridad electrónica y energía ininterrumpida para hogares, fincas y empresas en todo el Cibao. Estamos para servirle en:
+            </p>
+            <div class="space-y-1.5 pt-1 text-slate-800">
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-door-open text-amber-500 mt-0.5 shrink-0"></i>
+                <div><strong>Motores para Portones CAME:</strong> Instalación, repuestos (cremalleras, fotoceldas, controles) y reparación de modelos corredizos BXV (400kg a 1000kg) y batientes.</div>
+              </div>
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-car-battery text-emerald-600 mt-0.5 shrink-0"></i>
+                <div><strong>Laboratorio de Inversores & Baterías:</strong> Reparación de tarjetas electrónicas Trace, Magnum y Outback, además de bancos de baterías Forza AGM, Trojan y Litio.</div>
+              </div>
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-video text-blue-600 mt-0.5 shrink-0"></i>
+                <div><strong>Cámaras de Seguridad CCTV:</strong> Sistemas Dahua y Hikvision con visión a color nocturna ColorVu y monitoreo en vivo en tu celular con app DMSS.</div>
+              </div>
+              <div class="flex items-start space-x-2">
+                <i class="fas fa-tools text-purple-600 mt-0.5 shrink-0"></i>
+                <div><strong>Taller Técnico y Diagnóstico:</strong> Recepción con ticket formal SRV en 24 a 48 horas y garantía formal por escrito.</div>
+              </div>
+            </div>
           </div>
-          <div class="leading-relaxed text-slate-800">
-            ${escapeHtml(aiResult.reply).replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')}
-          </div>
-          <div class="pt-2 border-t border-slate-100 flex flex-wrap gap-2">
-            <a href="${WES_KB.empresa.whatsappUrl}?text=${encodeURIComponent(`Hola WES, el asistente virtual me sugirió: ${aiResult.reply.substring(0, 100)}...`)}" target="_blank" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs transition inline-flex items-center space-x-1 shadow-xs">
-              <i class="fab fa-whatsapp"></i>
-              <span>Hablar con un Asesor</span>
-            </a>
-            <button type="button" onclick="startServiceRequestFlow()" class="px-3 py-1.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold text-xs transition border border-wes-gold/40">
-              <i class="fas fa-tools text-wes-gold mr-1"></i> Abrir Solicitud
-            </button>
-          </div>
+          <p class="text-slate-600 text-xs leading-relaxed">
+            ¿En cuál de estas áreas podemos asistirle? Puede indicarnos aquí los detalles de su necesidad, su Nombre y su Teléfono o WhatsApp, y uno de nuestros asesores comerciales o técnicos especializados le estará llamando directamente para validar la información y entregarle su cotización o coordinar la atención técnica.
+          </p>
         </div>
       `);
-      return;
+    } finally {
+      // Restaurar controles y foco
+      if (input) {
+        input.disabled = false;
+        input.placeholder = origPlaceholder;
+        setTimeout(() => input.focus(), 60);
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
     }
-
-    // Respuesta general inteligente y corporativa por defecto de WES
-    appendBotMessage(`
-      <div class="space-y-3">
-        <div class="p-3 bg-blue-50/80 border border-blue-200 rounded-2xl text-xs space-y-2">
-          <p class="font-bold text-slate-900">
-            ¡Hola! Es un placer saludarle de parte de <strong>Warn Electrical Services, SRL (WES)</strong> en Moca.
-          </p>
-          <p class="text-slate-600 leading-relaxed">
-            Somos especialistas líderes en automatización, seguridad electrónica y energía ininterrumpida para hogares, fincas y empresas en todo el Cibao. Estamos para servirle en:
-          </p>
-          <div class="space-y-1.5 pt-1 text-slate-800">
-            <div class="flex items-start space-x-2">
-              <i class="fas fa-door-open text-amber-500 mt-0.5 shrink-0"></i>
-              <div><strong>Motores para Portones CAME:</strong> Instalación, repuestos (cremalleras, fotoceldas, controles) y reparación de modelos corredizos BXV (400kg a 1000kg) y batientes.</div>
-            </div>
-            <div class="flex items-start space-x-2">
-              <i class="fas fa-car-battery text-emerald-600 mt-0.5 shrink-0"></i>
-              <div><strong>Laboratorio de Inversores & Baterías:</strong> Reparación de tarjetas electrónicas Trace, Magnum y Outback, además de bancos de baterías Forza AGM, Trojan y Litio.</div>
-            </div>
-            <div class="flex items-start space-x-2">
-              <i class="fas fa-video text-blue-600 mt-0.5 shrink-0"></i>
-              <div><strong>Cámaras de Seguridad CCTV:</strong> Sistemas Dahua y Hikvision con visión a color nocturna ColorVu y monitoreo en vivo en tu celular con app DMSS.</div>
-            </div>
-            <div class="flex items-start space-x-2">
-              <i class="fas fa-tools text-purple-600 mt-0.5 shrink-0"></i>
-              <div><strong>Taller Técnico y Diagnóstico:</strong> Recepción con ticket formal SRV en 24 a 48 horas y garantía formal por escrito.</div>
-            </div>
-          </div>
-        </div>
-        <p class="text-slate-600 text-xs">
-          ¿En cuál de estas soluciones podemos asistirle hoy? Puede escribirnos su consulta directamente o contactar a uno de nuestros asesores:
-        </p>
-        <div class="pt-1 flex flex-wrap gap-2">
-          <a href="${WES_KB.empresa.whatsappUrl}?text=${encodeURIComponent(`Hola WES, estoy en la página web y quisiera una cotización/asesoría sobre: ${query}`)}" target="_blank" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs transition inline-flex items-center space-x-1.5 shadow-xs">
-            <i class="fab fa-whatsapp text-sm"></i>
-            <span>Hablar con un Asesor al (849) 207-5474</span>
-          </a>
-          <button type="button" onclick="startServiceRequestFlow()" class="px-3.5 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold text-xs transition border border-wes-gold/40">
-            <i class="fas fa-tools text-wes-gold mr-1"></i> Abrir Solicitud Técnica
-          </button>
-        </div>
-      </div>
-    `);
   }
 
   // Exportar funciones a window para interacción con el DOM
