@@ -7,6 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
   initApp();
 });
 
+// Imagen de respaldo: varias fotos externas de productos (Unsplash) ya no existen (404).
+// Si una imagen falla al cargar, se reemplaza una sola vez por el logo de WES.
+document.addEventListener('error', (e) => {
+  const el = e.target;
+  if (!el || el.tagName !== 'IMG' || el.dataset.wesFallback) return;
+  const src = el.getAttribute('src');
+  if (!src) return;
+  el.dataset.wesFallback = '1';
+  el.src = 'assets/logo-wes.png';
+  el.style.objectFit = 'contain';
+}, true);
+
 // Estado global de la aplicación
 const AppState = {
   cart: [],
@@ -252,9 +264,15 @@ function matchesCategoryFilter(product, selectedCat) {
   if (sel.includes('energia') || sel.includes('bateria') || sel.includes('respaldo')) {
     return cat.includes('energia') || cat.includes('bateria') || catId === 'energia';
   }
-  // Accesorios / Cableado / Redes
-  if (sel.includes('accesorio') || sel.includes('cable') || sel.includes('red')) {
-    return cat.includes('accesorio') || cat.includes('cable') || cat.includes('red') || catId === 'cables' || catId === 'redes';
+  // Accesorios / Cableado / Redes (cada filtro coincide solo con su propia categoría)
+  if (sel.includes('accesorio')) {
+    return cat.includes('accesorio') || (sel === 'accesorios' && catId === 'accesorios');
+  }
+  if (sel.includes('cable')) {
+    return cat.includes('cable') || (sel === 'cables' && catId === 'cables');
+  }
+  if (sel.includes('redes') || sel === 'red') {
+    return cat.includes('redes') || cat === 'red' || (sel.startsWith('redes') && catId === 'redes' && sel === 'redes');
   }
 
   return false;
@@ -1176,7 +1194,15 @@ function processSelectedFiles(files) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
+      img.onerror = () => {
+        showToast(`No se pudo leer la imagen "${file.name}". Intenta con otra foto.`, 'warning');
+      };
       img.onload = () => {
+        // Re-validar el límite aquí: la lectura es asíncrona y varios archivos del mismo lote pasaban la primera verificación
+        if (AppState.supportImages.length >= 5) {
+          showToast('Límite alcanzado: máximo 5 fotografías por solicitud de soporte.', 'warning');
+          return;
+        }
         const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;

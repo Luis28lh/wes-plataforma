@@ -12,8 +12,8 @@
     empresa: {
       nombre: "Warn Electrical Services, SRL (WES)",
       ubicacion: "Moca, Provincia Espaillat, República Dominicana",
-      horario: "Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM",
-      telefono: "(809) 578-0000",
+      horario: "Lunes a Viernes de 7:30 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM",
+      telefono: "(849) 207-5474",
       whatsapp: "18492075474",
       whatsappUrl: "https://wa.me/18492075474"
     },
@@ -119,13 +119,7 @@
               <i class="fas fa-robot"></i>
             </div>
             <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200/80 shadow-xs max-w-[85%] leading-relaxed text-slate-800">
-              <p class="font-bold text-slate-900 mb-1">¡Hola! 👋 Bienvenido a WES.</p>
-              <p class="text-slate-600">Soy tu asistente virtual. Estoy aquí para ayudarte con:</p>
-              <ul class="list-disc list-inside mt-1.5 space-y-1 text-slate-700">
-                <li><strong>Consultar el estado</strong> de tu ticket o servicio técnico.</li>
-                <li><strong>Información y cotizaciones</strong> de motores CAME, inversores o CCTV.</li>
-                <li><strong>Reportar un problema</strong> y agendar soporte técnico.</li>
-              </ul>
+              <p class="font-bold text-slate-900 mb-1">Hola! En Warn Electrical Services estamos para servirle con gusto.</p>
             </div>
           </div>
         </div>
@@ -325,8 +319,8 @@ DATOS DE LA EMPRESA
 ════════════════════════════════════════════════════════════════
 - Empresa: Warn Electrical Services, SRL (WES).
 - Ubicación: Moca, Provincia Espaillat, República Dominicana. Cobertura: Moca, Santiago, La Vega, Licey, Salcedo y todo el Cibao.
-- Teléfono: (809) 578-0000 | WhatsApp oficial: +1 (849) 207-5474.
-- Horarios de Operación: Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM | Domingos cerrado.
+- Teléfono y WhatsApp oficial: (849) 207-5474.
+- Horarios de Operación: Lunes a Viernes de 7:30 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM | Domingos cerrado.
 - Especialidades: Motores CAME (BXV y batientes), Reparación de Inversores (Trace, Magnum, Outback), Cámaras CCTV Dahua/Hikvision, Controles de Acceso y Cerraduras Inteligentes.`;
 
   async function queryAIBackend(userMessage) {
@@ -728,7 +722,7 @@ DATOS DE LA EMPRESA
     const draft = chatSession.ticketDraft;
     const res = KDSService.createService({
       clientName: draft.name || 'Cliente WES',
-      phone: draft.phone && draft.phone.length > 5 ? draft.phone : '(809) 578-0000',
+      phone: draft.phone && draft.phone.length > 5 ? draft.phone : '(849) 207-5474',
       productSystem: draft.equipment || 'Servicio Técnico Solicitado',
       address: draft.address || 'Moca, Rep. Dominicana',
       description: draft.description || 'Solicitud generada desde el Asistente Virtual Web.',
@@ -812,7 +806,7 @@ DATOS DE LA EMPRESA
       const lower = query.toLowerCase().trim();
 
       // 3. Detección automática si el usuario escribió un código de ticket directamente
-      if (/^(SRV|TKT|\d{4})/i.test(query) || (lower.includes('srv-') && lower.match(/srv-\d{4}-\d{4}/i))) {
+      if (/^\s*(SRV|TKT)[-\s]?[A-Z0-9-]{3,}\s*$/i.test(query) || /^\s*\d{4}\s*$/.test(query) || /srv-\d{4}-\d{4}/i.test(lower)) {
         const targetDelay = 2200 + Math.floor(Math.random() * 800);
         const elapsed = Date.now() - startTime;
         if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
@@ -847,7 +841,7 @@ DATOS DE LA EMPRESA
           } else if (day === 6) {
             scheduleReply = "¡Hola! Hoy sábado estamos hasta la 1:00 p.m.\n¿En qué podemos servirle hoy?";
           } else {
-            scheduleReply = "¡Hola! Los domingos nuestras oficinas están cerradas; abrimos mañana lunes a las 8:00 a.m.\n¿Desea dejarnos su consulta y número telefónico para llamarle a primera hora?";
+            scheduleReply = "¡Hola! Los domingos nuestras oficinas están cerradas; abrimos mañana lunes a las 7:30 a.m.\n¿Desea dejarnos su consulta y número telefónico para llamarle a primera hora?";
           }
         } catch (e) {
           scheduleReply = "¡Hola! Hoy estamos hasta las 6:00 p.m.\n¿En qué podemos servirle hoy?";
@@ -913,9 +907,24 @@ DATOS DE LA EMPRESA
         fallbackText = "Contamos con laboratorio técnico especializado y banco de pruebas para inversores Trace, Magnum y Outback.<br>¿Qué marca, capacidad o síntoma presenta su equipo?";
       } else if (/(c[aá]mara|cctv|dahua|hikvision)/i.test(lower)) {
         fallbackText = "Instalamos sistemas de cámaras de seguridad Dahua y Hikvision ColorVu con monitoreo en vivo en su celular.<br>¿Cuántas cámaras necesita cotizar o para qué tipo de propiedad?";
+      } else if (/^(hola|buenas|buenos d[ií]as|buenas tardes|buenas noches|saludos)\b/i.test(lower)) {
+        fallbackText = "¡Hola! Con gusto le atendemos.<br>¿En qué podemos servirle hoy?";
+      } else if (/(gracias|muy amable|agradecid)/i.test(lower)) {
+        fallbackText = "¡Con mucho gusto! Estamos para servirle.<br>Si necesita algo más, aquí seguimos.";
+      } else if (/^(ok|okay|vale|listo|perfecto|entiendo|entendido|de acuerdo|dale)\b/i.test(lower)) {
+        fallbackText = "Perfecto.<br>¿Hay algo más en lo que podamos ayudarle?";
+      } else if (/(adi[oó]s|hasta luego|nos vemos|chao|bye)/i.test(lower)) {
+        fallbackText = "Gracias por escribirnos. ¡Que tenga un excelente día!<br>Estamos a sus órdenes cuando nos necesite.";
+      } else if (/(cotiz|precio|cu[aá]nto cuesta|cu[aá]nto vale|costo)/i.test(lower)) {
+        fallbackText = "Con gusto le cotizamos. Indíquenos el producto o servicio, la cantidad y su nombre con teléfono.<br>También puede usar el botón \"Cotizar\" en la tienda.";
       } else {
-        fallbackText = "¡Hola! En Warn Electrical Services estamos para servirle con gusto.<br>Indíquenos su requerimiento puntual y con gusto le orientamos de inmediato.";
+        fallbackText = "Para orientarle mejor, ¿nos indica si su consulta es sobre cámaras, portones, inversores o soporte técnico?<br>También puede dejarnos su nombre y teléfono para que le llamemos.";
       }
+      // Evitar repetir exactamente la misma respuesta dos veces seguidas
+      if (chatSession.lastFallback === fallbackText) {
+        fallbackText = "Disculpe, quiero asegurarme de entenderle bien.<br>Cuéntenos en una frase qué necesita (producto, falla o cotización) y le ayudamos.";
+      }
+      chatSession.lastFallback = fallbackText;
 
       appendBotMessage(`
         <div class="space-y-1.5">
