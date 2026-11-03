@@ -119,13 +119,7 @@
               <i class="fas fa-robot"></i>
             </div>
             <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200/80 shadow-xs max-w-[85%] leading-relaxed text-slate-800">
-              <p class="font-bold text-slate-900 mb-1">¡Hola! 👋 Bienvenido a WES.</p>
-              <p class="text-slate-600">Soy tu asistente virtual. Estoy aquí para ayudarte con:</p>
-              <ul class="list-disc list-inside mt-1.5 space-y-1 text-slate-700">
-                <li><strong>Consultar el estado</strong> de tu ticket o servicio técnico.</li>
-                <li><strong>Información y cotizaciones</strong> de motores CAME, inversores o CCTV.</li>
-                <li><strong>Reportar un problema</strong> y agendar soporte técnico.</li>
-              </ul>
+              <p class="font-bold text-slate-900 mb-1">¡Hola! En Warn Electrical Services estamos para servirle con gusto.</p>
             </div>
           </div>
         </div>

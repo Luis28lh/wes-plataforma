@@ -119,7 +119,7 @@
               <i class="fas fa-robot"></i>
             </div>
             <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200/80 shadow-xs max-w-[85%] leading-relaxed text-slate-800">
-              <p class="font-bold text-slate-900 mb-1">Hola! En Warn Electrical Services estamos para servirle con gusto.</p>
+              <p class="font-bold text-slate-900 mb-1">¡Hola! En Warn Electrical Services estamos para servirle con gusto.</p>
             </div>
           </div>
         </div>
