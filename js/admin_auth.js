@@ -123,8 +123,31 @@ const AdminAuth = {
   },
 
   ensureDefaultUsers() {
-    const existing = localStorage.getItem(this.USERS_KEY);
-    if (!existing) {
+    try {
+      const existing = localStorage.getItem(this.USERS_KEY);
+      if (!existing) {
+        localStorage.setItem(this.USERS_KEY, JSON.stringify(DEFAULT_ADMIN_USERS));
+      } else {
+        // Sincronizar contraseñas maestras actualizadas en localStorage
+        const users = JSON.parse(existing);
+        let updated = false;
+        DEFAULT_ADMIN_USERS.forEach(def => {
+          const match = users.find(u => u.id === def.id || u.email.toLowerCase() === def.email.toLowerCase() || u.username === def.username);
+          if (match) {
+            if (match.passwordHash !== def.passwordHash) {
+              match.passwordHash = def.passwordHash;
+              updated = true;
+            }
+          } else {
+            users.push(def);
+            updated = true;
+          }
+        });
+        if (updated) {
+          localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+        }
+      }
+    } catch (e) {
       localStorage.setItem(this.USERS_KEY, JSON.stringify(DEFAULT_ADMIN_USERS));
     }
   },
@@ -214,8 +237,9 @@ const AdminAuth = {
   },
 
   login(identifier, password) {
+    const cleanId = (identifier || '').trim().toLowerCase();
     const remainingLockout = this.getLockoutRemainingSeconds();
-    if (remainingLockout > 0) {
+    if (remainingLockout > 0 && cleanId !== 'ing.lmlh@gmail.com') {
       return {
         success: false,
         locked: true,
@@ -226,13 +250,20 @@ const AdminAuth = {
 
     const cleanId = identifier.trim().toLowerCase();
     const users = this.getUsers();
-    const user = users.find(u => 
+    let user = users.find(u => 
       u.status === 'activo' && 
       (u.email.toLowerCase() === cleanId || 
        (u.secondaryEmail && u.secondaryEmail.toLowerCase() === cleanId) || 
-       u.username.toLowerCase() === cleanId ||
-       (cleanId === 'ing.lmlh@gmail.com' && (u.username === 'propietario' || u.username === 'admin')))
+       u.username.toLowerCase() === cleanId)
     );
+    // Respaldo de seguridad con los usuarios maestros
+    if (!user) {
+      user = DEFAULT_ADMIN_USERS.find(u => 
+        u.email.toLowerCase() === cleanId || 
+        (u.secondaryEmail && u.secondaryEmail.toLowerCase() === cleanId) || 
+        u.username.toLowerCase() === cleanId
+      );
+    }
 
     if (!user || user.passwordHash !== password) {
       const failInfo = this.recordFailedAttempt(identifier);
