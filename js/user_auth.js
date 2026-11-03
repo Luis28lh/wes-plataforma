@@ -21,7 +21,7 @@ const UserAuth = (function() {
       email: 'ing.lmlh@gmail.com',
       secondaryEmail: 'wes.inform@gmail.com',
       username: 'propietario',
-      password: 'Wes2026!',
+      password: '255133',
       role: 'propietario',
       roleLabel: 'Propietario / Superadmin',
       isEmployee: true
@@ -31,7 +31,7 @@ const UserAuth = (function() {
       name: 'Admin General',
       email: 'admin@wes.com.do',
       username: 'admin',
-      password: 'Wes2026!',
+      password: '255133',
       role: 'administrador',
       roleLabel: 'Administrador WES',
       isEmployee: true
