@@ -2958,7 +2958,7 @@ function openRecoveryView() {
   if (contentRecovery) contentRecovery.classList.remove('hidden');
 
   if (title) title.textContent = 'Recuperar Contraseña';
-  if (subtitle) subtitle.textContent = 'Código de seguridad de 4 dígitos por correo';
+  if (subtitle) subtitle.textContent = 'Código de seguridad de 6 dígitos por correo';
 
   showRecoveryStep(1);
   clearAuthAlerts();
@@ -3209,7 +3209,7 @@ async function handleRecoveryStep1(e) {
       showAuthAlert('recovery-alert-box-1', res.message, 'error');
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Enviar Código de 4 Dígitos';
+        btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Enviar Código de 6 Dígitos';
       }
       return;
     }
@@ -3228,14 +3228,14 @@ async function handleRecoveryStep1(e) {
 
     showRecoveryStep(2);
     setupOtpInputs();
-    showToast(`Código de 4 dígitos enviado a ${email}`, 'info');
+    showToast(`Código de 6 dígitos enviado a ${email}`, 'info');
 
   } catch (err) {
     showAuthAlert('recovery-alert-box-1', 'Ocurrió un error al enviar el código.', 'error');
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Enviar Código de 4 Dígitos';
+      btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Enviar Código de 6 Dígitos';
     }
   }
 }
@@ -3268,7 +3268,7 @@ function setupOtpInputs() {
 
     input.onpaste = (e) => {
       e.preventDefault();
-      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 4);
+      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
       for (let i = 0; i < paste.length; i++) {
         if (inputs[i]) inputs[i].value = paste[i];
       }
@@ -3312,7 +3312,7 @@ function handleRecoveryStep2(e) {
 
 async function resendRecoveryCode() {
   if (!recoveryCurrentEmail) return;
-  showToast('Reenviando nuevo código de 4 dígitos...', 'info');
+  showToast('Reenviando nuevo código de 6 dígitos...', 'info');
   let res;
   if (recoveryMode === 'registration') {
     res = await UserAuth.requestRegistrationOtp(recoveryCurrentName || 'Cliente', recoveryCurrentEmail);

@@ -283,8 +283,8 @@ const UserAuth = (function() {
     return null;
   }
 
-  function generate4DigitCode() {
-    return String(Math.floor(1000 + Math.random() * 9000));
+  function generate6DigitCode() {
+    return String(Math.floor(100000 + Math.random() * 900000));
   }
 
   // Notificación automática al administrador (ing.lmlh@gmail.com) cuando se produce un nuevo registro
@@ -382,7 +382,7 @@ Moca, Provincia Espaillat, República Dominicana`;
     let subjectText = `Código de Seguridad WES: ${cleanCode}`;
     let messageText = `Hola ${cleanName},
 
-Tu código de verificación de 4 dígitos para tu cuenta en Warn Electrical Services (WES) es:
+Tu código de verificación de 6 dígitos para tu cuenta en Warn Electrical Services (WES) es:
 
 ${cleanCode}
 
@@ -403,7 +403,7 @@ Moca, República Dominicana`;
       subjectText = `Configura tu Contraseña WES – Código: ${cleanCode}`;
       messageText = `Hola ${cleanName},
 
-Tu código de 4 dígitos para completar el registro en Warn Electrical Services (WES) es:
+Tu código de 6 dígitos para completar el registro en Warn Electrical Services (WES) es:
 
 ${cleanCode}
 
@@ -750,7 +750,7 @@ Warn Electrical Services, SRL (WES)`;
         return { success: false, message: 'No se encontró ninguna cuenta registrada con el correo ingresado.' };
       }
 
-      const code = generate4DigitCode();
+      const code = generate6DigitCode();
       const expiresAt = Date.now() + (15 * 60 * 1000);
       try {
         const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
@@ -769,13 +769,13 @@ Warn Electrical Services, SRL (WES)`;
         success: true,
         email: cleanEmail,
         codeDemo: code,
-        message: `Hemos enviado un código de 4 dígitos a ${cleanEmail}.`
+        message: `Hemos enviado un código de 6 dígitos a ${cleanEmail}.`
       };
     },
 
     verifyResetCode(email, inputCode) {
       if (!email || !inputCode) {
-        return { success: false, message: 'Debes ingresar el código de 4 dígitos.' };
+        return { success: false, message: 'Debes ingresar el código de 6 dígitos.' };
       }
       const cleanEmail = email.trim().toLowerCase();
       const cleanCode = String(inputCode).trim();
