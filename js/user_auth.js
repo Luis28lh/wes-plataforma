@@ -432,16 +432,22 @@ Moca, Provincia Espaillat, República Dominicana`;
     };
 
     try {
-      const fetchPromise = fetch(backendUrl, {
+      const response = await fetch(backendUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
       });
-      const timeoutPromise = new Promise(resolve => setTimeout(() => resolve({ ok: true, timeout: true }), 4000));
-      await Promise.race([fetchPromise, timeoutPromise]);
-      return { success: true };
+      if (!response.ok) {
+        return { success: false, message: 'El servidor de correo respondió con error HTTP ' + response.status };
+      }
+      const result = await response.json().catch(() => null);
+      if (result && result.success === false) {
+        return { success: false, message: result.message || 'El servicio de correo no pudo procesar el envío.' };
+      }
+      return { success: true, ticketNumber: result?.ticketNumber || null };
     } catch (err) {
-      return { success: true, localOnly: true };
+      console.warn('[UserAuth] Error al conectar con el servicio de correo:', err);
+      return { success: false, message: 'No se pudo conectar con el servidor de correo (' + err.message + ').' };
     }
   }
 
@@ -811,8 +817,19 @@ Moca, Provincia Espaillat, República Dominicana`;
         localStorage.setItem(REG_CODES_KEY, JSON.stringify(regCodes));
       } catch (e) {}
 
-      // Enviar correo
-      await sendEmailCode(cleanEmail, code, name.trim(), 'registro');
+      // Enviar correo real
+      const emailRes = await sendEmailCode(cleanEmail, code, name.trim(), 'registro');
+      if (!emailRes.success) {
+        try {
+          const regCodes = JSON.parse(localStorage.getItem(REG_CODES_KEY) || '{}');
+          delete regCodes[cleanEmail];
+          localStorage.setItem(REG_CODES_KEY, JSON.stringify(regCodes));
+        } catch (e) {}
+        return {
+          success: false,
+          message: emailRes.message || 'No se pudo enviar el correo de verificación. Por favor intenta de nuevo.'
+        };
+      }
 
       return {
         success: true,
@@ -959,7 +976,19 @@ Moca, Provincia Espaillat, República Dominicana`;
         localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
       } catch (e) {}
 
-      await sendEmailCode(cleanEmail, code, user.name, 'recuperacion');
+      const emailRes = await sendEmailCode(cleanEmail, code, user.name, 'recuperacion');
+      if (!emailRes.success) {
+        try {
+          const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+          delete codes[cleanEmail];
+          localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
+        } catch (e) {}
+        return {
+          success: false,
+          message: emailRes.message || 'No se pudo enviar el código de recuperación al correo. Por favor intenta de nuevo.'
+        };
+      }
+
       return {
         success: true,
         email: cleanEmail,
@@ -1053,12 +1082,12 @@ Moca, Provincia Espaillat, República Dominicana`;
         saveRegisteredClients(clients);
       }
 
-      // Sincronizar en wes_admin_users si correspondiese
+      // Sincronizar en wes_admin_users y empleados en memoria/almacenamiento
       try {
         const adminUsers = JSON.parse(localStorage.getItem('wes_admin_users') || '[]');
         let adminUpdated = false;
         adminUsers.forEach(u => {
-          if (u.email && u.email.toLowerCase() === cleanEmail) {
+          if ((u.email && u.email.toLowerCase() === cleanEmail) || (u.secondaryEmail && u.secondaryEmail.toLowerCase() === cleanEmail)) {
             u.passwordHash = newPassword;
             adminUpdated = true;
           }
@@ -1066,6 +1095,12 @@ Moca, Provincia Espaillat, República Dominicana`;
         if (adminUpdated) {
           localStorage.setItem('wes_admin_users', JSON.stringify(adminUsers));
         }
+        // Actualizar en empleados de sesión si es empleado del sistema
+        SYSTEM_EMPLOYEES.forEach(emp => {
+          if ((emp.email && emp.email.toLowerCase() === cleanEmail) || (emp.secondaryEmail && emp.secondaryEmail.toLowerCase() === cleanEmail)) {
+            emp.password = newPassword;
+          }
+        });
       } catch (e) {}
 
       return {
