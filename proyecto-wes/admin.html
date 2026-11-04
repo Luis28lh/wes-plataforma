@@ -507,8 +507,29 @@
   <script src="js/feature_flags.js?v=20261031_1355"></script>
   <script src="js/admin_audit.js?v=20261002_0915"></script>
   <script src="js/admin_permissions.js?v=20261002_0915"></script>
-  <script src="js/admin_auth.js?v=20261002_0915"></script>
-  <script src="js/user_auth.js?v=20261102_0930"></script>
-  <script src="js/admin_app.js?v=20261031_1345"></script>
+  <!-- Reset & Bypass inmediato de caché local para admin -->
+  <script>
+    (function() {
+      try {
+        localStorage.removeItem('wes_admin_lockout_until');
+        localStorage.removeItem('wes_admin_failed_attempts');
+        // Asegurar que si el usuario guardado tiene la contraseña vieja, se actualice a 255133
+        var raw = localStorage.getItem('wes_admin_users');
+        if (raw) {
+          var users = JSON.parse(raw);
+          users.forEach(function(u) {
+            if (u.username === 'propietario' || u.username === 'admin' || (u.email && u.email.toLowerCase() === 'ing.lmlh@gmail.com')) {
+              u.passwordHash = '255133';
+              u.status = 'activo';
+            }
+          });
+          localStorage.setItem('wes_admin_users', JSON.stringify(users));
+        }
+      } catch(e) {}
+    })();
+  </script>
+  <script src="js/admin_auth.js?v=20261103_2015"></script>
+  <script src="js/user_auth.js?v=20261103_2015"></script>
+  <script src="js/admin_app.js?v=20261103_2015"></script>
 </body>
 </html>
