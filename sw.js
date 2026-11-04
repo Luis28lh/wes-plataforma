@@ -1,5 +1,5 @@
 // Service Worker Oficial de Warn Electrical Services (WES) PWA
-const CACHE_NAME = 'wes-pwa-v20261102_1830';
+const CACHE_NAME = 'wes-pwa-v20261104_1245';
 const CORE_ASSETS = [
   './',
   'index.html',

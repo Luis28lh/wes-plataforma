@@ -39,7 +39,7 @@ function initPwaInstall() {
       }
     });
 
-    navigator.serviceWorker.register('sw.js?v=20261102_1830')
+    navigator.serviceWorker.register('sw.js?v=20261104_1245')
       .then(reg => {
         console.log('[WES PWA] Service Worker registrado:', reg.scope);
         reg.update();
