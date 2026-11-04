@@ -248,7 +248,6 @@ const AdminAuth = {
       };
     }
 
-    const cleanId = identifier.trim().toLowerCase();
     const users = this.getUsers();
     let user = users.find(u => 
       u.status === 'activo' && 
