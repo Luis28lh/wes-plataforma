@@ -159,6 +159,7 @@ const AdminApp = {
   openForgotPasswordModal() {
     const modal = document.getElementById('modal-forgot-password');
     if (modal) modal.classList.remove('hidden');
+    this.resetAdminRecoveryView();
   },
 
   closeForgotPasswordModal() {
@@ -166,20 +167,152 @@ const AdminApp = {
     if (modal) modal.classList.add('hidden');
   },
 
-  handleForgotPasswordSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const email = form.recoveryEmail.value;
+  resetAdminRecoveryView() {
+    const s1 = document.getElementById('admin-recovery-step1');
+    const s2 = document.getElementById('admin-recovery-step2');
+    const a1 = document.getElementById('admin-recovery-alert-1');
+    const a2 = document.getElementById('admin-recovery-alert-2');
+    if (s1) s1.classList.remove('hidden');
+    if (s2) s2.classList.add('hidden');
+    if (a1) a1.classList.add('hidden');
+    if (a2) a2.classList.add('hidden');
+  },
 
-    showToast(`Se ha enviado un enlace de recuperación seguro al correo: ${email}`, 'success');
-    if (window.AuditLog) {
-      window.AuditLog.log({
-        module: 'usuarios',
-        action: 'solicitud_recuperacion',
-        description: `Solicitud de restablecimiento de contraseña para: ${email}`
-      });
+  async handleAdminRecoveryStep1(e) {
+    e.preventDefault();
+    const emailInput = document.getElementById('admin-recovery-email');
+    const alertBox = document.getElementById('admin-recovery-alert-1');
+    const btn = document.getElementById('admin-btn-send-code');
+    if (!emailInput) return;
+
+    const email = emailInput.value.trim().toLowerCase();
+    this.adminRecoveryEmail = email;
+
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i><span>Enviando código...</span>';
     }
+
+    try {
+      let res;
+      if (typeof UserAuth !== 'undefined' && UserAuth.requestPasswordReset) {
+        res = await UserAuth.requestPasswordReset(email);
+      } else {
+        res = { success: true, codeDemo: '255133' };
+      }
+
+      if (!res.success) {
+        if (alertBox) {
+          alertBox.className = 'p-2.5 rounded-xl text-xs bg-rose-50 text-rose-700 border border-rose-200';
+          alertBox.textContent = res.message || 'No se encontró una cuenta con este correo.';
+          alertBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // Pasar a paso 2
+      const s1 = document.getElementById('admin-recovery-step1');
+      const s2 = document.getElementById('admin-recovery-step2');
+      const banner = document.getElementById('admin-recovery-demo-banner');
+      const val = document.getElementById('admin-recovery-demo-val');
+      if (s1) s1.classList.add('hidden');
+      if (s2) s2.classList.remove('hidden');
+      if (banner && val && res.codeDemo) {
+        val.textContent = res.codeDemo;
+        banner.classList.remove('hidden');
+      }
+
+      showToast(`Código de seguridad enviado a ${email}`, 'info');
+      setTimeout(() => {
+        const codeInput = document.getElementById('admin-recovery-code');
+        if (codeInput) codeInput.focus();
+      }, 150);
+
+    } catch (err) {
+      console.error(err);
+      if (alertBox) {
+        alertBox.className = 'p-2.5 rounded-xl text-xs bg-rose-50 text-rose-700 border border-rose-200';
+        alertBox.textContent = 'Error de conexión al enviar el código.';
+        alertBox.classList.remove('hidden');
+      }
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane text-xs"></i><span>Enviar Código</span>';
+      }
+    }
+  },
+
+  handleAdminRecoveryStep2(e) {
+    e.preventDefault();
+    const codeInput = document.getElementById('admin-recovery-code');
+    const newPassInput = document.getElementById('admin-recovery-newpass');
+    const confirmPassInput = document.getElementById('admin-recovery-confirmpass');
+    const alertBox = document.getElementById('admin-recovery-alert-2');
+
+    const code = (codeInput?.value || '').trim();
+    const newPass = newPassInput?.value || '';
+    const confirmPass = confirmPassInput?.value || '';
+    const email = this.adminRecoveryEmail;
+
+    if (newPass.length < 6) {
+      if (alertBox) {
+        alertBox.className = 'p-2.5 rounded-xl text-xs bg-rose-50 text-rose-700 border border-rose-200';
+        alertBox.textContent = 'La nueva clave debe tener mínimo 6 caracteres.';
+        alertBox.classList.remove('hidden');
+      }
+      return;
+    }
+
+    if (newPass !== confirmPass) {
+      if (alertBox) {
+        alertBox.className = 'p-2.5 rounded-xl text-xs bg-rose-50 text-rose-700 border border-rose-200';
+        alertBox.textContent = 'Las contraseñas no coinciden.';
+        alertBox.classList.remove('hidden');
+      }
+      return;
+    }
+
+    let res = null;
+    if (typeof UserAuth !== 'undefined' && UserAuth.resetPassword) {
+      res = UserAuth.resetPassword(email, code, newPass, confirmPass);
+    } else {
+      res = { success: true };
+    }
+
+    if (!res.success) {
+      if (alertBox) {
+        alertBox.className = 'p-2.5 rounded-xl text-xs bg-rose-50 text-rose-700 border border-rose-200';
+        alertBox.textContent = res.message || 'Código incorrecto o expirado.';
+        alertBox.classList.remove('hidden');
+      }
+      return;
+    }
+
+    // Actualizar directamente en wes_admin_users
+    try {
+      const raw = localStorage.getItem('wes_admin_users');
+      if (raw) {
+        const users = JSON.parse(raw);
+        users.forEach(u => {
+          if (u.email && u.email.toLowerCase() === email.toLowerCase()) {
+            u.passwordHash = newPass;
+          }
+        });
+        localStorage.setItem('wes_admin_users', JSON.stringify(users));
+      }
+      localStorage.removeItem('wes_admin_lockout_until');
+      localStorage.removeItem('wes_admin_failed_attempts');
+    } catch (e) {}
+
+    showToast('¡Contraseña actualizada exitosamente! Ya puedes iniciar sesión.', 'success');
     this.closeForgotPasswordModal();
+
+    // Rellenar en el formulario principal
+    const mainUser = document.querySelector('input[name="identifier"]');
+    const mainPass = document.getElementById('login-password-input');
+    if (mainUser) mainUser.value = email;
+    if (mainPass) mainPass.value = newPass;
   },
 
   togglePasswordVisibility(inputId, iconId) {
