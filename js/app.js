@@ -3137,11 +3137,11 @@ async function handleUserRegisterSubmit(e) {
 
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Creando cuenta e iniciando sesión...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando código de verificación...';
   }
 
   try {
-    const res = await UserAuth.registerClient({
+    const res = await UserAuth.initiateRegistration({
       name,
       email,
       phone,
@@ -3150,41 +3150,61 @@ async function handleUserRegisterSubmit(e) {
     });
 
     if (!res.success) {
-      showAuthAlert('register-alert-box', res.message || 'Error al completar el registro.', 'error');
+      showAuthAlert('register-alert-box', res.message || 'Error al iniciar el registro.', 'error');
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-user-check text-xs mr-1"></i> Crear Cuenta y Acceder Directamente';
+        submitBtn.innerHTML = '<i class="fas fa-user-check text-xs mr-1"></i> Enviar Código de Verificación (6 Dígitos)';
       }
       return;
     }
 
-    // Registro y login automático completado
-    closeAuthModal();
-    updateAuthHeaderUI();
-    showToast(`¡Bienvenido a Warn Electrical Services, ${res.user.name || 'Cliente'}!`, 'success');
+    // Configurar estado para verificación de registro
+    recoveryMode = 'registration';
+    recoveryCurrentEmail = email;
+    recoveryCurrentName = name;
+    recoveryDemoCode = res.codeDemo || '';
 
-    // Limpiar campos del formulario
-    nameInput.value = '';
-    emailInput.value = '';
-    if (phoneInput) phoneInput.value = '';
-    passInput.value = '';
-    passConfirmInput.value = '';
+    // Cambiar a vista de verificación OTP
+    const tabsBar = document.getElementById('auth-tabs-bar');
+    const contentLogin = document.getElementById('auth-content-login');
+    const contentRegister = document.getElementById('auth-content-register');
+    const contentRecovery = document.getElementById('auth-content-recovery');
+    const title = document.getElementById('auth-modal-title');
+    const subtitle = document.getElementById('auth-modal-subtitle');
 
-    // Abrir directamente la vista personalizada correspondiente
-    setTimeout(() => {
-      openUserProfileModal();
-    }, 350);
+    if (tabsBar) tabsBar.classList.add('hidden');
+    if (contentLogin) contentLogin.classList.add('hidden');
+    if (contentRegister) contentRegister.classList.add('hidden');
+    if (contentRecovery) contentRecovery.classList.remove('hidden');
+
+    if (title) title.textContent = 'Activar Cuenta - Tienda WES';
+    if (subtitle) subtitle.textContent = 'Ingresa el código temporal de 6 dígitos que enviamos a tu correo';
+
+    const displayEmail = document.getElementById('recovery-target-email-display');
+    if (displayEmail) displayEmail.textContent = email;
+
+    const demoBanner = document.getElementById('recovery-demo-code-banner');
+    const demoVal = document.getElementById('recovery-demo-code-val');
+    if (demoBanner && demoVal && res.codeDemo) {
+      demoVal.textContent = res.codeDemo;
+      demoBanner.classList.remove('hidden');
+    }
+
+    showRecoveryStep(2);
+    setupOtpInputs();
+    showToast('Código de 6 dígitos enviado a ' + email, 'success');
 
   } catch (err) {
     console.error(err);
-    showAuthAlert('register-alert-box', 'Error inesperado al procesar el registro.', 'error');
+    showAuthAlert('register-alert-box', 'Error inesperado al solicitar el código de activación.', 'error');
   } finally {
     if (submitBtn) {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fas fa-user-check text-xs mr-1"></i> Crear Cuenta y Acceder Directamente';
+      submitBtn.innerHTML = '<i class="fas fa-user-check text-xs mr-1"></i> Enviar Código de Verificación (6 Dígitos)';
     }
   }
 }
+
 // RECUPERACIÓN - PASO 1 (SOLICITAR CÓDIGO)
 async function handleRecoveryStep1(e) {
   e.preventDefault();
@@ -3246,12 +3266,14 @@ function setupOtpInputs() {
     document.getElementById('otp-digit-1'),
     document.getElementById('otp-digit-2'),
     document.getElementById('otp-digit-3'),
-    document.getElementById('otp-digit-4')
+    document.getElementById('otp-digit-4'),
+    document.getElementById('otp-digit-5'),
+    document.getElementById('otp-digit-6')
   ].filter(Boolean);
 
   inputs.forEach((input, index) => {
     input.value = '';
-    
+
     input.oninput = (e) => {
       const val = input.value.replace(/\D/g, '');
       input.value = val.slice(0, 1);
@@ -3268,18 +3290,52 @@ function setupOtpInputs() {
 
     input.onpaste = (e) => {
       e.preventDefault();
-      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
-      for (let i = 0; i < paste.length; i++) {
-        if (inputs[i]) inputs[i].value = paste[i];
-      }
-      if (paste.length === 4) {
-        inputs[3].focus();
+      const rawText = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+      const digits = rawText.replace(/\D/g, '').slice(0, 6);
+      if (digits.length > 0) {
+        for (let i = 0; i < 6; i++) {
+          if (inputs[i]) {
+            inputs[i].value = digits[i] || '';
+          }
+        }
+        const lastFilledIdx = Math.min(digits.length - 1, inputs.length - 1);
+        if (inputs[lastFilledIdx]) {
+          inputs[lastFilledIdx].focus();
+        }
+        if (digits.length === 6) {
+          showToast('Código de 6 dígitos pegado correctamente.', 'info');
+        }
       }
     };
   });
 
   if (inputs[0]) inputs[0].focus();
 }
+
+async function handlePasteFromClipboard() {
+  try {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      const text = await navigator.clipboard.readText();
+      const digits = text.replace(/\D/g, '').slice(0, 6);
+      if (!digits) {
+        showToast('No se encontraron dígitos en el portapapeles.', 'warning');
+        return;
+      }
+      for (let i = 1; i <= 6; i++) {
+        const inp = document.getElementById('otp-digit-' + i);
+        if (inp) inp.value = digits[i - 1] || '';
+      }
+      const lastInp = document.getElementById('otp-digit-' + Math.min(digits.length, 6));
+      if (lastInp) lastInp.focus();
+      showToast('Código de ' + digits.length + ' dígitos pegado.', 'success');
+    } else {
+      showToast('Por favor usa Ctrl+V dentro de las casillas para pegar.', 'info');
+    }
+  } catch (err) {
+    showToast('Haz clic dentro de las casillas y presiona Ctrl+V para pegar.', 'info');
+  }
+}
+window.handlePasteFromClipboard = handlePasteFromClipboard;
 
 // RECUPERACIÓN - PASO 2 (VERIFICAR CÓDIGO)
 function handleRecoveryStep2(e) {
@@ -3290,13 +3346,34 @@ function handleRecoveryStep2(e) {
   const d2 = document.getElementById('otp-digit-2')?.value || '';
   const d3 = document.getElementById('otp-digit-3')?.value || '';
   const d4 = document.getElementById('otp-digit-4')?.value || '';
-  const fullCode = `${d1}${d2}${d3}${d4}`.trim();
+  const d5 = document.getElementById('otp-digit-5')?.value || '';
+  const d6 = document.getElementById('otp-digit-6')?.value || '';
+  const fullCode = (d1 + d2 + d3 + d4 + d5 + d6).trim();
 
-  if (fullCode.length !== 4) {
-    showAuthAlert('recovery-alert-box-2', 'Por favor ingresa los 4 dígitos del código.', 'warning');
+  if (fullCode.length !== 6) {
+    showAuthAlert('recovery-alert-box-2', 'Por favor ingresa los 6 dígitos completos del código.', 'warning');
     return;
   }
 
+  // Si estamos en flujo de Registro: validar y activar cuenta
+  if (recoveryMode === 'registration') {
+    const res = UserAuth.verifyAndActivateAccount(recoveryCurrentEmail, fullCode);
+    if (!res.success) {
+      showAuthAlert('recovery-alert-box-2', res.message, 'error');
+      return;
+    }
+
+    // Éxito: cuenta activada y logueado
+    updateAuthHeaderUI();
+    closeAuthModal();
+    showToast('¡Cuenta activada exitosamente! Bienvenido a Tienda WES.', 'success');
+    setTimeout(() => {
+      openUserProfileModal();
+    }, 350);
+    return;
+  }
+
+  // Si estamos en flujo de Recuperación de contraseña:
   const res = UserAuth.verifyResetCode(recoveryCurrentEmail, fullCode);
   if (!res.success) {
     showAuthAlert('recovery-alert-box-2', res.message, 'error');
@@ -3315,15 +3392,25 @@ async function resendRecoveryCode() {
   showToast('Reenviando nuevo código de 6 dígitos...', 'info');
   let res;
   if (recoveryMode === 'registration') {
-    res = await UserAuth.requestRegistrationOtp(recoveryCurrentName || 'Cliente', recoveryCurrentEmail);
+    res = await UserAuth.initiateRegistration({
+      name: recoveryCurrentName || 'Cliente',
+      email: recoveryCurrentEmail,
+      password: 'User2026!'
+    });
   } else {
     res = await UserAuth.requestPasswordReset(recoveryCurrentEmail);
   }
-  if (res && res.success && res.codeDemo) {
-    recoveryDemoCode = res.codeDemo;
+
+  if (res && res.success) {
+    recoveryDemoCode = res.codeDemo || '';
     const demoVal = document.getElementById('recovery-demo-code-val');
-    if (demoVal) demoVal.textContent = res.codeDemo;
-    showToast(`Nuevo código enviado: ${res.codeDemo}`, 'success');
+    if (demoVal && res.codeDemo) {
+      demoVal.textContent = res.codeDemo;
+    }
+    showToast(res.message || 'Nuevo código enviado exitosamente.', 'success');
+  } else if (res && !res.success) {
+    showAuthAlert('recovery-alert-box-2', res.message, 'error');
+    showToast(res.message, 'error');
   }
 }
 
@@ -3338,14 +3425,11 @@ function handleRecoveryStep3(e) {
   const d2 = document.getElementById('otp-digit-2')?.value || '';
   const d3 = document.getElementById('otp-digit-3')?.value || '';
   const d4 = document.getElementById('otp-digit-4')?.value || '';
-  const fullCode = `${d1}${d2}${d3}${d4}`.trim();
+  const d5 = document.getElementById('otp-digit-5')?.value || '';
+  const d6 = document.getElementById('otp-digit-6')?.value || '';
+  const fullCode = (d1 + d2 + d3 + d4 + d5 + d6).trim();
 
-  let res;
-  if (recoveryMode === 'registration') {
-    res = UserAuth.completeRegistration(recoveryCurrentEmail, fullCode, newPass, confirmPass);
-  } else {
-    res = UserAuth.resetPassword(recoveryCurrentEmail, fullCode, newPass, confirmPass);
-  }
+  const res = UserAuth.resetPassword(recoveryCurrentEmail, fullCode, newPass, confirmPass);
 
   if (!res.success) {
     showAuthAlert('recovery-alert-box-3', res.message, 'error');
@@ -3354,29 +3438,19 @@ function handleRecoveryStep3(e) {
 
   updateAuthHeaderUI();
 
-  // Personalizar paso 4 según si fue registro o recuperación
   const step4Title = document.getElementById('recovery-step4-title');
   const step4Desc = document.getElementById('recovery-step4-desc');
   const step4Btn = document.getElementById('recovery-step4-btn');
 
-  if (recoveryMode === 'registration') {
-    if (step4Title) step4Title.textContent = '¡Cuenta Creada Exitosamente!';
-    if (step4Desc) step4Desc.textContent = `Tu contraseña ha sido configurada y tu sesión está iniciada como Cliente WES. ¡Bienvenido/a, ${recoveryCurrentName || ''}!`;
-    if (step4Btn) {
-      step4Btn.textContent = 'Empezar a Explorar la Tienda';
-      step4Btn.onclick = () => closeAuthModal();
-    }
-    showToast(`¡Bienvenido/a a WES, ${recoveryCurrentName || 'Cliente'}!`, 'success');
-  } else {
-    if (step4Title) step4Title.textContent = '¡Contraseña Actualizada!';
-    if (step4Desc) step4Desc.textContent = 'Tu clave ha sido reconfigurada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.';
-    if (step4Btn) {
-      step4Btn.textContent = 'Iniciar Sesión Ahora';
-      step4Btn.onclick = () => showLoginView();
-    }
+  if (step4Title) step4Title.textContent = '¡Contraseña Actualizada!';
+  if (step4Desc) step4Desc.textContent = 'Tu clave ha sido reconfigurada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.';
+  if (step4Btn) {
+    step4Btn.textContent = 'Iniciar Sesión Ahora';
+    step4Btn.onclick = () => showLoginView();
   }
 
   showRecoveryStep(4);
+  showToast('¡Contraseña actualizada con éxito!', 'success');
 }
 
 // ----------------------------------------------------------------------------

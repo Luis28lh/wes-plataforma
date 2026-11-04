@@ -2300,6 +2300,8 @@
         </div>
 
       </div>
+    </div>
+  </div>
 
   <!-- ========================================================= -->
   <!-- MODAL: VISOR DE FOTOGRAFÍA DE PROYECTO REAL WES           -->
@@ -2938,7 +2940,7 @@
             <span class="w-7 h-7 rounded-lg bg-wes-blue text-wes-gold flex items-center justify-center shrink-0 text-xs">
               <i class="fas fa-shield-alt"></i>
             </span>
-            <span><strong>Acceso Inmediato WES:</strong> Ingresa tus datos y contraseña dos veces para entrar automáticamente al sistema y habilitar tu vista personalizada.</span>
+            <span><strong>Activación de Cuenta WES:</strong> Ingresa tu correo y define tu contraseña. Te enviaremos un código de seguridad de 6 dígitos temporal para validar tu correo y activar tu cuenta.</span>
           </div>
 
           <form id="form-user-register" onsubmit="handleUserRegisterSubmit(event)" class="space-y-3">
@@ -2999,7 +3001,7 @@
 
             <button type="submit" id="register-submit-btn" class="w-full py-3 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2 mt-2">
               <i class="fas fa-user-check text-xs"></i>
-              <span>Crear Cuenta y Acceder Directamente</span>
+              <span>Enviar Código de Verificación (6 Dígitos)</span>
             </button>
           </form>
 
@@ -3058,17 +3060,25 @@
               </div>
               <h4 class="font-extrabold text-sm text-slate-900">Ingresa tu Código de 6 Dígitos</h4>
               <p class="text-xs text-slate-500 mt-1">
-                Enviado a <span id="recovery-target-email-display" class="font-bold text-slate-800">correo@ejemplo.com</span>
+                Enviado a <span id="recovery-target-email-display" class="font-bold text-slate-800">correo@ejemplo.com</span><br><span class="text-[11px] text-amber-600 font-semibold"><i class="fas fa-clock mr-1"></i>Código temporal válido por 10 minutos (un solo uso)</span>
               </p>
             </div>
 
             <form id="form-recovery-step2" onsubmit="handleRecoveryStep2(event)" class="space-y-4">
               <!-- Cajas numéricas OTP -->
-              <div class="flex justify-center items-center space-x-3 my-2">
-                <input type="text" id="otp-digit-1" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-12 h-14 text-center text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition" required>
-                <input type="text" id="otp-digit-2" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-12 h-14 text-center text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition" required>
-                <input type="text" id="otp-digit-3" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-12 h-14 text-center text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition" required>
-                <input type="text" id="otp-digit-4" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-12 h-14 text-center text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition" required>
+              <div class="flex justify-center items-center gap-2 sm:gap-2.5 my-3">
+                <input type="text" id="otp-digit-1" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required autofocus>
+                <input type="text" id="otp-digit-2" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="otp-digit-3" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="otp-digit-4" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="otp-digit-5" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="otp-digit-6" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+              </div>
+              <div class="text-center">
+                <button type="button" onclick="handlePasteFromClipboard()" class="inline-flex items-center space-x-1 text-[11px] font-semibold text-wes-blue hover:text-blue-800 transition">
+                  <i class="fas fa-paste text-xs"></i>
+                  <span>Pegar los 6 dígitos desde el portapapeles</span>
+                </button>
               </div>
 
               <!-- Banner de código para facilitar pruebas en test -->

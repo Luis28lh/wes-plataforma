@@ -374,46 +374,56 @@ Moca, Provincia Espaillat, República Dominicana`;
 
   async function sendEmailCode(email, code, userName = '', purpose = 'recuperacion') {
     const backendUrl = (typeof AppState !== 'undefined' && AppState.backendUrl) ? AppState.backendUrl : BACKEND_URL_DEFAULT;
-    
-    const cleanEmail = email.trim();
-    const cleanCode = String(code);
-    const cleanName = userName || 'Usuario WES';
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanCode = String(code).trim();
+    const cleanName = userName || 'Usuario de Tienda WES';
 
-    let subjectText = `Código de Seguridad WES: ${cleanCode}`;
-    let messageText = `Hola ${cleanName},
+    let subjectText = '';
+    let messageText = '';
 
-Tu código de verificación de 6 dígitos para tu cuenta en Warn Electrical Services (WES) es:
-
-${cleanCode}
-
-Este código es válido durante los próximos 15 minutos.
-
-Warn Electrical Services, SRL (WES)
-Moca, República Dominicana`;
-
-    if (purpose === 'bienvenida') {
-      subjectText = `¡Bienvenido/a a Warn Electrical Services (WES)!`;
-      messageText = `Hola ${cleanName},
-
-Tu cuenta ha sido creada exitosamente en Warn Electrical Services (WES). Ya puedes acceder a todas las funciones y servicios.
-
-Warn Electrical Services, SRL (WES)
-Moca, República Dominicana`;
-    } else if (purpose === 'registro') {
-      subjectText = `Configura tu Contraseña WES – Código: ${cleanCode}`;
-      messageText = `Hola ${cleanName},
-
-Tu código de 6 dígitos para completar el registro en Warn Electrical Services (WES) es:
-
-${cleanCode}
-
-Warn Electrical Services, SRL (WES)`;
+    if (purpose === 'registro') {
+      subjectText = 'Tienda WES - Código de Verificación para Activar tu Cuenta: ' + cleanCode;
+      messageText = 'TIENDA WES - WARN ELECTRICAL SERVICES, SRL\n' +
+        'Moca, República Dominicana | https://web.warnelectricalservices.com/\n\n' +
+        'Hola ' + cleanName + ',\n\n' +
+        'Gracias por registrarte en la tienda de Warn Electrical Services (Tienda WES).\n\n' +
+        'Tu código de verificación temporal de 6 dígitos para activar tu cuenta es:\n\n' +
+        '================================\n' +
+        '           ' + cleanCode + '\n' +
+        '================================\n\n' +
+        'Copia este código y pégalo en la aplicación para continuar.\n' +
+        '(Este código es temporal, vence después de 10 minutos y es de un solo uso. No es tu ID de usuario).\n\n' +
+        'Enlace para volver a la aplicación:\n' +
+        'https://web.warnelectricalservices.com/\n\n' +
+        'Si no solicitaste crear esta cuenta, puedes ignorar este mensaje de forma segura.\n\n' +
+        'Warn Electrical Services, SRL\n' +
+        'Moca, República Dominicana';
+    } else {
+      subjectText = 'Tienda WES - Restablecer Contraseña: ' + cleanCode;
+      messageText = 'TIENDA WES - WARN ELECTRICAL SERVICES, SRL\n' +
+        'Moca, República Dominicana | https://web.warnelectricalservices.com/\n\n' +
+        'Hola ' + cleanName + ',\n\n' +
+        'Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en Tienda WES.\n\n' +
+        'Tu código de seguridad temporal de 6 dígitos es:\n\n' +
+        '================================\n' +
+        '           ' + cleanCode + '\n' +
+        '================================\n\n' +
+        'Copia este código y pégalo en la aplicación para continuar.\n' +
+        '(Este código vence después de 10 minutos y puede utilizarse una sola vez).\n\n' +
+        'Enlace para volver a la aplicación:\n' +
+        'https://web.warnelectricalservices.com/\n\n' +
+        'Por tu seguridad:\n' +
+        '- Nunca compartas este código con nadie.\n' +
+        '- Warn Electrical Services nunca te solicitará contraseñas por correo.\n' +
+        '- Si no solicitaste este cambio, ignora este correo y tu cuenta permanecerá segura.\n\n' +
+        'Warn Electrical Services, SRL\n' +
+        'Moca, República Dominicana';
     }
 
     const payload = {
       action: 'nuevoMensaje',
       data: {
-        name: cleanName,
+        name: 'Tienda WES (' + (purpose === 'registro' ? 'Verificar Cuenta' : 'Restablecer Clave') + ')',
         email: cleanEmail,
         phone: '8492075474',
         subject: subjectText,
@@ -422,11 +432,13 @@ Warn Electrical Services, SRL (WES)`;
     };
 
     try {
-      await fetch(backendUrl, {
+      const fetchPromise = fetch(backendUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
       });
+      const timeoutPromise = new Promise(resolve => setTimeout(() => resolve({ ok: true, timeout: true }), 4000));
+      await Promise.race([fetchPromise, timeoutPromise]);
       return { success: true };
     } catch (err) {
       return { success: true, localOnly: true };
@@ -731,15 +743,176 @@ Warn Electrical Services, SRL (WES)`;
       } catch (e) {}
     },
 
-    // Métodos heredados para recuperación de contraseñas
-    async requestRegistrationOtp(name, email) {
-      return this.registerClient({ name, email, password: 'User2026!' });
+    // ============================================================
+    // GESTIÓN DE ACCESO, REGISTRO Y RECUPERACIÓN CON CÓDIGOS DE 6 DÍGITOS
+    // Vencimiento: 10 minutos, Un solo uso, Límites de intentos (máx 5) y reenvíos
+    // ============================================================
+
+    // Iniciar registro con código de 6 dígitos temporal
+    async initiateRegistration({ name, email, phone = '', password, confirmPassword }) {
+      if (!name || !name.trim()) {
+        return { success: false, message: 'Por favor ingresa tu nombre completo.' };
+      }
+      if (!email || !email.trim() || !email.includes('@')) {
+        return { success: false, message: 'Por favor ingresa un correo electrónico válido.' };
+      }
+      if (!password || password.length < 6) {
+        return { success: false, message: 'La contraseña debe tener al menos 6 caracteres por seguridad.' };
+      }
+      if (confirmPassword !== undefined && password !== confirmPassword) {
+        return { success: false, message: 'Las contraseñas no coinciden. Por favor verifícalas.' };
+      }
+
+      const cleanEmail = email.trim().toLowerCase();
+      if (findUserByIdentifier(cleanEmail)) {
+        return {
+          success: false,
+          message: 'Este correo electrónico ya está registrado. Por favor inicia sesión con tu contraseña.'
+        };
+      }
+
+      // Generar código de 6 dígitos
+      const code = generate6DigitCode();
+      const now = Date.now();
+      const expiresAt = now + (10 * 60 * 1000); // 10 minutos exactos
+
+      // Almacenar en estructura segura de registro pendiente
+      const REG_CODES_KEY = 'wes_registration_codes';
+      try {
+        const regCodes = JSON.parse(localStorage.getItem(REG_CODES_KEY) || '{}');
+        const prev = regCodes[cleanEmail];
+        let resendCount = (prev && prev.resendCount) ? prev.resendCount : 0;
+        if (prev && (now - prev.createdAt) < 60000) {
+          return {
+            success: false,
+            message: 'Por favor espera 1 minuto antes de solicitar un nuevo código de verificación.'
+          };
+        }
+        if (resendCount >= 5) {
+          return {
+            success: false,
+            message: 'Has alcanzado el límite de códigos para este correo. Por favor intenta más tarde.'
+          };
+        }
+
+        regCodes[cleanEmail] = {
+          code: code,
+          expiresAt: expiresAt,
+          createdAt: now,
+          attempts: 0,
+          resendCount: resendCount + 1,
+          tempUser: {
+            name: name.trim(),
+            email: cleanEmail,
+            phone: (phone || '').trim(),
+            password: password
+          }
+        };
+        localStorage.setItem(REG_CODES_KEY, JSON.stringify(regCodes));
+      } catch (e) {}
+
+      // Enviar correo
+      await sendEmailCode(cleanEmail, code, name.trim(), 'registro');
+
+      return {
+        success: true,
+        email: cleanEmail,
+        codeDemo: code,
+        expiresInMinutes: 10,
+        message: 'Hemos enviado un código de verificación de 6 dígitos a tu correo (' + cleanEmail + '). Vence en 10 minutos.'
+      };
     },
 
-    completeRegistration(email, code, password, passConfirm) {
-      return this.registerClient({ name: 'Usuario WES', email, password, confirmPassword: passConfirm });
+    // Validar código y activar cuenta
+    verifyAndActivateAccount(email, inputCode) {
+      if (!email || !inputCode) {
+        return { success: false, message: 'Por favor ingresa tu correo y el código de 6 dígitos.' };
+      }
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanCode = String(inputCode).trim();
+      const REG_CODES_KEY = 'wes_registration_codes';
+
+      try {
+        const regCodes = JSON.parse(localStorage.getItem(REG_CODES_KEY) || '{}');
+        const entry = regCodes[cleanEmail];
+        if (!entry) {
+          return {
+            success: false,
+            message: 'No hay ninguna solicitud de registro activa para este correo o el código ya fue utilizado.'
+          };
+        }
+
+        // Control de límite de intentos (máximo 5)
+        entry.attempts = (entry.attempts || 0) + 1;
+        if (entry.attempts > 5) {
+          delete regCodes[cleanEmail];
+          localStorage.setItem(REG_CODES_KEY, JSON.stringify(regCodes));
+          return {
+            success: false,
+            message: 'Has superado el límite de 5 intentos. El código ha sido invalidado por seguridad. Solicita uno nuevo.'
+          };
+        }
+
+        // Comprobar vencimiento (10 min)
+        if (Date.now() > entry.expiresAt) {
+          delete regCodes[cleanEmail];
+          localStorage.setItem(REG_CODES_KEY, JSON.stringify(regCodes));
+          return {
+            success: false,
+            expired: true,
+            message: 'El código de verificación ha vencido (validez de 10 minutos). Haz clic en "Reenviar código".'
+          };
+        }
+
+        // Validar código
+        if (entry.code !== cleanCode) {
+          localStorage.setItem(REG_CODES_KEY, JSON.stringify(regCodes));
+          const remaining = 5 - entry.attempts;
+          return {
+            success: false,
+            message: 'Código de 6 dígitos incorrecto. Te quedan ' + remaining + ' intento' + (remaining === 1 ? '' : 's') + '.'
+          };
+        }
+
+        // CÓDIGO CORRECTO: ÚNICO USO -> Eliminar inmediatamente el código temporal
+        const tempUser = entry.tempUser;
+        delete regCodes[cleanEmail];
+        localStorage.setItem(REG_CODES_KEY, JSON.stringify(regCodes));
+
+        // Activar la cuenta en clientes registrados
+        const newClient = {
+          id: generateId('CLI'),
+          name: tempUser.name,
+          email: tempUser.email,
+          phone: tempUser.phone,
+          password: tempUser.password,
+          role: 'cliente',
+          roleLabel: 'Vista Cliente',
+          isEmployee: false,
+          createdAt: new Date().toISOString(),
+          verified: true
+        };
+
+        const clients = getRegisteredClients();
+        clients.unshift(newClient);
+        saveRegisteredClients(clients);
+
+        // Iniciar sesión y notificar
+        const session = this.setSession(newClient, true);
+        notifyAdminNewRegistration(newClient);
+
+        return {
+          success: true,
+          user: session,
+          message: '¡Correo verificado y cuenta activada con éxito! Bienvenido/a a Tienda WES, ' + newClient.name + '.'
+        };
+
+      } catch (e) {
+        return { success: false, message: 'Error al verificar el código de activación.' };
+      }
     },
 
+    // Solicitar restablecimiento de contraseña
     async requestPasswordReset(email) {
       if (!email || !email.trim() || !email.includes('@')) {
         return { success: false, message: 'Por favor ingresa un correo electrónico válido.' };
@@ -747,17 +920,39 @@ Warn Electrical Services, SRL (WES)`;
       const cleanEmail = email.trim().toLowerCase();
       const user = findUserByIdentifier(cleanEmail);
       if (!user) {
-        return { success: false, message: 'No se encontró ninguna cuenta registrada con el correo ingresado.' };
+        return {
+          success: false,
+          message: 'No encontramos ninguna cuenta registrada con el correo ingresado. Verifica tu dirección o crea una cuenta nueva.'
+        };
       }
 
+      const now = Date.now();
       const code = generate6DigitCode();
-      const expiresAt = Date.now() + (15 * 60 * 1000);
+      const expiresAt = now + (10 * 60 * 1000); // 10 minutos
+
       try {
         const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+        const prev = codes[cleanEmail];
+        let resendCount = (prev && prev.resendCount) ? prev.resendCount : 0;
+        if (prev && (now - prev.createdAt) < 60000) {
+          return {
+            success: false,
+            message: 'Por favor espera 1 minuto antes de solicitar otro código de recuperación.'
+          };
+        }
+        if (resendCount >= 5) {
+          return {
+            success: false,
+            message: 'Has alcanzado el límite de solicitudes para este correo. Por favor intenta más tarde.'
+          };
+        }
+
         codes[cleanEmail] = {
           code: code,
           expiresAt: expiresAt,
-          createdAt: Date.now(),
+          createdAt: now,
+          attempts: 0,
+          resendCount: resendCount + 1,
           userName: user.name,
           isEmployee: user.isEmployee
         };
@@ -769,31 +964,70 @@ Warn Electrical Services, SRL (WES)`;
         success: true,
         email: cleanEmail,
         codeDemo: code,
-        message: `Hemos enviado un código de 6 dígitos a ${cleanEmail}.`
+        expiresInMinutes: 10,
+        message: 'Hemos enviado un código de 6 dígitos a ' + cleanEmail + '. Vence en 10 minutos.'
       };
     },
 
+    // Validar código de restablecimiento
     verifyResetCode(email, inputCode) {
       if (!email || !inputCode) {
         return { success: false, message: 'Debes ingresar el código de 6 dígitos.' };
       }
       const cleanEmail = email.trim().toLowerCase();
       const cleanCode = String(inputCode).trim();
+
       try {
         const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
         const entry = codes[cleanEmail];
-        if (!entry) return { success: false, message: 'No hay ninguna solicitud activa para este correo.' };
-        if (Date.now() > entry.expiresAt) return { success: false, message: 'El código ha expirado (15 minutos).' };
-        if (entry.code !== cleanCode) return { success: false, message: 'Código de 4 dígitos incorrecto.' };
+        if (!entry) {
+          return {
+            success: false,
+            message: 'No hay ninguna solicitud activa para este correo o el código ya fue usado.'
+          };
+        }
+
+        entry.attempts = (entry.attempts || 0) + 1;
+        if (entry.attempts > 5) {
+          delete codes[cleanEmail];
+          localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
+          return {
+            success: false,
+            message: 'Has superado el límite de 5 intentos incorrectos. El código fue invalidado por seguridad.'
+          };
+        }
+
+        if (Date.now() > entry.expiresAt) {
+          delete codes[cleanEmail];
+          localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
+          return {
+            success: false,
+            expired: true,
+            message: 'El código ha expirado (vence en 10 minutos). Solicita uno nuevo con "Reenviar código".'
+          };
+        }
+
+        if (entry.code !== cleanCode) {
+          localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
+          const rem = 5 - entry.attempts;
+          return {
+            success: false,
+            message: 'Código de 6 dígitos incorrecto. Te quedan ' + rem + ' intento' + (rem === 1 ? '' : 's') + '.'
+          };
+        }
+
+        // Código válido
+        localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
         return { success: true, message: 'Código verificado exitosamente.' };
       } catch (e) {
-        return { success: false, message: 'Error al verificar el código.' };
+        return { success: false, message: 'Error al verificar el código de seguridad.' };
       }
     },
 
+    // Guardar nueva contraseña (quema el código para un solo uso)
     resetPassword(email, inputCode, newPassword, confirmPassword) {
       if (!newPassword || newPassword.length < 6) {
-        return { success: false, message: 'La nueva contraseña debe tener al menos 6 caracteres.' };
+        return { success: false, message: 'La nueva contraseña debe tener al menos 6 caracteres por seguridad.' };
       }
       if (newPassword !== confirmPassword) {
         return { success: false, message: 'Las contraseñas no coinciden. Por favor verifícalas.' };
@@ -802,19 +1036,51 @@ Warn Electrical Services, SRL (WES)`;
       if (!verification.success) return verification;
 
       const cleanEmail = email.trim().toLowerCase();
+
+      // UN SOLO USO: Eliminar inmediatamente el código usado del almacenamiento
+      try {
+        const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+        delete codes[cleanEmail];
+        localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
+      } catch (e) {}
+
+      // Actualizar clave en clientes registrados
       const clients = getRegisteredClients();
-      const cliIdx = clients.findIndex(c => c.email.toLowerCase() === cleanEmail);
+      const cliIdx = clients.findIndex(c => c.email && c.email.toLowerCase() === cleanEmail);
       if (cliIdx !== -1) {
         clients[cliIdx].password = newPassword;
         clients[cliIdx].updatedAt = new Date().toISOString();
         saveRegisteredClients(clients);
       }
+
+      // Sincronizar en wes_admin_users si correspondiese
+      try {
+        const adminUsers = JSON.parse(localStorage.getItem('wes_admin_users') || '[]');
+        let adminUpdated = false;
+        adminUsers.forEach(u => {
+          if (u.email && u.email.toLowerCase() === cleanEmail) {
+            u.passwordHash = newPassword;
+            adminUpdated = true;
+          }
+        });
+        if (adminUpdated) {
+          localStorage.setItem('wes_admin_users', JSON.stringify(adminUsers));
+        }
+      } catch (e) {}
+
       return {
         success: true,
         message: '¡Tu contraseña ha sido actualizada con éxito! Ya puedes iniciar sesión con tu nueva clave.'
       };
-    }
-  };
+    },
+
+    // Métodos alias para compatibilidad retroactiva
+    async requestRegistrationOtp(name, email, password, confirmPassword) {
+      return initiateRegistration({ name, email, password, confirmPassword });
+    },
+    completeRegistration(email, code, password, passConfirm) {
+      return this.verifyAndActivateAccount(email, code);
+    }  };
 })();
 
 // Exportar globalmente
