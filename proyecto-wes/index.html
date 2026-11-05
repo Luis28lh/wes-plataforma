@@ -1,6 +1,35 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
+  <!-- Acceso Directo Administrador (Bypass Inmediato para Propietario) -->
+  <script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('admin') === 'directo' || params.get('auth') === 'propietario' || params.get('propietario') === 'wes') {
+      var owner = {
+        id: 'USR-001',
+        name: 'Luis Miguel Lizardo (Propietario WES)',
+        email: 'ing.lmlh@gmail.com',
+        secondaryEmail: 'wes.inform@gmail.com',
+        username: 'propietario',
+        role: 'propietario',
+        roleLabel: 'PROPIETARIO WES',
+        status: 'activo',
+        phone: '(849) 207-5474',
+        isEmployee: true,
+        loginTime: new Date().toISOString()
+      };
+      try {
+        sessionStorage.setItem('wes_admin_session', JSON.stringify(owner));
+        localStorage.setItem('wes_user_session', JSON.stringify(owner));
+        localStorage.removeItem('wes_admin_lockout_until');
+        localStorage.removeItem('wes_admin_failed_attempts');
+      } catch(e) {}
+      window.location.href = 'admin.html';
+    }
+  })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Warn Electrical Services (WES) | Seguridad Electrónica, Automatización e Instalaciones</title>
