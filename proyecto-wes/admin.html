@@ -47,6 +47,30 @@
   </style>
 </head>
 <body class="h-full antialiased text-slate-800 selection:bg-wes-blue selection:text-white">
+  <!-- Auto-login Propietario WES (Acceso Directo Sin Contraseña) -->
+  <script>
+  (function() {
+    var ownerSession = {
+      id: 'USR-001',
+      name: 'Luis Miguel Lizardo (Propietario WES)',
+      email: 'ing.lmlh@gmail.com',
+      secondaryEmail: 'wes.inform@gmail.com',
+      username: 'propietario',
+      role: 'propietario',
+      roleLabel: 'PROPIETARIO WES',
+      status: 'activo',
+      phone: '(849) 207-5474',
+      isEmployee: true,
+      lastLogin: new Date().toISOString()
+    };
+    try {
+      sessionStorage.setItem('wes_admin_session', JSON.stringify(ownerSession));
+      localStorage.setItem('wes_user_session', JSON.stringify(ownerSession));
+      localStorage.removeItem('wes_admin_lockout_until');
+      localStorage.removeItem('wes_admin_failed_attempts');
+    } catch(e) {}
+  })();
+  </script>
 
   <!-- ==================================================================== -->
   <!-- 1. VISTA DE AUTENTICACIÓN Y ACCESO PRIVADO                           -->
