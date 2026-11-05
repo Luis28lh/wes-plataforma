@@ -31,6 +31,7 @@ jobs:
         run: |
           mkdir -p _site
           cp -r ./proyecto-wes/* _site/
+          touch _site/.nojekyll
           echo "web.warnelectricalservices.com" > _site/CNAME
 
       - name: Upload artifact
