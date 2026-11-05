@@ -1,3 +1,26 @@
+window.entrarAdminWES = function() {
+  var owner = {
+    id: 'USR-001',
+    name: 'Luis Miguel Lizardo (Propietario WES)',
+    email: 'ing.lmlh@gmail.com',
+    secondaryEmail: 'wes.inform@gmail.com',
+    username: 'propietario',
+    role: 'propietario',
+    roleLabel: 'PROPIETARIO WES',
+    status: 'activo',
+    phone: '(849) 207-5474',
+    isEmployee: true,
+    lastLogin: new Date().toISOString()
+  };
+  try {
+    sessionStorage.setItem('wes_admin_session', JSON.stringify(owner));
+    localStorage.setItem('wes_user_session', JSON.stringify(owner));
+    localStorage.removeItem('wes_admin_lockout_until');
+    localStorage.removeItem('wes_admin_failed_attempts');
+  } catch(e) {}
+  window.location.href = 'admin.html';
+};
+
 // ============================================================================
 // WARN ELECTRICAL SERVICES, SRL (WES)
 // TABLERO KDS DE SERVICIO TÉCNICO (ESTILO MCDONALD'S) - js/servicio_tecnico.js
