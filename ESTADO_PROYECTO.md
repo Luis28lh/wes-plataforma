@@ -36,9 +36,15 @@
 
 ## 2. Hallazgos y Defectos Pendientes Registrados para Siguiente Etapa
 
-### Módulo: Asistente Virtual / Chat Web WES
-- **Fallo identificado:** Durante las pruebas recientes, el chat web ofreció respuestas comerciales idénticas ante tres preguntas distintas con pérdida de continuidad y contexto.
-- **Acción:** Queda registrado en este documento sin modificar todavía, a la espera de ser atendido en la siguiente fase una vez cerrada la etapa de autenticación.
+### Módulo: Asistente Virtual / Chat Web WES (Sofía)
+- **Estado:** ✅ Corregido y Desplegado en Producción (Apps Script v45 & GitHub Pages v20261105_2030).
+- **Mejoras Implementadas:**
+  - **Conexión a Backend Seguro:** Las consultas públicas a Gemini ahora se realizan a través de Google Apps Script (`action: 'query_gemini_chat'`), protegiendo la API Key sin exponerla a visitantes.
+  - **Identidad de Sofía:** Encabezado actualizado a 'Sofía - Asistente WES' y saludo inicial personalizado.
+  - **Memoria Multiturno:** Implementación de historial conversacional en memoria (`chatSession.chatHistory`) respetando el orden y alternancia de roles (`user` y `model`) para conservar el contexto.
+  - **Eliminación de Respuestas Simuladas:** Erradicadas las plantillas comerciales idénticas basadas en palabras clave. En caso de indisponibilidad del modelo, se muestra un aviso veraz con botón de reintento y enlace directo a WhatsApp.
+  - **Unificación de Horarios:** Horario oficial de sábados consolidado de 8:00 a. m. a 1:00 p. m. en todo el sistema (`products.js`, catálogo, footer y chat).
+  - **Seguridad y Control Administrativo:** Edición del prompt de Sofía y clave de Gemini restringida a administradores mediante `save_ai_config_admin` con sincronización en tiempo real al servidor. Límites de mensajes a 1,000 caracteres.
 
 ---
 
