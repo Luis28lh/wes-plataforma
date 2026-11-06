@@ -40,7 +40,8 @@
   // Estado del flujo conversacional interactivo
   let chatSession = {
     isOpen: false,
-    step: 'idle', // 'idle', 'awaiting_ticket_query', 'drafting_ticket'
+    step: 'idle',
+    chatHistory: [], // Historial multiturno para Gemini
     ticketDraft: {
       name: '',
       phone: '',
@@ -76,7 +77,7 @@
       <div id="wes-chat-launcher" class="fixed bottom-6 right-6 z-40 flex items-center group cursor-pointer" onclick="toggleClientChat()" title="Chatear con el Asistente WES">
         <span class="hidden sm:inline-flex mr-2.5 px-3 py-1 bg-slate-900/90 text-wes-gold text-xs font-bold rounded-xl shadow-lg border border-wes-gold/40 backdrop-blur-xs transition group-hover:scale-105 pointer-events-none items-center space-x-1.5">
           <i class="fas fa-sparkles text-amber-400 text-[10px]"></i>
-          <span>Asistente WES</span>
+          <span>Sofía - Asistente WES</span>
         </span>
         <button type="button" aria-label="Abrir Asistente Virtual WES" class="w-14 h-14 bg-gradient-to-tr from-slate-950 via-wes-blue to-slate-900 border-2 border-wes-gold text-wes-gold rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 relative focus:outline-none focus:ring-4 focus:ring-wes-gold/30">
           <i id="wes-chat-launcher-icon" class="fas fa-headset text-2xl transition-transform duration-300"></i>
@@ -98,7 +99,7 @@
             </div>
             <div>
               <div class="flex items-center space-x-1.5">
-                <h3 class="font-extrabold text-sm font-brand tracking-wide text-white">Asistente Virtual WES</h3>
+                <h3 class="font-extrabold text-sm font-brand tracking-wide text-white" id="wes-chat-header-title">Sofía - Asistente WES</h3>
                 <span class="px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider bg-emerald-600/90 text-white rounded-md">En Línea</span>
               </div>
               <p class="text-[11px] text-slate-300">Warn Electrical Services · Soporte & Cotizaciones</p>
@@ -119,7 +120,7 @@
               <i class="fas fa-robot"></i>
             </div>
             <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200/80 shadow-xs max-w-[85%] leading-relaxed text-slate-800">
-              <p class="font-bold text-slate-900 mb-1">¡Hola! En Warn Electrical Services estamos para servirle con gusto.</p>
+              <p class="font-bold text-slate-900 mb-1">¡Hola! Soy Sofía, asesora de Warn Electrical Services. ¿En qué le puedo asistir hoy?</p>
             </div>
           </div>
         </div>
@@ -324,174 +325,100 @@ DATOS DE LA EMPRESA
 - Especialidades: Motores CAME (BXV y batientes), Reparación de Inversores (Trace, Magnum, Outback), Cámaras CCTV Dahua/Hikvision, Controles de Acceso y Cerraduras Inteligentes.`;
 
   async function queryAIBackend(userMessage) {
-    // 1. Obtener configuración de IA guardada por el administrador en wes_ai_config (Taller 3)
-    let aiConfig = null;
+    const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+    
+    // Fallback local solo si el administrador configuró una clave en este navegador
+    let localApiKey = '';
     try {
       const stored = localStorage.getItem('wes_ai_config');
       if (stored) {
-        aiConfig = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (parsed.enabled === false) return { disabled: true };
+        localApiKey = parsed.apiKey || '';
       }
     } catch (e) {}
 
-    // Si el administrador desactivó el asistente explícitamente:
-    if (aiConfig && aiConfig.enabled === false) {
-      return null;
-    }
-
-    // 2. Si el administrador configuró una API Key (Google Gemini u OpenAI)
-    if (aiConfig && aiConfig.apiKey && aiConfig.apiKey.length > 5) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 14000); // 14s timeout
-        const provider = aiConfig.provider || 'gemini';
-        let preferredModel = aiConfig.model || (provider === 'gemini' ? 'gemini-2.0-flash' : 'gpt-4o-mini');
-        if (preferredModel === 'gemini-1.5-flash' || preferredModel === 'gemini-2.5-flash' || preferredModel === 'gemini-3.8-flash') {
-          preferredModel = 'gemini-2.0-flash';
-        }
-
-        // Si el prompt guardado es breve o versión anterior, actualizar a la versión 3.1
-        const targetPromptVer = '3.2 - Corto, Amable y Directo (Máximo 2 Líneas)';
-        const rawPrompt = aiConfig.systemPrompt || '';
-        const needsUpgrade = !aiConfig.promptVersion || aiConfig.promptVersion !== targetPromptVer || rawPrompt.length < 500;
-        const systemPrompt = needsUpgrade ? DEFAULT_SYSTEM_PROMPT : rawPrompt;
-        if (needsUpgrade) {
-          aiConfig.promptVersion = targetPromptVer;
-          aiConfig.systemPrompt = DEFAULT_SYSTEM_PROMPT;
-          try { localStorage.setItem('wes_ai_config', JSON.stringify(aiConfig)); } catch (e) {}
-        }
-        const temperature = aiConfig.temperature !== undefined ? Number(aiConfig.temperature) : 0.7;
-        const maxTokens = Math.max(Number(aiConfig.maxTokens) || 800, 800);
-
-        let reply = '';
-
-        if (provider === 'gemini') {
-          const candidateModels = [
-            preferredModel,
-            'gemini-2.0-flash',
-            'gemini-2.0-flash-lite',
-            'gemini-1.5-flash-latest',
-            'gemini-3.5-flash',
-            'gemini-2.0-flash-exp',
-            'gemini-3.8-flash'
-          ].filter((val, idx, self) => val && self.indexOf(val) === idx);
-
-          for (const candidate of candidateModels) {
-            try {
-              const url = `https://generativelanguage.googleapis.com/v1beta/models/${candidate}:generateContent?key=${aiConfig.apiKey}`;
-              
-              // Intentar primero con systemInstruction oficial de Gemini
-              let res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                  },
-                  contents: [{
-                    role: 'user',
-                    parts: [{ text: `[DIRECTIVA OBLIGATORIA: Responde de forma amable, corta y directa en MÁXIMO 2 LÍNEAS. Solo expón lo estrictamente necesario.]\n\n${userMessage}` }]
-                  }],
-                  generationConfig: {
-                    maxOutputTokens: 220,
-                    temperature: 0.35
-                  }
-                }),
-                signal: controller.signal
-              });
-
-              // Si falla por payload systemInstruction, reintentar con contents unificado
-              if (!res.ok) {
-                res = await fetch(url, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    contents: [{
-                      parts: [{ text: `[INSTRUCCIONES DEL SISTEMA DE WES]\n${systemPrompt}\n\n[CONSULTA DEL CLIENTE]\n${userMessage}` }]
-                    }],
-                    generationConfig: {
-                      maxOutputTokens: maxTokens,
-                      temperature: temperature
-                    }
-                  }),
-                  signal: controller.signal
-                });
-              }
-
-              if (res.ok) {
-                const data = await res.json();
-                const candidateObj = data?.candidates?.[0];
-                const parts = candidateObj?.content?.parts || [];
-                // Concatenar TODAS las partes para evitar truncamiento
-                reply = parts.map(p => (p && typeof p.text === 'string' ? p.text : '')).join('').trim();
-                
-                if (reply) {
-                  if (candidate !== aiConfig.model) {
-                    aiConfig.model = candidate;
-                    try { localStorage.setItem('wes_ai_config', JSON.stringify(aiConfig)); } catch (e) {}
-                  }
-                  break;
-                }
-              } else {
-                console.warn(`[Client Chat Cascade] Modelo ${candidate} no disponible, probando alternativo...`);
-              }
-            } catch (candErr) {
-              if (controller.signal.aborted) break;
-            }
-          }
-          clearTimeout(timeoutId);
-        } else if (provider === 'openai') {
-          const res = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${aiConfig.apiKey}`
-            },
-            body: JSON.stringify({
-              model: preferredModel,
-              messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: userMessage }
-              ],
-              max_tokens: maxTokens,
-              temperature: temperature
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-          if (res.ok) {
-            const data = await res.json();
-            reply = data?.choices?.[0]?.message?.content || '';
-          }
-        }
-
-        if (reply && reply.trim()) {
-          return { ok: true, reply: reply.trim(), provider };
-        }
-      } catch (err) {
-        console.warn('[WES Chat] Error consultando API de IA:', err);
-      }
-    }
-
-    // 3. Fallback a endpoint local /api/chat si estuviese activo
+    // 1. Consultar vía Backend Seguro en Google Apps Script
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-      const res = await fetch('/api/chat', {
+      const timeoutId = setTimeout(() => controller.abort(), 18000);
+
+      const payload = {
+        action: 'query_gemini_chat',
+        data: {
+          message: userMessage,
+          history: chatSession.chatHistory || [],
+          clientFallbackKey: localApiKey
+        }
+      };
+
+      const res = await fetch(backendUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
         signal: controller.signal
       });
       clearTimeout(timeoutId);
+
       if (res.ok) {
         const data = await res.json();
-        if (data && data.ok && data.reply) {
-          return data;
+        if (data && data.success && data.reply) {
+          if (data.assistantName) {
+            const hTitle = document.getElementById('wes-chat-header-title');
+            if (hTitle) hTitle.textContent = data.assistantName + ' - Asistente WES';
+          }
+          return { ok: true, reply: data.reply, model: data.model, assistantName: data.assistantName || 'Sofía' };
+        } else if (data && data.errorType) {
+          return { ok: false, errorType: data.errorType, message: data.message };
         }
       }
-    } catch (e) {}
+    } catch (err) {
+      console.warn('[WES Chat] Error consultando backend central de IA:', err);
+    }
 
-    return null;
+    // 2. Respaldo directo en cliente SOLO si existe clave local en este navegador
+    if (localApiKey && localApiKey.length > 5) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(localApiKey);
+        
+        let contents = [];
+        if (Array.isArray(chatSession.chatHistory)) {
+          contents = chatSession.chatHistory.slice(-8).map(h => ({
+            role: h.role,
+            parts: [{ text: h.content }]
+          }));
+        }
+        contents.push({ role: 'user', parts: [{ text: userMessage }] });
+
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: DEFAULT_SYSTEM_PROMPT }] },
+            contents: contents,
+            generationConfig: { maxOutputTokens: 800, temperature: 0.7 }
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          const reply = data?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('').trim();
+          if (reply) return { ok: true, reply, model: 'gemini-2.0-flash (local-fallback)', assistantName: 'Sofía' };
+        }
+      } catch (locErr) {
+        console.warn('[WES Chat] Fallback local falló:', locErr);
+      }
+    }
+
+    return {
+      ok: false,
+      errorType: 'AI_UNAVAILABLE',
+      message: 'En este momento nuestro asistente virtual no pudo procesar la respuesta. Por favor reintente su consulta o comuníquese con nosotros por WhatsApp.'
+    };
   }
 
   // Manejar clics de los chips de sugerencia rápida
@@ -830,7 +757,8 @@ DATOS DE LA EMPRESA
       }
 
       // 4.1 Detección inteligente de consultas sobre horarios y cierre de hoy (Respuesta de MÁXIMO 2 LÍNEAS)
-      const isHoursQuery = /(hasta\s+qu[eé]\s+hora|qu[eé]\s+hora\s+(est[aá]n|cierran|abren)|a\s+qu[eé]\s+hora|horario|est[aá]n\s+abiertos|abierto\s+hoy|hora\s+est[aá]n|esta\s+que\s+hora)/i.test(lower);
+      const isHoursQuery = /(hasta\s+qu[eé]\s+hora|qu[eé]\s+hora\s+(est[aá]n|cierran|abren)|a\s+qu[eé]\s+hora|horario|est[aá]n\s+abiertos|abierto\s+hoy|hora\s+est[aá]n|esta\s+que\s+hora|s[aá]bado)/i.test(lower);
+      const asksAboutSaturday = /(s[aá]bado|sabados|fin de semana)/i.test(lower);
       if (isHoursQuery) {
         let scheduleReply = '';
         try {
@@ -863,6 +791,9 @@ DATOS DE LA EMPRESA
             </div>
           </div>
         `);
+        if (!chatSession.chatHistory) chatSession.chatHistory = [];
+        chatSession.chatHistory.push({ role: 'model', content: aiResult.reply });
+        if (chatSession.chatHistory.length > 16) chatSession.chatHistory = chatSession.chatHistory.slice(-16);
         return;
       }
 
@@ -897,43 +828,27 @@ DATOS DE LA EMPRESA
         return;
       }
 
-      // 6. Respuesta de contingencia corta, amable y directa (MÁXIMO 2 LÍNEAS)
-      let fallbackText = '';
-      if (/(donde|direcci[oó]n|ubicaci[oó]n|queda)/i.test(lower)) {
-        fallbackText = "Estamos ubicados en Moca, Provincia Espaillat, con cobertura directa en toda la región del Cibao.<br>¿Desea visitarnos en nuestro taller o programar una visita técnica en sitio?";
-      } else if (/(motor|port[oó]n|came)/i.test(lower)) {
-        fallbackText = "Disponemos de motores italianos CAME BXV (400 a 1000 kg) y pistones batientes con instalación y garantía.<br>¿Su portón es corredizo o batiente para orientarle con el modelo ideal?";
-      } else if (/(inversor|bater[ií]a|trace|magnum|outback)/i.test(lower)) {
-        fallbackText = "Contamos con laboratorio técnico especializado y banco de pruebas para inversores Trace, Magnum y Outback.<br>¿Qué marca, capacidad o síntoma presenta su equipo?";
-      } else if (/(c[aá]mara|cctv|dahua|hikvision)/i.test(lower)) {
-        fallbackText = "Instalamos sistemas de cámaras de seguridad Dahua y Hikvision ColorVu con monitoreo en vivo en su celular.<br>¿Cuántas cámaras necesita cotizar o para qué tipo de propiedad?";
-      } else if (/^(hola|buenas|buenos d[ií]as|buenas tardes|buenas noches|saludos)\b/i.test(lower)) {
-        fallbackText = "¡Hola! Con gusto le atendemos.<br>¿En qué podemos servirle hoy?";
-      } else if (/(gracias|muy amable|agradecid)/i.test(lower)) {
-        fallbackText = "¡Con mucho gusto! Estamos para servirle.<br>Si necesita algo más, aquí seguimos.";
-      } else if (/^(ok|okay|vale|listo|perfecto|entiendo|entendido|de acuerdo|dale)\b/i.test(lower)) {
-        fallbackText = "Perfecto.<br>¿Hay algo más en lo que podamos ayudarle?";
-      } else if (/(adi[oó]s|hasta luego|nos vemos|chao|bye)/i.test(lower)) {
-        fallbackText = "Gracias por escribirnos. ¡Que tenga un excelente día!<br>Estamos a sus órdenes cuando nos necesite.";
-      } else if (/(cotiz|precio|cu[aá]nto cuesta|cu[aá]nto vale|costo)/i.test(lower)) {
-        fallbackText = "Con gusto le cotizamos. Indíquenos el producto o servicio, la cantidad y su nombre con teléfono.<br>También puede usar el botón \"Cotizar\" en la tienda.";
-      } else {
-        fallbackText = "Para orientarle mejor, ¿nos indica si su consulta es sobre cámaras, portones, inversores o soporte técnico?<br>También puede dejarnos su nombre y teléfono para que le llamemos.";
-      }
-      // Evitar repetir exactamente la misma respuesta dos veces seguidas
-      if (chatSession.lastFallback === fallbackText) {
-        fallbackText = "Disculpe, quiero asegurarme de entenderle bien.<br>Cuéntenos en una frase qué necesita (producto, falla o cotización) y le ayudamos.";
-      }
-      chatSession.lastFallback = fallbackText;
+      // 6. Aviso veraz cuando el servicio de IA no responde (Sin respuestas simuladas por palabras clave)
+      const errNotice = (aiResult && aiResult.message) 
+        ? aiResult.message 
+        : 'En este momento nuestro asistente virtual no pudo procesar la respuesta. Por favor reintente o comuníquese por WhatsApp.';
 
       appendBotMessage(`
-        <div class="space-y-1.5">
-          <div class="flex items-center space-x-1.5 text-[10px] text-amber-700 font-bold uppercase tracking-wider mb-0.5">
-            <i class="fas fa-sparkles text-amber-500"></i>
-            <span>Respuesta Asistente WES</span>
+        <div class="space-y-2">
+          <div class="flex items-center space-x-1.5 text-[10px] text-amber-800 font-bold uppercase tracking-wider mb-0.5">
+            <i class="fas fa-exclamation-triangle text-amber-600"></i>
+            <span>Asistente Sofía - Aviso de Servicio</span>
           </div>
-          <div class="leading-relaxed text-slate-800 text-xs">
-            ${fallbackText}
+          <p class="text-xs text-slate-700 leading-relaxed">${escapeHtml(errNotice)}</p>
+          <div class="pt-2 border-t border-slate-200 flex flex-wrap gap-2 items-center text-[11px]">
+            <button type="button" onclick="retryUserQuery('${escapeHtml(query).replace(/'/g, "\\'")}')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg transition shadow-xs flex items-center space-x-1">
+              <i class="fas fa-redo-alt text-[10px]"></i>
+              <span>Reintentar</span>
+            </button>
+            <a href="${WES_KB.empresa.whatsappUrl}" target="_blank" rel="noopener" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition shadow-xs flex items-center space-x-1">
+              <i class="fab fa-whatsapp text-[11px]"></i>
+              <span>WhatsApp Directo</span>
+            </a>
           </div>
         </div>
       `);
@@ -952,10 +867,19 @@ DATOS DE LA EMPRESA
   }
 
   // Exportar funciones a window para interacción con el DOM
+    function retryUserQuery(q) {
+    const input = document.getElementById('wes-chat-user-input');
+    if (input) {
+      input.value = q;
+      handleChatSubmit(new Event('submit'));
+    }
+  }
+
   if (typeof window !== 'undefined') {
     window.toggleClientChat = toggleClientChat;
     window.handleQuickChipClick = handleQuickChipClick;
     window.handleChatSubmit = handleChatSubmit;
+    window.retryUserQuery = retryUserQuery;
     window.querySpecificTicket = querySpecificTicket;
     window.startServiceRequestFlow = startServiceRequestFlow;
     window.confirmTicketDraft = confirmTicketDraft;

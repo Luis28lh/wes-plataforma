@@ -10479,7 +10479,7 @@ const StorageService = {
       emailSupport: 'wes.inform@gmail.com',
       address: 'Autopista Ramón Cáceres, Moca, Rep. Dom.',
       scheduleWeek: 'Lun - Vie: 8:00 AM - 6:00 PM',
-      scheduleSat: 'Sábados: 8:00 AM - 12:00 PM',
+      scheduleSat: 'Sábados: 8:00 AM - 1:00 PM',
       facebook: 'https://www.facebook.com/Warn.Electrical.Services',
       instagram: 'https://www.instagram.com/wes.inform/'
     };

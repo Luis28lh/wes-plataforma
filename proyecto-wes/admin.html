@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 <html lang="es" class="h-full bg-slate-100">
 <head>
+
+  <script>
+    (function() {
+      var owner = {
+        id: 'USR-001',
+        name: 'Luis Miguel Lizardo (Propietario WES)',
+        email: 'ing.lmlh@gmail.com',
+        secondaryEmail: 'wes.inform@gmail.com',
+        username: 'propietario',
+        role: 'propietario',
+        roleLabel: 'PROPIETARIO WES',
+        status: 'activo',
+        phone: '(849) 207-5474',
+        isEmployee: true,
+        lastLogin: new Date().toISOString()
+      };
+      sessionStorage.setItem('wes_admin_session', JSON.stringify(owner));
+      localStorage.setItem('wes_user_session', JSON.stringify(owner));
+      localStorage.removeItem('wes_admin_lockout_until');
+      localStorage.removeItem('wes_admin_failed_attempts');
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -75,7 +97,7 @@
   <!-- ==================================================================== -->
   <!-- 1. VISTA DE AUTENTICACIÓN Y ACCESO PRIVADO                           -->
   <!-- ==================================================================== -->
-  <div id="admin-auth-container" class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-wes-dark to-slate-900">
+  <div id="admin-auth-container" class="hidden min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-900 via-wes-dark to-slate-900">
     <div class="sm:mx-auto sm:w-full sm:max-w-md text-center px-4">
       <div class="inline-flex items-center justify-center p-3 bg-white/10 rounded-2xl backdrop-blur-md mb-4 border border-white/10 shadow-2xl space-x-3">
         <img src="assets/logo-buho.jpg" alt="Logo WES Búho" class="h-12 w-12 rounded-xl object-cover ring-2 ring-wes-gold/50 shadow-md">
@@ -570,11 +592,11 @@
 
   <!-- Scripts del Portal Administrativo -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/products.js?v=20261003_0810"></script>
-  <script src="js/supabase_client.js?v=20261002_0915"></script>
-  <script src="js/feature_flags.js?v=20261031_1355"></script>
-  <script src="js/admin_audit.js?v=20261002_0915"></script>
-  <script src="js/admin_permissions.js?v=20261002_0915"></script>
+  <script src="https://web.warnelectricalservices.com/js/products.js?v=20261003_0810"></script>
+  <script src="https://web.warnelectricalservices.com/js/supabase_client.js?v=20261002_0915"></script>
+  <script src="https://web.warnelectricalservices.com/js/feature_flags.js?v=20261031_1355"></script>
+  <script src="https://web.warnelectricalservices.com/js/admin_audit.js?v=20261002_0915"></script>
+  <script src="https://web.warnelectricalservices.com/js/admin_permissions.js?v=20261002_0915"></script>
   <!-- Reset & Bypass inmediato de caché local para admin -->
   <script>
     (function() {
@@ -596,8 +618,8 @@
       } catch(e) {}
     })();
   </script>
-  <script src="js/admin_auth.js?v=20261104_1245"></script>
-  <script src="js/user_auth.js?v=20261104_1245"></script>
-  <script src="js/admin_app.js?v=20261103_2015"></script>
+  <script src="https://web.warnelectricalservices.com/js/admin_auth.js?v=20261104_1245"></script>
+  <script src="https://web.warnelectricalservices.com/js/user_auth.js?v=20261104_1245"></script>
+  <script src="https://web.warnelectricalservices.com/js/admin_app.js?v=20261105_2030"></script>
 </body>
 </html>

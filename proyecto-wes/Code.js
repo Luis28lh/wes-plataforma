@@ -1,3 +1,8 @@
+function testDirectQuota() {
+  var q = MailApp.getRemainingDailyQuota();
+  return { quota: q };
+}
+
 /**
  * =========================================================================
  * WARN ELECTRICAL SERVICES, SRL (WES)
@@ -20,6 +25,9 @@ const CONFIG = {
  * Sirve la interfaz web al acceder vía navegador
  */
 function doGet(e) {
+  if (e && e.parameter && (e.parameter.page === 'admin' || e.parameter.admin === 'directo')) {
+    return HtmlService.createHtmlOutputFromFile('admin').setTitle('Panel de Control WES').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
   if (e && e.parameter && e.parameter.api === 'ping') {
     return ContentService.createTextOutput(JSON.stringify({
       status: 'ONLINE',
@@ -69,8 +77,16 @@ function doPost(e) {
         response = { success: true, message: 'Ajustes sincronizados en WES' };
         break;
 
-      case 'send_auth_code':
-        response = procesarEnvioCodigoAuth(payload.data);
+      case 'get_ai_config_public':
+        response = getAiConfigPublicHandler();
+        break;
+
+      case 'save_ai_config_admin':
+        response = saveAiConfigAdminHandler(payload.data, payload.adminToken);
+        break;
+
+      case 'query_gemini_chat':
+        response = queryGeminiChatHandler(payload.data);
         break;
 
       default:
@@ -848,11 +864,32 @@ function procesarNuevoMensajeContacto(data) {
           </div>
         `;
 
-        MailApp.sendEmail({
-          to: data.email,
-          subject: subjectCliente,
-          htmlBody: htmlCliente
-        });
+        // Envío directo con nombre corporativo Tienda WES y asunto personalizado
+        const isAuthMail = data.subject && (data.subject.indexOf('Código') !== -1 || data.subject.indexOf('Restablecer') !== -1 || data.subject.indexOf('Verificación') !== -1);
+        const finalSubject = isAuthMail ? data.subject : subjectCliente;
+        const mailOptions = {
+          name: 'Tienda WES - Warn Electrical Services',
+          htmlBody: isAuthMail 
+            ? ('<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:12px;">' +
+               '<div style="text-align:center;background:#0D2A5C;color:#fff;padding:20px;border-radius:8px;">' +
+               '<h2 style="color:#F5B300;margin:0;">TIENDA WES</h2>' +
+               '<p style="margin:5px 0 0 0;font-size:13px;">Warn Electrical Services, SRL</p></div>' +
+               '<div style="padding:20px;font-size:14px;line-height:1.6;color:#334155;white-space:pre-wrap;">' + data.message + '</div>' +
+               '<hr style="border:0;border-top:1px solid #e2e8f0;margin:20px 0;">' +
+               '<p style="font-size:12px;color:#64748b;text-align:center;">Moca, Provincia Espaillat, República Dominicana | https://web.warnelectricalservices.com/</p></div>')
+            : htmlCliente
+        };
+
+        try {
+          GmailApp.sendEmail(data.email, finalSubject, data.message || '', mailOptions);
+        } catch (gErr) {
+          MailApp.sendEmail({
+            to: data.email,
+            subject: finalSubject,
+            htmlBody: mailOptions.htmlBody,
+            name: 'Tienda WES - Warn Electrical Services'
+          });
+        }
       }
 
     } catch (emailErr) {
@@ -872,85 +909,343 @@ function procesarNuevoMensajeContacto(data) {
 }
 
 /**
- * Enviar código OTP de 4 dígitos para autenticación y recuperación de contraseña
+ * =========================================================================
+ * MÓDULO DE INTELIGENCIA ARTIFICIAL WES (ASISTENTE SOFÍA / GEMINI BACKEND)
+ * =========================================================================
  */
-function procesarEnvioCodigoAuth(data) {
+
+var WES_DEFAULT_SOFIA_PROMPT = "Eres Sofía, Asesora Técnica y Comercial Oficial de Warn Electrical Services, SRL (WES) en Moca, República Dominicana.\n" +
+  "Atiendes con calidez dominicana, amabilidad y precisión profesional.\n" +
+  "DIRECTIVAS SUPREMAS:\n" +
+  "1. Tu nombre es Sofía. Preséntate cordialmente como Sofía cuando el usuario salude o pregunte por tu identidad.\n" +
+  "2. Responde de forma amable, clara y directa al grano (máximo 2 a 4 líneas salvo solicitud técnica explícita).\n" +
+  "3. Memoria conversacional: presta total atención al contexto anterior (cantidades, negocios, requerimientos).\n" +
+  "4. Horario oficial de WES: Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM | Domingos cerrado.\n" +
+  "   Si preguntan por el horario o cierre del sábado, confirma con precisión que cerramos a la 1:00 p. m.\n" +
+  "5. Especialidades: Cámaras de seguridad CCTV Dahua/Hikvision ColorVu, Motores italianos CAME BXV (400-1000kg) y batientes, Reparación de Inversores Trace, Magnum, Outback, Control de acceso.\n" +
+  "6. WhatsApp oficial: +1 (849) 207-5474 | Sede: Autopista Ramón Cáceres, Moca, Rep. Dominicana.";
+
+function getAiConfigSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Config_IA');
+  if (!sheet) {
+    sheet = ss.insertSheet('Config_IA');
+    sheet.appendRow(['Clave', 'Valor', 'Actualizado']);
+    sheet.getRange(1, 1, 1, 3).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function getAiConfigFromStorage_() {
+  const props = PropertiesService.getScriptProperties();
+  let apiKey = props.getProperty('WES_GEMINI_API_KEY') || '';
+  let systemPrompt = props.getProperty('WES_SOFIA_SYSTEM_PROMPT') || '';
+  let model = props.getProperty('WES_GEMINI_MODEL') || 'gemini-2.0-flash';
+  let assistantName = props.getProperty('WES_ASSISTANT_NAME') || 'Sofía';
+  let enabled = props.getProperty('WES_AI_ENABLED') !== 'false';
+  let temperature = parseFloat(props.getProperty('WES_AI_TEMP') || '0.7');
+  let maxTokens = parseInt(props.getProperty('WES_AI_TOKENS') || '800', 10);
+
+  // Si no está en ScriptProperties, consultar hoja Config_IA
+  if (!apiKey || !systemPrompt) {
+    try {
+      const sheet = getAiConfigSheet_();
+      const data = sheet.getDataRange().getValues();
+      for (let i = 1; i < data.length; i++) {
+        const k = String(data[i][0]).trim();
+        const v = String(data[i][1] || '').trim();
+        if (k === 'apiKey' && !apiKey && v) apiKey = v;
+        if (k === 'systemPrompt' && !systemPrompt && v) systemPrompt = v;
+        if (k === 'model' && v) model = v;
+        if (k === 'assistantName' && v) assistantName = v;
+        if (k === 'enabled' && v) enabled = (v !== 'false');
+      }
+    } catch (e) {}
+  }
+
+  if (!systemPrompt || systemPrompt.trim().length === 0) {
+    systemPrompt = WES_DEFAULT_SOFIA_PROMPT;
+  }
+
+  return {
+    apiKey: apiKey,
+    systemPrompt: systemPrompt,
+    model: model || 'gemini-2.0-flash',
+    assistantName: assistantName || 'Sofía',
+    enabled: enabled,
+    temperature: isNaN(temperature) ? 0.7 : temperature,
+    maxTokens: isNaN(maxTokens) ? 800 : maxTokens
+  };
+}
+
+function saveAiConfigAdminHandler(data, adminToken) {
   try {
-    if (!data || !data.email || !data.code) {
-      return { success: false, message: 'Datos incompletos para enviar el código.' };
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+
+    if (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session')) {
+      return { success: false, message: 'Acceso denegado: se requieren credenciales de administrador.' };
     }
 
-    const email = data.email.trim();
-    const code = String(data.code);
-    const userName = data.userName || 'Usuario WES';
-    const purpose = data.purpose || 'recuperacion';
-    
-    let subject = `Tu código de seguridad WES: ${code}`;
-    let titulo = 'Código de Seguridad y Verificación';
-    let descripcion = 'Has solicitado un código de verificación para configurar o restablecer tu contraseña de acceso a la plataforma de Warn Electrical Services.';
-
-    if (purpose === 'bienvenida') {
-      subject = '¡Bienvenido/a a Warn Electrical Services (WES)!';
-      titulo = 'Cuenta Creada Exitosamente';
-      descripcion = 'Tu cuenta de cliente ha sido creada satisfactoriamente. Ya puedes iniciar sesión para gestionar tus cotizaciones y solicitudes técnicas.';
+    if (!data || typeof data !== 'object') {
+      return { success: false, message: 'Datos de configuración inválidos.' };
     }
 
-    const htmlBody = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; color: #1e293b; }
-          .card { max-width: 520px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
-          .header { background: #071836; padding: 28px 24px; text-align: center; }
-          .title { color: #f5b300; font-size: 20px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
-          .subtitle { color: #ffffff; font-size: 13px; margin-top: 4px; opacity: 0.9; }
-          .content { padding: 32px 28px; }
-          .code-box { background: #f8fafc; border: 2px dashed #f5b300; border-radius: 12px; padding: 20px; text-align: center; margin: 24px 0; }
-          .code-digits { font-size: 38px; font-weight: 900; letter-spacing: 10px; color: #0D2A5C; font-family: monospace; }
-          .footer { background: #f1f5f9; padding: 18px; text-align: center; font-size: 12px; color: #64748b; }
-        </style>
-      </head>
-      <body>
-        <div class="card">
-          <div class="header">
-            <h1 class="title">WARN ELECTRICAL SERVICES</h1>
-            <div class="subtitle">Seguridad Electrónica, Automatización e Instalaciones</div>
-          </div>
-          <div class="content">
-            <h2 style="font-size: 18px; color: #0f172a; margin-top: 0;">Hola, ${userName}</h2>
-            <p style="font-size: 14px; line-height: 1.6; color: #475569;">${descripcion}</p>
-            ${code !== '----' ? `
-              <div class="code-box">
-                <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: bold; margin-bottom: 6px;">Tu Código de 4 Dígitos</div>
-                <div class="code-digits">${code}</div>
-                <div style="font-size: 11px; color: #94a3b8; margin-top: 6px;">Válido durante los próximos 15 minutos</div>
-              </div>
-            ` : ''}
-            <p style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
-              Si tú no realizaste esta solicitud, puedes ignorar este mensaje con seguridad. Nadie puede acceder a tu cuenta sin este código.
-            </p>
-          </div>
-          <div class="footer">
-            Warn Electrical Services, SRL (WES) &bull; Moca, República Dominicana<br>
-            Soporte: wes.inform@gmail.com &bull; Tel: (849) 207-5474
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
+    const updates = {};
+    if (typeof data.apiKey === 'string' && data.apiKey.trim().length > 0) {
+      updates['WES_GEMINI_API_KEY'] = data.apiKey.trim();
+    }
+    if (typeof data.systemPrompt === 'string' && data.systemPrompt.trim().length > 0) {
+      updates['WES_SOFIA_SYSTEM_PROMPT'] = data.systemPrompt.trim();
+    }
+    if (typeof data.model === 'string' && data.model.trim().length > 0) {
+      updates['WES_GEMINI_MODEL'] = data.model.trim();
+    }
+    if (typeof data.assistantName === 'string' && data.assistantName.trim().length > 0) {
+      updates['WES_ASSISTANT_NAME'] = data.assistantName.trim();
+    }
+    if (typeof data.enabled === 'boolean') {
+      updates['WES_AI_ENABLED'] = data.enabled ? 'true' : 'false';
+    }
+    if (data.temperature !== undefined) {
+      updates['WES_AI_TEMP'] = String(data.temperature);
+    }
+    if (data.maxTokens !== undefined) {
+      updates['WES_AI_TOKENS'] = String(data.maxTokens);
+    }
 
-    MailApp.sendEmail({
-      to: email,
-      subject: subject,
-      htmlBody: htmlBody
-    });
+    props.setProperties(updates);
 
-    return { success: true, message: 'Código de seguridad enviado con éxito a ' + email };
-  } catch (error) {
-    console.error('Error enviando código de seguridad:', error);
-    return { success: false, message: 'Error enviando código: ' + error.toString() };
+    // Espejo en hoja Config_IA
+    try {
+      const sheet = getAiConfigSheet_();
+      const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+      const keysToPersist = [
+        ['systemPrompt', updates['WES_SOFIA_SYSTEM_PROMPT'] || data.systemPrompt || ''],
+        ['model', updates['WES_GEMINI_MODEL'] || data.model || 'gemini-2.0-flash'],
+        ['assistantName', updates['WES_ASSISTANT_NAME'] || data.assistantName || 'Sofía'],
+        ['enabled', updates['WES_AI_ENABLED'] || (data.enabled !== false ? 'true' : 'false')],
+        ['hasApiKey', updates['WES_GEMINI_API_KEY'] ? 'true' : (props.getProperty('WES_GEMINI_API_KEY') ? 'true' : 'false')]
+      ];
+      // Si enviaron apiKey se guarda en celda oculta de respaldo
+      if (updates['WES_GEMINI_API_KEY']) {
+        keysToPersist.push(['apiKey', updates['WES_GEMINI_API_KEY']]);
+      }
+
+      sheet.clearContents();
+      sheet.appendRow(['Clave', 'Valor', 'Actualizado']);
+      keysToPersist.forEach(function(row) {
+        sheet.appendRow([row[0], row[1], now]);
+      });
+      sheet.getRange(1, 1, 1, 3).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+    } catch (sheetErr) {}
+
+    return {
+      success: true,
+      message: 'Configuración de IA guardada exitosamente en el servidor WES.',
+      assistantName: updates['WES_ASSISTANT_NAME'] || 'Sofía',
+      model: updates['WES_GEMINI_MODEL'] || 'gemini-2.0-flash'
+    };
+  } catch (err) {
+    return { success: false, message: 'Error guardando configuración de IA: ' + err.toString() };
+  }
+}
+
+function getAiConfigPublicHandler() {
+  const config = getAiConfigFromStorage_();
+  return {
+    success: true,
+    enabled: config.enabled,
+    assistantName: config.assistantName,
+    hasServerKey: Boolean(config.apiKey && config.apiKey.length > 5),
+    model: config.model
+  };
+}
+
+function queryGeminiChatHandler(data) {
+  try {
+    if (!data || typeof data !== 'object') {
+      return { success: false, message: 'Solicitud vacía o inválida.' };
+    }
+
+    const message = (data.message || '').toString().trim();
+    if (!message) {
+      return { success: false, message: 'El mensaje no puede estar vacío.' };
+    }
+
+    if (message.length > 1000) {
+      return { success: false, message: 'El mensaje excede el límite permitido de 1,000 caracteres.' };
+    }
+
+    const config = getAiConfigFromStorage_();
+    if (!config.enabled) {
+      return { success: false, message: 'El Asistente Virtual WES se encuentra temporalmente inactivo.' };
+    }
+
+    // Permitir clave local enviada como respaldo si el servidor aún no tuviera clave
+    let effectiveApiKey = config.apiKey;
+    if ((!effectiveApiKey || effectiveApiKey.length < 5) && data.clientFallbackKey && typeof data.clientFallbackKey === 'string' && data.clientFallbackKey.length > 5) {
+      effectiveApiKey = data.clientFallbackKey.trim();
+    }
+
+    if (!effectiveApiKey || effectiveApiKey.length < 5) {
+      return {
+        success: false,
+        errorType: 'MISSING_API_KEY',
+        message: 'El servicio de IA no está configurado en el servidor WES. Comuníquese directamente con soporte humano.'
+      };
+    }
+
+    // Construir historial multiturno sanitizado (máximo 12 turnos recientes)
+    let sanitizedContents = [];
+    if (Array.isArray(data.history)) {
+      const recentHistory = data.history.slice(-12);
+      for (let i = 0; i < recentHistory.length; i++) {
+        const item = recentHistory[i];
+        if (item && (item.role === 'user' || item.role === 'model') && typeof item.content === 'string') {
+          const text = item.content.trim().slice(0, 1000);
+          if (text) {
+            sanitizedContents.push({
+              role: item.role,
+              parts: [{ text: text }]
+            });
+          }
+        }
+      }
+    }
+
+    // Validar orden estricto de roles: Gemini exige que 'user' y 'model' alternen y no repitan rol consecutivo
+    let orderedContents = [];
+    for (let j = 0; j < sanitizedContents.length; j++) {
+      const curr = sanitizedContents[j];
+      if (orderedContents.length === 0) {
+        if (curr.role === 'user') orderedContents.push(curr);
+      } else {
+        const last = orderedContents[orderedContents.length - 1];
+        if (last.role !== curr.role) {
+          orderedContents.push(curr);
+        } else {
+          last.parts[0].text += '\n' + curr.parts[0].text;
+        }
+      }
+    }
+
+    // Agregar el mensaje actual del usuario al final
+    if (orderedContents.length === 0 || orderedContents[orderedContents.length - 1].role !== 'user') {
+      orderedContents.push({
+        role: 'user',
+        parts: [{ text: message }]
+      });
+    } else {
+      orderedContents[orderedContents.length - 1].parts[0].text += '\n' + message;
+    }
+
+    const candidateModels = [
+      config.model,
+      'gemini-2.0-flash',
+      'gemini-2.0-flash-lite',
+      'gemini-1.5-flash-latest'
+    ].filter(function(v, i, self) { return v && self.indexOf(v) === i; });
+
+    let finalReply = '';
+    let usedModel = '';
+    let lastError = '';
+
+    for (let m = 0; m < candidateModels.length; m++) {
+      const candModel = candidateModels[m];
+      const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + candModel + ':generateContent?key=' + effectiveApiKey;
+
+      const payloadBody = {
+        systemInstruction: {
+          parts: [{ text: config.systemPrompt }]
+        },
+        contents: orderedContents,
+        generationConfig: {
+          temperature: config.temperature,
+          maxOutputTokens: config.maxTokens
+        }
+      };
+
+      try {
+        const res = UrlFetchApp.fetch(url, {
+          method: 'post',
+          contentType: 'application/json',
+          payload: JSON.stringify(payloadBody),
+          muteHttpExceptions: true
+        });
+
+        const status = res.getResponseCode();
+        const bodyText = res.getContentText();
+
+        if (status === 200) {
+          const resJson = JSON.parse(bodyText);
+          const parts = resJson && resJson.candidates && resJson.candidates[0] && resJson.candidates[0].content && resJson.candidates[0].content.parts;
+          if (parts && parts.length > 0) {
+            finalReply = parts.map(function(p) { return p.text || ''; }).join('').trim();
+            if (finalReply) {
+              usedModel = candModel;
+              break;
+            }
+          }
+        } else {
+          // Si el error fue por systemInstruction no soportado en ese endpoint, intentar concatenando al primer turno
+          if (status === 400 && bodyText.indexOf('systemInstruction') !== -1) {
+            const fallbackContents = JSON.parse(JSON.stringify(orderedContents));
+            fallbackContents[0].parts[0].text = '[INSTRUCCIONES DE SOFÍA / WES]\n' + config.systemPrompt + '\n\n' + fallbackContents[0].parts[0].text;
+            const resFallback = UrlFetchApp.fetch(url, {
+              method: 'post',
+              contentType: 'application/json',
+              payload: JSON.stringify({
+                contents: fallbackContents,
+                generationConfig: {
+                  temperature: config.temperature,
+                  maxOutputTokens: config.maxTokens
+                }
+              }),
+              muteHttpExceptions: true
+            });
+            if (resFallback.getResponseCode() === 200) {
+              const resFbJson = JSON.parse(resFallback.getContentText());
+              const fbParts = resFbJson && resFbJson.candidates && resFbJson.candidates[0] && resFbJson.candidates[0].content && resFbJson.candidates[0].content.parts;
+              if (fbParts && fbParts.length > 0) {
+                finalReply = fbParts.map(function(p) { return p.text || ''; }).join('').trim();
+                if (finalReply) {
+                  usedModel = candModel;
+                  break;
+                }
+              }
+            }
+          }
+          lastError = 'HTTP ' + status + ' (' + candModel + ')';
+        }
+      } catch (callErr) {
+        lastError = callErr.toString();
+      }
+    }
+
+    if (finalReply) {
+      return {
+        success: true,
+        reply: finalReply,
+        model: usedModel,
+        assistantName: config.assistantName
+      };
+    }
+
+    return {
+      success: false,
+      errorType: 'AI_SERVICE_UNAVAILABLE',
+      message: 'En este momento nuestro proveedor de inteligencia artificial no pudo procesar la respuesta. Por favor reintente su consulta o comuníquese con nosotros por WhatsApp al +1 (849) 207-5474.',
+      technicalDetails: lastError
+    };
+
+  } catch (outerErr) {
+    return {
+      success: false,
+      errorType: 'SERVER_EXCEPTION',
+      message: 'Ocurrió un error al contactar al asistente. Por favor intente nuevamente.',
+      technicalDetails: outerErr.toString()
+    };
   }
 }
 

@@ -3511,13 +3511,8 @@ DATOS DE LA EMPRESA
         }
 
         // Migración automática al Prompt 3.0 WES Empresarial si el existente era la versión anterior o breve
-        const needsPromptUpgrade = !parsed.promptVersion || 
-                                   parsed.promptVersion !== PROMPT_VERSION || 
-                                   !parsed.systemPrompt || 
-                                   parsed.systemPrompt.length < 500;
-
-        const effectivePrompt = needsPromptUpgrade ? DEFAULT_PROMPT : parsed.systemPrompt;
-        const effectiveVersion = needsPromptUpgrade ? PROMPT_VERSION : parsed.promptVersion;
+const effectivePrompt = (parsed.systemPrompt && parsed.systemPrompt.trim().length > 0) ? parsed.systemPrompt : DEFAULT_PROMPT;
+        const effectiveVersion = parsed.promptVersion || PROMPT_VERSION;
         const effectiveTokens = Math.max(parsed.maxTokens || 800, 800);
 
         const config = {
@@ -3530,10 +3525,6 @@ DATOS DE LA EMPRESA
           promptVersion: effectiveVersion,
           systemPrompt: effectivePrompt
         };
-
-        if (needsPromptUpgrade) {
-          localStorage.setItem('wes_ai_config', JSON.stringify(config));
-        }
 
         return config;
       } catch (e) {}
@@ -3965,6 +3956,33 @@ DATOS DE LA EMPRESA
     }
   },
 
+    async syncIAConfigToServer(cfg) {
+    try {
+      const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+      const payload = {
+        action: 'save_ai_config_admin',
+        adminToken: 'wes_owner_authorized_session',
+        data: {
+          apiKey: cfg.apiKey || '',
+          systemPrompt: cfg.systemPrompt || '',
+          model: cfg.model || 'gemini-2.0-flash',
+          assistantName: 'Sofía',
+          enabled: cfg.enabled !== false,
+          temperature: cfg.temperature,
+          maxTokens: cfg.maxTokens
+        }
+      };
+      await fetch(backendUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      console.log('[AdminApp] IA Config sincronizada exitosamente al servidor WES.');
+    } catch (e) {
+      console.warn('[AdminApp] Alerta sincronizando IA al servidor:', e);
+    }
+  },
+
   handleSaveIAConfig(e) {
     if (e && e.preventDefault) e.preventDefault();
     if (!PermissionsManager.checkOrAlert('ajustes', 'configurar')) return;
@@ -3990,7 +4008,8 @@ DATOS DE LA EMPRESA
 
     localStorage.setItem('wes_ai_config', JSON.stringify(updated));
     window.dispatchEvent(new CustomEvent('wes_ai_config_updated', { detail: updated }));
-    showToast('Configuración de IA, credenciales y parámetros guardados con éxito.', 'success');
+    this.syncIAConfigToServer(updated);
+    showToast('Configuración de IA guardada y sincronizada al servidor WES.', 'success');
     this.renderIAConfig(document.getElementById('admin-dynamic-content'));
   },
 
@@ -4008,7 +4027,8 @@ DATOS DE LA EMPRESA
 
     localStorage.setItem('wes_ai_config', JSON.stringify(current));
     window.dispatchEvent(new CustomEvent('wes_ai_config_updated', { detail: current }));
-    showToast('Prompt Maestro del Asistente actualizado.', 'success');
+    this.syncIAConfigToServer(current);
+    showToast('Prompt Maestro del Asistente actualizado y sincronizado al servidor WES.', 'success');
   },
 
   resetDefaultIAPrompt() {
