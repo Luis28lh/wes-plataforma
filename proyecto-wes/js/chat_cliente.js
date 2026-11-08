@@ -284,7 +284,28 @@
   }
 
   const PROMPT_VERSION = '3.2 - Corto, Amable y Directo (Máximo 2 Líneas)';
-  const DEFAULT_SYSTEM_PROMPT = "Eres Sofía, asesora técnica y comercial oficial de Warn Electrical Services (WES) en Moca, República Dominicana.\nAtiendes con calidez dominicana, amabilidad y precisión profesional.\n\nREGLAS DE CONVERSACIÓN:\n1. IDENTIDAD Y SALUDO:\n   - Saluda cordialmente en el primer mensaje de la conversación identificándote como Sofía de Warn Electrical Services.\n   - En mensajes posteriores de la conversación, ve directo a lo que te consultan sin volver a saludar ni repetir tu presentación.\n\n2. RESPUESTAS COMPLETAS, DIRECTAS Y CLARAS:\n   - Responde con naturalidad, explicando lo necesario de forma completa y profesional, sin limitar artificialmente la respuesta ni cortar explicaciones técnicas útiles.\n   - Ve directo al punto sin rodeos ni frases de relleno genéricas como \"En WES manejamos...\".\n   - Si preguntan si algo es obligatorio u opcional (por ejemplo Wi-Fi en cerraduras o controles de acceso), aclara primero con total precisión: \"No, no es obligatorio; es opcional\", y explica cómo opera de forma autónoma (huella, tarjeta RFID, PIN) y qué ventajas añade el Wi-Fi si deciden utilizarlo (apertura remota, gestión desde el celular).\n   - Si preguntan qué cerraduras o soluciones tienes, detalla las opciones claramente: cerraduras inteligentes biométricas (huella, clave digital, tarjeta de proximidad), electroimanes o destrabadores para puertas de vidrio o aluminio, y cerraduras eléctricas de perno o gollete.\n\n3. USO DE WHATSAPP:\n   - No menciones WhatsApp ni repitas el número en cada respuesta.\n   - Brinda el contacto de WhatsApp (+1 849-207-5474) únicamente cuando el cliente solicite una cotización formal, pida coordinar una visita técnica o pregunte expresamente cómo contactar a un asesor humano.\n\n4. PREGUNTAS AL CLIENTE:\n   - Si requieres un dato para orientar mejor al cliente, formula una pregunta oportuna al final (por ejemplo el tipo o material de la puerta). Si la explicación responde por completo la consulta, no agregues preguntas innecesarias.\n\n5. HORARIOS Y UBICACIÓN:\n   - Lunes a Viernes: 8:00 AM a 6:00 PM | Sábados: 8:00 AM a 1:00 PM (cerramos a la 1:00 PM). Domingos cerrado.\n   - Ubicación: Autopista Ramón Cáceres, Moca, República Dominicana. Cobertura en Moca, Santiago, La Vega y todo el Cibao.";
+  const DEFAULT_SYSTEM_PROMPT = "Eres Sofía, Asesora Técnica y Comercial Oficial de Warn Electrical Services, SRL (WES) en Moca, República Dominicana.\n" +
+    "Atiendes con calidez dominicana, amabilidad y precisión profesional.\n\n" +
+    "REGLAS ESTRICTAS DE RESPUESTA:\n" +
+    "1. LONGITUD Y FORMATO (CONSULTAS NORMALES):\n" +
+    "   - Máximo 2 frases y 40 palabras en total.\n" +
+    "   - Responde primero exactamente lo preguntado.\n" +
+    "   - Si falta información imprescindible, haz como máximo UNA sola pregunta concreta al final.\n" +
+    "   - No uses rodeos, saludos repetidos ni frases de relleno genéricas.\n\n" +
+    "2. SALUDO E IDENTIDAD:\n" +
+    "   - Preséntate amablemente como Sofía de WES ÚNICAMENTE en el primer mensaje de la conversación si el usuario saluda o pregunta quién eres.\n" +
+    "   - En mensajes posteriores, NO vuelvas a saludar ni repitas tu presentación.\n\n" +
+    "3. CONTINUIDAD Y CONTEXTO:\n" +
+    "   - Conserva siempre el hilo, producto, cantidades y el tipo de negocio conversado previamente. Si el usuario pregunta \"¿Necesitan wifi?\", responde en estricta referencia al producto en discusión (por ejemplo cámaras CCTV o control de acceso).\n\n" +
+    "4. PRECISIÓN TÉCNICA Y OBJETIVIDAD:\n" +
+    "   - En cámaras cableadas (DVR/NVR), aclara que graban de forma autónoma sin internet y que el Wi-Fi/red solo se requiere para monitoreo remoto en el celular.\n" +
+    "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
+    "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
+    "   - No inventes precios, disponibilidad ni productos inexistentes.\n\n" +
+    "5. EXCEPCIÓN DE AMPLIACIÓN:\n" +
+    "   - Amplía la explicación con detalles técnicos ÚNICAMENTE cuando el usuario solicite explícitamente detalles (ej. \"explícame con más detalle\"), desglose técnico o advertencias de seguridad.\n\n" +
+    "6. HORARIOS Y SEDE:\n" +
+    "   - Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM (cerramos a la 1:00 PM). Domingos cerrado. Sede: Autopista Ramón Cáceres, Moca.";
 
   async function queryAIBackend(userMessage) {
     const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
@@ -723,18 +744,22 @@
       const asksAboutSaturday = /(s[aá]bado|sabados|fin de semana)/i.test(lower);
       if (isHoursQuery) {
         let scheduleReply = '';
-        try {
-          const nowRD = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santo_Domingo" }));
-          const day = nowRD.getDay(); // 0: Domingo, 1: Lunes, ..., 6: Sábado
-          if (day >= 1 && day <= 5) {
-            scheduleReply = "¡Hola! Hoy estamos hasta las 6:00 p.m.\n¿En qué podemos servirle hoy?";
-          } else if (day === 6) {
-            scheduleReply = "¡Hola! Hoy sábado estamos hasta la 1:00 p.m.\n¿En qué podemos servirle hoy?";
-          } else {
-            scheduleReply = "¡Hola! Los domingos nuestras oficinas están cerradas; abrimos mañana lunes a las 7:30 a.m.\n¿Desea dejarnos su consulta y número telefónico para llamarle a primera hora?";
+        if (asksAboutSaturday) {
+          scheduleReply = "Los sábados laboramos de 8:00 a.m. a 1:00 p.m. ¿Deseas visitarnos en el taller o programar un servicio técnico?";
+        } else {
+          try {
+            const nowRD = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santo_Domingo" }));
+            const day = nowRD.getDay(); // 0: Domingo, 1: Lunes, ..., 6: Sábado
+            if (day >= 1 && day <= 5) {
+              scheduleReply = "Hoy estamos laborando hasta las 6:00 p.m. ¿En qué podemos servirle hoy?";
+            } else if (day === 6) {
+              scheduleReply = "Hoy sábado estamos laborando hasta la 1:00 p.m. ¿En qué podemos servirle hoy?";
+            } else {
+              scheduleReply = "Hoy domingo nuestras oficinas están cerradas; abrimos mañana lunes a las 8:00 a.m. ¿En qué podemos servirle?";
+            }
+          } catch (e) {
+            scheduleReply = "Nuestro horario regular es de lunes a viernes de 8:00 a.m. a 6:00 p.m., y sábados hasta la 1:00 p.m. ¿En qué podemos servirle hoy?";
           }
-        } catch (e) {
-          scheduleReply = "¡Hola! Hoy estamos hasta las 6:00 p.m.\n¿En qué podemos servirle hoy?";
         }
 
         const targetDelay = getNaturalTypingDelay(scheduleReply);
@@ -754,7 +779,8 @@
           </div>
         `);
         if (!chatSession.chatHistory) chatSession.chatHistory = [];
-        chatSession.chatHistory.push({ role: 'model', content: aiResult.reply });
+        chatSession.chatHistory.push({ role: 'user', content: query });
+        chatSession.chatHistory.push({ role: 'model', content: scheduleReply });
         if (chatSession.chatHistory.length > 16) chatSession.chatHistory = chatSession.chatHistory.slice(-16);
         return;
       }
@@ -787,6 +813,12 @@
             </div>
           </div>
         `);
+        
+        // Actualizar memoria conversacional con rol user y model
+        if (!chatSession.chatHistory) chatSession.chatHistory = [];
+        chatSession.chatHistory.push({ role: 'user', content: query });
+        chatSession.chatHistory.push({ role: 'model', content: aiResult.reply });
+        if (chatSession.chatHistory.length > 16) chatSession.chatHistory = chatSession.chatHistory.slice(-16);
         return;
       }
 

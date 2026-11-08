@@ -37,14 +37,14 @@
 ## 2. Hallazgos y Defectos Pendientes Registrados para Siguiente Etapa
 
 ### Módulo: Asistente Virtual / Chat Web WES (Sofía)
-- **Estado:** ✅ Corregido y Desplegado en Producción (Apps Script v45 & GitHub Pages v20261105_2030).
+- **Estado:** ✅ Corregido y Desplegado en Producción (Apps Script v51 & GitHub Pages).
 - **Mejoras Implementadas:**
-  - **Conexión a Backend Seguro:** Las consultas públicas a Gemini ahora se realizan a través de Google Apps Script (`action: 'query_gemini_chat'`), protegiendo la API Key sin exponerla a visitantes.
-  - **Identidad de Sofía:** Encabezado actualizado a 'Sofía - Asistente WES' y saludo inicial personalizado.
-  - **Memoria Multiturno:** Implementación de historial conversacional en memoria (`chatSession.chatHistory`) respetando el orden y alternancia de roles (`user` y `model`) para conservar el contexto.
-  - **Eliminación de Respuestas Simuladas:** Erradicadas las plantillas comerciales idénticas basadas en palabras clave. En caso de indisponibilidad del modelo, se muestra un aviso veraz con botón de reintento y enlace directo a WhatsApp.
-  - **Unificación de Horarios:** Horario oficial de sábados consolidado de 8:00 a. m. a 1:00 p. m. en todo el sistema (`products.js`, catálogo, footer y chat).
-  - **Seguridad y Control Administrativo:** Edición del prompt de Sofía y clave de Gemini restringida a administradores mediante `save_ai_config_admin` con sincronización en tiempo real al servidor. Límites de mensajes a 1,000 caracteres.
+  - **Control de Brevedad y Validación en Servidor:** Las respuestas normales del modelo son validadas en el backend de Google Apps Script (`queryGeminiChatHandler`). Si no hay solicitud expresa de ampliación técnica y superan el límite, el servidor ejecuta una condensación conservando el dato útil, con un tope de 2 frases y menos de 40 palabras.
+  - **Memoria Multiturno y Continuidad Estricta:** Se subsanó la desincronización en el frontend (`chatSession.chatHistory`) donde las respuestas de IA no se guardaban en el array local del navegador. Ahora cada turno del usuario y del modelo se preserva en orden estricto, manteniendo el contexto (cámaras, tipo de negocio, cantidades).
+  - **Manejo Específico de Horarios:** La detección de horario diferencia consultas generales del horario del sábado (8:00 a. m. a 1:00 p. m.), respondiendo con precisión sin importar el día en que se consulte.
+  - **Conexión a Backend Seguro:** Las consultas públicas a Gemini se procesan a través de Google Apps Script (`action: 'query_gemini_chat'`), protegiendo la clave sin exponerla a visitantes.
+  - **Eliminación de Rellenos y Spam de WhatsApp:** Erradicadas las frases de introducción genéricas, listas no solicitadas y números de WhatsApp repetitivos. El modelo solo deriva a canales externos ante solicitud formal de cotización o contacto humano.
+  - **Ampliación Técnica Selectiva:** Explicaciones extensas y comparativas (como DVR vs. NVR) se activan exclusivamente cuando el usuario solicita explícitamente detalles.
 
 ---
 

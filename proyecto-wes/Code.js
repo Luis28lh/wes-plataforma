@@ -915,15 +915,27 @@ function procesarNuevoMensajeContacto(data) {
  */
 
 var WES_DEFAULT_SOFIA_PROMPT = "Eres Sofía, Asesora Técnica y Comercial Oficial de Warn Electrical Services, SRL (WES) en Moca, República Dominicana.\n" +
-  "Atiendes con calidez dominicana, amabilidad y precisión profesional.\n" +
-  "DIRECTIVAS SUPREMAS:\n" +
-  "1. Tu nombre es Sofía. Preséntate cordialmente como Sofía cuando el usuario salude o pregunte por tu identidad.\n" +
-  "2. Responde de forma amable, clara y directa al grano (máximo 2 a 4 líneas salvo solicitud técnica explícita).\n" +
-  "3. Memoria conversacional: presta total atención al contexto anterior (cantidades, negocios, requerimientos).\n" +
-  "4. Horario oficial de WES: Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM | Domingos cerrado.\n" +
-  "   Si preguntan por el horario o cierre del sábado, confirma con precisión que cerramos a la 1:00 p. m.\n" +
-  "5. Especialidades: Cámaras de seguridad CCTV Dahua/Hikvision ColorVu, Motores italianos CAME BXV (400-1000kg) y batientes, Reparación de Inversores Trace, Magnum, Outback, Control de acceso.\n" +
-  "6. WhatsApp oficial: +1 (849) 207-5474 | Sede: Autopista Ramón Cáceres, Moca, Rep. Dominicana.";
+  "Atiendes con calidez dominicana, amabilidad y precisión profesional.\n\n" +
+  "REGLAS ESTRICTAS DE RESPUESTA:\n" +
+  "1. LONGITUD Y FORMATO (CONSULTAS NORMALES):\n" +
+  "   - Máximo 2 frases y 40 palabras en total.\n" +
+  "   - Responde primero exactamente lo preguntado.\n" +
+  "   - Si falta información imprescindible, haz como máximo UNA sola pregunta concreta al final.\n" +
+  "   - No uses rodeos, saludos repetidos ni frases de relleno genéricas.\n\n" +
+  "2. SALUDO E IDENTIDAD:\n" +
+  "   - Preséntate amablemente como Sofía de WES ÚNICAMENTE en el primer mensaje de la conversación si el usuario saluda o pregunta quién eres.\n" +
+  "   - En mensajes posteriores, NO vuelvas a saludar ni repitas tu presentación.\n\n" +
+  "3. CONTINUIDAD Y CONTEXTO:\n" +
+  "   - Conserva siempre el hilo, producto, cantidades y el tipo de negocio conversado previamente. Si el usuario pregunta \"¿Necesitan wifi?\", responde en estricta referencia al producto en discusión (por ejemplo cámaras CCTV o control de acceso).\n\n" +
+  "4. PRECISIÓN TÉCNICA Y OBJETIVIDAD:\n" +
+  "   - En cámaras cableadas (DVR/NVR), aclara que graban de forma autónoma sin internet y que el Wi-Fi/red solo se requiere para monitoreo remoto en el celular.\n" +
+  "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
+  "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
+  "   - No inventes precios, disponibilidad ni productos inexistentes.\n\n" +
+  "5. EXCEPCIÓN DE AMPLIACIÓN:\n" +
+  "   - Amplía la explicación con detalles técnicos ÚNICAMENTE cuando el usuario solicite explícitamente detalles (ej. \"explícame con más detalle\"), desglose técnico o advertencias de seguridad.\n\n" +
+  "6. HORARIOS Y SEDE:\n" +
+  "   - Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM (cerramos a la 1:00 PM). Domingos cerrado. Sede: Autopista Ramón Cáceres, Moca.";
 
 function getAiConfigSheet_() {
   const ss = getOrCreateDatabase();
@@ -1224,6 +1236,55 @@ function queryGeminiChatHandler(data) {
     }
 
     if (finalReply) {
+      // VALIDACIÓN Y CONDENSACIÓN EN SERVIDOR (CONTROL ESTRICTO DE BREVEDAD)
+      // Si la consulta NO solicita ampliación técnica explícita y supera 40 palabras, sintetizar manteniendo el dato útil.
+      var isExplicitExpansion = /(detall|diferencia|expl[ií]ca|compara|profund|especificaci|caracter[ií]stic|t[eé]cnic)/i.test(message);
+      var wordCount = finalReply.trim().split(/\s+/).filter(Boolean).length;
+      
+      if (!isExplicitExpansion && wordCount > 40 && effectiveApiKey) {
+        try {
+          var summarizeUrl = 'https://generativelanguage.googleapis.com/v1beta/models/' + (usedModel || 'gemini-3.5-flash') + ':generateContent?key=' + effectiveApiKey;
+          var summarizePayload = {
+            systemInstruction: {
+              parts: [{
+                text: "Eres un validador de brevedad estricto para el asistente de Warn Electrical Services. " +
+                      "Convierte el siguiente borrador en una respuesta concisa de MÁXIMO 2 frases y MÁXIMO 35 palabras en total. " +
+                      "Responde primero exactamente lo preguntado y deja como máximo UNA sola pregunta concreta al final si falta un dato. " +
+                      "Conserva los datos clave (cantidades, producto y negocio conversado). No saludes ni menciones teléfonos ni WhatsApp."
+              }]
+            },
+            contents: [{
+              role: 'user',
+              parts: [{ text: "Pregunta del usuario: " + message + "\nBorrador original:\n" + finalReply }]
+            }],
+            generationConfig: {
+              temperature: 0.2,
+              maxOutputTokens: 120
+            }
+          };
+
+          var sumRes = UrlFetchApp.fetch(summarizeUrl, {
+            method: 'post',
+            contentType: 'application/json',
+            payload: JSON.stringify(summarizePayload),
+            muteHttpExceptions: true
+          });
+
+          if (sumRes.getResponseCode() === 200) {
+            var sumJson = JSON.parse(sumRes.getContentText());
+            var sumParts = sumJson && sumJson.candidates && sumJson.candidates[0] && sumJson.candidates[0].content && sumJson.candidates[0].content.parts;
+            if (sumParts && sumParts.length > 0) {
+              var condensed = sumParts.map(function(p) { return p.text || ''; }).join('').trim();
+              if (condensed && condensed.length > 10) {
+                finalReply = condensed;
+              }
+            }
+          }
+        } catch (sumErr) {
+          console.warn('Advertencia en validación de brevedad en servidor:', sumErr);
+        }
+      }
+
       return {
         success: true,
         reply: finalReply,
