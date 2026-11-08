@@ -940,7 +940,7 @@ function getAiConfigFromStorage_() {
   const props = PropertiesService.getScriptProperties();
   let apiKey = props.getProperty('WES_GEMINI_API_KEY') || '';
   let systemPrompt = props.getProperty('WES_SOFIA_SYSTEM_PROMPT') || '';
-  let model = props.getProperty('WES_GEMINI_MODEL') || 'gemini-2.0-flash';
+  let model = props.getProperty('WES_GEMINI_MODEL') || 'gemini-3.5-flash';
   let assistantName = props.getProperty('WES_ASSISTANT_NAME') || 'Sofía';
   let enabled = props.getProperty('WES_AI_ENABLED') !== 'false';
   let temperature = parseFloat(props.getProperty('WES_AI_TEMP') || '0.7');
@@ -970,7 +970,7 @@ function getAiConfigFromStorage_() {
   return {
     apiKey: apiKey,
     systemPrompt: systemPrompt,
-    model: model || 'gemini-2.0-flash',
+    model: model || 'gemini-3.5-flash',
     assistantName: assistantName || 'Sofía',
     enabled: enabled,
     temperature: isNaN(temperature) ? 0.7 : temperature,
@@ -1022,7 +1022,7 @@ function saveAiConfigAdminHandler(data, adminToken) {
       const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
       const keysToPersist = [
         ['systemPrompt', updates['WES_SOFIA_SYSTEM_PROMPT'] || data.systemPrompt || ''],
-        ['model', updates['WES_GEMINI_MODEL'] || data.model || 'gemini-2.0-flash'],
+        ['model', updates['WES_GEMINI_MODEL'] || data.model || 'gemini-3.5-flash'],
         ['assistantName', updates['WES_ASSISTANT_NAME'] || data.assistantName || 'Sofía'],
         ['enabled', updates['WES_AI_ENABLED'] || (data.enabled !== false ? 'true' : 'false')],
         ['hasApiKey', updates['WES_GEMINI_API_KEY'] ? 'true' : (props.getProperty('WES_GEMINI_API_KEY') ? 'true' : 'false')]
@@ -1044,7 +1044,7 @@ function saveAiConfigAdminHandler(data, adminToken) {
       success: true,
       message: 'Configuración de IA guardada exitosamente en el servidor WES.',
       assistantName: updates['WES_ASSISTANT_NAME'] || 'Sofía',
-      model: updates['WES_GEMINI_MODEL'] || 'gemini-2.0-flash'
+      model: updates['WES_GEMINI_MODEL'] || 'gemini-3.5-flash'
     };
   } catch (err) {
     return { success: false, message: 'Error guardando configuración de IA: ' + err.toString() };
@@ -1142,9 +1142,9 @@ function queryGeminiChatHandler(data) {
 
     const candidateModels = [
       config.model,
-      'gemini-2.0-flash',
-      'gemini-2.0-flash-lite',
-      'gemini-1.5-flash-latest'
+      'gemini-3.5-flash',
+      'gemini-3.5-flash-lite',
+      'gemini-flash-latest'
     ].filter(function(v, i, self) { return v && self.indexOf(v) === i; });
 
     let finalReply = '';
