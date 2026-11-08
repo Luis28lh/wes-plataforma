@@ -378,6 +378,7 @@ const AdminApp = {
       { id: 'usuarios', name: 'Usuarios y Roles', icon: 'fa-users-cog', module: 'usuarios' },
       { id: 'permisos', name: 'Matriz de Permisos', icon: 'fa-shield-alt', module: 'usuarios' },
       { id: 'ia_config', name: 'Inteligencia Artificial (IA)', icon: 'fa-robot', module: 'ajustes' },
+      { id: 'sofia_knowledge', name: 'Conocimiento de Sofía', icon: 'fa-brain', module: 'ajustes' },
       { id: 'ajustes', name: 'Ajustes & Toggles', icon: 'fa-sliders-h', module: 'ajustes' },
       { id: 'correos', name: 'Gestión de Correos', icon: 'fa-mail-bulk', module: 'ajustes' },
       { id: 'auditoria', name: 'Historial Auditoría', icon: 'fa-history', module: 'auditoria' }
@@ -448,6 +449,7 @@ const AdminApp = {
       usuarios: 'Directorio de Usuarios y Roles',
       permisos: 'Matriz Interactiva de Permisos (RBAC)',
       ia_config: 'Gestión de Inteligencia Artificial (IA), Prompts y APIs',
+      sofia_knowledge: 'Conocimiento y Respuestas de Sofía (AIDET)',
       ajustes: 'Ajustes Generales y Conmutadores Públicos',
       correos: 'Enrutamiento y Pruebas de Notificaciones',
       auditoria: 'Historial de Auditoría (Audit Log)'
@@ -490,6 +492,9 @@ const AdminApp = {
         break;
       case 'ia_config':
         this.renderIAConfig(container);
+        break;
+      case 'sofia_knowledge':
+        this.renderSofiaKnowledge(container);
         break;
       case 'ajustes':
         this.renderAjustes(container);
@@ -4635,3 +4640,639 @@ window.AdminApp = AdminApp;
 if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => AdminApp.init());
 }
+
+
+/**
+ * =========================================================================
+ * SUBMÓDULO: CONOCIMIENTO Y RESPUESTAS DE SOFÍA (WES ADMIN KNOWLEDGE BASE)
+ * =========================================================================
+ */
+
+AdminApp.knowledgeList = [];
+AdminApp.knowledgeFilter = { search: '', status: 'all', category: 'all' };
+
+AdminApp.renderSofiaKnowledge = async function(container) {
+  try {
+    container.innerHTML = `
+      <div class="space-y-6 animate-fadeIn">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4 border border-wes-gold/30">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-wes-gold text-slate-950 flex items-center justify-center font-black text-xl shadow-inner">
+              <i class="fas fa-brain"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h3 class="text-base font-extrabold font-brand tracking-wide text-white">Conocimiento y Respuestas de Sofía</h3>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-white">
+                  ● En Vivo en la Nube
+                </span>
+              </div>
+              <p class="text-xs text-slate-300 mt-0.5">Preguntas frecuentes, respuestas oficiales de referencia e instrucciones breves que alimentan el chat público sin tocar el prompt maestro.</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 shrink-0">
+            <button type="button" onclick="AdminApp.openSofiaKnowledgeModal()" class="px-4 py-2 bg-wes-gold hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-black transition flex items-center space-x-1.5 shadow-md">
+              <i class="fas fa-plus text-xs"></i>
+              <span>Nueva Entrada</span>
+            </button>
+            <button type="button" onclick="AdminApp.refreshSofiaKnowledge()" class="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1 border border-white/20">
+              <i class="fas fa-sync-alt text-xs"></i>
+              <span>Recargar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Barra de Búsqueda y Filtros -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div class="relative w-full sm:w-80">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+              <i class="fas fa-search text-xs"></i>
+            </span>
+            <input type="text" id="sofia-knw-search" oninput="AdminApp.handleSofiaKnowledgeFilter()" placeholder="Buscar por pregunta, respuesta o condición..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none">
+          </div>
+
+          <div class="flex items-center space-x-2 w-full sm:w-auto">
+            <select id="sofia-knw-status-filter" onchange="AdminApp.handleSofiaKnowledgeFilter()" class="p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 focus:outline-none">
+              <option value="all">Todos los estados</option>
+              <option value="activo">Solo Activos</option>
+              <option value="borrador">Solo Borradores</option>
+              <option value="inactivo">Solo Inactivos</option>
+            </select>
+
+            <select id="sofia-knw-cat-filter" onchange="AdminApp.handleSofiaKnowledgeFilter()" class="p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 focus:outline-none">
+              <option value="all">Todas las categorías</option>
+              <option value="Cámaras de Seguridad CCTV">Cámaras de Seguridad CCTV</option>
+              <option value="Motores para Portones">Motores para Portones</option>
+              <option value="Inversores y Baterías">Inversores y Baterías</option>
+              <option value="Control de Acceso y Cerraduras">Control de Acceso y Cerraduras</option>
+              <option value="General y Políticas">General y Políticas</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tabla / Listado de Entradas -->
+        <div id="sofia-knowledge-container" class="space-y-3">
+          <div class="p-8 text-center text-slate-400 text-xs">
+            <i class="fas fa-spinner fa-spin text-lg text-wes-blue mb-2"></i>
+            <p>Cargando base de conocimientos de Sofía...</p>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    await AdminApp.refreshSofiaKnowledge();
+  } catch (err) {
+    console.error('Error renderizando conocimiento de Sofía:', err);
+    container.innerHTML = `<div class="p-6 bg-rose-50 text-rose-800 text-xs rounded-xl">Error: ${escapeHtml(err.message)}</div>`;
+  }
+};
+
+AdminApp.refreshSofiaKnowledge = async function() {
+  const container = document.getElementById('sofia-knowledge-container');
+  if (!container) return;
+
+  const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+
+  try {
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'list_sofia_knowledge',
+        adminToken: 'wes_owner_authorized_session'
+      })
+    });
+
+    const data = await res.json();
+    if (data.success && Array.isArray(data.items)) {
+      AdminApp.knowledgeList = data.items;
+      AdminApp.renderSofiaKnowledgeList();
+    } else {
+      container.innerHTML = `<div class="p-4 bg-amber-50 text-amber-900 text-xs rounded-xl">${escapeHtml(data.message || 'No se pudieron cargar los datos.')}</div>`;
+    }
+  } catch (err) {
+    container.innerHTML = `<div class="p-4 bg-rose-50 text-rose-900 text-xs rounded-xl">Error conectando al servidor: ${escapeHtml(err.message)}</div>`;
+  }
+};
+
+AdminApp.handleSofiaKnowledgeFilter = function() {
+  const search = (document.getElementById('sofia-knw-search')?.value || '').toLowerCase().trim();
+  const status = document.getElementById('sofia-knw-status-filter')?.value || 'all';
+  const category = document.getElementById('sofia-knw-cat-filter')?.value || 'all';
+
+  AdminApp.knowledgeFilter = { search, status, category };
+  AdminApp.renderSofiaKnowledgeList();
+};
+
+AdminApp.renderSofiaKnowledgeList = function() {
+  const container = document.getElementById('sofia-knowledge-container');
+  if (!container) return;
+
+  const { search, status, category } = AdminApp.knowledgeFilter;
+  const filtered = AdminApp.knowledgeList.filter(item => {
+    if (status !== 'all' && item.status.toLowerCase() !== status.toLowerCase()) return false;
+    if (category !== 'all' && item.category !== category) return false;
+    if (search) {
+      const hay = (item.situation + ' ' + item.solution + ' ' + item.category + ' ' + item.conditions + ' ' + item.id).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white rounded-2xl p-10 border border-slate-200 text-center space-y-3">
+        <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl">
+          <i class="fas fa-inbox"></i>
+        </div>
+        <h4 class="font-bold text-slate-700 text-sm">No se encontraron conocimientos registrados</h4>
+        <p class="text-xs text-slate-400 max-w-md mx-auto">Agrega una nueva pregunta frecuente o instrucción de referencia con el botón "Nueva Entrada" o desde la terminal de Antigravity.</p>
+      </div>
+    `;
+    return;
+  }
+
+  let html = '';
+  filtered.forEach(item => {
+    let statusBadge = 'bg-amber-100 text-amber-800 border-amber-200';
+    let statusLabel = 'Borrador';
+    if (item.status === 'activo') {
+      statusBadge = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      statusLabel = 'Activo en Sofía';
+    } else if (item.status === 'inactivo') {
+      statusBadge = 'bg-slate-100 text-slate-700 border-slate-200';
+      statusLabel = 'Inactivo';
+    }
+
+    const typeBadge = item.type === 'faq' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';
+    const typeLabel = item.type === 'faq' ? 'Pregunta Frecuente' : 'Instrucción Breve';
+    const hasHistory = Array.isArray(item.history) && item.history.length > 0;
+
+    html += `
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3 transition hover:border-slate-300">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+          <div class="flex items-center space-x-2">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold ${typeBadge}">${typeLabel}</span>
+            <span class="font-mono text-xs font-black text-wes-blue">${escapeHtml(item.id)}</span>
+            ${item.category ? `<span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-semibold">${escapeHtml(item.category)}</span>` : ''}
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${statusBadge}">${statusLabel}</span>
+            <span class="text-[10px] text-slate-400">Por: <strong>${escapeHtml(item.author || 'Sistema')}</strong> · ${escapeHtml(item.updatedAt || item.createdAt)}</span>
+          </div>
+        </div>
+
+        <div class="space-y-1.5 text-xs">
+          <div>
+            <span class="font-bold text-slate-700 block text-[11px] uppercase tracking-wider text-slate-400">Pregunta o Situación a la que aplica:</span>
+            <p class="font-semibold text-slate-900">${escapeHtml(item.situation)}</p>
+          </div>
+          <div>
+            <span class="font-bold text-slate-700 block text-[11px] uppercase tracking-wider text-slate-400">Respuesta Oficial / Instrucción:</span>
+            <p class="text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 leading-relaxed">${escapeHtml(item.solution)}</p>
+          </div>
+          ${item.conditions ? `
+            <div class="text-[11px] text-amber-900 bg-amber-50/80 p-2 rounded-lg border border-amber-200">
+              <span class="font-bold"><i class="fas fa-exclamation-circle text-amber-600 mr-1"></i>Condiciones / Excepciones:</span> ${escapeHtml(item.conditions)}
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- Acciones del Item -->
+        <div class="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="AdminApp.testSingleSofiaKnowledge('${escapeHtml(item.id)}')" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl font-bold transition flex items-center space-x-1">
+              <i class="fas fa-play text-[10px]"></i>
+              <span>Probar</span>
+            </button>
+            ${hasHistory ? `
+              <button type="button" onclick="AdminApp.viewSofiaKnowledgeHistory('${escapeHtml(item.id)}')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold transition text-[11px] flex items-center space-x-1">
+                <i class="fas fa-history text-[10px]"></i>
+                <span>Historial (${item.history.length})</span>
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="flex items-center space-x-1.5">
+            ${item.status !== 'activo' ? `
+              <button type="button" onclick="AdminApp.toggleSofiaKnowledgeStatus('${escapeHtml(item.id)}', 'activo')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition flex items-center space-x-1 shadow-xs">
+                <i class="fas fa-check text-[10px]"></i>
+                <span>Activar</span>
+              </button>
+            ` : `
+              <button type="button" onclick="AdminApp.toggleSofiaKnowledgeStatus('${escapeHtml(item.id)}', 'inactivo')" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl font-bold transition flex items-center space-x-1">
+                <i class="fas fa-pause text-[10px]"></i>
+                <span>Desactivar</span>
+              </button>
+            `}
+            <button type="button" onclick="AdminApp.editSofiaKnowledge('${escapeHtml(item.id)}')" class="px-3 py-1.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold transition flex items-center space-x-1 shadow-xs">
+              <i class="fas fa-edit text-[10px]"></i>
+              <span>Editar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenedor dinámico para resultados de prueba in situ -->
+        <div id="test-result-${escapeHtml(item.id)}" class="hidden pt-2 text-xs"></div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+};
+
+AdminApp.openSofiaKnowledgeModal = function(editItem = null) {
+  let modal = document.getElementById('admin-modal-sofia-knowledge');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'admin-modal-sofia-knowledge';
+    modal.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4';
+    document.body.appendChild(modal);
+  }
+
+  const isEdit = Boolean(editItem && editItem.id);
+  const item = editItem || {
+    id: '',
+    type: 'faq',
+    situation: '',
+    solution: '',
+    category: 'Cámaras de Seguridad CCTV',
+    conditions: '',
+    status: 'activo'
+  };
+
+  modal.innerHTML = `
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto border border-slate-200 animate-fadeIn text-xs text-slate-800">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-wes-blue text-wes-gold flex items-center justify-center font-bold">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3 class="font-bold text-sm text-slate-900 font-brand">
+            ${isEdit ? 'Editar Conocimiento de Sofía' : 'Registrar Nuevo Conocimiento para Sofía'}
+          </h3>
+        </div>
+        <button onclick="AdminApp.closeModal('admin-modal-sofia-knowledge')" class="text-slate-400 hover:text-slate-700 p-1 text-base">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form onsubmit="AdminApp.handleSaveSofiaKnowledge(event)" class="space-y-4">
+        <input type="hidden" id="knw-form-id" value="${escapeHtml(item.id)}">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Tipo de Entrada *</label>
+            <select id="knw-form-type" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue">
+              <option value="faq" ${item.type === 'faq' ? 'selected' : ''}>Pregunta Frecuente (FAQ)</option>
+              <option value="instruccion" ${item.type === 'instruccion' ? 'selected' : ''}>Instrucción Breve de Atención</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Estado de Publicación *</label>
+            <select id="knw-form-status" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue">
+              <option value="activo" ${item.status === 'activo' ? 'selected' : ''}>Activo (En vivo en Sofía)</option>
+              <option value="borrador" ${item.status === 'borrador' ? 'selected' : ''}>Borrador (Solo en Administrador)</option>
+              <option value="inactivo" ${item.status === 'inactivo' ? 'selected' : ''}>Inactivo (Desactivado temporal)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Producto o Categoría Asociada</label>
+          <select id="knw-form-category" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue">
+            <option value="Cámaras de Seguridad CCTV" ${item.category === 'Cámaras de Seguridad CCTV' ? 'selected' : ''}>Cámaras de Seguridad CCTV</option>
+            <option value="Motores para Portones" ${item.category === 'Motores para Portones' ? 'selected' : ''}>Motores para Portones</option>
+            <option value="Inversores y Baterías" ${item.category === 'Inversores y Baterías' ? 'selected' : ''}>Inversores y Baterías</option>
+            <option value="Control de Acceso y Cerraduras" ${item.category === 'Control de Acceso y Cerraduras' ? 'selected' : ''}>Control de Acceso y Cerraduras</option>
+            <option value="General y Políticas" ${item.category === 'General y Políticas' ? 'selected' : ''}>General y Políticas</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Pregunta o Situación a la que aplica *</label>
+          <input type="text" id="knw-form-situation" required value="${escapeHtml(item.situation)}" placeholder="Ej: ¿Qué garantía tienen los motores CAME para portones?" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue focus:bg-white">
+          <p class="text-[10px] text-slate-400 mt-0.5">Sofía reconocerá la intención aunque el cliente pregunte con otras palabras.</p>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Respuesta Oficial de Referencia o Instrucción *</label>
+          <textarea id="knw-form-solution" required rows="4" placeholder="Ej: Los motores italianos CAME tienen 2 años de garantía oficial en piezas con respaldo directo de WES en Moca." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue focus:bg-white leading-relaxed">${escapeHtml(item.solution)}</textarea>
+          <p class="text-[10px] text-slate-400 mt-0.5">Sofía adaptará la redacción al hilo de la charla respetando estos datos y el tope de brevedad.</p>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Condiciones o Excepciones Relevantes (Opcional)</label>
+          <input type="text" id="knw-form-conditions" value="${escapeHtml(item.conditions)}" placeholder="Ej: Requiere protector de voltaje instalado y validado por técnicos WES." class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue focus:bg-white">
+        </div>
+
+        <div id="knw-form-warning" class="hidden p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs"></div>
+
+        <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
+          <button type="button" onclick="AdminApp.testModalKnowledgeDraft()" class="px-4 py-2 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 rounded-xl font-bold transition flex items-center space-x-1.5 border border-slate-300">
+            <i class="fas fa-flask text-emerald-600"></i>
+            <span>Probar Respuesta en Vivo</span>
+          </button>
+
+          <div class="flex items-center space-x-2">
+            <button type="button" onclick="AdminApp.closeModal('admin-modal-sofia-knowledge')" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-semibold hover:bg-slate-200 transition">Cancelar</button>
+            <button type="submit" id="btn-save-knw" class="px-5 py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold transition shadow-md flex items-center space-x-1.5">
+              <i class="fas fa-save text-wes-gold"></i>
+              <span>Guardar en Servidor</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="modal-test-output" class="hidden p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1"></div>
+      </form>
+    </div>
+  `;
+
+  modal.classList.remove('hidden');
+};
+
+AdminApp.editSofiaKnowledge = function(id) {
+  const item = AdminApp.knowledgeList.find(k => k.id === id);
+  if (item) AdminApp.openSofiaKnowledgeModal(item);
+};
+
+AdminApp.handleSaveSofiaKnowledge = async function(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const btn = document.getElementById('btn-save-knw');
+  const warnDiv = document.getElementById('knw-form-warning');
+  if (warnDiv) warnDiv.classList.add('hidden');
+
+  const id = document.getElementById('knw-form-id').value;
+  const type = document.getElementById('knw-form-type').value;
+  const status = document.getElementById('knw-form-status').value;
+  const category = document.getElementById('knw-form-category').value;
+  const situation = document.getElementById('knw-form-situation').value.trim();
+  const solution = document.getElementById('knw-form-solution').value.trim();
+  const conditions = document.getElementById('knw-form-conditions').value.trim();
+
+  if (!situation || !solution) {
+    alert('Pregunta y respuesta son campos obligatorios.');
+    return;
+  }
+
+  const user = AdminAuth.getCurrentUser();
+  const author = user ? user.name : 'Administrador WES';
+
+  const payloadData = { id, type, status, category, situation, solution, conditions, author };
+  const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  }
+
+  try {
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'save_sofia_knowledge_entry',
+        adminToken: 'wes_owner_authorized_session',
+        data: payloadData
+      })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      if (Array.isArray(data.warnings) && data.warnings.length > 0) {
+        alert('Guardado con advertencias:\n' + data.warnings.join('\n'));
+      }
+      AdminApp.closeModal('admin-modal-sofia-knowledge');
+      showToast('Conocimiento guardado exitosamente en el servidor.', 'success');
+      await AdminApp.refreshSofiaKnowledge();
+    } else {
+      if (warnDiv) {
+        warnDiv.textContent = data.message || 'Error guardando en el servidor';
+        warnDiv.classList.remove('hidden');
+      } else {
+        alert(data.message || 'Error guardando');
+      }
+    }
+  } catch (err) {
+    alert('Error al comunicar con backend: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-save text-wes-gold"></i><span>Guardar en Servidor</span>';
+    }
+  }
+};
+
+AdminApp.toggleSofiaKnowledgeStatus = async function(id, newStatus) {
+  const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+  try {
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'set_sofia_knowledge_status',
+        adminToken: 'wes_owner_authorized_session',
+        id: id,
+        status: newStatus
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(`Estado actualizado a: ${newStatus}`, 'success');
+      await AdminApp.refreshSofiaKnowledge();
+    } else {
+      alert('Error: ' + data.message);
+    }
+  } catch (err) {
+    alert('Error de conexión: ' + err.message);
+  }
+};
+
+AdminApp.testSingleSofiaKnowledge = async function(id) {
+  const item = AdminApp.knowledgeList.find(k => k.id === id);
+  if (!item) return;
+
+  const resultDiv = document.getElementById(`test-result-${id}`);
+  if (!resultDiv) return;
+
+  resultDiv.classList.remove('hidden');
+  resultDiv.innerHTML = `<div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500"><i class="fas fa-spinner fa-spin mr-1"></i> Consultando a Sofía con la pregunta de prueba...</div>`;
+
+  const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+
+  try {
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'query_gemini_chat',
+        data: { message: item.situation, history: [] }
+      })
+    });
+
+    const data = await res.json();
+    if (data.success && data.reply) {
+      const words = data.reply.trim().split(/\s+/).filter(Boolean).length;
+      resultDiv.innerHTML = `
+        <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1.5 animate-fadeIn">
+          <div class="flex items-center justify-between font-bold text-emerald-950 text-[11px]">
+            <span class="flex items-center"><i class="fas fa-check-circle text-emerald-600 mr-1.5"></i>Respuesta Generada por Sofía:</span>
+            <span class="px-2 py-0.5 bg-white text-emerald-800 rounded border border-emerald-200 font-mono">${words} palabras</span>
+          </div>
+          <p class="text-slate-800 leading-relaxed font-sans text-xs bg-white p-2.5 rounded-lg border border-emerald-100">
+            ${escapeHtml(data.reply)}
+          </p>
+          <div class="text-[10px] text-emerald-700 flex justify-between">
+            <span>Modelo: ${escapeHtml(data.model || 'Gemini')}</span>
+            <span>Esta prueba verifica la respuesta sin activar el registro automáticamente.</span>
+          </div>
+        </div>
+      `;
+    } else {
+      resultDiv.innerHTML = `<div class="p-3 bg-rose-50 text-rose-800 rounded-xl text-xs">${escapeHtml(data.message || 'Error en prueba')}</div>`;
+    }
+  } catch (err) {
+    resultDiv.innerHTML = `<div class="p-3 bg-rose-50 text-rose-800 rounded-xl text-xs">Error: ${escapeHtml(err.message)}</div>`;
+  }
+};
+
+AdminApp.testModalKnowledgeDraft = async function() {
+  const situation = document.getElementById('knw-form-situation')?.value.trim();
+  const output = document.getElementById('modal-test-output');
+  if (!situation) {
+    alert('Ingresa primero una pregunta para probar.');
+    return;
+  }
+  if (!output) return;
+
+  output.classList.remove('hidden');
+  output.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Probando respuesta con el modelo...`;
+
+  const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+
+  try {
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'query_gemini_chat',
+        data: { message: situation, history: [] }
+      })
+    });
+    const data = await res.json();
+    if (data.success && data.reply) {
+      const words = data.reply.trim().split(/\s+/).filter(Boolean).length;
+      output.innerHTML = `
+        <div class="space-y-1">
+          <div class="flex items-center justify-between font-bold text-slate-800">
+            <span>Respuesta simulada:</span>
+            <span class="font-mono text-[10px] text-wes-blue bg-blue-50 px-1.5 py-0.5 rounded">${words} palabras</span>
+          </div>
+          <p class="text-slate-700 italic">"${escapeHtml(data.reply)}"</p>
+        </div>
+      `;
+    } else {
+      output.innerHTML = `<span class="text-rose-600">${escapeHtml(data.message || 'Error')}</span>`;
+    }
+  } catch (err) {
+    output.innerHTML = `<span class="text-rose-600">Error: ${escapeHtml(err.message)}</span>`;
+  }
+};
+
+AdminApp.viewSofiaKnowledgeHistory = function(id) {
+  const item = AdminApp.knowledgeList.find(k => k.id === id);
+  if (!item || !Array.isArray(item.history) || item.history.length === 0) {
+    alert('No hay versiones anteriores registradas para esta entrada.');
+    return;
+  }
+
+  let histHtml = `
+    <div class="space-y-3 text-xs">
+      <div class="border-b border-slate-200 pb-2">
+        <h4 class="font-bold text-slate-800 text-sm">Historial de Versiones Anteriores (${escapeHtml(item.id)})</h4>
+        <p class="text-slate-500 text-[11px]">Versiones guardadas antes de cada modificación.</p>
+      </div>
+      <div class="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+  `;
+
+  item.history.forEach((h, idx) => {
+    histHtml += `
+      <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1 text-slate-700">
+        <div class="flex justify-between items-center text-[10px] font-bold text-slate-500">
+          <span>Versión #${item.history.length - idx}</span>
+          <span>${escapeHtml(h.versionDate || 'Fecha desconocida')} · ${escapeHtml(h.author || 'Sistema')}</span>
+        </div>
+        <div class="font-semibold text-slate-900">${escapeHtml(h.situation || '')}</div>
+        <p class="text-[11px] text-slate-600 bg-white p-2 rounded border border-slate-100">${escapeHtml(h.solution || '')}</p>
+        ${h.conditions ? `<div class="text-[10px] text-amber-800">Condiciones: ${escapeHtml(h.conditions)}</div>` : ''}
+        <div class="pt-1 text-right">
+          <button type="button" onclick="AdminApp.restoreSofiaKnowledgeVersion('${escapeHtml(item.id)}', ${idx})" class="px-2.5 py-1 bg-wes-blue text-white rounded-lg text-[10px] font-bold hover:bg-wes-dark transition">
+            <i class="fas fa-undo mr-1"></i> Restaurar esta versión
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  histHtml += `</div></div>`;
+
+  AdminApp.openGenericModal('Historial de Cambios - ' + item.id, histHtml);
+};
+
+AdminApp.restoreSofiaKnowledgeVersion = async function(id, historyIdx) {
+  const item = AdminApp.knowledgeList.find(k => k.id === id);
+  if (!item || !item.history[historyIdx]) return;
+  const oldVer = item.history[historyIdx];
+
+  if (!confirm('¿Deseas restaurar el contenido de esta versión anterior?')) return;
+
+  const restoredData = {
+    id: item.id,
+    type: oldVer.type || item.type,
+    situation: oldVer.situation,
+    solution: oldVer.solution,
+    category: oldVer.category || item.category,
+    conditions: oldVer.conditions || '',
+    status: oldVer.status || 'borrador',
+    author: 'Restaurado por ' + (AdminAuth.getCurrentUser()?.name || 'Administrador')
+  };
+
+  const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+
+  try {
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'save_sofia_knowledge_entry',
+        adminToken: 'wes_owner_authorized_session',
+        data: restoredData
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      AdminApp.closeModal('admin-modal-detail');
+      showToast('Versión restaurada exitosamente.', 'success');
+      await AdminApp.refreshSofiaKnowledge();
+    } else {
+      alert('Error restaurando versión: ' + data.message);
+    }
+  } catch (err) {
+    alert('Error de conexión: ' + err.message);
+  }
+};
+
+AdminApp.openGenericModal = function(title, contentHtml) {
+  const modal = document.getElementById('admin-modal-detail');
+  const titleEl = document.getElementById('detail-modal-title');
+  const contentEl = document.getElementById('detail-modal-content');
+  if (modal && titleEl && contentEl) {
+    titleEl.textContent = title;
+    contentEl.innerHTML = contentHtml;
+    modal.classList.remove('hidden');
+  }
+};

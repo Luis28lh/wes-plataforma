@@ -89,6 +89,18 @@ function doPost(e) {
         response = queryGeminiChatHandler(payload.data);
         break;
 
+      case 'list_sofia_knowledge':
+        response = listSofiaKnowledgeHandler(payload.adminToken);
+        break;
+
+      case 'save_sofia_knowledge_entry':
+        response = saveSofiaKnowledgeEntryHandler(payload.data, payload.adminToken);
+        break;
+
+      case 'set_sofia_knowledge_status':
+        response = setSofiaKnowledgeStatusHandler(payload.id, payload.status, payload.adminToken);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -1152,6 +1164,9 @@ function queryGeminiChatHandler(data) {
       orderedContents[orderedContents.length - 1].parts[0].text += '\n' + message;
     }
 
+    const activeKnowledge = getActiveSofiaKnowledgeList_();
+    const augmentedPrompt = buildKnowledgeAugmentedPrompt_(config.systemPrompt, activeKnowledge);
+
     const candidateModels = [
       config.model,
       'gemini-3.5-flash',
@@ -1169,7 +1184,7 @@ function queryGeminiChatHandler(data) {
 
       const payloadBody = {
         systemInstruction: {
-          parts: [{ text: config.systemPrompt }]
+          parts: [{ text: augmentedPrompt }]
         },
         contents: orderedContents,
         generationConfig: {
@@ -1203,7 +1218,7 @@ function queryGeminiChatHandler(data) {
           // Si el error fue por systemInstruction no soportado en ese endpoint, intentar concatenando al primer turno
           if (status === 400 && bodyText.indexOf('systemInstruction') !== -1) {
             const fallbackContents = JSON.parse(JSON.stringify(orderedContents));
-            fallbackContents[0].parts[0].text = '[INSTRUCCIONES DE SOFÍA / WES]\n' + config.systemPrompt + '\n\n' + fallbackContents[0].parts[0].text;
+            fallbackContents[0].parts[0].text = '[INSTRUCCIONES DE SOFÍA / WES]\n' + augmentedPrompt + '\n\n' + fallbackContents[0].parts[0].text;
             const resFallback = UrlFetchApp.fetch(url, {
               method: 'post',
               contentType: 'application/json',
@@ -1310,3 +1325,246 @@ function queryGeminiChatHandler(data) {
   }
 }
 
+
+
+/**
+ * =========================================================================
+ * MÓDULO DE CONOCIMIENTO Y RESPUESTAS DE SOFÍA (AIDET - WES KNOWLEDGE BASE)
+ * =========================================================================
+ */
+
+function getSofiaKnowledgeSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Conocimiento_Sofia');
+  if (!sheet) {
+    sheet = ss.insertSheet('Conocimiento_Sofia');
+    sheet.appendRow([
+      'ID', 'Tipo', 'Situación / Pregunta', 'Respuesta / Instrucción', 
+      'Categoría / Producto', 'Condiciones / Excepciones', 'Estado', 
+      'Fecha Creación', 'Última Edición', 'Autor', 'Historial Versiones'
+    ]);
+    sheet.getRange(1, 1, 1, 11).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function listSofiaKnowledgeHandler(adminToken) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+    if (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session')) {
+      return { success: false, message: 'Acceso denegado: se requieren credenciales de administrador.' };
+    }
+
+    const sheet = getSofiaKnowledgeSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const items = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r[0]) continue;
+      items.push({
+        id: String(r[0]),
+        type: String(r[1] || 'faq'),
+        situation: String(r[2] || ''),
+        solution: String(r[3] || ''),
+        category: String(r[4] || ''),
+        conditions: String(r[5] || ''),
+        status: String(r[6] || 'borrador'),
+        createdAt: String(r[7] || ''),
+        updatedAt: String(r[8] || ''),
+        author: String(r[9] || 'Sistema WES'),
+        history: r[10] ? (typeof r[10] === 'string' ? JSON.parse(r[10]) : r[10]) : []
+      });
+    }
+
+    return { success: true, items: items };
+  } catch (err) {
+    return { success: false, message: 'Error listando conocimientos: ' + err.toString() };
+  }
+}
+
+function saveSofiaKnowledgeEntryHandler(data, adminToken) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+    if (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session')) {
+      return { success: false, message: 'Acceso denegado: se requieren credenciales de administrador.' };
+    }
+
+    if (!data || typeof data !== 'object') {
+      return { success: false, message: 'Datos de conocimiento inválidos.' };
+    }
+
+    const sheet = getSofiaKnowledgeSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const author = (data.author || 'Administrador WES').trim();
+    const status = (data.status || 'borrador').toLowerCase().trim(); // borrador, activo, inactivo
+    const situation = (data.situation || '').trim();
+    const solution = (data.solution || '').trim();
+    const category = (data.category || '').trim();
+    const conditions = (data.conditions || '').trim();
+    const type = (data.type || 'faq').trim();
+
+    if (!situation || !solution) {
+      return { success: false, message: 'La pregunta/situación y la respuesta/instrucción son obligatorias.' };
+    }
+
+    // Detección de duplicados o contradicciones potenciales si el estado es 'activo'
+    const warnings = [];
+    let foundIndex = -1;
+    let existingEntry = null;
+
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const rId = String(r[0]);
+      if (data.id && rId === String(data.id)) {
+        foundIndex = i + 1;
+        existingEntry = r;
+      } else if (status === 'activo' && String(r[6]).toLowerCase() === 'activo') {
+        const otherSit = String(r[2]).toLowerCase().trim();
+        const otherCat = String(r[4]).toLowerCase().trim();
+        const curSit = situation.toLowerCase();
+        const curCat = category.toLowerCase();
+
+        if (otherSit === curSit || (curSit.length > 8 && otherSit.includes(curSit)) || (otherSit.length > 8 && curSit.includes(otherSit))) {
+          if (otherCat === curCat || !curCat || !otherCat) {
+            warnings.push('Existe otra entrada activa parecida (' + rId + ': "' + r[2] + '"). Verifique posibles contradicciones antes de continuar.');
+          }
+        }
+      }
+    }
+
+    let entryId = data.id;
+    let historyList = [];
+
+    if (foundIndex !== -1 && existingEntry) {
+      // Actualizar registro existente
+      try {
+        historyList = existingEntry[10] ? (typeof existingEntry[10] === 'string' ? JSON.parse(existingEntry[10]) : existingEntry[10]) : [];
+      } catch (e) { historyList = []; }
+
+      // Guardar versión previa en el historial
+      historyList.unshift({
+        versionDate: existingEntry[8] || existingEntry[7] || now,
+        author: existingEntry[9] || 'Sistema WES',
+        status: existingEntry[6],
+        situation: existingEntry[2],
+        solution: existingEntry[3],
+        conditions: existingEntry[5],
+        category: existingEntry[4],
+        type: existingEntry[1]
+      });
+      if (historyList.length > 10) historyList = historyList.slice(0, 10);
+
+      sheet.getRange(foundIndex, 1, 1, 11).setValues([[
+        entryId, type, situation, solution, category, conditions, status,
+        existingEntry[7] || now, now, author, JSON.stringify(historyList)
+      ]]);
+    } else {
+      // Crear nuevo registro
+      entryId = 'KNW-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+      sheet.appendRow([
+        entryId, type, situation, solution, category, conditions, status,
+        now, now, author, JSON.stringify([])
+      ]);
+    }
+
+    return {
+      success: true,
+      message: 'Conocimiento guardado exitosamente en el servidor central.',
+      id: entryId,
+      status: status,
+      warnings: warnings
+    };
+  } catch (err) {
+    return { success: false, message: 'Error guardando conocimiento: ' + err.toString() };
+  }
+}
+
+function setSofiaKnowledgeStatusHandler(id, newStatus, adminToken) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+    if (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session')) {
+      return { success: false, message: 'Acceso denegado: se requieren credenciales de administrador.' };
+    }
+
+    const sheet = getSofiaKnowledgeSheet_();
+    const rows = sheet.getDataRange().getValues();
+    let rowIndex = -1;
+    let currentRow = null;
+
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]) === String(id)) {
+        rowIndex = i + 1;
+        currentRow = rows[i];
+        break;
+      }
+    }
+
+    if (rowIndex === -1) {
+      return { success: false, message: 'Registro no encontrado: ' + id };
+    }
+
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    sheet.getRange(rowIndex, 7).setValue(newStatus);
+    sheet.getRange(rowIndex, 9).setValue(now);
+
+    return { success: true, message: 'Estado actualizado a: ' + newStatus, id: id, status: newStatus };
+  } catch (err) {
+    return { success: false, message: 'Error actualizando estado: ' + err.toString() };
+  }
+}
+
+function getActiveSofiaKnowledgeList_() {
+  try {
+    const sheet = getSofiaKnowledgeSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const active = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r[0]) continue;
+      const status = String(r[6] || '').toLowerCase().trim();
+      if (status === 'activo') {
+        active.push({
+          id: String(r[0]),
+          type: String(r[1] || 'faq'),
+          situation: String(r[2] || ''),
+          solution: String(r[3] || ''),
+          category: String(r[4] || ''),
+          conditions: String(r[5] || '')
+        });
+      }
+    }
+    return active;
+  } catch (e) {
+    return [];
+  }
+}
+
+function buildKnowledgeAugmentedPrompt_(basePrompt, activeKnowledge) {
+  if (!activeKnowledge || activeKnowledge.length === 0) {
+    return basePrompt;
+  }
+
+  let knowledgeSection = "\n\nBASE DE CONOCIMIENTOS Y RESPUESTAS DE REFERENCIA (OFICIALES DE WES):\n" +
+    "Aplica estas referencias cuando la consulta o situación del cliente coincida con la intención, aunque use palabras distintas:\n";
+
+  for (let i = 0; i < activeKnowledge.length; i++) {
+    const k = activeKnowledge[i];
+    knowledgeSection += (i + 1) + ". [" + k.type.toUpperCase() + "] " +
+      (k.category ? "Categoría/Producto: " + k.category + " | " : "") +
+      "Situación: \"" + k.situation + "\" -> Referencia oficial: \"" + k.solution + "\"" +
+      (k.conditions ? " (Condiciones: " + k.conditions + ")" : "") + "\n";
+  }
+
+  knowledgeSection += "\nREGLAS DE APLICACIÓN DE REFERENCIAS:\n" +
+    "- Adapta la redacción con naturalidad al hilo conversacional sin inventar datos ni cambiar precios ni condiciones.\n" +
+    "- Si una referencia no aplica al producto que se está conversando, NO la utilices.\n" +
+    "- Mantén para consultas normales el máximo de dos frases y 40 palabras, formulando a lo sumo una pregunta breve si falta un dato.\n";
+
+  return basePrompt + knowledgeSection;
+}
