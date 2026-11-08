@@ -944,7 +944,7 @@ function getAiConfigFromStorage_() {
   let assistantName = props.getProperty('WES_ASSISTANT_NAME') || 'Sofía';
   let enabled = props.getProperty('WES_AI_ENABLED') !== 'false';
   let temperature = parseFloat(props.getProperty('WES_AI_TEMP') || '0.7');
-  let maxTokens = parseInt(props.getProperty('WES_AI_TOKENS') || '800', 10);
+  let maxTokens = parseInt(props.getProperty('WES_AI_TOKENS') || '2048', 10);
 
   // Si no está en ScriptProperties, consultar hoja Config_IA
   if (!apiKey || !systemPrompt) {
@@ -974,7 +974,7 @@ function getAiConfigFromStorage_() {
     assistantName: assistantName || 'Sofía',
     enabled: enabled,
     temperature: isNaN(temperature) ? 0.7 : temperature,
-    maxTokens: isNaN(maxTokens) ? 800 : maxTokens
+    maxTokens: isNaN(maxTokens) ? 2048 : maxTokens
   };
 }
 
