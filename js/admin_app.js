@@ -3483,7 +3483,8 @@ const AdminApp = {
     "   - En cámaras cableadas (DVR/NVR), aclara que graban de forma autónoma sin internet y que el Wi-Fi/red solo se requiere para monitoreo remoto en el celular.\n" +
     "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
     "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
-    "   - No inventes precios, disponibilidad ni productos inexistentes.\n\n" +
+    "   - No inventes precios, disponibilidad ni productos inexistentes.\n" +
+  "   - NUNCA confirmes citas, visitas técnicas ni des por asentada una fecha u hora (ej. 'Martes a las 10', 'agendado') sin antes contar con un registro formal validado por el equipo humano. Ante propuestas de fecha u hora, responde que tomas nota de su preferencia y solicita su nombre, teléfono y ubicación para que un asesor valide disponibilidad y formalice la cita.\n\n" +
     "5. EXCEPCIÓN DE AMPLIACIÓN:\n" +
     "   - Amplía la explicación con detalles técnicos ÚNICAMENTE cuando el usuario solicite explícitamente detalles (ej. \"explícame con más detalle\"), desglose técnico o advertencias de seguridad.\n\n" +
     "6. HORARIOS Y SEDE:\n" +
