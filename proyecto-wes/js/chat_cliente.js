@@ -225,6 +225,7 @@ function setupChatEvents() {
     } else {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
+      removeTypingIndicator();
       if (icon) {
         icon.className = 'fas fa-headset text-2xl';
       }
@@ -277,6 +278,22 @@ function setupChatEvents() {
     scrollToBottom();
   }
 
+  let typingIndicatorTimer = null;
+
+  function clearTypingIndicatorTimer() {
+    if (typingIndicatorTimer) {
+      clearTimeout(typingIndicatorTimer);
+      typingIndicatorTimer = null;
+    }
+  }
+
+  function scheduleTypingIndicator() {
+    clearTypingIndicatorTimer();
+    typingIndicatorTimer = setTimeout(() => {
+      appendTypingIndicator();
+    }, 1000);
+  }
+
   function appendTypingIndicator() {
     const msgContainer = document.getElementById('wes-chat-messages');
     if (!msgContainer) return null;
@@ -286,18 +303,16 @@ function setupChatEvents() {
 
     const div = document.createElement('div');
     div.id = 'wes-chat-typing';
-    div.className = 'flex items-start space-x-2 animate-fadeIn';
+    div.className = 'flex items-end space-x-2 animate-fadeIn';
     div.innerHTML = `
-      <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-wes-dark via-wes-blue to-slate-900 text-wes-gold flex items-center justify-center text-xs shrink-0 mt-0.5 shadow-xs border border-wes-gold/30">
-        <i class="fas fa-robot animate-pulse"></i>
-      </div>
-      <div class="bg-white px-3.5 py-2.5 rounded-2xl rounded-tl-none border border-slate-200/90 shadow-xs text-slate-600 text-xs flex items-center space-x-2">
+      <img src="assets/sofia-avatar.jpg" alt="Sofía" class="w-7 h-7 rounded-full object-cover border border-[#F5B300]/80 shrink-0 mb-1 shadow-xs">
+      <div class="bg-white px-3.5 py-2.5 rounded-2xl rounded-bl-none border border-slate-200/90 shadow-xs text-slate-600 text-xs flex items-center space-x-2">
         <div class="flex items-center space-x-1">
-          <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0s;"></span>
-          <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.18s;"></span>
-          <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.36s;"></span>
+          <span class="w-1.5 h-1.5 bg-[#F5B300] rounded-full animate-bounce" style="animation-delay: 0s;"></span>
+          <span class="w-1.5 h-1.5 bg-[#F5B300] rounded-full animate-bounce" style="animation-delay: 0.18s;"></span>
+          <span class="w-1.5 h-1.5 bg-[#F5B300] rounded-full animate-bounce" style="animation-delay: 0.36s;"></span>
         </div>
-        <span class="text-[11px] font-medium text-slate-500">Asistente WES está escribiendo...</span>
+        <span class="text-[11px] font-medium text-slate-500">Sofía está escribiendo...</span>
       </div>
     `;
     msgContainer.appendChild(div);
@@ -306,6 +321,7 @@ function setupChatEvents() {
   }
 
   function removeTypingIndicator() {
+    clearTypingIndicatorTimer();
     const el = document.getElementById('wes-chat-typing');
     if (el) el.remove();
   }
@@ -725,19 +741,16 @@ function setupChatEvents() {
       submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
     }
     const origPlaceholder = input.placeholder || 'Escribe tu consulta o número de ticket...';
-    input.placeholder = 'Asistente WES está escribiendo...';
+    // Placeholder se mantiene natural
 
     appendUserMessage(query);
 
     const startTime = Date.now();
-    appendTypingIndicator();
+    scheduleTypingIndicator();
 
     try {
       // 1. Si estábamos esperando el código del ticket
       if (chatSession.step === 'awaiting_ticket_query') {
-        const targetDelay = 2200 + Math.floor(Math.random() * 800);
-        const elapsed = Date.now() - startTime;
-        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
         removeTypingIndicator();
         executeTicketSearch(query);
         return;
@@ -745,9 +758,6 @@ function setupChatEvents() {
 
       // 2. Si estábamos en el flujo de borrador de ticket
       if (chatSession.step === 'drafting_ticket') {
-        const targetDelay = 2200 + Math.floor(Math.random() * 800);
-        const elapsed = Date.now() - startTime;
-        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
         removeTypingIndicator();
         handleDraftParsing(query);
         return;
@@ -757,9 +767,6 @@ function setupChatEvents() {
 
       // 3. Detección automática si el usuario escribió un código de ticket directamente
       if (/^\s*(SRV|TKT)[-\s]?[A-Z0-9-]{3,}\s*$/i.test(query) || /^\s*\d{4}\s*$/.test(query) || /srv-\d{4}-\d{4}/i.test(lower)) {
-        const targetDelay = 2200 + Math.floor(Math.random() * 800);
-        const elapsed = Date.now() - startTime;
-        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
         removeTypingIndicator();
         executeTicketSearch(query);
         return;
@@ -767,9 +774,6 @@ function setupChatEvents() {
 
       // 4. Intención explícita de consultar ticket o estado de orden técnica
       if (/(consultar ticket|ver ticket|estado de ticket|estatus de orden|consultar orden|ver mi orden|como va mi equipo)/i.test(lower)) {
-        const targetDelay = 2000 + Math.floor(Math.random() * 800);
-        const elapsed = Date.now() - startTime;
-        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
         removeTypingIndicator();
         chatSession.step = 'awaiting_ticket_query';
         appendBotMessage(`
@@ -802,9 +806,6 @@ function setupChatEvents() {
           }
         }
 
-        const targetDelay = getNaturalTypingDelay(scheduleReply);
-        const elapsed = Date.now() - startTime;
-        if (targetDelay > elapsed) await new Promise(r => setTimeout(r, targetDelay - elapsed));
         removeTypingIndicator();
 
         appendBotMessage(`
@@ -820,30 +821,14 @@ function setupChatEvents() {
       // 5. Toda consulta conversacional va al backend de Inteligencia Artificial (Google Gemini)
       const aiResult = await queryAIBackend(query);
 
-      // Calcular tiempo de digitación / razonamiento natural (entre 3.5s y 5.5s, "muchas veces 5 segundos")
-      const replyContent = (aiResult && aiResult.ok && aiResult.reply) ? aiResult.reply : '';
-      const targetDelay = getNaturalTypingDelay(replyContent);
-      const elapsed = Date.now() - startTime;
-      const remaining = targetDelay - elapsed;
-
-      if (remaining > 0) {
-        await new Promise(resolve => setTimeout(resolve, remaining));
-      }
-
+            // Entrega fluida sin retardo artificial innecesario:
+      // Si la IA responde de inmediato, se muestra directamente; si tardó más de 1s, el indicador se quita al instante
       removeTypingIndicator();
 
       if (aiResult && aiResult.ok && aiResult.reply) {
         // Respuesta puramente conversacional en burbuja limpia, SIN botones externos (MÁXIMO 2 LÍNEAS)
         appendBotMessage(`
-          <div class="space-y-1.5">
-            <div class="flex items-center space-x-1.5 text-[10px] text-amber-700 font-bold uppercase tracking-wider mb-0.5">
-              <i class="fas fa-sparkles text-amber-500"></i>
-              <span>Respuesta Asistente WES IA</span>
-            </div>
-            <div class="leading-relaxed text-slate-800 text-xs">
-              ${escapeHtml(aiResult.reply).replace(/\n\n/g, '<br>').replace(/\n/g, '<br>')}
-            </div>
-          </div>
+          <div class="leading-relaxed text-slate-800 text-xs">${escapeHtml(aiResult.reply).replace(/\n\n/g, '<br>').replace(/\n/g, '<br>')}</div>
         `);
         
         // Actualizar memoria conversacional con rol user y model
@@ -894,6 +879,7 @@ function setupChatEvents() {
 
   // Exportar funciones a window para interacción con el DOM
     function retryUserQuery(q) {
+    removeTypingIndicator();
     const input = document.getElementById('wes-chat-user-input');
     if (input) {
       input.value = q;
