@@ -65,7 +65,25 @@
   function initClientChat() {
     renderChatLauncherAndModal();
     setupChatEvents();
-  }
+  
+    // Ajuste dinámico de teclado virtual en móviles (iOS Safari & Android Chrome)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => {
+        const modal = document.getElementById('wes-chat-modal');
+        if (modal && chatSession.isOpen && window.innerWidth < 640) {
+          modal.style.height = window.visualViewport.height + 'px';
+          modal.style.top = window.visualViewport.offsetTop + 'px';
+          scrollToBottom();
+        }
+      });
+      window.visualViewport.addEventListener('scroll', () => {
+        const modal = document.getElementById('wes-chat-modal');
+        if (modal && chatSession.isOpen && window.innerWidth < 640) {
+          modal.style.top = window.visualViewport.offsetTop + 'px';
+        }
+      });
+    }
+}
 
   function renderChatLauncherAndModal() {
     if (document.getElementById('wes-client-chat-wrapper')) return;
@@ -85,63 +103,69 @@
         </button>
       </div>
 
-      <!-- Ventana Flotante del Chat de Clientes -->
-      <div id="wes-chat-modal" class="fixed bottom-3 right-2 sm:bottom-24 sm:right-6 z-50 w-[calc(100vw-1rem)] sm:w-[400px] h-[82dvh] sm:h-[580px] max-h-[85vh] sm:max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex-col overflow-hidden hidden transition-all duration-300 animate-fadeIn text-slate-800 font-sans">
+      <!-- Ventana del Chat de Clientes (Móvil Full / Desktop Ventana Flotante Elegante) -->
+      <div id="wes-chat-modal" class="fixed inset-x-0 bottom-0 top-0 sm:top-auto sm:bottom-24 sm:right-6 sm:left-auto z-50 w-full sm:w-[410px] h-[100dvh] sm:h-[620px] max-h-[100dvh] sm:max-h-[88vh] bg-[#f8fafc] sm:rounded-3xl shadow-2xl border-0 sm:border sm:border-slate-200/90 flex-col overflow-hidden hidden transition-all duration-300 animate-fadeIn text-slate-800 font-sans">
         
-        <!-- Encabezado del Chat -->
-        <div class="p-4 bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 text-white flex items-center justify-between shadow-md shrink-0">
+        <!-- Encabezado Azul Marino Sofía WES -->
+        <div class="px-4 py-3.5 bg-gradient-to-r from-[#071836] via-[#0D2A5C] to-[#0A224A] text-white flex items-center justify-between shadow-lg shrink-0 border-b border-[#F5B300]/30">
           <div class="flex items-center space-x-3">
             <div class="relative">
-              <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-wes-gold text-slate-950 flex items-center justify-center font-black shadow-inner">
-                <i class="fas fa-robot text-lg"></i>
-              </div>
-              <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+              <img src="assets/sofia-avatar.jpg" alt="Sofía" class="w-11 h-11 rounded-full object-cover border-2 border-[#F5B300] shadow-md ring-2 ring-white/10">
+              <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#071836] rounded-full shadow-xs"></span>
             </div>
             <div>
-              <div class="flex items-center space-x-1.5">
-                <h3 class="font-extrabold text-sm font-brand tracking-wide text-white" id="wes-chat-header-title">Sofía - Asistente WES</h3>
-                <span class="px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider bg-emerald-600/90 text-white rounded-md">En Línea</span>
+              <div class="flex items-center space-x-2">
+                <h3 class="font-extrabold text-sm tracking-wide text-white font-brand" id="wes-chat-header-title">Sofía</h3>
+                <span class="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  En línea
+                </span>
               </div>
-              <p class="text-[11px] text-slate-300">Warn Electrical Services · Soporte & Cotizaciones</p>
+              <p class="text-[11px] text-slate-300">Asistente WES · Soporte y cotizaciones</p>
             </div>
           </div>
+
+          <!-- Controles del Encabezado: Reiniciar y Cerrar -->
           <div class="flex items-center space-x-1">
-            <button onclick="toggleClientChat()" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition focus:outline-none" title="Cerrar chat">
+            <button onclick="confirmResetClientChat()" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white flex items-center justify-center transition active:scale-95 focus:outline-none" title="Reiniciar conversación">
+              <i class="fas fa-redo-alt text-xs"></i>
+            </button>
+            <button onclick="toggleClientChat()" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white flex items-center justify-center transition active:scale-95 focus:outline-none" title="Cerrar chat">
               <i class="fas fa-times text-xs"></i>
             </button>
           </div>
         </div>
 
-        <!-- Área de Mensajes Desplazable -->
-        <div id="wes-chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50/70 text-xs">
+        <!-- Área de Mensajes Desplazable con Fondo Claro Texturizado WES -->
+        <div id="wes-chat-messages" class="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3.5 text-xs bg-[#f4f6f9] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px]">
           <!-- Mensaje de Bienvenida Inicial -->
-          <div class="flex items-start space-x-2">
-            <div class="w-7 h-7 rounded-full bg-wes-blue text-wes-gold flex items-center justify-center text-xs shrink-0 mt-0.5 shadow-xs">
-              <i class="fas fa-robot"></i>
-            </div>
-            <div class="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200/80 shadow-xs max-w-[85%] leading-relaxed text-slate-800">
-              <p class="font-bold text-slate-900 mb-1">¡Hola! Soy Sofía, asesora de Warn Electrical Services. ¿En qué le puedo asistir hoy?</p>
+          <div class="flex items-end space-x-2 animate-fadeIn">
+            <img src="assets/sofia-avatar.jpg" alt="Sofía" class="w-7 h-7 rounded-full object-cover border border-[#F5B300]/80 shrink-0 mb-4 shadow-xs">
+            <div class="max-w-[85%]">
+              <div class="bg-white p-3.5 rounded-2xl rounded-bl-none border border-slate-200/80 shadow-xs leading-relaxed text-slate-800">
+                <p class="font-medium text-slate-900">¡Hola! Soy Sofía, asesora técnica de Warn Electrical Services. ¿En qué le puedo asistir hoy?</p>
+              </div>
+              <span class="text-[10px] text-slate-400 mt-1 ml-1 block font-mono">Justo ahora</span>
             </div>
           </div>
         </div>
 
-        <!-- Formulario de Entrada de Texto -->
-        <form id="wes-chat-input-form" onsubmit="handleChatSubmit(event)" class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2 shrink-0">
-          <input type="text" id="wes-chat-user-input" placeholder="Escribe tu consulta o número de ticket..." autocomplete="off" class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-base sm:text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-wes-gold focus:bg-white transition shadow-inner">
-          <button type="submit" class="w-10 h-10 bg-wes-blue hover:bg-wes-dark active:scale-95 text-wes-gold rounded-xl flex items-center justify-center transition shadow-md border border-wes-gold/40 shrink-0" title="Enviar mensaje">
+        <!-- Formulario de Entrada de Texto adaptado a teclados móviles -->
+        <form id="wes-chat-input-form" onsubmit="handleChatSubmit(event)" class="p-2.5 sm:p-3 bg-white border-t border-slate-200/90 flex items-center space-x-2 shrink-0 shadow-lg">
+          <input type="text" id="wes-chat-user-input" placeholder="Escribe tu consulta o pregunta..." autocomplete="off" class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-base sm:text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D2A5C] focus:bg-white transition">
+          <button type="submit" class="w-10 h-10 bg-[#0D2A5C] hover:bg-[#071836] active:scale-95 text-[#F5B300] rounded-2xl flex items-center justify-center transition shadow-md border border-[#F5B300]/40 shrink-0" title="Enviar mensaje">
             <i class="fas fa-paper-plane text-xs"></i>
           </button>
         </form>
 
         <!-- Pie de página sutil -->
-        <div class="px-3 py-1 bg-slate-100 border-t border-slate-200/60 text-[9px] text-slate-500 flex items-center justify-between shrink-0">
-          <span class="flex items-center space-x-1">
+        <div class="px-3.5 py-1.5 bg-slate-100/90 border-t border-slate-200 text-[10px] text-slate-500 flex items-center justify-between shrink-0">
+          <span class="flex items-center space-x-1.5">
             <i class="fas fa-shield-alt text-emerald-600"></i>
-            <span>Datos protegidos · Solo consultas públicas</span>
+            <span>Warn Electrical Services (WES)</span>
           </span>
           <a href="${WES_KB.empresa.whatsappUrl}" target="_blank" class="text-emerald-700 font-bold hover:underline flex items-center space-x-1">
-            <i class="fab fa-whatsapp"></i>
-            <span>Asesor Humano</span>
+            <i class="fab fa-whatsapp text-emerald-600"></i>
+            <span>WhatsApp Directo</span>
           </a>
         </div>
 
@@ -150,7 +174,16 @@
     document.body.appendChild(wrapper);
   }
 
-  function setupChatEvents() {
+  
+  function getCurrentMessageTime() {
+    try {
+      const d = new Date();
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch (e) {
+      return '';
+    }
+  }
+function setupChatEvents() {
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && chatSession.isOpen) {
         toggleClientChat();
@@ -209,11 +242,15 @@
     const msgContainer = document.getElementById('wes-chat-messages');
     if (!msgContainer) return;
 
+    const timeStr = getCurrentMessageTime();
     const div = document.createElement('div');
-    div.className = 'flex justify-end';
+    div.className = 'flex justify-end animate-fadeIn';
     div.innerHTML = `
-      <div class="bg-wes-blue text-white px-3.5 py-2.5 rounded-2xl rounded-tr-none shadow-xs max-w-[85%] leading-relaxed text-xs">
-        ${escapeHtml(text)}
+      <div class="max-w-[85%] flex flex-col items-end">
+        <div class="bg-[#0D2A5C] text-white px-4 py-2.5 rounded-2xl rounded-br-none shadow-sm leading-relaxed text-xs font-normal">
+          ${escapeHtml(text)}
+        </div>
+        ${timeStr ? `<span class="text-[10px] text-slate-400 mt-1 mr-1 font-mono">${timeStr}</span>` : ''}
       </div>
     `;
     msgContainer.appendChild(div);
@@ -224,14 +261,16 @@
     const msgContainer = document.getElementById('wes-chat-messages');
     if (!msgContainer) return;
 
+    const timeStr = getCurrentMessageTime();
     const div = document.createElement('div');
-    div.className = 'flex items-start space-x-2 animate-fadeIn';
+    div.className = 'flex items-end space-x-2 animate-fadeIn';
     div.innerHTML = `
-      <div class="w-7 h-7 rounded-full bg-wes-blue text-wes-gold flex items-center justify-center text-xs shrink-0 mt-0.5 shadow-xs">
-        <i class="fas fa-robot"></i>
-      </div>
-      <div class="bg-white p-3.5 rounded-2xl rounded-tl-none border border-slate-200/90 shadow-xs max-w-[88%] leading-relaxed text-slate-800 text-xs">
-        ${htmlContent}
+      <img src="assets/sofia-avatar.jpg" alt="Sofía" class="w-7 h-7 rounded-full object-cover border border-[#F5B300]/80 shrink-0 mb-4 shadow-xs">
+      <div class="max-w-[88%] flex flex-col items-start">
+        <div class="bg-white p-3.5 rounded-2xl rounded-bl-none border border-slate-200/90 shadow-xs leading-relaxed text-slate-800 text-xs">
+          ${htmlContent}
+        </div>
+        ${timeStr ? `<span class="text-[10px] text-slate-400 mt-1 ml-1 font-mono">${timeStr}</span>` : ''}
       </div>
     `;
     msgContainer.appendChild(div);
@@ -768,15 +807,7 @@
         removeTypingIndicator();
 
         appendBotMessage(`
-          <div class="space-y-1.5">
-            <div class="flex items-center space-x-1.5 text-[10px] text-amber-700 font-bold uppercase tracking-wider mb-0.5">
-              <i class="fas fa-sparkles text-amber-500"></i>
-              <span>Respuesta Asistente WES IA</span>
-            </div>
-            <div class="leading-relaxed text-slate-800 text-xs">
-              ${escapeHtml(scheduleReply).replace(/\n/g, '<br>')}
-            </div>
-          </div>
+          <p class="leading-relaxed text-slate-800">${escapeHtml(scheduleReply).replace(/\n/g, '<br>')}</p>
         `);
         if (!chatSession.chatHistory) chatSession.chatHistory = [];
         chatSession.chatHistory.push({ role: 'user', content: query });
@@ -869,8 +900,38 @@
     }
   }
 
-  if (typeof window !== 'undefined') {
+  
+  function confirmResetClientChat() {
+    if (!confirm('¿Deseas reiniciar la conversación con Sofía? Se borrarán los mensajes anteriores.')) {
+      return;
+    }
+    chatSession.chatHistory = [];
+    chatSession.step = 'idle';
+    chatSession.ticketDraft = { name: '', phone: '', equipment: '', address: '', description: '' };
+    
+    const msgContainer = document.getElementById('wes-chat-messages');
+    if (msgContainer) {
+      msgContainer.innerHTML = `
+        <div class="flex items-end space-x-2 animate-fadeIn">
+          <img src="assets/sofia-avatar.jpg" alt="Sofía" class="w-7 h-7 rounded-full object-cover border border-[#F5B300]/80 shrink-0 mb-4 shadow-xs">
+          <div class="max-w-[85%]">
+            <div class="bg-white p-3.5 rounded-2xl rounded-bl-none border border-slate-200/80 shadow-xs leading-relaxed text-slate-800">
+              <p class="font-medium text-slate-900">¡Hola! Soy Sofía, asesora técnica de Warn Electrical Services. ¿En qué le puedo asistir hoy?</p>
+            </div>
+            <span class="text-[10px] text-slate-400 mt-1 ml-1 block font-mono">Justo ahora</span>
+          </div>
+        </div>
+      `;
+    }
+    const input = document.getElementById('wes-chat-user-input');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+  }
+if (typeof window !== 'undefined') {
     window.toggleClientChat = toggleClientChat;
+    window.confirmResetClientChat = confirmResetClientChat;
     window.handleQuickChipClick = handleQuickChipClick;
     window.handleChatSubmit = handleChatSubmit;
     window.retryUserQuery = retryUserQuery;
