@@ -380,7 +380,7 @@ function setupChatEvents() {
     // 1. Consultar vía Backend Seguro en Google Apps Script
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 18000);
+      const timeoutId = setTimeout(() => controller.abort(), 35000);
 
       const payload = {
         action: 'query_gemini_chat',
@@ -419,7 +419,7 @@ function setupChatEvents() {
     if (localApiKey && localApiKey.length > 5) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
         const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(localApiKey);
         
         let contents = [];
