@@ -14,11 +14,11 @@
 | **Propietario / organización** | Ing. Luis Miguel Lizardo / Warn Electrical Services, SRL (WES) |
 | **Sede física** | Autopista Ramón Cáceres, Moca, Provincia Espaillat, República Dominicana |
 | **Fecha de inicio** | 2017 (operaciones WES) / Septiembre 2026 (fase plataforma digital) |
-| **Última actualización** | 2026-11-09 19:25 (GMT-4) |
+| **Última actualización** | 2026-11-10 09:30 (GMT-4) |
 | **Repositorio GitHub (privado)** | `https://github.com/Luis28lh/wes-plataforma.git` (remoto `origin`) y `https://github.com/Luis28lh/wes-plataforma-v1.git` (remoto `v1`) |
 | **Rama principal / política de cambios** | `main` (despliegue continuo a producción). Commits atómicos con verificación previa obligatoria. |
 | **Estado general** | **OPERATIVO EN PRODUCCIÓN** |
-| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #56) |
+| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #58) |
 
 ---
 
@@ -74,7 +74,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 - **Servicio Técnico KDS:** Registro de órdenes, generación de código `SRV-YYYY-XXXX`, estados de reparación y consulta pública mediante código o teléfono.
 
 ### Limitaciones o errores conocidos:
-- El modelo de IA puede experimentar picos de latencia en la red de Google; mitigado con timeout de 35s y cascada multi-modelo.
+- Picos de latencia de red de Google mitigados con ampliación de timeout a 45s, límite de tokens directos (max 250), cascada optimizada (gemini-2.0-flash, gemini-2.0-flash-lite, gemini-3.5-flash, gemini-3.5-flash-lite) y reintento transparente único en frontend ante timeouts o interrupciones de red.
 
 **Última versión / commit verificado:**  
 `f40ef1a` (sincronizado en `origin/main` y `v1/main`).
@@ -86,7 +86,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 | Componente | Tecnología / servicio | Función | Estado |
 |---|---|---|---|
 | **Frontend** | HTML5, Tailwind CSS, JavaScript Vanilla (ES6+), FontAwesome 6, PWA Service Worker | Interfaz pública y paneles | IMPLEMENTADO |
-| **Backend API** | Google Apps Script (Web App REST JSON/POST) | Lógica de negocio, correo, base de datos y puente a IA | IMPLEMENTADO (v56) |
+| **Backend API** | Google Apps Script (Web App REST JSON/POST) | Lógica de negocio, correo, base de datos y puente a IA | IMPLEMENTADO (v58) |
 | **Persistencia** | Google Sheets (`Base_Datos_WES_Oficial`) | Base de datos relacional y hojas operativas | IMPLEMENTADO |
 | **Inteligencia Artificial** | Google Gemini API (`gemini-2.0-flash` / `gemini-3.5-flash`) | Motor conversacional de Sofía | IMPLEMENTADO |
 | **Hosting y CDN** | GitHub Pages Privado + Custom Domain Cloudflare/DNS | Entrega rápida con SSL | IMPLEMENTADO |
@@ -154,6 +154,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 | **2026-11-08** | Módulo "Conocimiento y respuestas de Sofía" | Permitir registrar FAQs y reglas sin editar el prompt maestro | Doble vía de registro con historial y versionado |
 | **2026-11-09** | Aumento de timeout a 35s y cascada de modelos | Evitar error "no pudo procesar respuesta" por latencia de red | Estabilidad total en consultas de catálogo y soporte |
 | **2026-11-09** | Incorporación formal del Kit de Documentación Maestra | Estandarizar gobernanza, trazabilidad y control de versiones | `AGENTS.md` y `docs/PROYECTO_MAESTRO.md` como fuente de verdad permanente |
+| **2026-11-10** | Optimización de latencia en Apps Script (v58) y Timeout a 45s con reintento transparente | Corrección de fallos intermitentes de "no pudo procesar respuesta" en consultas como "hola" y cables | Reducción de latencia a 3-8s, tokens directos acotados (250), modelos ligeros de respaldo y resiliencia ante cortes |
 
 ---
 

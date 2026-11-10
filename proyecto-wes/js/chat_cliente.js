@@ -377,49 +377,74 @@ function setupChatEvents() {
       }
     } catch (e) {}
 
-    // 1. Consultar vía Backend Seguro en Google Apps Script
-    try {
+    // Función interna para llamar al backend de Apps Script con timeout de 45 segundos
+    async function attemptBackendFetch() {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 35000);
+      const timeoutId = setTimeout(() => controller.abort(), 45000);
 
-      const payload = {
-        action: 'query_gemini_chat',
-        data: {
-          message: userMessage,
-          history: chatSession.chatHistory || [],
-          clientFallbackKey: localApiKey
-        }
-      };
-
-      const res = await fetch(backendUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.success && data.reply) {
-          if (data.assistantName) {
-            const hTitle = document.getElementById('wes-chat-header-title');
-            if (hTitle) hTitle.textContent = data.assistantName + ' - Asistente WES';
+      try {
+        const payload = {
+          action: 'query_gemini_chat',
+          data: {
+            message: userMessage,
+            history: chatSession.chatHistory || [],
+            clientFallbackKey: localApiKey
           }
-          return { ok: true, reply: data.reply, model: data.model, assistantName: data.assistantName || 'Sofía' };
-        } else if (data && data.errorType) {
-          return { ok: false, errorType: data.errorType, message: data.message };
+        };
+
+        const res = await fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && data.reply) {
+            if (data.assistantName) {
+              const hTitle = document.getElementById('wes-chat-header-title');
+              if (hTitle) hTitle.textContent = data.assistantName + ' - Asistente WES';
+            }
+            return { ok: true, reply: data.reply, model: data.model, assistantName: data.assistantName || 'Sofía' };
+          } else if (data && data.errorType) {
+            return { ok: false, errorType: data.errorType, message: data.message };
+          }
         }
+        return { ok: false, errorType: 'SERVER_STATUS_' + res.status };
+      } catch (fetchErr) {
+        clearTimeout(timeoutId);
+        return { ok: false, errorType: fetchErr.name === 'AbortError' ? 'TIMEOUT' : 'NETWORK_ERROR', raw: fetchErr };
       }
-    } catch (err) {
-      console.warn('[WES Chat] Error consultando backend central de IA:', err);
+    }
+
+    // 1. Primer intento contra el Backend Seguro en Google Apps Script
+    let attempt1 = await attemptBackendFetch();
+    if (attempt1.ok) {
+      return attempt1;
+    }
+
+    // Si fue un fallo temporal de red o tiempo de espera, realizar un reintento transparente único (espera 1s)
+    if (attempt1.errorType === 'TIMEOUT' || attempt1.errorType === 'NETWORK_ERROR' || attempt1.errorType === 'SERVER_STATUS_500' || attempt1.errorType === 'SERVER_STATUS_503') {
+      console.warn('[WES Chat] Reintentando consulta al backend tras fallo temporal:', attempt1.errorType);
+      await new Promise(r => setTimeout(r, 1000));
+      let attempt2 = await attemptBackendFetch();
+      if (attempt2.ok) {
+        return attempt2;
+      }
+      if (attempt2.message) {
+        return attempt2;
+      }
+    } else if (attempt1.message) {
+      return attempt1;
     }
 
     // 2. Respaldo directo en cliente SOLO si existe clave local en este navegador
     if (localApiKey && localApiKey.length > 5) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
         const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(localApiKey);
         
         let contents = [];
@@ -437,7 +462,7 @@ function setupChatEvents() {
           body: JSON.stringify({
             systemInstruction: { parts: [{ text: DEFAULT_SYSTEM_PROMPT }] },
             contents: contents,
-            generationConfig: { maxOutputTokens: 800, temperature: 0.7 }
+            generationConfig: { maxOutputTokens: 250, temperature: 0.7 }
           }),
           signal: controller.signal
         });

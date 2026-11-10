@@ -1170,6 +1170,8 @@ function queryGeminiChatHandler(data) {
 
     const candidateModels = [
       config.model,
+      'gemini-2.0-flash',
+      'gemini-2.0-flash-lite',
       'gemini-3.5-flash',
       'gemini-3.5-flash-lite',
       'gemini-flash-latest'
@@ -1190,7 +1192,7 @@ function queryGeminiChatHandler(data) {
         contents: orderedContents,
         generationConfig: {
           temperature: config.temperature,
-          maxOutputTokens: config.maxTokens
+          maxOutputTokens: Math.min(config.maxTokens || 250, 250)
         }
       };
 
@@ -1227,7 +1229,7 @@ function queryGeminiChatHandler(data) {
                 contents: fallbackContents,
                 generationConfig: {
                   temperature: config.temperature,
-                  maxOutputTokens: config.maxTokens
+                  maxOutputTokens: Math.min(config.maxTokens || 250, 250)
                 }
               }),
               muteHttpExceptions: true
@@ -1257,7 +1259,7 @@ function queryGeminiChatHandler(data) {
       var isExplicitExpansion = /(detall|diferencia|expl[ií]ca|compara|profund|especificaci|caracter[ií]stic|t[eé]cnic)/i.test(message);
       var wordCount = finalReply.trim().split(/\s+/).filter(Boolean).length;
       
-      if (!isExplicitExpansion && wordCount > 40 && effectiveApiKey) {
+      if (!isExplicitExpansion && wordCount > 55 && effectiveApiKey) {
         try {
           var summarizeUrl = 'https://generativelanguage.googleapis.com/v1beta/models/' + (usedModel || 'gemini-3.5-flash') + ':generateContent?key=' + effectiveApiKey;
           var summarizePayload = {
