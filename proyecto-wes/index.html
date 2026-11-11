@@ -154,7 +154,7 @@
           <a href="#servicios" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Servicios</a>
           
           <!-- Acceso Directo: Servicio Técnico (Tablero KDS en Tiempo Real) -->
-          <a href="servicio-tecnico.html" class="px-3 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs transition flex items-center space-x-1.5 shadow-sm border border-slate-700/80 group shrink-0" title="Entrar al Tablero de Servicio Técnico (Estilo McDonald's)">
+          <a href="servicio-tecnico.html" id="nav-service-kds-link" class="hidden px-3 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs transition items-center space-x-1.5 shadow-sm border border-slate-700/80 group shrink-0" title="Entrar al Tablero de Servicio Técnico (Estilo McDonald's)">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span class="tracking-tight">Servicio Técnico</span>
             <span id="nav-ongoing-badge" class="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs">0</span>
@@ -183,7 +183,7 @@
           </button>
 
           <!-- Chip Móvil Servicio Técnico -->
-          <a href="servicio-tecnico.html" class="md:hidden px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm border border-slate-800 shrink-0" title="Entrar a Servicio Técnico (Tablero KDS)">
+          <a href="servicio-tecnico.html" id="header-service-kds-chip" class="hidden md:hidden px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs items-center space-x-1.5 shadow-sm border border-slate-800 shrink-0" title="Entrar a Servicio Técnico (Tablero KDS)">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <span class="hidden sm:inline">Servicio Técnico</span>
             <span class="sm:hidden">Servicio</span>
@@ -227,7 +227,7 @@
       <a href="#servicios" onclick="closeMobileMenu()" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Servicios Comerciales</a>
       
       <!-- Servicio Técnico KDS (Móvil) -->
-      <a href="servicio-tecnico.html" class="mobile-nav-link w-full p-2.5 rounded-xl bg-slate-900 hover:bg-wes-blue text-white font-bold flex items-center justify-between shadow-sm my-1 text-xs transition">
+      <a href="servicio-tecnico.html" id="drawer-service-kds-link" class="hidden mobile-nav-link w-full p-2.5 rounded-xl bg-slate-900 hover:bg-wes-blue text-white font-bold items-center justify-between shadow-sm my-1 text-xs transition">
         <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>Tablero Servicio Técnico (KDS)</span>
         <span id="drawer-ongoing-badge" class="text-[9px] bg-wes-gold text-slate-950 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">0 Activos</span>
       </a>
@@ -1130,7 +1130,7 @@
         </div>
 
         <!-- Banner Principal de Acceso Directo al Tablero KDS de Servicio Técnico -->
-        <div class="mb-12 bg-white rounded-2xl border-2 border-wes-gold shadow-md hover:shadow-xl transition-all duration-300 p-5 sm:p-7 flex flex-col lg:flex-row items-center justify-between gap-6 bg-gradient-to-r from-amber-500/10 via-white to-amber-500/5">
+        <div id="section-services-kds-banner" class="hidden mb-12 bg-white rounded-2xl border-2 border-wes-gold shadow-md hover:shadow-xl transition-all duration-300 p-5 sm:p-7 flex flex-col lg:flex-row items-center justify-between gap-6 bg-gradient-to-r from-amber-500/10 via-white to-amber-500/5">
           <div class="flex items-start sm:items-center space-x-4">
             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-wes-gold to-amber-500 text-slate-950 flex items-center justify-center text-2xl font-black shadow-md shrink-0">
               <i class="fas fa-tools"></i>
@@ -2870,7 +2870,7 @@
   </div>
 
   <!-- ========================================================= -->
-  <!-- MODAL DE AUTENTICACIÓN UNIVERSAL (LOGIN, REGISTRO, OTP)   -->
+  <!-- MODAL DE ACCESO SENCILLO WES (CÓDIGO DE 6 DÍGITOS SIN CONTRASEÑA) -->
   <!-- ========================================================= -->
   <div id="auth-modal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all transform duration-200">
@@ -2884,300 +2884,149 @@
       <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-6 pt-7 pb-6 text-center text-white relative">
         <div class="inline-flex items-center space-x-2 bg-white/10 px-3 py-1 rounded-full backdrop-blur-md mb-2.5">
           <img src="assets/logo-wes.png" alt="WES" class="h-4 w-auto object-contain brightness-0 invert">
-          <span class="text-[10px] font-black uppercase tracking-wider text-wes-gold">Acceso Universal WES</span>
+          <span class="text-[10px] font-black uppercase tracking-wider text-wes-gold">Acceso Seguro WES</span>
         </div>
-        <h3 id="auth-modal-title" class="text-xl font-extrabold text-white font-brand">Iniciar Sesión</h3>
-        <p id="auth-modal-subtitle" class="text-xs text-slate-300 mt-1 max-w-xs mx-auto">Acceso unificado para Empleados y Clientes</p>
-      </div>
-
-      <!-- Barra de Pestañas (Tabs: Login | Registro) -->
-      <div id="auth-tabs-bar" class="flex border-b border-slate-200 bg-slate-50/80 p-1.5 gap-1.5">
-        <button id="auth-tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-wes-blue shadow-sm">
-          <i class="fas fa-sign-in-alt mr-1"></i> Iniciar Sesión
-        </button>
-        <button id="auth-tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800">
-          <i class="fas fa-user-plus mr-1"></i> Crear Cuenta
-        </button>
+        <h3 id="auth-modal-title" class="text-xl sm:text-2xl font-extrabold text-white font-brand">Bienvenido a WES</h3>
+        <p id="auth-modal-subtitle" class="text-xs text-slate-300 mt-1 max-w-xs mx-auto">Le enviaremos un código para entrar o crear su cuenta</p>
       </div>
 
       <div class="p-6">
 
         <!-- ============================================== -->
-        <!-- PESTAÑA 1: INICIAR SESIÓN                      -->
+        <!-- PASO 1: PANTALLA DE ACCESO (CORREO ELECTRÓNICO)-->
         <!-- ============================================== -->
-        <div id="auth-content-login">
-          <form id="form-user-login" onsubmit="handleUserLoginSubmit(event)" class="space-y-4">
+        <div id="auth-step-request">
+          <form id="form-auth-request-code" onsubmit="handleRequestAccessCodeSubmit(event)" class="space-y-4">
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo Electrónico o Usuario</label>
+              <label for="auth-access-email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo electrónico</label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <i class="fas fa-envelope text-xs"></i>
                 </span>
-                <input type="text" id="login-identifier" required placeholder="correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                <input type="email" id="auth-access-email" required placeholder="correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition" autofocus>
               </div>
+              <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
+                Le enviaremos un código para entrar o crear su cuenta.
+              </p>
             </div>
 
-            <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Contraseña</label>
-                <button type="button" onclick="openRecoveryView()" class="text-[11px] font-bold text-wes-gold hover:text-amber-600 transition">
-                  ¿Olvidaste tu contraseña?
-                </button>
-              </div>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <i class="fas fa-lock text-xs"></i>
-                </span>
-                <input type="password" id="login-password" required placeholder="••••••••" class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-                <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-                  <i class="fas fa-eye text-xs"></i>
-                </button>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between text-xs">
+            <!-- Opción Recordarme -->
+            <div class="flex items-center justify-between text-xs pt-1">
               <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
-                <input type="checkbox" id="login-remember" checked class="w-4 h-4 rounded text-wes-blue focus:ring-wes-blue border-slate-300">
-                <span>Recordarme en este equipo</span>
+                <input type="checkbox" id="auth-access-remember" checked class="w-4 h-4 rounded text-wes-blue focus:ring-wes-blue border-slate-300">
+                <span>Conservar mi sesión en este dispositivo</span>
               </label>
             </div>
 
             <!-- Alerta dinámica -->
-            <div id="login-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
+            <div id="auth-request-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
 
-            <button type="submit" id="login-submit-btn" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
-              <i class="fas fa-sign-in-alt"></i>
-              <span>Iniciar Sesión</span>
+            <button type="submit" id="auth-request-btn" class="w-full py-3.5 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-2">
+              <i class="fas fa-paper-plane text-wes-gold"></i>
+              <span>Enviarme código</span>
             </button>
           </form>
 
-          <div class="mt-5 pt-4 border-t border-slate-100 text-center">
-            <p class="text-xs text-slate-500">
-              ¿No tienes cuenta?
-              <button onclick="switchAuthTab('register')" class="font-bold text-wes-blue hover:underline ml-1">
-                Regístrate como Cliente (Opcional)
-              </button>
-            </p>
+          <div class="mt-5 pt-3.5 border-t border-slate-100 text-center">
+            <span class="text-[11px] text-slate-400 flex items-center justify-center space-x-1.5">
+              <i class="fas fa-lock text-[10px] text-emerald-600"></i>
+              <span>Acceso seguro sin contraseña · Válido para clientes y personal WES</span>
+            </span>
           </div>
         </div>
 
         <!-- ============================================== -->
-        <!-- PESTAÑA 2: REGISTRO DE CLIENTE                 -->
+        <!-- PASO 2: VERIFICACIÓN DEL CÓDIGO (6 DÍGITOS)   -->
         <!-- ============================================== -->
-        <div id="auth-content-register" class="hidden">
-                    <div class="mb-4 p-3 bg-gradient-to-r from-amber-50 to-blue-50 border border-amber-200/80 rounded-2xl flex items-center space-x-2.5 text-xs text-slate-700 shadow-xs">
-            <span class="w-7 h-7 rounded-lg bg-wes-blue text-wes-gold flex items-center justify-center shrink-0 text-xs">
+        <div id="auth-step-verify" class="hidden">
+          <div class="text-center mb-5">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-2 text-xl shadow-sm">
               <i class="fas fa-shield-alt"></i>
-            </span>
-            <span><strong>Activación de Cuenta WES:</strong> Ingresa tu correo y define tu contraseña. Te enviaremos un código de seguridad de 6 dígitos temporal para validar tu correo y activar tu cuenta.</span>
+            </div>
+            <h4 class="font-extrabold text-sm sm:text-base text-slate-900">Introduzca el código enviado a su correo</h4>
+            <p class="text-xs text-slate-500 mt-1">
+              Enviado a <strong id="auth-verify-email-display" class="font-bold text-slate-800">correo@ejemplo.com</strong>
+            </p>
+            <div class="mt-2 inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-[11px] text-amber-800 font-semibold">
+              <i class="fas fa-clock mr-0.5"></i>
+              <span>Vence en 10 minutos · Un solo uso</span>
+            </div>
           </div>
 
-          <form id="form-user-register" onsubmit="handleUserRegisterSubmit(event)" class="space-y-3">
+          <form id="form-auth-verify-code" onsubmit="handleVerifyAccessCodeSubmit(event)" class="space-y-4">
+            <!-- Cajas de dígitos OTP (soporta portapapeles, teclado numérico y autocompletado) -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo *</label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <i class="fas fa-user text-xs"></i>
-                </span>
-                <input type="text" id="register-name" required placeholder="Tu nombre y apellido" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Correo Electrónico *</label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <i class="fas fa-envelope text-xs"></i>
-                </span>
-                <input type="email" id="register-email" required placeholder="tu-correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono o WhatsApp <span class="text-slate-400 font-normal">(Recomendado)</span></label>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <i class="fas fa-phone text-xs"></i>
-                </span>
-                <input type="tel" id="register-phone" placeholder="809-000-0000" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Crear Contraseña *</label>
-                <div class="relative">
-                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <i class="fas fa-lock text-xs"></i>
-                  </span>
-                  <input type="password" id="register-password" required minlength="6" placeholder="Mínimo 6 car." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-                </div>
+              <div class="flex justify-center items-center gap-2 sm:gap-2.5 my-2">
+                <input type="text" id="magic-digit-1" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required autofocus>
+                <input type="text" id="magic-digit-2" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="magic-digit-3" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="magic-digit-4" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="magic-digit-5" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="magic-digit-6" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
               </div>
 
-              <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Repetir Contraseña *</label>
-                <div class="relative">
-                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <i class="fas fa-check-double text-xs"></i>
-                  </span>
-                  <input type="password" id="register-password-confirm" required minlength="6" placeholder="Confirmar clave" class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-                </div>
+              <div class="text-center mt-2">
+                <button type="button" onclick="handlePasteMagicCode()" class="inline-flex items-center space-x-1 text-[11px] font-semibold text-wes-blue hover:text-blue-800 transition">
+                  <i class="fas fa-paste text-xs"></i>
+                  <span>Pegar código desde el portapapeles</span>
+                </button>
               </div>
             </div>
 
             <!-- Alerta dinámica -->
-            <div id="register-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
+            <div id="auth-verify-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
 
-            <button type="submit" id="register-submit-btn" class="w-full py-3 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2 mt-2">
-              <i class="fas fa-user-check text-xs"></i>
-              <span>Enviar Código de Verificación (6 Dígitos)</span>
+            <button type="submit" id="auth-verify-btn" class="w-full py-3.5 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-2">
+              <i class="fas fa-check-circle text-wes-gold"></i>
+              <span>Verificar y entrar</span>
             </button>
-          </form>
 
-          <div class="mt-4 pt-3 border-t border-slate-100 text-center">
-            <p class="text-xs text-slate-500">
-              ¿Ya estás registrado?
-              <button onclick="switchAuthTab('login')" class="font-bold text-wes-blue hover:underline ml-1">
-                Iniciar Sesión
+            <!-- Opciones Cambiar correo y Reenviar código -->
+            <div class="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+              <button type="button" onclick="backToEmailStep()" class="font-bold text-slate-600 hover:text-wes-blue transition flex items-center space-x-1">
+                <i class="fas fa-arrow-left text-[10px]"></i>
+                <span>Cambiar correo</span>
               </button>
-            </p>
-          </div>
+              <button type="button" id="auth-resend-btn" onclick="handleResendMagicCode()" class="font-bold text-wes-gold hover:text-amber-600 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <span>Reenviar código</span>
+              </button>
+            </div>
+          </form>
         </div>
 
         <!-- ============================================== -->
-        <!-- VISTA DE RECUPERACIÓN (CÓDIGO DE 6 DÍGITOS OTP)-->
+        <!-- PASO 3: COMPLETAR NOMBRE (SOLO NUEVOS USUARIOS)-->
         <!-- ============================================== -->
-        <div id="auth-content-recovery" class="hidden">
-          
-          <!-- Botón Volver -->
-          <button type="button" onclick="showLoginView()" class="inline-flex items-center space-x-1.5 text-xs font-bold text-slate-500 hover:text-wes-blue mb-4 transition">
-            <i class="fas fa-arrow-left"></i>
-            <span>Volver al inicio de sesión</span>
-          </button>
-
-          <!-- PASO 1: Ingresar Correo -->
-          <div id="recovery-step-1">
-            <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-              Ingresa el correo electrónico asociado a tu cuenta. Te enviaremos un <strong>código de seguridad de 6 dígitos</strong> para que puedas crear una nueva contraseña.
-            </p>
-
-            <form id="form-recovery-step1" onsubmit="handleRecoveryStep1(event)" class="space-y-4">
-              <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo Electrónico</label>
-                <div class="relative">
-                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                    <i class="fas fa-envelope text-xs"></i>
-                  </span>
-                  <input type="email" id="recovery-email" required placeholder="correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-                </div>
-              </div>
-
-              <div id="recovery-alert-box-1" class="hidden p-3 rounded-xl text-xs"></div>
-
-              <button type="submit" id="btn-send-code" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
-                <i class="fas fa-paper-plane"></i>
-                <span>Enviar Código de 6 Dígitos</span>
-              </button>
-            </form>
+        <div id="auth-step-new-user" class="hidden">
+          <div class="text-center mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-2 text-xl shadow-sm">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <h4 class="font-extrabold text-base text-slate-900">¡Correo verificado con éxito!</h4>
+            <p class="text-xs text-slate-500 mt-1">Indíquenos su nombre para completar su cuenta en WES.</p>
           </div>
 
-          <!-- PASO 2: Ingresar Código de 4 Dígitos OTP -->
-          <div id="recovery-step-2" class="hidden">
-            <div class="text-center mb-5">
-              <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-2 text-xl shadow-sm">
-                <i class="fas fa-shield-alt"></i>
-              </div>
-              <h4 class="font-extrabold text-sm text-slate-900">Ingresa tu Código de 6 Dígitos</h4>
-              <p class="text-xs text-slate-500 mt-1">
-                Enviado a <span id="recovery-target-email-display" class="font-bold text-slate-800">correo@ejemplo.com</span><br><span class="text-[11px] text-amber-600 font-semibold"><i class="fas fa-clock mr-1"></i>Código temporal válido por 10 minutos (un solo uso)</span>
-              </p>
-            </div>
-
-            <form id="form-recovery-step2" onsubmit="handleRecoveryStep2(event)" class="space-y-4">
-              <!-- Cajas numéricas OTP -->
-              <div class="flex justify-center items-center gap-2 sm:gap-2.5 my-3">
-                <input type="text" id="otp-digit-1" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required autofocus>
-                <input type="text" id="otp-digit-2" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
-                <input type="text" id="otp-digit-3" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
-                <input type="text" id="otp-digit-4" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
-                <input type="text" id="otp-digit-5" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
-                <input type="text" id="otp-digit-6" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
-              </div>
-              <div class="text-center">
-                <button type="button" onclick="handlePasteFromClipboard()" class="inline-flex items-center space-x-1 text-[11px] font-semibold text-wes-blue hover:text-blue-800 transition">
-                  <i class="fas fa-paste text-xs"></i>
-                  <span>Pegar los 6 dígitos desde el portapapeles</span>
-                </button>
-              </div>
-
-              <!-- Banner de código para facilitar pruebas en test -->
-              <div id="recovery-demo-code-banner" class="hidden p-2.5 bg-blue-50 border border-blue-200 rounded-xl text-center text-[11px] text-blue-900">
-                <span>Código para pruebas: <strong id="recovery-demo-code-val" class="text-sm font-black tracking-widest text-wes-blue">----</strong></span>
-              </div>
-
-              <div id="recovery-alert-box-2" class="hidden p-3 rounded-xl text-xs"></div>
-
-              <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
-                <span>¿No recibiste el correo?</span>
-                <button type="button" onclick="resendRecoveryCode()" class="font-bold text-wes-gold hover:text-amber-600 transition">
-                  Reenviar Código
-                </button>
-              </div>
-
-              <button type="submit" id="btn-verify-otp" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
-                <i class="fas fa-check"></i>
-                <span>Verificar Código</span>
-              </button>
-            </form>
-          </div>
-
-          <!-- PASO 3: Nueva Contraseña -->
-          <div id="recovery-step-3" class="hidden">
-            <div class="mb-4 text-center">
-              <h4 class="font-extrabold text-sm text-slate-900">Configura tu Nueva Contraseña</h4>
-              <p class="text-xs text-slate-500 mt-0.5">Ingresa tu nueva clave de acceso seguro.</p>
-            </div>
-
-            <form id="form-recovery-step3" onsubmit="handleRecoveryStep3(event)" class="space-y-4">
-              <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nueva Contraseña</label>
-                <div class="relative">
-                  <input type="password" id="new-password" required minlength="6" placeholder="Mínimo 6 caracteres" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Confirmar Nueva Contraseña</label>
-                <div class="relative">
-                  <input type="password" id="confirm-new-password" required minlength="6" placeholder="Repite la nueva contraseña" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-                </div>
-              </div>
-
-              <div id="recovery-alert-box-3" class="hidden p-3 rounded-xl text-xs"></div>
-
-              <button type="submit" id="btn-save-new-password" class="w-full py-3 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-wes-dark font-black rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
-                <i class="fas fa-save"></i>
-                <span>Guardar Nueva Contraseña</span>
-              </button>
-            </form>
-          </div>
-
-          <!-- PASO 4: Éxito Total -->
-          <div id="recovery-step-4" class="hidden text-center py-4 space-y-4">
-            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-2xl shadow-inner">
-              <i class="fas fa-check"></i>
-            </div>
+          <form id="form-auth-new-user" onsubmit="handleCompleteNewUserSubmit(event)" class="space-y-4">
             <div>
-              <h4 id="recovery-step4-title" class="font-extrabold text-base text-slate-900">¡Contraseña Actualizada!</h4>
-              <p id="recovery-step4-desc" class="text-xs text-slate-600 mt-1 max-w-xs mx-auto leading-relaxed">
-                Tu clave ha sido reconfigurada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.
+              <label for="auth-newuser-name" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nombre completo</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fas fa-user text-xs"></i>
+                </span>
+                <input type="text" id="auth-newuser-name" required placeholder="Ej. Juan Pérez" class="w-full pl-10 pr-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition" autofocus>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Su teléfono u otros datos solo se solicitarán cuando sean necesarios para cotizar o solicitar un servicio.
               </p>
             </div>
-            <button type="button" id="recovery-step4-btn" onclick="showLoginView()" class="w-full py-3 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs shadow-md transition">
-              Iniciar Sesión Ahora
-            </button>
-          </div>
 
+            <div id="auth-newuser-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
+
+            <button type="submit" id="auth-newuser-btn" class="w-full py-3.5 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-2">
+              <i class="fas fa-check"></i>
+              <span>Finalizar y Entrar</span>
+            </button>
+          </form>
         </div>
 
       </div>
@@ -3346,10 +3195,10 @@
   <script src="js/supabase_client.js?v=20261026_0955"></script>
   <script src="js/feature_flags.js?v=20261031_1355"></script>
   <script src="js/admin_auth.js?v=20261104_1245"></script>
-  <script src="js/user_auth.js?v=20261104_1245"></script>
+  <script src="js/user_auth.js?v=1794403535700_1245"></script>
   <script src="js/servicio_tecnico.js?v=20261026_1500"></script>
-  <script src="js/chat_cliente.js?v=20261102_1830"></script>
-  <script src="js/app.js?v=20261104_1245"></script>
+  <script src="js/chat_cliente.js?v=1794317165120"></script>
+  <script src="js/app.js?v=1794403535700_1245"></script>
   <script src="js/pwa-install.js?v=20261104_1245"></script>
 </body>
 </html>

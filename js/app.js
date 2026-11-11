@@ -2893,16 +2893,22 @@ window.addEventListener('popstate', (e) => {
 let recoveryCurrentEmail = '';
 let recoveryCurrentName = '';
 let recoveryMode = 'recovery'; // 'recovery' o 'registration'
-let recoveryDemoCode = '';
+let authCurrentEmail = '';
+let authIsNewUser = false;
+let authRememberSession = true;
+let authResendTimer = null;
+let authResendCountdown = 0;
 
-function openAuthModal(tab = 'login') {
+function openAuthModal(step = 'request') {
   if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
   if (typeof closeUserProfileModal === 'function') closeUserProfileModal();
 
   const modal = document.getElementById('auth-modal');
   if (!modal) return;
 
-  switchAuthTab(tab);
+  clearAuthAlerts();
+  showAuthStep(step);
+
   modal.classList.remove('hidden');
   modal.style.display = 'flex';
   document.body.classList.add('overflow-hidden');
@@ -2915,118 +2921,62 @@ function closeAuthModal() {
   modal.style.display = 'none';
   document.body.classList.remove('overflow-hidden');
   clearAuthAlerts();
+  if (authResendTimer) {
+    clearInterval(authResendTimer);
+    authResendTimer = null;
+  }
 }
 
-function switchAuthTab(tab) {
-  const tabLoginBtn = document.getElementById('auth-tab-btn-login');
-  const tabRegisterBtn = document.getElementById('auth-tab-btn-register');
-  const contentLogin = document.getElementById('auth-content-login');
-  const contentRegister = document.getElementById('auth-content-register');
-  const contentRecovery = document.getElementById('auth-content-recovery');
-  const tabsBar = document.getElementById('auth-tabs-bar');
+function showAuthStep(step) {
+  const stepRequest = document.getElementById('auth-step-request');
+  const stepVerify = document.getElementById('auth-step-verify');
+  const stepNewUser = document.getElementById('auth-step-new-user');
   const title = document.getElementById('auth-modal-title');
   const subtitle = document.getElementById('auth-modal-subtitle');
 
-  if (tabsBar) tabsBar.classList.remove('hidden');
-  if (contentRecovery) contentRecovery.classList.add('hidden');
+  if (stepRequest) stepRequest.classList.add('hidden');
+  if (stepVerify) stepVerify.classList.add('hidden');
+  if (stepNewUser) stepNewUser.classList.add('hidden');
   clearAuthAlerts();
 
-  if (tab === 'login') {
-    if (contentLogin) contentLogin.classList.remove('hidden');
-    if (contentRegister) contentRegister.classList.add('hidden');
-    if (tabLoginBtn) {
-      tabLoginBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-wes-blue shadow-sm';
-    }
-    if (tabRegisterBtn) {
-      tabRegisterBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800';
-    }
-    if (title) title.textContent = 'Iniciar Sesión';
-    if (subtitle) subtitle.textContent = 'Acceso unificado para Empleados y Clientes';
+  if (step === 'verify') {
+    if (stepVerify) stepVerify.classList.remove('hidden');
+    if (title) title.textContent = 'Verificación de Acceso';
+    if (subtitle) subtitle.textContent = 'Introduzca el código enviado a su correo';
+    setupMagicOtpInputs();
+  } else if (step === 'new_user') {
+    if (stepNewUser) stepNewUser.classList.remove('hidden');
+    if (title) title.textContent = 'Bienvenido a WES';
+    if (subtitle) subtitle.textContent = 'Complete su nombre para acceder a su cuenta';
     setTimeout(() => {
-      const input = document.getElementById('login-identifier');
-      if (input) input.focus();
+      const inp = document.getElementById('auth-newuser-name');
+      if (inp) inp.focus();
     }, 150);
   } else {
-    if (contentLogin) contentLogin.classList.add('hidden');
-    if (contentRegister) contentRegister.classList.remove('hidden');
-    if (tabRegisterBtn) {
-      tabRegisterBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition bg-white text-wes-blue shadow-sm';
-    }
-    if (tabLoginBtn) {
-      tabLoginBtn.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition text-slate-500 hover:text-slate-800';
-    }
-    if (title) title.textContent = 'Crear Cuenta WES';
-    if (subtitle) subtitle.textContent = 'Registro opcional para Clientes';
-    setupPhoneInputsMask();
+    // Paso inicial por defecto: solicitud de código
+    if (stepRequest) stepRequest.classList.remove('hidden');
+    if (title) title.textContent = 'Bienvenido a WES';
+    if (subtitle) subtitle.textContent = 'Le enviaremos un código para entrar o crear su cuenta';
     setTimeout(() => {
-      const input = document.getElementById('register-name');
-      if (input) input.focus();
+      const inp = document.getElementById('auth-access-email');
+      if (inp) inp.focus();
     }, 150);
   }
 }
 
-function openRecoveryView() {
-  recoveryMode = 'recovery';
-  recoveryCurrentName = '';
-  const tabsBar = document.getElementById('auth-tabs-bar');
-  const contentLogin = document.getElementById('auth-content-login');
-  const contentRegister = document.getElementById('auth-content-register');
-  const contentRecovery = document.getElementById('auth-content-recovery');
-  const title = document.getElementById('auth-modal-title');
-  const subtitle = document.getElementById('auth-modal-subtitle');
-
-  if (tabsBar) tabsBar.classList.add('hidden');
-  if (contentLogin) contentLogin.classList.add('hidden');
-  if (contentRegister) contentRegister.classList.add('hidden');
-  if (contentRecovery) contentRecovery.classList.remove('hidden');
-
-  if (title) title.textContent = 'Recuperar Contraseña';
-  if (subtitle) subtitle.textContent = 'Código de seguridad de 6 dígitos por correo';
-
-  showRecoveryStep(1);
-  clearAuthAlerts();
-
+function backToEmailStep() {
+  showAuthStep('request');
   setTimeout(() => {
-    const input = document.getElementById('recovery-email');
-    if (input) {
-      const loginId = document.getElementById('login-identifier');
-      if (loginId && loginId.value && loginId.value.includes('@')) {
-        input.value = loginId.value.trim();
-      }
-      input.focus();
+    const inp = document.getElementById('auth-access-email');
+    if (inp) {
+      if (authCurrentEmail) inp.value = authCurrentEmail;
+      inp.focus();
     }
-  }, 150);
-}
-
-function showLoginView() {
-  switchAuthTab('login');
-}
-
-function showRecoveryStep(stepNum) {
-  for (let i = 1; i <= 4; i++) {
-    const el = document.getElementById(`recovery-step-${i}`);
-    if (el) {
-      if (i === stepNum) el.classList.remove('hidden');
-      else el.classList.add('hidden');
-    }
-  }
-}
-
-function togglePasswordVisibility(inputId, btn) {
-  const input = document.getElementById(inputId);
-  if (!input) return;
-  const isPass = input.type === 'password';
-  input.type = isPass ? 'text' : 'password';
-  if (btn) {
-    const icon = btn.querySelector('i');
-    if (icon) {
-      icon.className = isPass ? 'fas fa-eye-slash text-xs text-wes-blue' : 'fas fa-eye text-xs';
-    }
-  }
+  }, 100);
 }
 
 function clearAuthAlerts() {
-  ['login-alert-box', 'register-alert-box', 'recovery-alert-box-1', 'recovery-alert-box-2', 'recovery-alert-box-3'].forEach(id => {
+  ['auth-request-alert-box', 'auth-verify-alert-box', 'auth-newuser-alert-box'].forEach(id => {
     const box = document.getElementById(id);
     if (box) {
       box.className = 'hidden p-3 rounded-xl text-xs';
@@ -3050,195 +3000,23 @@ function showAuthAlert(boxId, message, type = 'error') {
   box.classList.remove('hidden');
 }
 
-// HANDLER DE LOGIN
-function handleUserLoginSubmit(e) {
-  e.preventDefault();
+// 1. HANDLER: SOLICITAR CÓDIGO DE 6 DÍGITOS
+async function handleRequestAccessCodeSubmit(e) {
+  if (e) e.preventDefault();
   clearAuthAlerts();
 
-  const idInput = document.getElementById('login-identifier');
-  const passInput = document.getElementById('login-password');
-  const remInput = document.getElementById('login-remember');
-  const submitBtn = document.getElementById('login-submit-btn');
+  const emailInput = document.getElementById('auth-access-email');
+  const rememberInput = document.getElementById('auth-access-remember');
+  const btn = document.getElementById('auth-request-btn');
 
-  if (!idInput || !passInput) return;
-
-  const identifier = idInput.value.trim();
-  const password = passInput.value;
-  const remember = remInput ? remInput.checked : true;
-
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Iniciando sesión...';
-  }
-
-  setTimeout(() => {
-    try {
-      const res = UserAuth.login(identifier, password, remember);
-
-      if (!res.success) {
-        showAuthAlert('login-alert-box', res.message, 'error');
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-1"></i> Iniciar Sesión';
-        }
-        return;
-      }
-
-      closeAuthModal();
-      updateAuthHeaderUI();
-      showToast(res.message, 'success');
-
-      if (res.user && res.user.isEmployee) {
-        setTimeout(() => {
-          showConfirmationModal({
-            title: `¡Hola, ${res.user.name}!`,
-            code: res.user.role.toUpperCase(),
-            message: `
-              <div class="space-y-3">
-                <p class="text-xs text-slate-600">Has iniciado sesión con credenciales de <strong>Personal WES</strong> (${res.user.roleLabel}).</p>
-                <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 font-medium">
-                  Puedes seguir navegando en la tienda o dirigirte a la consola de administración corporativa.
-                </div>
-                <div class="pt-2 flex flex-col sm:flex-row gap-2">
-                  <a href="admin.html" class="flex-1 py-2.5 bg-wes-blue text-white rounded-xl text-center text-xs font-bold hover:bg-wes-dark shadow transition flex items-center justify-center space-x-1.5">
-                    <i class="fas fa-shield-alt text-wes-gold"></i>
-                    <span>Ir al Panel Admin</span>
-                  </a>
-                  <button onclick="closeConfirmationModal()" class="flex-1 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-center text-xs font-bold hover:bg-slate-200 transition">
-                    Permanecer en Tienda
-                  </button>
-                </div>
-              </div>
-            `,
-            type: 'login'
-          });
-        }, 500);
-      }
-    } catch (err) {
-      console.error(err);
-      showAuthAlert('login-alert-box', 'Error al procesar el inicio de sesión.', 'error');
-    } finally {
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-1"></i> Iniciar Sesión';
-      }
-    }
-  }, 350);
-}
-
-// REGISTRO DIRECTO DE CLIENTE CON CONTRASEÑA (DOBLE CONFIRMACIÓN Y ACCESO INMEDIATO)
-async function handleUserRegisterSubmit(e) {
-  e.preventDefault();
-  clearAuthAlerts();
-
-  const nameInput = document.getElementById('register-name');
-  const emailInput = document.getElementById('register-email');
-  const phoneInput = document.getElementById('register-phone');
-  const passInput = document.getElementById('register-password');
-  const passConfirmInput = document.getElementById('register-password-confirm');
-  const submitBtn = document.getElementById('register-submit-btn');
-
-  if (!nameInput || !emailInput || !passInput || !passConfirmInput) return;
-
-  const name = nameInput.value.trim();
-  const email = emailInput.value.trim().toLowerCase();
-  const phone = phoneInput ? phoneInput.value.trim() : '';
-  const password = passInput.value;
-  const confirmPassword = passConfirmInput.value;
-
-  if (password.length < 6) {
-    showAuthAlert('register-alert-box', 'La contraseña debe tener un mínimo de 6 caracteres.', 'warning');
-    passInput.focus();
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    showAuthAlert('register-alert-box', 'Las contraseñas no coinciden. Por favor verifícalas.', 'warning');
-    passConfirmInput.focus();
-    return;
-  }
-
-  if (submitBtn) {
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando código de verificación...';
-  }
-
-  try {
-    const res = await UserAuth.initiateRegistration({
-      name,
-      email,
-      phone,
-      password,
-      confirmPassword
-    });
-
-    if (!res.success) {
-      showAuthAlert('register-alert-box', res.message || 'Error al iniciar el registro.', 'error');
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-user-check text-xs mr-1"></i> Enviar Código de Verificación (6 Dígitos)';
-      }
-      return;
-    }
-
-    // Configurar estado para verificación de registro
-    recoveryMode = 'registration';
-    recoveryCurrentEmail = email;
-    recoveryCurrentName = name;
-    recoveryDemoCode = res.codeDemo || '';
-
-    // Cambiar a vista de verificación OTP
-    const tabsBar = document.getElementById('auth-tabs-bar');
-    const contentLogin = document.getElementById('auth-content-login');
-    const contentRegister = document.getElementById('auth-content-register');
-    const contentRecovery = document.getElementById('auth-content-recovery');
-    const title = document.getElementById('auth-modal-title');
-    const subtitle = document.getElementById('auth-modal-subtitle');
-
-    if (tabsBar) tabsBar.classList.add('hidden');
-    if (contentLogin) contentLogin.classList.add('hidden');
-    if (contentRegister) contentRegister.classList.add('hidden');
-    if (contentRecovery) contentRecovery.classList.remove('hidden');
-
-    if (title) title.textContent = 'Activar Cuenta - Tienda WES';
-    if (subtitle) subtitle.textContent = 'Ingresa el código temporal de 6 dígitos que enviamos a tu correo';
-
-    const displayEmail = document.getElementById('recovery-target-email-display');
-    if (displayEmail) displayEmail.textContent = email;
-
-    const demoBanner = document.getElementById('recovery-demo-code-banner');
-    const demoVal = document.getElementById('recovery-demo-code-val');
-    if (demoBanner && demoVal && res.codeDemo) {
-      demoVal.textContent = res.codeDemo;
-      demoBanner.classList.remove('hidden');
-    }
-
-    showRecoveryStep(2);
-    setupOtpInputs();
-    showToast('Código de 6 dígitos enviado a ' + email, 'success');
-
-  } catch (err) {
-    console.error(err);
-    showAuthAlert('register-alert-box', 'Error inesperado al solicitar el código de activación.', 'error');
-  } finally {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fas fa-user-check text-xs mr-1"></i> Enviar Código de Verificación (6 Dígitos)';
-    }
-  }
-}
-
-// RECUPERACIÓN - PASO 1 (SOLICITAR CÓDIGO)
-async function handleRecoveryStep1(e) {
-  e.preventDefault();
-  clearAuthAlerts();
-
-  const emailInput = document.getElementById('recovery-email');
-  const btn = document.getElementById('btn-send-code');
   if (!emailInput) return;
-
   const email = emailInput.value.trim().toLowerCase();
-  recoveryCurrentEmail = email;
+  authRememberSession = rememberInput ? rememberInput.checked : true;
+
+  if (!email || !email.includes('@')) {
+    showAuthAlert('auth-request-alert-box', 'Por favor ingresa un correo electrónico válido.', 'error');
+    return;
+  }
 
   if (btn) {
     btn.disabled = true;
@@ -3246,58 +3024,47 @@ async function handleRecoveryStep1(e) {
   }
 
   try {
-    const res = await UserAuth.requestPasswordReset(email);
+    const res = await UserAuth.requestAccessCode(email);
 
     if (!res.success) {
-      showAuthAlert('recovery-alert-box-1', res.message, 'error');
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Enviar Código de 6 Dígitos';
-      }
+      showAuthAlert('auth-request-alert-box', res.message || 'No se pudo enviar el código.', 'error');
       return;
     }
 
-    recoveryDemoCode = res.codeDemo || '';
+    authCurrentEmail = email;
+    const emailDisplay = document.getElementById('auth-verify-email-display');
+    if (emailDisplay) emailDisplay.textContent = email;
 
-    const displayEmail = document.getElementById('recovery-target-email-display');
-    if (displayEmail) displayEmail.textContent = email;
-
-    const demoBanner = document.getElementById('recovery-demo-code-banner');
-    const demoVal = document.getElementById('recovery-demo-code-val');
-    if (demoBanner && demoVal && res.codeDemo) {
-      demoVal.textContent = res.codeDemo;
-      demoBanner.classList.remove('hidden');
-    }
-
-    showRecoveryStep(2);
-    setupOtpInputs();
-    showToast(`Código de 6 dígitos enviado a ${email}`, 'info');
+    showAuthStep('verify');
+    startResendTimer(60);
+    showToast('Código de 6 dígitos enviado a ' + email, 'success');
 
   } catch (err) {
-    showAuthAlert('recovery-alert-box-1', 'Ocurrió un error al enviar el código.', 'error');
+    console.error('[Auth] Error al solicitar código:', err);
+    showAuthAlert('auth-request-alert-box', 'Error al conectar con el servicio de autenticación.', 'error');
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i> Enviar Código de 6 Dígitos';
+      btn.innerHTML = '<i class="fas fa-paper-plane text-wes-gold mr-1"></i> Enviarme código';
     }
   }
 }
 
-// SETUP DE LAS 4 CAJAS NUMÉRICAS OTP
-function setupOtpInputs() {
+// 2. CONFIGURACIÓN DE LAS 6 CAJAS DE ENTRADA OTP
+function setupMagicOtpInputs() {
   const inputs = [
-    document.getElementById('otp-digit-1'),
-    document.getElementById('otp-digit-2'),
-    document.getElementById('otp-digit-3'),
-    document.getElementById('otp-digit-4'),
-    document.getElementById('otp-digit-5'),
-    document.getElementById('otp-digit-6')
+    document.getElementById('magic-digit-1'),
+    document.getElementById('magic-digit-2'),
+    document.getElementById('magic-digit-3'),
+    document.getElementById('magic-digit-4'),
+    document.getElementById('magic-digit-5'),
+    document.getElementById('magic-digit-6')
   ].filter(Boolean);
 
   inputs.forEach((input, index) => {
     input.value = '';
 
-    input.oninput = (e) => {
+    input.oninput = () => {
       const val = input.value.replace(/\D/g, '');
       input.value = val.slice(0, 1);
       if (val && index < inputs.length - 1) {
@@ -3332,148 +3099,200 @@ function setupOtpInputs() {
     };
   });
 
-  if (inputs[0]) inputs[0].focus();
+  setTimeout(() => {
+    if (inputs[0]) inputs[0].focus();
+  }, 100);
 }
 
-async function handlePasteFromClipboard() {
+async function handlePasteMagicCode() {
   try {
     if (navigator.clipboard && navigator.clipboard.readText) {
       const text = await navigator.clipboard.readText();
       const digits = text.replace(/\D/g, '').slice(0, 6);
       if (!digits) {
-        showToast('No se encontraron dígitos en el portapapeles.', 'warning');
+        showToast('No se encontraron números en el portapapeles.', 'warning');
         return;
       }
       for (let i = 1; i <= 6; i++) {
-        const inp = document.getElementById('otp-digit-' + i);
+        const inp = document.getElementById('magic-digit-' + i);
         if (inp) inp.value = digits[i - 1] || '';
       }
-      const lastInp = document.getElementById('otp-digit-' + Math.min(digits.length, 6));
+      const lastInp = document.getElementById('magic-digit-' + Math.min(digits.length, 6));
       if (lastInp) lastInp.focus();
       showToast('Código de ' + digits.length + ' dígitos pegado.', 'success');
     } else {
-      showToast('Por favor usa Ctrl+V dentro de las casillas para pegar.', 'info');
+      showToast('Usa Ctrl+V o mantén presionado para pegar en las casillas.', 'info');
     }
-  } catch (err) {
-    showToast('Haz clic dentro de las casillas y presiona Ctrl+V para pegar.', 'info');
+  } catch (e) {
+    showToast('Toca una casilla y presiona Pegar.', 'info');
   }
 }
-window.handlePasteFromClipboard = handlePasteFromClipboard;
 
-// RECUPERACIÓN - PASO 2 (VERIFICAR CÓDIGO)
-function handleRecoveryStep2(e) {
-  e.preventDefault();
+// 3. HANDLER: VERIFICAR CÓDIGO
+function handleVerifyAccessCodeSubmit(e) {
+  if (e) e.preventDefault();
   clearAuthAlerts();
 
-  const d1 = document.getElementById('otp-digit-1')?.value || '';
-  const d2 = document.getElementById('otp-digit-2')?.value || '';
-  const d3 = document.getElementById('otp-digit-3')?.value || '';
-  const d4 = document.getElementById('otp-digit-4')?.value || '';
-  const d5 = document.getElementById('otp-digit-5')?.value || '';
-  const d6 = document.getElementById('otp-digit-6')?.value || '';
+  const d1 = document.getElementById('magic-digit-1')?.value || '';
+  const d2 = document.getElementById('magic-digit-2')?.value || '';
+  const d3 = document.getElementById('magic-digit-3')?.value || '';
+  const d4 = document.getElementById('magic-digit-4')?.value || '';
+  const d5 = document.getElementById('magic-digit-5')?.value || '';
+  const d6 = document.getElementById('magic-digit-6')?.value || '';
   const fullCode = (d1 + d2 + d3 + d4 + d5 + d6).trim();
 
   if (fullCode.length !== 6) {
-    showAuthAlert('recovery-alert-box-2', 'Por favor ingresa los 6 dígitos completos del código.', 'warning');
+    showAuthAlert('auth-verify-alert-box', 'Por favor ingresa los 6 dígitos completos del código.', 'warning');
     return;
   }
 
-  // Si estamos en flujo de Registro: validar y activar cuenta
-  if (recoveryMode === 'registration') {
-    const res = UserAuth.verifyAndActivateAccount(recoveryCurrentEmail, fullCode);
+  const btn = document.getElementById('auth-verify-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Verificando...';
+  }
+
+  try {
+    const res = UserAuth.verifyAccessCode(authCurrentEmail, fullCode, authRememberSession);
+
     if (!res.success) {
-      showAuthAlert('recovery-alert-box-2', res.message, 'error');
+      showAuthAlert('auth-verify-alert-box', res.message, 'error');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check-circle text-wes-gold mr-1"></i> Verificar y entrar';
+      }
       return;
     }
 
-    // Éxito: cuenta activada y logueado
-    updateAuthHeaderUI();
-    closeAuthModal();
-    showToast('¡Cuenta activada exitosamente! Bienvenido a Tienda WES.', 'success');
-    setTimeout(() => {
-      openUserProfileModal();
-    }, 350);
-    return;
-  }
-
-  // Si estamos en flujo de Recuperación de contraseña:
-  const res = UserAuth.verifyResetCode(recoveryCurrentEmail, fullCode);
-  if (!res.success) {
-    showAuthAlert('recovery-alert-box-2', res.message, 'error');
-    return;
-  }
-
-  showRecoveryStep(3);
-  setTimeout(() => {
-    const input = document.getElementById('new-password');
-    if (input) input.focus();
-  }, 150);
-}
-
-async function resendRecoveryCode() {
-  if (!recoveryCurrentEmail) return;
-  showToast('Reenviando nuevo código de 6 dígitos...', 'info');
-  let res;
-  if (recoveryMode === 'registration') {
-    res = await UserAuth.initiateRegistration({
-      name: recoveryCurrentName || 'Cliente',
-      email: recoveryCurrentEmail,
-      password: 'User2026!'
-    });
-  } else {
-    res = await UserAuth.requestPasswordReset(recoveryCurrentEmail);
-  }
-
-  if (res && res.success) {
-    recoveryDemoCode = res.codeDemo || '';
-    const demoVal = document.getElementById('recovery-demo-code-val');
-    if (demoVal && res.codeDemo) {
-      demoVal.textContent = res.codeDemo;
+    // Si es un usuario nuevo: pedir nombre
+    if (res.isNewUser) {
+      authIsNewUser = true;
+      showAuthStep('new_user');
+      showToast('Código correcto. Complete su nombre para entrar.', 'info');
+      return;
     }
-    showToast(res.message || 'Nuevo código enviado exitosamente.', 'success');
-  } else if (res && !res.success) {
-    showAuthAlert('recovery-alert-box-2', res.message, 'error');
-    showToast(res.message, 'error');
+
+    // Usuario existente verificado: acceso concedido
+    closeAuthModal();
+    updateAuthHeaderUI();
+    showToast(res.message || '¡Sesión iniciada con éxito!', 'success');
+
+    if (res.user && res.user.isEmployee) {
+      setTimeout(() => {
+        showConfirmationModal({
+          title: '¡Hola, ' + res.user.name + '!',
+          code: (res.user.role || 'PERSONAL').toUpperCase(),
+          message: '<div class="space-y-3"><p class="text-xs text-slate-600">Has ingresado como <strong>Personal Autorizado WES</strong> (' + (res.user.roleLabel || res.user.role) + ').</p><div class="pt-2 flex flex-col sm:flex-row gap-2"><a href="admin.html" class="flex-1 py-2.5 bg-wes-blue text-white rounded-xl text-center text-xs font-bold hover:bg-wes-dark shadow transition flex items-center justify-center space-x-1.5"><i class="fas fa-shield-alt text-wes-gold"></i><span>Ir al Panel Admin</span></a><button onclick="closeConfirmationModal()" class="flex-1 py-2.5 bg-slate-100 text-slate-700 rounded-xl text-center text-xs font-bold hover:bg-slate-200 transition">Permanecer en Tienda</button></div></div>',
+          type: 'login'
+        });
+      }, 400);
+    }
+  } catch (err) {
+    console.error('[Auth] Error al verificar código:', err);
+    showAuthAlert('auth-verify-alert-box', 'Error al verificar el código de acceso.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check-circle text-wes-gold mr-1"></i> Verificar y entrar';
+    }
   }
 }
 
-// RECUPERACIÓN / CONFIGURACIÓN - PASO 3 (GUARDAR CONTRASEÑA)
-function handleRecoveryStep3(e) {
-  e.preventDefault();
+// 4. HANDLER: COMPLETAR NOMBRE PARA USUARIOS NUEVOS
+function handleCompleteNewUserSubmit(e) {
+  if (e) e.preventDefault();
   clearAuthAlerts();
 
-  const newPass = document.getElementById('new-password')?.value || '';
-  const confirmPass = document.getElementById('confirm-new-password')?.value || '';
-  const d1 = document.getElementById('otp-digit-1')?.value || '';
-  const d2 = document.getElementById('otp-digit-2')?.value || '';
-  const d3 = document.getElementById('otp-digit-3')?.value || '';
-  const d4 = document.getElementById('otp-digit-4')?.value || '';
-  const d5 = document.getElementById('otp-digit-5')?.value || '';
-  const d6 = document.getElementById('otp-digit-6')?.value || '';
-  const fullCode = (d1 + d2 + d3 + d4 + d5 + d6).trim();
+  const nameInput = document.getElementById('auth-newuser-name');
+  const name = nameInput ? nameInput.value.trim() : '';
 
-  const res = UserAuth.resetPassword(recoveryCurrentEmail, fullCode, newPass, confirmPass);
-
-  if (!res.success) {
-    showAuthAlert('recovery-alert-box-3', res.message, 'error');
+  if (!name) {
+    showAuthAlert('auth-newuser-alert-box', 'Por favor ingresa tu nombre completo.', 'error');
     return;
   }
 
-  updateAuthHeaderUI();
-
-  const step4Title = document.getElementById('recovery-step4-title');
-  const step4Desc = document.getElementById('recovery-step4-desc');
-  const step4Btn = document.getElementById('recovery-step4-btn');
-
-  if (step4Title) step4Title.textContent = '¡Contraseña Actualizada!';
-  if (step4Desc) step4Desc.textContent = 'Tu clave ha sido reconfigurada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.';
-  if (step4Btn) {
-    step4Btn.textContent = 'Iniciar Sesión Ahora';
-    step4Btn.onclick = () => showLoginView();
+  const btn = document.getElementById('auth-newuser-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Creando cuenta...';
   }
 
-  showRecoveryStep(4);
-  showToast('¡Contraseña actualizada con éxito!', 'success');
+  try {
+    const res = UserAuth.completeNewUserProfile(authCurrentEmail, name, authRememberSession);
+    if (!res.success) {
+      showAuthAlert('auth-newuser-alert-box', res.message, 'error');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check mr-1"></i> Finalizar y Entrar';
+      }
+      return;
+    }
+
+    closeAuthModal();
+    updateAuthHeaderUI();
+    showToast(res.message, 'success');
+  } catch (err) {
+    console.error('[Auth] Error al completar perfil:', err);
+    showAuthAlert('auth-newuser-alert-box', 'Error al finalizar registro.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check mr-1"></i> Finalizar y Entrar';
+    }
+  }
+}
+
+// 5. CONTROL DEL TEMPORIZADOR DE REENVÍO (60 SEGUNDOS)
+function startResendTimer(seconds = 60) {
+  const btn = document.getElementById('auth-resend-btn');
+  if (!btn) return;
+
+  if (authResendTimer) clearInterval(authResendTimer);
+  authResendCountdown = seconds;
+  btn.disabled = true;
+  btn.innerHTML = '<span>Reenviar en ' + authResendCountdown + 's</span>';
+
+  authResendTimer = setInterval(() => {
+    authResendCountdown--;
+    if (authResendCountdown <= 0) {
+      clearInterval(authResendTimer);
+      authResendTimer = null;
+      btn.disabled = false;
+      btn.innerHTML = '<span>Reenviar código</span>';
+    } else {
+      btn.innerHTML = '<span>Reenviar en ' + authResendCountdown + 's</span>';
+    }
+  }, 1000);
+}
+
+async function handleResendMagicCode() {
+  if (!authCurrentEmail || authResendCountdown > 0) return;
+  const btn = document.getElementById('auth-resend-btn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span>Enviando...</span>';
+  }
+
+  try {
+    const res = await UserAuth.requestAccessCode(authCurrentEmail);
+    if (res.success) {
+      showToast('Nuevo código enviado a ' + authCurrentEmail, 'success');
+      startResendTimer(60);
+      setupMagicOtpInputs();
+    } else {
+      showAuthAlert('auth-verify-alert-box', res.message || 'No se pudo reenviar el código.', 'error');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Reenviar código</span>';
+      }
+    }
+  } catch (err) {
+    showToast('Error al reenviar código.', 'error');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>Reenviar código</span>';
+    }
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -3621,6 +3440,31 @@ function updateAuthHeaderUI() {
   const mobName = document.getElementById('mobile-user-name');
   const mobRole = document.getElementById('mobile-user-role');
   const mobAdminLink = document.getElementById('mobile-admin-link');
+
+  // Control estricto de visibilidad del botón 'Servicio Técnico' (KDS) y Tablero Interno
+  // Oculto para visitantes y clientes; visible solo para técnicos y administradores autorizados
+  const allowedTechRoles = ['tecnico_interno', 'tecnico_externo', 'administrador', 'propietario', 'gestor_soporte'];
+  const userRole = user && user.role ? String(user.role).toLowerCase() : '';
+  const hasKdsAccess = Boolean(user && (allowedTechRoles.includes(userRole) || user.isEmployee));
+
+  const navKdsLink = document.getElementById('nav-service-kds-link');
+  const headerKdsChip = document.getElementById('header-service-kds-chip');
+  const drawerKdsLink = document.getElementById('drawer-service-kds-link');
+  const sectionKdsBanner = document.getElementById('section-services-kds-banner');
+
+  [navKdsLink, headerKdsChip, drawerKdsLink, sectionKdsBanner].forEach(el => {
+    if (el) {
+      if (hasKdsAccess) {
+        el.classList.remove('hidden');
+        if (el === navKdsLink || el === headerKdsChip) el.style.display = 'inline-flex';
+        else if (el === drawerKdsLink) el.style.display = 'flex';
+        else if (el === sectionKdsBanner) el.style.display = 'flex';
+      } else {
+        el.classList.add('hidden');
+        el.style.display = 'none';
+      }
+    }
+  });
 
   if (isAuth && user) {
     const initials = (user.name || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();

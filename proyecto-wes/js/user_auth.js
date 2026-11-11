@@ -372,6 +372,85 @@ Moca, Provincia Espaillat, República Dominicana`;
     }
   }
 
+  const AUTH_CODES_KEY = "wes_magic_auth_codes";
+  const REVOKED_SESSIONS_KEY = "wes_revoked_sessions";
+
+  async function sendMagicAccessCode(email, code, userName, isExisting) {
+    const backendUrl = (typeof AppState !== "undefined" && AppState.backendUrl) ? AppState.backendUrl : BACKEND_URL_DEFAULT;
+    const cleanEmail = (email || "").trim().toLowerCase();
+    const cleanCode = String(code).trim();
+    const displayName = userName || (isExisting ? "Usuario de WES" : "Nuevo Usuario");
+
+    const subjectText = "WES · Código de acceso: " + cleanCode;
+    const messageText = "WARN ELECTRICAL SERVICES, SRL (WES)\n" +
+      "Moca, República Dominicana | https://web.warnelectricalservices.com/\n\n" +
+      "Hola " + displayName + ",\n\n" +
+      "Tu código de acceso de 6 dígitos para entrar o crear tu cuenta es:\n\n" +
+      "================================\n" +
+      "           " + cleanCode + "\n" +
+      "================================\n\n" +
+      "Este código es válido durante 10 minutos, es de un solo uso y no debe compartirse con nadie.\n" +
+      "WES nunca te solicitará contraseñas ni transferencias para entregarte este código.\n\n" +
+      "Enlace para volver a WES:\n" +
+      "https://web.warnelectricalservices.com/\n\n" +
+      "Si no solicitaste este código, puedes ignorar este mensaje de forma segura.\n\n" +
+      "Warn Electrical Services, SRL";
+
+    const htmlContent = '<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:18px;background:#ffffff;box-shadow:0 4px 12px rgba(0,0,0,0.05);">' +
+      '<div style="text-align:center;background:linear-gradient(135deg,#071836,#0D2A5C);color:#ffffff;padding:26px 20px;border-radius:14px;">' +
+      '<div style="display:inline-block;padding:4px 12px;background:rgba(255,255,255,0.12);border-radius:20px;margin-bottom:8px;font-size:11px;font-weight:bold;letter-spacing:1px;color:#F5B300;">WARN ELECTRICAL SERVICES (WES)</div>' +
+      '<h2 style="color:#ffffff;margin:4px 0 0 0;font-size:22px;letter-spacing:0.5px;font-weight:800;">Código de acceso</h2>' +
+      '<p style="margin:6px 0 0 0;font-size:12px;color:#cbd5e1;">Moca, República Dominicana · Acceso Seguro</p>' +
+      '</div>' +
+      '<div style="padding:28px 16px;color:#334155;line-height:1.6;font-size:14px;">' +
+      '<p style="margin:0 0 16px 0;">Hola, <strong>' + displayName + '</strong>:</p>' +
+      '<p style="margin:0 0 20px 0;color:#475569;">Usa este código de 6 dígitos para iniciar sesión o registrar tu cuenta en Warn Electrical Services:</p>' +
+      '<div style="text-align:center;margin:24px 0;padding:20px;background:#f8fafc;border:2px dashed #0D2A5C;border-radius:14px;">' +
+      '<span style="display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Tu código de seis dígitos</span>' +
+      '<div style="font-family:\'Courier New\',Courier,monospace;font-size:38px;font-weight:900;letter-spacing:8px;color:#0D2A5C;padding:4px 0;">' + cleanCode + '</div>' +
+      '</div>' +
+      '<div style="background:#fffbeb;border:1px solid #fef3c7;border-left:4px solid #f59e0b;padding:12px 14px;border-radius:10px;font-size:12px;color:#92400e;margin-bottom:20px;">' +
+      '⏱️ <strong>Vencimiento:</strong> Este código es válido durante <strong>10 minutos</strong> y es de un solo uso.<br>' +
+      '🔒 <strong>Seguridad:</strong> Nunca compartas este código con ninguna persona.' +
+      '</div>' +
+      '<p style="font-size:12px;color:#64748b;margin:0;">Si no solicitaste este código, puedes ignorar este correo; tu cuenta permanece totalmente protegida.</p>' +
+      '</div>' +
+      '<hr style="border:0;border-top:1px solid #f1f5f9;margin:16px 0;">' +
+      '<p style="font-size:11px;color:#94a3b8;text-align:center;margin:0;">Warn Electrical Services, SRL · Autopista Ramón Cáceres, Moca · web.warnelectricalservices.com</p>' +
+      '</div>';
+
+    const payload = {
+      action: "nuevoMensaje",
+      data: {
+        name: "WES · Código de acceso",
+        email: cleanEmail,
+        phone: "8492075474",
+        subject: subjectText,
+        message: messageText,
+        htmlContent: htmlContent
+      }
+    };
+
+    try {
+      const response = await fetch(backendUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        return { success: false, message: "El servidor de correo respondió con error HTTP " + response.status };
+      }
+      const result = await response.json().catch(() => null);
+      if (result && result.success === false) {
+        return { success: false, message: result.message || "El servicio de correo no pudo procesar el envío." };
+      }
+      return { success: true, ticketNumber: result?.ticketNumber || null };
+    } catch (err) {
+      console.warn("[UserAuth] Error al conectar con el servicio de correo:", err);
+      return { success: false, message: "No se pudo conectar con el servidor de correo (" + err.message + ")." };
+    }
+  }
+
   async function sendEmailCode(email, code, userName = '', purpose = 'recuperacion') {
     const backendUrl = (typeof AppState !== 'undefined' && AppState.backendUrl) ? AppState.backendUrl : BACKEND_URL_DEFAULT;
     const cleanEmail = (email || '').trim().toLowerCase();
@@ -455,7 +534,18 @@ Moca, Provincia Espaillat, República Dominicana`;
     getCurrentUser() {
       try {
         const session = localStorage.getItem(SESSION_STORAGE_KEY) || sessionStorage.getItem(SESSION_STORAGE_KEY);
-        return session ? JSON.parse(session) : null;
+        if (!session) return null;
+        const parsed = JSON.parse(session);
+        if (!parsed || !parsed.email) return null;
+        try {
+          const revoked = JSON.parse(localStorage.getItem(REVOKED_SESSIONS_KEY) || "[]");
+          if (Array.isArray(revoked) && revoked.includes(parsed.email.toLowerCase())) {
+            localStorage.removeItem(SESSION_STORAGE_KEY);
+            sessionStorage.removeItem(SESSION_STORAGE_KEY);
+            return null;
+          }
+        } catch (revErr) {}
+        return parsed;
       } catch (e) {
         return null;
       }
@@ -1121,7 +1211,238 @@ Moca, Provincia Espaillat, República Dominicana`;
     },
     completeRegistration(email, code, password, passConfirm) {
       return this.verifyAndActivateAccount(email, code);
-    }  };
+    },
+
+    // Solicitar código de 6 dígitos sin contraseña (para login o registro unificado)
+    async requestAccessCode(email) {
+      if (!email || !email.trim() || !email.includes("@")) {
+        return { success: false, message: "Por favor ingresa un correo electrónico válido." };
+      }
+      const cleanEmail = email.trim().toLowerCase();
+      const existingUser = findUserByIdentifier(cleanEmail);
+      const isExisting = Boolean(existingUser);
+      const userName = existingUser ? existingUser.name : "";
+
+      const code = generate6DigitCode();
+      const now = Date.now();
+      const expiresAt = now + (10 * 60 * 1000); // 10 minutos de validez
+
+      try {
+        const authCodes = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
+        const prev = authCodes[cleanEmail];
+        let resendCount = (prev && prev.resendCount) ? prev.resendCount : 0;
+
+        // Control de reenvío: esperar 60 segundos
+        if (prev && (now - prev.createdAt) < 60000) {
+          const remainingSecs = Math.ceil((60000 - (now - prev.createdAt)) / 1000);
+          return {
+            success: false,
+            message: "Por favor espera " + remainingSecs + " segundos antes de solicitar otro código."
+          };
+        }
+
+        // Límite de solicitudes por correo (máximo 5)
+        if (resendCount >= 5) {
+          return {
+            success: false,
+            message: "Has alcanzado el límite de códigos para este correo hoy. Por favor contacta a soporte."
+          };
+        }
+
+        authCodes[cleanEmail] = {
+          code: code,
+          expiresAt: expiresAt,
+          createdAt: now,
+          attempts: 0,
+          resendCount: resendCount + 1,
+          isExisting: isExisting,
+          existingUser: existingUser ? { id: existingUser.id, name: existingUser.name, role: existingUser.role, isEmployee: existingUser.isEmployee } : null
+        };
+        localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
+      } catch (e) {
+        console.warn("[UserAuth] Error guardando código en almacenamiento:", e);
+      }
+
+      // Enviar correo real con plantilla "WES · Código de acceso"
+      const emailRes = await sendMagicAccessCode(cleanEmail, code, userName, isExisting);
+      if (!emailRes.success) {
+        try {
+          const authCodes = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
+          delete authCodes[cleanEmail];
+          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
+        } catch (e) {}
+        return {
+          success: false,
+          message: emailRes.message || "No pudimos enviar el correo en este momento. Por favor verifica tu conexión o intenta más tarde."
+        };
+      }
+
+      return {
+        success: true,
+        email: cleanEmail,
+        isExisting: isExisting,
+        codeDemo: code,
+        expiresInMinutes: 10,
+        message: "Hemos enviado un código de acceso de 6 dígitos a " + cleanEmail + ". Vence en 10 minutos."
+      };
+    },
+
+    // Verificar código de 6 dígitos
+    verifyAccessCode(email, inputCode, remember = true) {
+      if (!email || !inputCode) {
+        return { success: false, message: "Por favor introduce el código de 6 dígitos." };
+      }
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanCode = String(inputCode).trim();
+
+      try {
+        const authCodes = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
+        const entry = authCodes[cleanEmail];
+
+        if (!entry) {
+          return {
+            success: false,
+            message: "No hay ninguna solicitud de acceso activa para este correo o el código ya fue utilizado."
+          };
+        }
+
+        // Control de intentos fallidos (máximo 5)
+        entry.attempts = (entry.attempts || 0) + 1;
+        if (entry.attempts > 5) {
+          delete authCodes[cleanEmail];
+          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
+          return {
+            success: false,
+            message: "Has superado el límite de 5 intentos incorrectos. El código ha sido invalidado por seguridad. Solicita uno nuevo."
+          };
+        }
+
+        // Control de vencimiento (10 min)
+        if (Date.now() > entry.expiresAt) {
+          delete authCodes[cleanEmail];
+          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
+          return {
+            success: false,
+            expired: true,
+            message: "El código ha expirado (vence en 10 minutos). Haz clic en \"Reenviar código\" para recibir uno nuevo."
+          };
+        }
+
+        // Validación de dígitos
+        if (entry.code !== cleanCode) {
+          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
+          const rem = 5 - entry.attempts;
+          return {
+            success: false,
+            message: "Código de 6 dígitos incorrecto. Te quedan " + rem + " intento" + (rem === 1 ? "" : "s") + "."
+          };
+        }
+
+        // CÓDIGO VÁLIDO: QUEMAR INMEDIATAMENTE (UN SOLO USO)
+        const wasExisting = entry.isExisting;
+        delete authCodes[cleanEmail];
+        localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
+
+        // Limpiar cualquier revocación previa si existiera
+        try {
+          const revoked = JSON.parse(localStorage.getItem(REVOKED_SESSIONS_KEY) || "[]");
+          const cleanRevoked = revoked.filter(e => e !== cleanEmail);
+          localStorage.setItem(REVOKED_SESSIONS_KEY, JSON.stringify(cleanRevoked));
+        } catch (e) {}
+
+        // CASO A: Usuario existente (empleado o cliente registrado)
+        if (wasExisting) {
+          const user = findUserByIdentifier(cleanEmail);
+          if (user) {
+            if (user.isEmployee && typeof AdminAuth !== "undefined") {
+              try {
+                sessionStorage.setItem(AdminAuth.SESSION_KEY, JSON.stringify(user));
+              } catch (e) {}
+            }
+            const session = this.setSession(user, remember);
+            return {
+              success: true,
+              isNewUser: false,
+              user: session,
+              message: "¡Bienvenido/a de nuevo a WES, " + user.name + "!"
+            };
+          }
+        }
+
+        // CASO B: Usuario nuevo verificado -> Requiere solo solicitar nombre para crear la cuenta definitiva
+        return {
+          success: true,
+          isNewUser: true,
+          email: cleanEmail,
+          message: "Correo verificado con éxito. Por favor indícanos tu nombre para completar tu acceso."
+        };
+
+      } catch (err) {
+        console.error("[UserAuth] Error al verificar código de acceso:", err);
+        return { success: false, message: "Error interno al verificar el código." };
+      }
+    },
+
+    // Crear la cuenta definitiva para usuarios nuevos tras verificar el correo
+    completeNewUserProfile(email, name, remember = true) {
+      if (!email || !name || !name.trim()) {
+        return { success: false, message: "Por favor indica tu nombre completo." };
+      }
+      const cleanEmail = email.trim().toLowerCase();
+
+      // Verificar si por carrera ya existía
+      const existing = findUserByIdentifier(cleanEmail);
+      if (existing) {
+        const session = this.setSession(existing, remember);
+        return { success: true, user: session, message: "¡Bienvenido/a a WES, " + existing.name + "!" };
+      }
+
+      const newClient = {
+        id: generateId("CLI"),
+        name: name.trim(),
+        email: cleanEmail,
+        phone: "", // Se solicitará solo cuando sea necesario para un servicio o cotización
+        role: "cliente",
+        roleLabel: "Vista Cliente",
+        isEmployee: false,
+        createdAt: new Date().toISOString(),
+        verified: true
+      };
+
+      const clients = getRegisteredClients();
+      clients.unshift(newClient);
+      saveRegisteredClients(clients);
+
+      const session = this.setSession(newClient, remember);
+      notifyAdminNewRegistration(newClient);
+
+      return {
+        success: true,
+        user: session,
+        message: "¡Cuenta creada exitosamente! Bienvenido/a a Warn Electrical Services, " + newClient.name + "."
+      };
+    },
+
+    // Revocar sesiones de un usuario desde administración
+    revokeUserSession(email) {
+      if (!email) return false;
+      const cleanEmail = email.trim().toLowerCase();
+      try {
+        const revoked = JSON.parse(localStorage.getItem(REVOKED_SESSIONS_KEY) || "[]");
+        if (!revoked.includes(cleanEmail)) {
+          revoked.push(cleanEmail);
+          localStorage.setItem(REVOKED_SESSIONS_KEY, JSON.stringify(revoked));
+        }
+        const current = this.getCurrentUser();
+        if (current && current.email && current.email.toLowerCase() === cleanEmail) {
+          this.logout();
+        }
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  };
 })();
 
 // Exportar globalmente

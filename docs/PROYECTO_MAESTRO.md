@@ -14,11 +14,11 @@
 | **Propietario / organización** | Ing. Luis Miguel Lizardo / Warn Electrical Services, SRL (WES) |
 | **Sede física** | Autopista Ramón Cáceres, Moca, Provincia Espaillat, República Dominicana |
 | **Fecha de inicio** | 2017 (operaciones WES) / Septiembre 2026 (fase plataforma digital) |
-| **Última actualización** | 2026-11-10 09:30 (GMT-4) |
+| **Última actualización** | 2026-11-11 09:30 (GMT-4) |
 | **Repositorio GitHub (privado)** | `https://github.com/Luis28lh/wes-plataforma.git` (remoto `origin`) y `https://github.com/Luis28lh/wes-plataforma-v1.git` (remoto `v1`) |
 | **Rama principal / política de cambios** | `main` (despliegue continuo a producción). Commits atómicos con verificación previa obligatoria. |
 | **Estado general** | **OPERATIVO EN PRODUCCIÓN** |
-| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #58) |
+| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #61) |
 
 ---
 
@@ -86,7 +86,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 | Componente | Tecnología / servicio | Función | Estado |
 |---|---|---|---|
 | **Frontend** | HTML5, Tailwind CSS, JavaScript Vanilla (ES6+), FontAwesome 6, PWA Service Worker | Interfaz pública y paneles | IMPLEMENTADO |
-| **Backend API** | Google Apps Script (Web App REST JSON/POST) | Lógica de negocio, correo, base de datos y puente a IA | IMPLEMENTADO (v58) |
+| **Backend API** | Google Apps Script (Web App REST JSON/POST) | Lógica de negocio, correo, base de datos y puente a IA | IMPLEMENTADO (v61) |
 | **Persistencia** | Google Sheets (`Base_Datos_WES_Oficial`) | Base de datos relacional y hojas operativas | IMPLEMENTADO |
 | **Inteligencia Artificial** | Google Gemini API (`gemini-2.0-flash` / `gemini-3.5-flash`) | Motor conversacional de Sofía | IMPLEMENTADO |
 | **Hosting y CDN** | GitHub Pages Privado + Custom Domain Cloudflare/DNS | Entrega rápida con SSL | IMPLEMENTADO |
@@ -100,7 +100,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 |---|---|---|---|
 | **Catálogo** | Visualización, búsqueda, filtrado y ficha técnica de productos | IMPLEMENTADO | `js/products.js`, `index.html` |
 | **Cotizador** | Carrito flotante, cálculo de totales y despacho a backend | IMPLEMENTADO | `js/app.js`, hoja `Cotizaciones` |
-| **Autenticación** | Login, registro OTP, recuperación de contraseña y perfiles | IMPLEMENTADO | `js/admin_auth.js`, `js/user_auth.js` |
+| **Autenticación** | Acceso sin contraseña con código de 6 dígitos, validez 10 min, un solo uso, RBAC estricto | IMPLEMENTADO | `js/user_auth.js`, `index.html`, `Code.js` (v61) |
 | **Chat Sofía** | Asistente IA, consulta de tickets, asesoría técnica y cotizaciones | IMPLEMENTADO | `js/chat_cliente.js`, `proyecto-wes/Code.js` |
 | **Gestión IA** | Panel de control de prompts, modelos, API key y base de conocimientos | IMPLEMENTADO | `js/admin_app.js`, hoja `Config_IA` y `Conocimiento_Sofia` |
 | **Soporte KDS** | Recepción de equipos, diagnóstico, cotización de reparación y entrega | IMPLEMENTADO | `servicio-tecnico.html`, `js/servicio_tecnico.js` |
@@ -155,6 +155,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 | **2026-11-09** | Aumento de timeout a 35s y cascada de modelos | Evitar error "no pudo procesar respuesta" por latencia de red | Estabilidad total en consultas de catálogo y soporte |
 | **2026-11-09** | Incorporación formal del Kit de Documentación Maestra | Estandarizar gobernanza, trazabilidad y control de versiones | `AGENTS.md` y `docs/PROYECTO_MAESTRO.md` como fuente de verdad permanente |
 | **2026-11-10** | Optimización de latencia en Apps Script (v58) y Timeout a 45s con reintento transparente | Corrección de fallos intermitentes de "no pudo procesar respuesta" en consultas como "hola" y cables | Reducción de latencia a 3-8s, tokens directos acotados (250), modelos ligeros de respaldo y resiliencia ante cortes |
+| **2026-11-11** | Autenticación sin contraseña (Magic Code 6 dígitos) y blindaje RBAC de Servicio Técnico | Simplificar acceso unificado de clientes y personal sin contraseñas; proteger tablero técnico | Entrada directa con correo, código de 6 dígitos válido 10 min (un solo uso, máx 5 intentos), botón "Servicio Técnico" oculto a visitantes y clientes, guardia estricta en servidor y frontend |
 
 ---
 

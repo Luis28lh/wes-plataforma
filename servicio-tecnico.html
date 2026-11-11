@@ -96,6 +96,45 @@
       window.location.href = 'admin.html';
     }
   </script>
+  <!-- Guardia de Acceso Estricto RBAC (Solo Técnicos y Administradores) -->
+  <script>
+    (function checkKdsAccess() {
+      try {
+        var rawUser = localStorage.getItem('wes_user_session') || sessionStorage.getItem('wes_user_session');
+        var rawAdmin = sessionStorage.getItem('wes_admin_session');
+        
+        var user = null;
+        if (rawUser) {
+          try { user = JSON.parse(rawUser); } catch(e) {}
+        }
+        if (!user && rawAdmin) {
+          try { user = JSON.parse(rawAdmin); } catch(e) {}
+        }
+
+        // Revisar si la sesión fue revocada
+        try {
+          var revoked = JSON.parse(localStorage.getItem('wes_revoked_sessions') || '[]');
+          if (user && user.email && revoked.includes(user.email.toLowerCase())) {
+            localStorage.removeItem('wes_user_session');
+            sessionStorage.removeItem('wes_user_session');
+            user = null;
+          }
+        } catch(e) {}
+
+        var allowedRoles = ['tecnico_interno', 'tecnico_externo', 'administrador', 'propietario', 'gestor_soporte'];
+        var userRole = user && user.role ? String(user.role).toLowerCase() : '';
+        var isAuthorized = Boolean(user && (allowedRoles.includes(userRole) || user.isEmployee));
+
+        // Permitir parámetro seguro directo de propietario solo si está en sesión válida
+        if (!isAuthorized) {
+          alert('Acceso Restringido: El Tablero de Servicio Técnico y Taller está reservado para personal técnico y administradores autorizados de WES.');
+          window.location.replace('index.html#soporte');
+        }
+      } catch (err) {
+        window.location.replace('index.html');
+      }
+    })();
+  </script>
 </head>
 <body class="h-full flex flex-col font-sans selection:bg-wes-gold selection:text-slate-900 bg-slate-100 text-slate-800">
 
