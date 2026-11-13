@@ -843,6 +843,36 @@ function setupChatEvents() {
         return;
       }
 
+      // 4.2 Atencion Inmediata a Saludos y Cortesia (Garantizado sin consumo de IA ni fallos)
+      const isPureGreeting = /^(hola|buenos d[ií]as|buenas tardes|buenas noches|saludos|hey|klk|qu[eé] tal|buenas|hola sof[ií]a|hola wes)[\s!.,?]*$/i.test(lower);
+      const isPureThanks = /^(gracias|muchas gracias|mil gracias|gracias sof[ií]a|muy amable|perfecto gracias)[\s!.,?]*$/i.test(lower);
+
+      if (isPureGreeting) {
+        removeTypingIndicator();
+        const greetingReply = "¡Hola! Soy Sofía, asesora técnica de Warn Electrical Services. ¿En qué le puedo asistir hoy?";
+        appendBotMessage(`
+          <div class="leading-relaxed text-slate-800 text-xs">${escapeHtml(greetingReply)}</div>
+        `);
+        if (!chatSession.chatHistory) chatSession.chatHistory = [];
+        chatSession.chatHistory.push({ role: 'user', content: query });
+        chatSession.chatHistory.push({ role: 'model', content: greetingReply });
+        if (chatSession.chatHistory.length > 16) chatSession.chatHistory = chatSession.chatHistory.slice(-16);
+        return;
+      }
+
+      if (isPureThanks) {
+        removeTypingIndicator();
+        const thanksReply = "¡A su orden siempre! Si necesita cotizar o consultar otro equipo, aquí estoy para asistirle.";
+        appendBotMessage(`
+          <div class="leading-relaxed text-slate-800 text-xs">${escapeHtml(thanksReply)}</div>
+        `);
+        if (!chatSession.chatHistory) chatSession.chatHistory = [];
+        chatSession.chatHistory.push({ role: 'user', content: query });
+        chatSession.chatHistory.push({ role: 'model', content: thanksReply });
+        if (chatSession.chatHistory.length > 16) chatSession.chatHistory = chatSession.chatHistory.slice(-16);
+        return;
+      }
+
       // 5. Toda consulta conversacional va al backend de Inteligencia Artificial (Google Gemini)
       const aiResult = await queryAIBackend(query);
 

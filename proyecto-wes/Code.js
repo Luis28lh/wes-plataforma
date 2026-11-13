@@ -1115,11 +1115,10 @@ function queryGeminiChatHandler(data) {
       return { success: false, message: 'El Asistente Virtual WES se encuentra temporalmente inactivo.' };
     }
 
-    // Permitir clave local enviada como respaldo si el servidor aún no tuviera clave
-    let effectiveApiKey = config.apiKey;
-    if ((!effectiveApiKey || effectiveApiKey.length < 5) && data.clientFallbackKey && typeof data.clientFallbackKey === 'string' && data.clientFallbackKey.length > 5) {
-      effectiveApiKey = data.clientFallbackKey.trim();
-    }
+    // Si el cliente envía una clave autorizada (ej. del plan Pro actualizado), permitir usarla para contingencia
+    let effectiveApiKey = (data.clientFallbackKey && typeof data.clientFallbackKey === 'string' && data.clientFallbackKey.length > 10)
+      ? data.clientFallbackKey.trim()
+      : config.apiKey;
 
     if (!effectiveApiKey || effectiveApiKey.length < 5) {
       return {

@@ -14,11 +14,11 @@
 | **Propietario / organización** | Ing. Luis Miguel Lizardo / Warn Electrical Services, SRL (WES) |
 | **Sede física** | Autopista Ramón Cáceres, Moca, Provincia Espaillat, República Dominicana |
 | **Fecha de inicio** | 2017 (operaciones WES) / Septiembre 2026 (fase plataforma digital) |
-| **Última actualización** | 2026-11-11 09:30 (GMT-4) |
+| **Última actualización** | 2026-11-13 08:57 (GMT-4) |
 | **Repositorio GitHub (privado)** | `https://github.com/Luis28lh/wes-plataforma.git` (remoto `origin`) y `https://github.com/Luis28lh/wes-plataforma-v1.git` (remoto `v1`) |
 | **Rama principal / política de cambios** | `main` (despliegue continuo a producción). Commits atómicos con verificación previa obligatoria. |
 | **Estado general** | **OPERATIVO EN PRODUCCIÓN** |
-| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #61) |
+| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #63) |
 
 ---
 
@@ -156,6 +156,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 | **2026-11-09** | Incorporación formal del Kit de Documentación Maestra | Estandarizar gobernanza, trazabilidad y control de versiones | `AGENTS.md` y `docs/PROYECTO_MAESTRO.md` como fuente de verdad permanente |
 | **2026-11-10** | Optimización de latencia en Apps Script (v58) y Timeout a 45s con reintento transparente | Corrección de fallos intermitentes de "no pudo procesar respuesta" en consultas como "hola" y cables | Reducción de latencia a 3-8s, tokens directos acotados (250), modelos ligeros de respaldo y resiliencia ante cortes |
 | **2026-11-11** | Autenticación sin contraseña (Magic Code 6 dígitos) y blindaje RBAC de Servicio Técnico | Simplificar acceso unificado de clientes y personal sin contraseñas; proteger tablero técnico | Entrada directa con correo, código de 6 dígitos válido 10 min (un solo uso, máx 5 intentos), botón "Servicio Técnico" oculto a visitantes y clientes, guardia estricta en servidor y frontend |
+| **2026-11-13** | Atención inmediata a saludos y optimización de cuota de IA (v63) | Resolver fallo intermitente con "HOLA" y evitar consumo innecesario de tokens en plan Pro | Saludos y agradecimientos respondidos instantáneamente en frontend sin invocar Gemini; retiro garantizado de indicador de escritura; soporte de API key prioritaria en backend |
 
 ---
 
