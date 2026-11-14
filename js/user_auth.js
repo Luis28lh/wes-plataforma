@@ -1445,10 +1445,211 @@ Moca, Provincia Espaillat, República Dominicana`;
   };
 })();
 
+// ============================================================================
+// MONITOR Y POP-UP INTERACTIVO PARA INSTRUIR A SOFÍA (EXCLUSIVO PROPIETARIO)
+// ============================================================================
+const SofiaInstructorPopup = (function() {
+  const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+  let isChecking = false;
+  let activeModal = null;
+  const seenIds = new Set();
+
+  function isOwnerSession() {
+    if (typeof UserAuth === 'undefined') return false;
+    const user = UserAuth.getCurrentUser();
+    if (!user || !user.email) return false;
+    const em = user.email.toLowerCase().trim();
+    return (em === 'ing.lmlh@gmail.com' || user.role === 'propietario');
+  }
+
+  async function checkPendingQuestions() {
+    if (!isOwnerSession() || isChecking) return;
+    isChecking = true;
+
+    try {
+      const user = UserAuth.getCurrentUser();
+      const payload = {
+        action: 'get_pending_sofia_questions',
+        adminToken: 'wes_owner_authorized_session',
+        userEmail: user.email
+      };
+
+      const res = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success && Array.isArray(data.questions) && data.questions.length > 0) {
+          const freshQuestion = data.questions.find(q => !seenIds.has(q.id));
+          if (freshQuestion && !activeModal) {
+            showInstructorModal(freshQuestion);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[SofiaInstructor] Verificación de preguntas:', e);
+    } finally {
+      isChecking = false;
+    }
+  }
+
+  function showInstructorModal(q) {
+    if (activeModal) return;
+    seenIds.add(q.id);
+
+    const modal = document.createElement('div');
+    modal.id = 'sofia-instructor-modal';
+    modal.className = 'fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn';
+    modal.innerHTML = `
+      <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border-2 border-amber-400 overflow-hidden text-slate-800 font-sans animate-scaleIn">
+        <div class="bg-gradient-to-r from-[#071836] via-[#0D2A5C] to-[#0A224A] text-white p-4 flex items-center justify-between border-b border-amber-400/40">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-amber-400 text-lg shadow-md">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div>
+              <h3 class="font-extrabold text-sm text-white">Sofía necesita tu instrucción</h3>
+              <p class="text-[11px] text-amber-300">Un cliente preguntó algo que no está en catálogo</p>
+            </div>
+          </div>
+          <button type="button" onclick="SofiaInstructorPopup.closeModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 flex items-center justify-center transition">
+            <i class="fas fa-times text-xs"></i>
+          </button>
+        </div>
+
+        <div class="p-5 space-y-4">
+          <div class="p-3.5 bg-amber-50 rounded-2xl border border-amber-200">
+            <span class="text-[10px] font-black uppercase text-amber-800 tracking-wider block mb-1">
+              <i class="fas fa-comment-dots mr-1"></i> Pregunta del Cliente:
+            </span>
+            <p class="font-bold text-slate-900 text-sm leading-relaxed">"${escapeHtml(q.question)}"</p>
+            <span class="text-[10px] text-slate-400 mt-2 block font-mono">${q.date || 'Reciente'}</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">
+              Tu Respuesta Oficial para instruir a Sofía:
+            </label>
+            <textarea id="sofia-instruction-answer" rows="3" placeholder="Ej: Sí, tenemos disponible en marca Leviton a RD$3,500 la caja..." class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#0D2A5C] focus:outline-none transition"></textarea>
+            <p class="text-[10px] text-slate-400 mt-1">Sofía memorizará esta respuesta y la adaptará para responder automáticamente a futuros clientes.</p>
+          </div>
+
+          <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+            <button type="button" onclick="SofiaInstructorPopup.closeModal()" class="px-4 py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition">
+              Posponer
+            </button>
+            <button type="button" id="sofia-instruction-submit-btn" onclick="SofiaInstructorPopup.submitInstruction('${q.id}', '${escapeHtml(q.question).replace(/'/g, "\\'")}')" class="px-5 py-2.5 bg-[#0D2A5C] hover:bg-[#071836] text-amber-300 font-extrabold text-xs rounded-xl shadow-md border border-amber-400/40 flex items-center space-x-1.5 transition active:scale-95">
+              <i class="fas fa-graduation-cap"></i>
+              <span>Instruir a Sofía y Guardar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    activeModal = modal;
+  }
+
+  function closeModal() {
+    if (activeModal) {
+      activeModal.remove();
+      activeModal = null;
+    }
+  }
+
+  async function submitInstruction(qId, questionText) {
+    const input = document.getElementById('sofia-instruction-answer');
+    const submitBtn = document.getElementById('sofia-instruction-submit-btn');
+    if (!input || !input.value.trim()) {
+      alert('Por favor escribe la respuesta con la que deseas instruir a Sofía.');
+      return;
+    }
+
+    const answer = input.value.trim();
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+    }
+
+    try {
+      const user = UserAuth.getCurrentUser();
+      const payload = {
+        action: 'answer_and_train_sofia',
+        adminToken: 'wes_owner_authorized_session',
+        userEmail: user ? user.email : 'ing.lmlh@gmail.com',
+        data: {
+          id: qId,
+          question: questionText,
+          officialAnswer: answer,
+          category: 'Instrucción Rápida'
+        }
+      };
+
+      const res = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (data && data.success) {
+        alert('¡Excelente! Sofía ha aprendido esta respuesta y la utilizará de inmediato.');
+        closeModal();
+      } else {
+        alert('Error al guardar: ' + (data.message || 'Intente nuevamente.'));
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fas fa-graduation-cap"></i> Instruir a Sofía y Guardar';
+        }
+      }
+    } catch (e) {
+      alert('Error de conexión al guardar la instrucción.');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-graduation-cap"></i> Instruir a Sofía y Guardar';
+      }
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function init() {
+    // Revisar al iniciar
+    setTimeout(checkPendingQuestions, 4000);
+    // Sondeo periódico cada 25 segundos para el propietario
+    setInterval(checkPendingQuestions, 25000);
+  }
+
+  return {
+    init,
+    checkPendingQuestions,
+    closeModal,
+    submitInstruction
+  };
+})();
+
 // Exportar globalmente
 if (typeof window !== 'undefined') {
   window.UserAuth = UserAuth;
+  window.SofiaInstructorPopup = SofiaInstructorPopup;
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', SofiaInstructorPopup.init);
+  } else {
+    SofiaInstructorPopup.init();
+  }
 }
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { UserAuth };
+  module.exports = { UserAuth, SofiaInstructorPopup };
 }
+

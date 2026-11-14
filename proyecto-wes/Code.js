@@ -101,6 +101,14 @@ function doPost(e) {
         response = setSofiaKnowledgeStatusHandler(payload.id, payload.status, payload.adminToken);
         break;
 
+      case 'get_pending_sofia_questions':
+        response = getPendingSofiaQuestionsHandler(payload.adminToken, payload.userEmail);
+        break;
+
+      case 'answer_and_train_sofia':
+        response = answerAndTrainSofiaHandler(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -1309,6 +1317,17 @@ function queryGeminiChatHandler(data) {
         }
       }
 
+      // Detección de pregunta sin respuesta o derivación por falta de información
+      try {
+        const lowerReply = finalReply.toLowerCase();
+        const isUnknownAnswer = /(confirmar ese dato con nuestro gerente|confirmar el precio con ventas|confirmar la disponibilidad|no dispongo de|no cuento con esa informaci|necesito validar con ventas|validar con el gerente)/i.test(lowerReply);
+        if (isUnknownAnswer) {
+          recordPendingSofiaQuestion_(message, finalReply);
+        }
+      } catch (logErr) {
+        console.warn('Error al verificar pregunta pendiente:', logErr);
+      }
+
       return {
         success: true,
         reply: finalReply,
@@ -1576,4 +1595,162 @@ function buildKnowledgeAugmentedPrompt_(basePrompt, activeKnowledge) {
     "- Mantén para consultas normales el máximo de dos frases y 40 palabras, formulando a lo sumo una pregunta breve si falta un dato.\n";
 
   return basePrompt + knowledgeSection;
+}
+
+/**
+ * =========================================================================
+ * GESTIÓN DE PREGUNTAS PENDIENTES E INSTRUCCIÓN DE SOFÍA (ALERTAS POP-UP)
+ * =========================================================================
+ */
+
+function getSofiaPendingSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Preguntas_Pendientes_Sofia');
+  if (!sheet) {
+    sheet = ss.insertSheet('Preguntas_Pendientes_Sofia');
+    sheet.appendRow([
+      'ID', 'Fecha', 'Pregunta_Cliente', 'Respuesta_Provisoria', 
+      'Estado', 'Respuesta_Instruida', 'Fecha_Instruccion', 'Instruido_Por'
+    ]);
+    sheet.getRange(1, 1, 1, 8).setFontWeight('bold').setBackground('#B45309').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function recordPendingSofiaQuestion_(question, provisionalReply) {
+  try {
+    const sheet = getSofiaPendingSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const cleanQ = question.trim().toLowerCase();
+
+    // Evitar registrar duplicados idénticos pendientes en las últimas 24 horas
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][4]) === 'pendiente' && String(rows[i][2]).trim().toLowerCase() === cleanQ) {
+        return; // Ya existe registrada y pendiente de instrucción
+      }
+    }
+
+    const id = 'QST-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    sheet.appendRow([
+      id,
+      now,
+      question.trim(),
+      provisionalReply.trim(),
+      'pendiente',
+      '',
+      '',
+      ''
+    ]);
+
+    // Opcional: Notificar a ing.lmlh@gmail.com
+    try {
+      MailApp.sendEmail({
+        to: 'ing.lmlh@gmail.com',
+        subject: '🔔 Sofía WES: Nueva consulta sin respuesta para instruir',
+        htmlBody: '<div style="font-family:Arial,sans-serif;padding:20px;border:1px solid #e2e8f0;border-radius:10px;">' +
+                  '<h3 style="color:#0D2A5C;">Warn Electrical Services - Consulta de Cliente</h3>' +
+                  '<p>Un cliente realizó una consulta que Sofía no tiene en catálogo ni base de conocimientos:</p>' +
+                  '<blockquote style="background:#f8fafc;padding:12px;border-left:4px solid #F5B300;font-weight:bold;">' + question + '</blockquote>' +
+                  '<p>Respuesta provisional dada al cliente: <em>' + provisionalReply + '</em></p>' +
+                  '<p>Puedes ingresar a la aplicación WES para instruir la respuesta oficial desde tu teléfono o computadora.</p>' +
+                  '</div>'
+      });
+    } catch (mailErr) {
+      console.warn('No se pudo enviar notificación por correo:', mailErr);
+    }
+  } catch (err) {
+    console.warn('Error registrando pregunta pendiente:', err);
+  }
+}
+
+function getPendingSofiaQuestionsHandler(adminToken, userEmail) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
+
+    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
+      return { success: false, message: 'Acceso denegado: se requieren credenciales de propietario.' };
+    }
+
+    const sheet = getSofiaPendingSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const pending = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (String(r[4]).toLowerCase().trim() === 'pendiente') {
+        pending.push({
+          id: String(r[0]),
+          date: String(r[1]),
+          question: String(r[2]),
+          provisionalReply: String(r[3]),
+          status: 'pendiente'
+        });
+      }
+    }
+
+    return {
+      success: true,
+      pendingCount: pending.length,
+      questions: pending
+    };
+  } catch (err) {
+    return { success: false, message: 'Error consultando preguntas pendientes: ' + err.toString() };
+  }
+}
+
+function answerAndTrainSofiaHandler(data, adminToken, userEmail) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
+
+    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
+      return { success: false, message: 'Acceso denegado.' };
+    }
+
+    if (!data || !data.question || !data.officialAnswer) {
+      return { success: false, message: 'Pregunta y respuesta oficial son requeridas.' };
+    }
+
+    const questionText = String(data.question).trim();
+    const answerText = String(data.officialAnswer).trim();
+    const category = String(data.category || 'General').trim();
+    const qId = String(data.id || '');
+
+    // 1. Guardar en la Base de Conocimientos oficial de Sofía (Conocimiento_Sofia)
+    const knowledgeRes = saveSofiaKnowledgeEntryHandler({
+      type: 'faq',
+      situation: questionText,
+      solution: answerText,
+      category: category,
+      conditions: 'Instruido directamente por Propietario (Luis Lizardo)',
+      status: 'activo'
+    }, 'wes_owner_authorized_session');
+
+    // 2. Marcar la pregunta como instruida en Preguntas_Pendientes_Sofia
+    const pendingSheet = getSofiaPendingSheet_();
+    const rows = pendingSheet.getDataRange().getValues();
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    for (let i = 1; i < rows.length; i++) {
+      if ((qId && String(rows[i][0]) === qId) || String(rows[i][2]).trim().toLowerCase() === questionText.toLowerCase()) {
+        pendingSheet.getRange(i + 1, 5).setValue('instruida');
+        pendingSheet.getRange(i + 1, 6).setValue(answerText);
+        pendingSheet.getRange(i + 1, 7).setValue(now);
+        pendingSheet.getRange(i + 1, 8).setValue(userEmail || 'Luis Lizardo');
+      }
+    }
+
+    return {
+      success: true,
+      message: 'Sofía ha sido instruida exitosamente con esta respuesta.',
+      knowledgeId: knowledgeRes.id || null
+    };
+  } catch (err) {
+    return { success: false, message: 'Error al instruir a Sofía: ' + err.toString() };
+  }
 }
