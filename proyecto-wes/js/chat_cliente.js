@@ -809,9 +809,11 @@ function setupChatEvents() {
       }
 
       // 4.1 Detección inteligente de hora actual, apertura/cierre y horarios (Zona GMT-4 República Dominicana)
-      const isDirectTimeQuery = /^(y\s+)?(qu[eé]\s+hora\s+es|qu[eé]\s+hora\s+tienes|hora\s+actual|dime\s+la\s+hora|la\s+hora)[s!.,?]*$/i.test(lower) || /^(qu[eé]\s+hora\s+es)/i.test(lower);
-      const isHoursQuery = isDirectTimeQuery || /(hasta\s+qu[eé]\s+hora|qu[eé]\s+hora\s+(est[aá]n|cierran|abren)|a\s+qu[eé]\s+hora|horario|est[aá]n\s+abiertos|abierto\s+hoy|estamos\s+abiertos|hora\s+est[aá]n|esta\s+que\s+hora|s[aá]bado)/i.test(lower);
+      // 4.1 Detección inteligente de hora actual, apertura/cierre y horarios (Zona GMT-4 República Dominicana)
+      const isDirectTimeQuery = /^(y\s+)?(qu[eé]\s+hora\s+es|qu[eé]\s+hora\s+tienes|hora\s+actual|dime\s+la\s+hora|la\s+hora)[\s!.,?]*$/i.test(lower) || /(qu[eé]\s+hora\s+es|qu[eé]\s+hora\s+tienes)/i.test(lower);
+      const isOpenOrHoursQuery = /(est[aá]n?\s*(habiertos?|abiertos?|abierto|habiento|avierto)|estamos?\s*(abiertos?|habiento)|(abierto|habiento)\s*hoy|hasta\s+qu[eé]\s+hora|qu[eé]\s+hora\s*(est[aá]n|cierran|abren)|a\s+qu[eé]\s+hora|horario|esta\s+que\s+hora)/i.test(lower);
       const asksAboutSaturday = /(s[aá]bado|sabados|fin de semana)/i.test(lower);
+      const isHoursQuery = isDirectTimeQuery || isOpenOrHoursQuery || asksAboutSaturday;
       if (isHoursQuery) {
         let scheduleReply = '';
         try {
@@ -847,7 +849,7 @@ function setupChatEvents() {
             }
           } else if (asksAboutSaturday) {
             scheduleReply = "Los sábados laboramos de 8:00 a.m. a 1:00 p.m. Actualmente son las " + timeString + ". ¿Deseas visitarnos en el taller o cotizar un servicio?";
-          } else if (/(est[aá]n\s+abiertos|abierto\s+hoy|abiertos\s+ahora)/i.test(lower)) {
+          } else if (/(habiento|abierto|abiertos|est[aá]n?\s*abierto|abierto\s*hoy)/i.test(lower)) {
             if (isOpen) {
               scheduleReply = "¡Sí, estamos abiertos! Son las " + timeString + " y laboramos hoy hasta las " + closeTimeStr + ". ¿En qué podemos asistirle hoy?";
             } else {

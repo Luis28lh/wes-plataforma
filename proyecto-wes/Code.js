@@ -1222,8 +1222,9 @@ function queryGeminiChatHandler(data) {
     const augmentedPrompt = buildKnowledgeAugmentedPrompt_(config.systemPrompt + temporalContext, activeKnowledge);
 
     const candidateModels = [
-      'gemini-3.5-flash',
       'gemini-3.5-flash-lite',
+      'gemini-3.1-flash-lite',
+      'gemini-3.5-flash',
       config.model,
       'gemini-3.8-flash'
     ].filter(function(v, i, self) { return v && self.indexOf(v) === i; });
@@ -1243,7 +1244,7 @@ function queryGeminiChatHandler(data) {
         contents: orderedContents,
         generationConfig: {
           temperature: config.temperature,
-          maxOutputTokens: Math.min(config.maxTokens || 250, 250)
+          maxOutputTokens: Math.min(config.maxTokens || 350, 350)
         }
       };
 
@@ -1310,7 +1311,7 @@ function queryGeminiChatHandler(data) {
       var isExplicitExpansion = /(detall|diferencia|expl[ií]ca|compara|profund|especificaci|caracter[ií]stic|t[eé]cnic)/i.test(message);
       var wordCount = finalReply.trim().split(/\s+/).filter(Boolean).length;
       
-      if (!isExplicitExpansion && wordCount > 55 && effectiveApiKey) {
+      if (false && !isExplicitExpansion && wordCount > 80 && effectiveApiKey) { // Desactivado para garantizar frases completas sin cortes
         try {
           var summarizeUrl = 'https://generativelanguage.googleapis.com/v1beta/models/' + (usedModel || 'gemini-3.5-flash') + ':generateContent?key=' + effectiveApiKey;
           var summarizePayload = {

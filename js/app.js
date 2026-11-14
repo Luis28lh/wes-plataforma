@@ -3443,9 +3443,11 @@ function updateAuthHeaderUI() {
 
   // Control estricto de visibilidad del botón 'Servicio Técnico' (KDS) y Tablero Interno
   // Oculto para visitantes y clientes; visible solo para técnicos y administradores autorizados
+  // Regla estricta: Servicio Técnico / KDS SOLO visible para personal interno / empleados autorizados
   const allowedTechRoles = ['tecnico_interno', 'tecnico_externo', 'administrador', 'propietario', 'gestor_soporte'];
   const userRole = user && user.role ? String(user.role).toLowerCase() : '';
-  const hasKdsAccess = Boolean(user && (allowedTechRoles.includes(userRole) || user.isEmployee));
+  const isClientRole = userRole === 'cliente';
+  const hasKdsAccess = Boolean(user && !isClientRole && (allowedTechRoles.includes(userRole) || user.isEmployee === true));
 
   const navKdsLink = document.getElementById('nav-service-kds-link');
   const headerKdsChip = document.getElementById('header-service-kds-chip');
@@ -3456,12 +3458,12 @@ function updateAuthHeaderUI() {
     if (el) {
       if (hasKdsAccess) {
         el.classList.remove('hidden');
-        if (el === navKdsLink || el === headerKdsChip) el.style.display = 'inline-flex';
-        else if (el === drawerKdsLink) el.style.display = 'flex';
-        else if (el === sectionKdsBanner) el.style.display = 'flex';
+        if (el === navKdsLink || el === headerKdsChip) el.style.setProperty('display', 'inline-flex', 'important');
+        else if (el === drawerKdsLink) el.style.setProperty('display', 'flex', 'important');
+        else if (el === sectionKdsBanner) el.style.setProperty('display', 'flex', 'important');
       } else {
         el.classList.add('hidden');
-        el.style.display = 'none';
+        el.style.setProperty('display', 'none', 'important');
       }
     }
   });
