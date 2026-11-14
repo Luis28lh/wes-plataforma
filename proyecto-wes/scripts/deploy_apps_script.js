@@ -41,10 +41,15 @@ async function deployToAppsScript() {
   const logoB64 = fs.readFileSync(path.join(ROOT_DIR, 'assets', 'logo-wes.png')).toString('base64');
   const logoDataUri = `data:image/png;base64,${logoB64}`;
 
-  // Leer scripts frontend
+  // Leer scripts frontend esenciales para la plataforma completa
   const productsJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'products.js'), 'utf8');
   const featureFlagsJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'feature_flags.js'), 'utf8');
+  const adminAuthJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'admin_auth.js'), 'utf8');
+  const userAuthJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'user_auth.js'), 'utf8');
+  const servicioTecnicoJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'servicio_tecnico.js'), 'utf8');
+  const chatClienteJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'chat_cliente.js'), 'utf8');
   const appJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'app.js'), 'utf8');
+  const pwaInstallJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'pwa-install.js'), 'utf8');
 
   // Leer HTML base y reemplazar las rutas relativas de assets y scripts por versiones autocontenidas
   let htmlContent = fs.readFileSync(path.join(ROOT_DIR, 'index.html'), 'utf8');
@@ -60,22 +65,37 @@ async function deployToAppsScript() {
     htmlContent = htmlContent.split('assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg').join(projectImgDataUri);
   }
 
-  // Inyectar scripts directamente antes del cierre del body
+  // Inyectar scripts directamente antes del cierre del body (bundle total)
   const scriptsBundle = `
   <script>
-    // Inyección de Productos WES
+    // 1. Productos WES
     ${productsJs}
 
-    // Inyección de Feature Flags WES
+    // 2. Feature Flags WES
     ${featureFlagsJs}
 
-    // Inyección de Lógica Frontend WES
+    // 3. Autenticación Administrativa WES
+    ${adminAuthJs}
+
+    // 4. Autenticación Universal y Códigos de 6 Dígitos WES
+    ${userAuthJs}
+
+    // 5. Servicio Técnico y Tablero KDS
+    ${servicioTecnicoJs}
+
+    // 6. Asistente Sofía y Chat de Soporte
+    ${chatClienteJs}
+
+    // 7. Lógica Principal Frontend WES
     ${appJs}
+
+    // 8. Instalador PWA WES
+    ${pwaInstallJs}
   </script>
   `;
 
-  // Remover scripts externos que apuntan a js/... y poner el bundle
-  htmlContent = htmlContent.replace(/<script src="js\/products\.js[^>]*><\/script>[\s\S]*?<script src="js\/app\.js[^>]*><\/script>/, scriptsBundle);
+  // Remover scripts externos que apuntan a js/... y poner el bundle completo
+  htmlContent = htmlContent.replace(/<script src="js\/products\.js[^>]*><\/script>[\s\S]*?<script src="js\/pwa-install\.js[^>]*><\/script>/, scriptsBundle);
 
   // Leer Code.js y appsscript.json
   const codeJs = fs.readFileSync(path.join(ROOT_DIR, 'Code.js'), 'utf8');
@@ -127,7 +147,7 @@ async function deployToAppsScript() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      description: 'Publicación Web App v1.0 - AIDET Taller 2'
+      description: 'Publicación Web App v1.72 - Sincronización Completa de Módulos y Códigos de Acceso'
     })
   });
 
@@ -138,6 +158,7 @@ async function deployToAppsScript() {
   // 6. Actualizar despliegue productivo permanente (Deployment)
   console.log('\n5. Publicando Web App en producción...');
   const PERMANENT_DEPLOYMENT_ID = 'AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ';
+
   const deployRes = await fetch(`https://script.googleapis.com/v1/projects/${scriptId}/deployments/${PERMANENT_DEPLOYMENT_ID}`, {
     method: 'PUT',
     headers: {
@@ -149,7 +170,7 @@ async function deployToAppsScript() {
         scriptId: scriptId,
         versionNumber: versionNumber,
         manifestFileName: 'appsscript',
-        description: 'Producción Web WES v1.0 - Ofertas y Soporte'
+        description: 'Producción Web WES v1.72 - Módulos Unificados y Acceso 6 Dígitos'
       }
     })
   });
@@ -167,6 +188,7 @@ async function deployToAppsScript() {
   console.log('🎉 ¡PLATAFORMA WEB WES PUBLICADA CON ÉXITO!');
   console.log(`URL DE PRODUCCIÓN: ${webAppUrl}`);
   console.log(`DEPLOYMENT ID: ${deploymentId}`);
+  console.log(`VERSIÓN DESPLEGADA: #${versionNumber}`);
   console.log('======================================================\n');
 
   // Guardar datos de despliegue en un archivo local para registro
