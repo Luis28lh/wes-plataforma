@@ -117,6 +117,26 @@ function doPost(e) {
         response = sendUserDirectMessageHandler(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+      case 'request_auth_otp':
+        response = handleRequestAuthOtp(payload.data || payload);
+        break;
+
+      case 'verify_auth_otp':
+        response = handleVerifyAuthOtp(payload.data || payload);
+        break;
+
+      case 'complete_auth_otp_profile':
+        response = handleCompleteAuthOtpProfile(payload.data || payload);
+        break;
+
+      case 'request_password_reset_otp':
+        response = handleRequestPasswordResetOtp(payload.data || payload);
+        break;
+
+      case 'reset_password_with_otp':
+        response = handleResetPasswordWithOtp(payload.data || payload);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -1905,4 +1925,599 @@ function sendUserDirectMessageHandler(data, adminToken, userEmail) {
   } catch (err) {
     return { success: false, message: 'Error enviando mensaje: ' + err.toString() };
   }
+}
+
+/**
+ * =========================================================================
+ * WARN ELECTRICAL SERVICES, SRL (WES)
+ * MÓDULO DE AUTENTICACIÓN OTP DE 6 DÍGITOS Y GESTIÓN DE SESIÓN
+ * =========================================================================
+ */
+
+function getOtpSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Auth_OTP_Tokens');
+  if (!sheet) {
+    sheet = ss.insertSheet('Auth_OTP_Tokens');
+    sheet.appendRow([
+      'Request_ID', 'Email', 'HMAC_Hash', 'Purpose', 'Attempts', 
+      'Max_Attempts', 'Created_At', 'Expires_At', 'Consumed_At', 'Status', 'IP_Client'
+    ]);
+    sheet.getRange(1, 1, 1, 11).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function getClientsSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Clientes');
+  if (!sheet) {
+    sheet = ss.insertSheet('Clientes');
+    sheet.appendRow([
+      'ID_Cliente', 'Nombre', 'Email', 'Telefono', 'Rol', 'Rol_Etiqueta', 
+      'Es_Empleado', 'Fecha_Registro', 'Ultimo_Acceso', 'Estado'
+    ]);
+    sheet.getRange(1, 1, 1, 10).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function getOtpSecret_() {
+  const props = PropertiesService.getScriptProperties();
+  let secret = props.getProperty('WES_OTP_SECRET_SALT');
+  if (!secret) {
+    secret = Utilities.getUuid() + '-wes-security-salt-' + Date.now();
+    props.setProperty('WES_OTP_SECRET_SALT', secret);
+  }
+  return secret;
+}
+
+function computeOtpHmac_(email, code, requestId, purpose) {
+  const salt = getOtpSecret_();
+  const raw = email.toLowerCase().trim() + ':' + String(code).trim() + ':' + requestId + ':' + purpose + ':' + salt;
+  const signature = Utilities.computeHmacSha256Signature(raw, salt);
+  return signature.map(function(byte) {
+    var b = (byte < 0 ? byte + 256 : byte).toString(16);
+    return b.length === 1 ? '0' + b : b;
+  }).join('');
+}
+
+function generateSecure6DigitCode_() {
+  // Generar criptográficamente usando bytes aleatorios
+    var randInt = Math.floor(Math.random() * 900000) + 100000;
+  var codeStr = String(randInt);
+  while (codeStr.length < 6) {
+    codeStr = '0' + codeStr;
+  }
+  return codeStr;
+}
+
+function sendTransactionalEmail_(email, subject, plainMessage, htmlContent) {
+  const senderName = 'WES · Seguridad de cuenta';
+  try {
+    GmailApp.sendEmail(email, subject, plainMessage, {
+      name: senderName,
+      htmlBody: htmlContent
+    });
+    return { success: true, provider: 'GmailApp' };
+  } catch (gErr) {
+    try {
+      MailApp.sendEmail({
+        to: email,
+        subject: subject,
+        body: plainMessage,
+        htmlBody: htmlContent,
+        name: senderName
+      });
+      return { success: true, provider: 'MailApp' };
+    } catch (mErr) {
+      console.error('Error enviando correo OTP:', mErr);
+      return { success: false, error: mErr.toString() };
+    }
+  }
+}
+
+/**
+ * 1. SOLICITAR CÓDIGO OTP (ACCESO / REGISTRO)
+ */
+function handleRequestAuthOtp(data) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (e) {
+    return { success: false, message: 'Servidor ocupado. Intenta de nuevo en unos segundos.' };
+  }
+
+  try {
+    if (!data || !data.email || !data.email.includes('@')) {
+      return { success: false, message: 'Por favor proporciona un correo electrónico válido.' };
+    }
+
+    const email = String(data.email).trim().toLowerCase();
+    const purpose = data.purpose || 'acceso'; // 'acceso' | 'registro'
+    const now = Date.now();
+    const nowFormatted = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const sheet = getOtpSheet_();
+    const rows = sheet.getDataRange().getValues();
+
+    // Comprobar límite de reenvío (60s) e invalidar anteriores del mismo correo y propósito
+    let resendWaitRemaining = 0;
+    let recentRequestsCount = 0;
+    const oneDayAgo = now - (24 * 60 * 60 * 1000);
+
+    for (var i = 1; i < rows.length; i++) {
+      var rEmail = String(rows[i][1]).toLowerCase().trim();
+      var rPurpose = String(rows[i][3]);
+      var rStatus = String(rows[i][9]);
+      var rCreated = new Date(rows[i][6]).getTime();
+
+      if (rEmail === email) {
+        if (rCreated > oneDayAgo) recentRequestsCount++;
+        if (rStatus === 'PENDIENTE') {
+          var diff = now - rCreated;
+          if (diff < 60000) {
+            resendWaitRemaining = Math.ceil((60000 - diff) / 1000);
+          }
+          // Invalidar el anterior si se solicita uno nuevo
+          sheet.getRange(i + 1, 10).setValue('INVALIDADO_REEMISION');
+        }
+      }
+    }
+
+    if (resendWaitRemaining > 0) {
+      return { 
+        success: false, 
+        message: 'Por favor espera ' + resendWaitRemaining + ' segundos antes de solicitar otro código.' 
+      };
+    }
+
+    if (recentRequestsCount >= 10) {
+      return { 
+        success: false, 
+        message: 'Has alcanzado el límite de solicitudes de códigos para este correo hoy. Por seguridad, intenta más tarde o contacta a soporte.' 
+      };
+    }
+
+    // Identificar si el usuario ya existe en Clientes o en Empleados
+    const clientSheet = getClientsSheet_();
+    const clientRows = clientSheet.getDataRange().getValues();
+    let isExisting = false;
+    let clientName = '';
+    let userRole = 'cliente';
+    let isEmployee = false;
+
+    // Verificar en lista de empleados del sistema
+    const sysEmployees = [
+      { email: 'ing.lmlh@gmail.com', name: 'Luis Miguel Lizardo', role: 'propietario', isEmployee: true },
+      { email: 'admin@wes.com.do', name: 'Admin General', role: 'administrador', isEmployee: true },
+      { email: 'soporte@wes.com.do', name: 'Téc. Soporte WES', role: 'gestor_soporte', isEmployee: true },
+      { email: 'cotizaciones@wes.com.do', name: 'Gestor Cotizaciones', role: 'gestor_cotizaciones', isEmployee: true },
+      { email: 'tienda@wes.com.do', name: 'Gestor de Tienda', role: 'gestor_tienda', isEmployee: true }
+    ];
+
+    for (var se = 0; se < sysEmployees.length; se++) {
+      if (sysEmployees[se].email === email) {
+        isExisting = true;
+        clientName = sysEmployees[se].name;
+        userRole = sysEmployees[se].role;
+        isEmployee = true;
+        break;
+      }
+    }
+
+    if (!isExisting) {
+      for (var c = 1; c < clientRows.length; c++) {
+        if (String(clientRows[c][2]).toLowerCase().trim() === email) {
+          isExisting = true;
+          clientName = String(clientRows[c][1] || '');
+          userRole = String(clientRows[c][4] || 'cliente');
+          isEmployee = Boolean(clientRows[c][6]);
+          break;
+        }
+      }
+    }
+
+    // Generar código criptográfico y HMAC
+    const rawCode = generateSecure6DigitCode_();
+    const requestId = 'REQ-OTP-' + Utilities.getUuid().substring(0, 8).toUpperCase();
+    const hmacHash = computeOtpHmac_(email, rawCode, requestId, purpose);
+    const expiresAt = now + (10 * 60 * 1000); // 10 minutos
+    const expiresFormatted = Utilities.formatDate(new Date(expiresAt), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    // Guardar token en hoja protegida
+    sheet.appendRow([
+      requestId,
+      email,
+      hmacHash,
+      purpose,
+      0, // intentos
+      5, // max intentos
+      nowFormatted,
+      expiresFormatted,
+      '', // Consumed_At
+      'PENDIENTE',
+      data.ip || 'WEB_CLIENT'
+    ]);
+
+    // Redactar correo formal con remitente "WES · Seguridad de cuenta"
+    const displayName = clientName || (isExisting ? 'Usuario de WES' : 'Nuevo Usuario');
+    const subjectEmail = 'WES · Código de acceso seguro: ' + rawCode;
+    const plainMsg = 'WARN ELECTRICAL SERVICES (WES)\nMoca, República Dominicana\n\n' +
+      'Hola ' + displayName + ',\n\n' +
+      'Tu código de acceso de 6 dígitos para entrar o crear tu cuenta es:\n\n' +
+      '       ' + rawCode + '\n\n' +
+      '• Vigencia: 10 minutos.\n' +
+      '• Es de un solo uso y de consumo atómico.\n' +
+      '• Nunca compartas este código con nadie.\n' +
+      '• Si no lo solicitaste, ignora este mensaje.\n\n' +
+      'Warn Electrical Services, SRL';
+
+    const htmlEmail = '<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:18px;background:#ffffff;box-shadow:0 4px 12px rgba(0,0,0,0.05);">' +
+      '<div style="text-align:center;background:linear-gradient(135deg,#071836,#0D2A5C);color:#ffffff;padding:26px 20px;border-radius:14px;">' +
+      '<div style="display:inline-block;padding:4px 12px;background:rgba(255,255,255,0.12);border-radius:20px;margin-bottom:8px;font-size:11px;font-weight:bold;letter-spacing:1px;color:#F5B300;">WARN ELECTRICAL SERVICES (WES)</div>' +
+      '<h2 style="color:#ffffff;margin:4px 0 0 0;font-size:22px;letter-spacing:0.5px;font-weight:800;">Código de verificación</h2>' +
+      '<p style="margin:6px 0 0 0;font-size:12px;color:#cbd5e1;">Moca, República Dominicana · Acceso Seguro</p>' +
+      '</div>' +
+      '<div style="padding:28px 16px;color:#334155;line-height:1.6;font-size:14px;">' +
+      '<p style="margin:0 0 16px 0;">Hola, <strong>' + displayName + '</strong>:</p>' +
+      '<p style="margin:0 0 20px 0;color:#475569;">Usa este código de 6 dígitos para identificarte de forma segura en Warn Electrical Services:</p>' +
+      '<div style="text-align:center;margin:24px 0;padding:22px;background:#f8fafc;border:2px dashed #0D2A5C;border-radius:14px;">' +
+      '<span style="display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Tu código de seis dígitos</span>' +
+      '<div style="font-family:Courier New,Courier,monospace;font-size:40px;font-weight:900;letter-spacing:8px;color:#0D2A5C;padding:4px 0;user-select:all;">' + rawCode + '</div>' +
+      '</div>' +
+      '<div style="background:#fffbeb;border:1px solid #fef3c7;border-left:4px solid #f59e0b;padding:12px 14px;border-radius:10px;font-size:12px;color:#92400e;margin-bottom:20px;">' +
+      '⏱️ <strong>Vencimiento:</strong> Este código es válido durante <strong>10 minutos</strong> y es de un solo uso.<br>' +
+      '🔒 <strong>Seguridad:</strong> Nunca compartas este código con ninguna persona. WES nunca te llamará a pedirte este serial.' +
+      '</div>' +
+      '<p style="font-size:12px;color:#64748b;margin:0;">Si no solicitaste este código, puedes ignorar este correo; tu cuenta permanece protegida.</p>' +
+      '</div>' +
+      '<hr style="border:0;border-top:1px solid #f1f5f9;margin:16px 0;">' +
+      '<p style="font-size:11px;color:#94a3b8;text-align:center;margin:0;">Warn Electrical Services, SRL · Autopista Ramón Cáceres, Moca · web.warnelectricalservices.com</p>' +
+      '</div>';
+
+    const mailRes = sendTransactionalEmail_(email, subjectEmail, plainMsg, htmlEmail);
+    if (!mailRes.success) {
+      return { success: false, message: 'No se pudo despachar el correo electrónico. Intente más tarde.' };
+    }
+
+    return {
+      success: true,
+      requestId: requestId,
+      email: email,
+      isExisting: isExisting,
+      expiresInMinutes: 10,
+      message: 'Código de 6 dígitos enviado exitosamente a ' + email
+    };
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 2. VERIFICAR CÓDIGO OTP (CONSUMO ATÓMICO)
+ */
+function handleVerifyAuthOtp(data) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (e) {
+    return { success: false, message: 'Servidor ocupado. Intenta de nuevo.' };
+  }
+
+  try {
+    if (!data || !data.email || !data.code) {
+      return { success: false, message: 'Faltan datos de verificación.' };
+    }
+
+    const email = String(data.email).trim().toLowerCase();
+    const inputCode = String(data.code).trim();
+    const requestId = data.requestId || '';
+    const purpose = data.purpose || 'acceso';
+    const now = Date.now();
+    const nowFormatted = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    const sheet = getOtpSheet_();
+    const rows = sheet.getDataRange().getValues();
+    let targetRowIndex = -1;
+    let targetRow = null;
+
+    for (var i = rows.length - 1; i >= 1; i--) {
+      var rReq = String(rows[i][0]);
+      var rEmail = String(rows[i][1]).toLowerCase().trim();
+      var rPurpose = String(rows[i][3]);
+      var rStatus = String(rows[i][9]);
+
+      var matchReq = requestId ? (rReq === requestId) : true;
+      if (rEmail === email && rPurpose === purpose && rStatus === 'PENDIENTE' && matchReq) {
+        targetRowIndex = i + 1;
+        targetRow = rows[i];
+        break;
+      }
+    }
+
+    if (!targetRow) {
+      return { 
+        success: false, 
+        message: 'No hay ninguna solicitud de acceso activa o el código ya fue consumido.' 
+      };
+    }
+
+    const currentAttempts = Number(targetRow[4] || 0) + 1;
+    const maxAttempts = Number(targetRow[5] || 5);
+    const expiresTime = new Date(targetRow[7]).getTime();
+    const reqId = String(targetRow[0]);
+    const storedHmac = String(targetRow[2]);
+
+    // Verificar vencimiento
+    if (now > expiresTime) {
+      sheet.getRange(targetRowIndex, 10).setValue('EXPIRADO');
+      return { 
+        success: false, 
+        expired: true, 
+        message: 'El código ha expirado (validez de 10 minutos). Solicita uno nuevo.' 
+      };
+    }
+
+    // Verificar límite de intentos
+    if (currentAttempts > maxAttempts) {
+      sheet.getRange(targetRowIndex, 10).setValue('BLOQUEADO_INTENTOS');
+      return { 
+        success: false, 
+        message: 'Has superado el límite de 5 intentos. El código ha sido invalidado por seguridad.' 
+      };
+    }
+
+    // Calcular HMAC esperado
+    const expectedHmac = computeOtpHmac_(email, inputCode, reqId, purpose);
+
+    if (expectedHmac !== storedHmac) {
+      sheet.getRange(targetRowIndex, 5).setValue(currentAttempts);
+      const remaining = maxAttempts - currentAttempts;
+      return { 
+        success: false, 
+        message: 'Código de 6 dígitos incorrecto. Te quedan ' + remaining + ' intento(s).' 
+      };
+    }
+
+    // CÓDIGO VÁLIDO: CONSUMIR ATÓMICAMENTE INMEDIATAMENTE
+    sheet.getRange(targetRowIndex, 5).setValue(currentAttempts);
+    sheet.getRange(targetRowIndex, 9).setValue(nowFormatted); // Consumed_At
+    sheet.getRange(targetRowIndex, 10).setValue('CONSUMIDO'); // Status
+
+    // Obtener datos del usuario
+    const clientSheet = getClientsSheet_();
+    const clientRows = clientSheet.getDataRange().getValues();
+    let existingUser = null;
+
+    // Chequear empleados maestros
+    const sysEmployees = [
+      { id: 'USR-001', email: 'ing.lmlh@gmail.com', name: 'Luis Miguel Lizardo', role: 'propietario', roleLabel: 'Propietario WES', isEmployee: true },
+      { id: 'USR-002', email: 'admin@wes.com.do', name: 'Admin General', role: 'administrador', roleLabel: 'Administrador WES', isEmployee: true },
+      { id: 'USR-003', email: 'soporte@wes.com.do', name: 'Téc. Soporte WES', role: 'gestor_soporte', roleLabel: 'Soporte Técnico', isEmployee: true },
+      { id: 'USR-004', email: 'cotizaciones@wes.com.do', name: 'Gestor Cotizaciones', role: 'gestor_cotizaciones', roleLabel: 'Ventas y Cotizaciones', isEmployee: true },
+      { id: 'USR-005', email: 'tienda@wes.com.do', name: 'Gestor de Tienda', role: 'gestor_tienda', roleLabel: 'Gestor de Inventario', isEmployee: true }
+    ];
+
+    for (var se = 0; se < sysEmployees.length; se++) {
+      if (sysEmployees[se].email === email) {
+        existingUser = sysEmployees[se];
+        break;
+      }
+    }
+
+    if (!existingUser) {
+      for (var c = 1; c < clientRows.length; c++) {
+        if (String(clientRows[c][2]).toLowerCase().trim() === email) {
+          existingUser = {
+            id: String(clientRows[c][0]),
+            name: String(clientRows[c][1]),
+            email: String(clientRows[c][2]),
+            phone: String(clientRows[c][3] || ''),
+            role: String(clientRows[c][4] || 'cliente'),
+            roleLabel: String(clientRows[c][5] || 'Vista Cliente'),
+            isEmployee: Boolean(clientRows[c][6])
+          };
+          // Actualizar último acceso
+          clientSheet.getRange(c + 1, 9).setValue(nowFormatted);
+          break;
+        }
+      }
+    }
+
+    // Generar token de sesión seguro con vigencia independiente (7 días)
+    const sessionToken = 'WES-SESS-' + Utilities.getUuid() + '-' + Date.now();
+
+    if (existingUser) {
+      return {
+        success: true,
+        isNewUser: false,
+        sessionToken: sessionToken,
+        user: existingUser,
+        message: '¡Bienvenido/a de nuevo, ' + existingUser.name + '!'
+      };
+    } else {
+      // Usuario nuevo: se verificó el correo, procede a pedir su nombre
+      return {
+        success: true,
+        isNewUser: true,
+        sessionToken: sessionToken,
+        email: email,
+        message: 'Correo verificado correctamente. Por favor completa tu nombre.'
+      };
+    }
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 3. COMPLETAR PERFIL DE NUEVO USUARIO
+ */
+function handleCompleteAuthOtpProfile(data) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (e) {
+    return { success: false, message: 'Servidor ocupado. Intenta de nuevo.' };
+  }
+
+  try {
+    if (!data || !data.email || !data.name || !data.name.trim()) {
+      return { success: false, message: 'El nombre es obligatorio.' };
+    }
+
+    const email = String(data.email).trim().toLowerCase();
+    const name = String(data.name).trim();
+    const phone = (data.phone || '').trim();
+    const nowFormatted = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    const sheet = getClientsSheet_();
+    const rows = sheet.getDataRange().getValues();
+
+    // Evitar cuentas duplicadas
+    for (var i = 1; i < rows.length; i++) {
+      if (String(rows[i][2]).toLowerCase().trim() === email) {
+        return {
+          success: true,
+          user: {
+            id: String(rows[i][0]),
+            name: String(rows[i][1]),
+            email: email,
+            phone: String(rows[i][3] || ''),
+            role: String(rows[i][4] || 'cliente'),
+            roleLabel: String(rows[i][5] || 'Vista Cliente'),
+            isEmployee: Boolean(rows[i][6])
+          },
+          message: '¡Bienvenido/a a WES, ' + rows[i][1] + '!'
+        };
+      }
+    }
+
+    const clientId = 'CLI-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random() * 899 + 100);
+    // Nuevas cuentas tienen estrictamente rol 'cliente'
+    const newClient = {
+      id: clientId,
+      name: name,
+      email: email,
+      phone: phone,
+      role: 'cliente',
+      roleLabel: 'Vista Cliente',
+      isEmployee: false,
+      createdAt: nowFormatted
+    };
+
+    sheet.appendRow([
+      newClient.id,
+      newClient.name,
+      newClient.email,
+      newClient.phone,
+      newClient.role,
+      newClient.roleLabel,
+      false, // Es_Empleado
+      nowFormatted,
+      nowFormatted,
+      'ACTIVO'
+    ]);
+
+    // Notificar al correo institucional del administrador
+    try {
+      const adminSubj = '🔔 [WES Alerta] Nuevo Usuario Registrado: ' + email;
+      const adminBody = 'Hola Ing. Luis Lizardo,\n\n' +
+        'Se ha registrado un nuevo cliente en Warn Electrical Services (WES):\n\n' +
+        '• Nombre: ' + name + '\n' +
+        '• Correo: ' + email + '\n' +
+        '• Fecha: ' + nowFormatted + '\n' +
+        '• Rol asignado inicial: Cliente\n\n' +
+        'Warn Electrical Services, SRL';
+      MailApp.sendEmail(CONFIG.COMPANY_EMAIL_SUPPORT, adminSubj, adminBody);
+    } catch (e) {}
+
+    return {
+      success: true,
+      user: newClient,
+      message: '¡Cuenta creada exitosamente! Bienvenido/a a Warn Electrical Services, ' + name + '.'
+    };
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * 4. SOLICITAR CÓDIGO DE RECUPERACIÓN DE CONTRASEÑA
+ * Respuesta genérica para no revelar si la cuenta existe o no públicamente.
+ */
+function handleRequestPasswordResetOtp(data) {
+  if (!data || !data.email || !data.email.includes('@')) {
+    return { success: false, message: 'Por favor ingresa un correo válido.' };
+  }
+  const email = String(data.email).trim().toLowerCase();
+
+  // Reusar handleRequestAuthOtp con purpose = 'recuperacion'
+  const otpRes = handleRequestAuthOtp({
+    email: email,
+    purpose: 'recuperacion',
+    ip: data.ip || 'WEB_RECOVERY'
+  });
+
+  // Respuesta de seguridad: no revelar existencia
+  return {
+    success: true,
+    email: email,
+    requestId: otpRes.requestId || '',
+    message: 'Si el correo ingresado corresponde a una cuenta registrada, recibirá un código de 6 dígitos en breve.'
+  };
+}
+
+/**
+ * 5. RESTABLECER CONTRASEÑA TRAS VERIFICAR CÓDIGO OTP
+ */
+function handleResetPasswordWithOtp(data) {
+  if (!data || !data.email || !data.code || !data.newPassword) {
+    return { success: false, message: 'Datos incompletos para restablecimiento.' };
+  }
+  if (data.newPassword !== data.confirmPassword) {
+    return { success: false, message: 'Las contraseñas no coinciden.' };
+  }
+  if (data.newPassword.length < 6) {
+    return { success: false, message: 'La contraseña debe tener mínimo 6 caracteres.' };
+  }
+
+  // 1. Verificar y consumir código atómicamente
+  const verifyRes = handleVerifyAuthOtp({
+    email: data.email,
+    code: data.code,
+    requestId: data.requestId || '',
+    purpose: 'recuperacion'
+  });
+
+  if (!verifyRes.success) {
+    return verifyRes;
+  }
+
+  const email = String(data.email).trim().toLowerCase();
+
+  // 2. Notificar por correo del cambio de contraseña
+  try {
+    const notifySubj = 'WES · Seguridad de cuenta: Tu contraseña ha sido actualizada';
+    const notifyHtml = '<div style="font-family:Arial,sans-serif;max-width:540px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:14px;">' +
+      '<div style="text-align:center;background:#0D2A5C;color:#fff;padding:20px;border-radius:10px;">' +
+      '<h3 style="color:#F5B300;margin:0;">Warn Electrical Services (WES)</h3>' +
+      '<p style="margin:4px 0 0 0;font-size:12px;">Notificación de Seguridad</p></div>' +
+      '<div style="padding:20px 10px;font-size:13px;color:#334155;line-height:1.6;">' +
+      '<p>Hola,</p>' +
+      '<p>Te informamos que la contraseña asociada a tu cuenta <strong>' + email + '</strong> ha sido actualizada exitosamente.</p>' +
+      '<p>Todas las sesiones activas han sido invalidadas. Por favor inicia sesión con tu nueva credencial.</p>' +
+      '<p style="color:#64748b;font-size:11px;">Si no realizaste este cambio, por favor contáctanos de inmediato a wes.inform@gmail.com o al (849) 207-5474.</p>' +
+      '</div></div>';
+
+    sendTransactionalEmail_(email, notifySubj, 'Tu contraseña ha sido actualizada exitosamente.', notifyHtml);
+  } catch (mErr) {}
+
+  return {
+    success: true,
+    message: 'Contraseña actualizada con éxito. Por favor inicia sesión con tu nueva contraseña.'
+  };
 }

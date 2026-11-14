@@ -2931,12 +2931,14 @@ function showAuthStep(step) {
   const stepRequest = document.getElementById('auth-step-request');
   const stepVerify = document.getElementById('auth-step-verify');
   const stepNewUser = document.getElementById('auth-step-new-user');
+  const stepRecovery = document.getElementById('auth-step-recovery');
   const title = document.getElementById('auth-modal-title');
   const subtitle = document.getElementById('auth-modal-subtitle');
 
   if (stepRequest) stepRequest.classList.add('hidden');
   if (stepVerify) stepVerify.classList.add('hidden');
   if (stepNewUser) stepNewUser.classList.add('hidden');
+  if (stepRecovery) stepRecovery.classList.add('hidden');
   clearAuthAlerts();
 
   if (step === 'verify') {
@@ -2944,6 +2946,13 @@ function showAuthStep(step) {
     if (title) title.textContent = 'Verificación de Acceso';
     if (subtitle) subtitle.textContent = 'Introduzca el código enviado a su correo';
     setupMagicOtpInputs();
+  } else if (step === 'recovery') {
+    if (stepRecovery) stepRecovery.classList.remove('hidden');
+    if (title) title.textContent = 'Recuperar Contraseña';
+    if (subtitle) subtitle.textContent = 'Valide su identidad mediante código seguro';
+    const emailInp = document.getElementById('auth-access-email');
+    const recEmail = document.getElementById('auth-recovery-email');
+    if (recEmail && emailInp && emailInp.value) recEmail.value = emailInp.value.trim();
   } else if (step === 'new_user') {
     if (stepNewUser) stepNewUser.classList.remove('hidden');
     if (title) title.textContent = 'Bienvenido a WES';
@@ -3129,7 +3138,7 @@ async function handlePasteMagicCode() {
 }
 
 // 3. HANDLER: VERIFICAR CÓDIGO
-function handleVerifyAccessCodeSubmit(e) {
+async function handleVerifyAccessCodeSubmit(e) {
   if (e) e.preventDefault();
   clearAuthAlerts();
 
@@ -3153,7 +3162,7 @@ function handleVerifyAccessCodeSubmit(e) {
   }
 
   try {
-    const res = UserAuth.verifyAccessCode(authCurrentEmail, fullCode, authRememberSession);
+    const res = await UserAuth.verifyAccessCode(authCurrentEmail, fullCode, authRememberSession);
 
     if (!res.success) {
       showAuthAlert('auth-verify-alert-box', res.message, 'error');
@@ -3199,7 +3208,7 @@ function handleVerifyAccessCodeSubmit(e) {
 }
 
 // 4. HANDLER: COMPLETAR NOMBRE PARA USUARIOS NUEVOS
-function handleCompleteNewUserSubmit(e) {
+async function handleCompleteNewUserSubmit(e) {
   if (e) e.preventDefault();
   clearAuthAlerts();
 
@@ -3218,7 +3227,7 @@ function handleCompleteNewUserSubmit(e) {
   }
 
   try {
-    const res = UserAuth.completeNewUserProfile(authCurrentEmail, name, authRememberSession);
+    const res = await UserAuth.completeNewUserProfile(authCurrentEmail, name, authRememberSession);
     if (!res.success) {
       showAuthAlert('auth-newuser-alert-box', res.message, 'error');
       if (btn) {
@@ -3761,3 +3770,90 @@ function forceRefreshApp() {
     window.location.reload(true);
   }
 }
+
+// 6. HANDLERS PARA RECUPERACIÓN DE CONTRASEÑA
+async function handleRequestRecoveryCode() {
+  const emailInp = document.getElementById('auth-recovery-email');
+  const btn = document.getElementById('btn-request-recovery-code');
+  if (!emailInp || !emailInp.value || !emailInp.value.includes('@')) {
+    showAuthAlert('auth-recovery-alert-box', 'Por favor ingresa un correo electrónico válido.', 'error');
+    return;
+  }
+  const email = emailInp.value.trim().toLowerCase();
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+  }
+  try {
+    const res = await UserAuth.requestPasswordReset(email);
+    showAuthAlert('auth-recovery-alert-box', res.message || 'Código de recuperación enviado.', 'success');
+    showToast('Código de recuperación enviado si el correo existe.', 'info');
+  } catch (e) {
+    showAuthAlert('auth-recovery-alert-box', 'Error solicitando código.', 'error');
+  } finally {
+    if (btn) {
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.textContent = 'Reenviar código';
+      }, 5000);
+    }
+  }
+}
+
+async function handlePasswordRecoverySubmit(e) {
+  if (e) e.preventDefault();
+  const email = (document.getElementById('auth-recovery-email')?.value || '').trim().toLowerCase();
+  const code = (document.getElementById('auth-recovery-code')?.value || '').trim();
+  const newPass = document.getElementById('auth-recovery-newpass')?.value || '';
+  const confirmPass = document.getElementById('auth-recovery-confirmpass')?.value || '';
+  const btn = document.getElementById('auth-recovery-btn');
+
+  if (!email || !code || !newPass) {
+    showAuthAlert('auth-recovery-alert-box', 'Por favor completa todos los campos.', 'error');
+    return;
+  }
+
+  if (newPass !== confirmPass) {
+    showAuthAlert('auth-recovery-alert-box', 'Las contraseñas de confirmación no coinciden.', 'error');
+    return;
+  }
+
+  if (newPass.length < 6) {
+    showAuthAlert('auth-recovery-alert-box', 'La contraseña debe tener al menos 6 caracteres.', 'error');
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Actualizando...';
+  }
+
+  try {
+    const res = await UserAuth.resetPassword(email, code, newPass, confirmPass);
+    if (!res.success) {
+      showAuthAlert('auth-recovery-alert-box', res.message || 'Error al actualizar contraseña.', 'error');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save text-wes-gold mr-1"></i> Actualizar Contraseña y Salir';
+      }
+      return;
+    }
+
+    showToast('¡Contraseña actualizada con éxito!', 'success');
+    // Cerrar y volver al inicio de sesión limpio
+    closeAuthModal();
+    setTimeout(() => {
+      openAuthModal('request');
+      showToast('Por favor ingresa con tu nueva clave o código.', 'info');
+    }, 600);
+  } catch (err) {
+    showAuthAlert('auth-recovery-alert-box', 'Error interno al procesar recuperación.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-save text-wes-gold mr-1"></i> Actualizar Contraseña y Salir';
+    }
+  }
+}
+window.handleRequestRecoveryCode = handleRequestRecoveryCode;
+window.handlePasswordRecoverySubmit = handlePasswordRecoverySubmit;
