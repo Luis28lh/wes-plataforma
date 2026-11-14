@@ -808,27 +808,60 @@ function setupChatEvents() {
         return;
       }
 
-      // 4.1 Detección inteligente de consultas sobre horarios y cierre de hoy (Respuesta de MÁXIMO 2 LÍNEAS)
-      const isHoursQuery = /(hasta\s+qu[eé]\s+hora|qu[eé]\s+hora\s+(est[aá]n|cierran|abren)|a\s+qu[eé]\s+hora|horario|est[aá]n\s+abiertos|abierto\s+hoy|hora\s+est[aá]n|esta\s+que\s+hora|s[aá]bado)/i.test(lower);
+      // 4.1 Detección inteligente de hora actual, apertura/cierre y horarios (Zona GMT-4 República Dominicana)
+      const isDirectTimeQuery = /^(y\s+)?(qu[eé]\s+hora\s+es|qu[eé]\s+hora\s+tienes|hora\s+actual|dime\s+la\s+hora|la\s+hora)[s!.,?]*$/i.test(lower) || /^(qu[eé]\s+hora\s+es)/i.test(lower);
+      const isHoursQuery = isDirectTimeQuery || /(hasta\s+qu[eé]\s+hora|qu[eé]\s+hora\s+(est[aá]n|cierran|abren)|a\s+qu[eé]\s+hora|horario|est[aá]n\s+abiertos|abierto\s+hoy|estamos\s+abiertos|hora\s+est[aá]n|esta\s+que\s+hora|s[aá]bado)/i.test(lower);
       const asksAboutSaturday = /(s[aá]bado|sabados|fin de semana)/i.test(lower);
       if (isHoursQuery) {
         let scheduleReply = '';
-        if (asksAboutSaturday) {
-          scheduleReply = "Los sábados laboramos de 8:00 a.m. a 1:00 p.m. ¿Deseas visitarnos en el taller o programar un servicio técnico?";
-        } else {
-          try {
-            const nowRD = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santo_Domingo" }));
-            const day = nowRD.getDay(); // 0: Domingo, 1: Lunes, ..., 6: Sábado
-            if (day >= 1 && day <= 5) {
-              scheduleReply = "Hoy estamos laborando hasta las 6:00 p.m. ¿En qué podemos servirle hoy?";
-            } else if (day === 6) {
-              scheduleReply = "Hoy sábado estamos laborando hasta la 1:00 p.m. ¿En qué podemos servirle hoy?";
-            } else {
-              scheduleReply = "Hoy domingo nuestras oficinas están cerradas; abrimos mañana lunes a las 8:00 a.m. ¿En qué podemos servirle?";
-            }
-          } catch (e) {
-            scheduleReply = "Nuestro horario regular es de lunes a viernes de 8:00 a.m. a 6:00 p.m., y sábados hasta la 1:00 p.m. ¿En qué podemos servirle hoy?";
+        try {
+          const nowRD = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Santo_Domingo" }));
+          const day = nowRD.getDay(); // 0: Dom, 1: Lun, ..., 6: Sáb
+          const hours = nowRD.getHours();
+          const minutes = nowRD.getMinutes();
+          const timeMinutes = hours * 60 + minutes;
+
+          const timeString = nowRD.toLocaleTimeString("es-DO", { hour: 'numeric', minute: '2-digit', hour12: true });
+
+          // Evaluar si WES está ABIERTO en este instante
+          let isOpen = false;
+          let closeTimeStr = '';
+          if (day >= 1 && day <= 5) {
+            // Lunes a Viernes 8:00 AM (480 min) a 6:00 PM (1080 min)
+            isOpen = timeMinutes >= 480 && timeMinutes < 1080;
+            closeTimeStr = '6:00 p.m.';
+          } else if (day === 6) {
+            // Sábados 8:00 AM (480 min) a 1:00 PM (780 min)
+            isOpen = timeMinutes >= 480 && timeMinutes < 780;
+            closeTimeStr = '1:00 p.m.';
+          } else {
+            // Domingos cerrado
+            isOpen = false;
           }
+
+          if (isDirectTimeQuery) {
+            if (isOpen) {
+              scheduleReply = "Son las " + timeString + " aquí en Moca y estamos ABIERTOS laborando hoy hasta las " + closeTimeStr + ". ¿En qué podemos servirle?";
+            } else {
+              scheduleReply = "Son las " + timeString + " aquí en Moca y nuestras oficinas están CERRADAS en este momento (abrimos en horario regular de 8:00 a.m.). ¿Desea dejar su consulta?";
+            }
+          } else if (asksAboutSaturday) {
+            scheduleReply = "Los sábados laboramos de 8:00 a.m. a 1:00 p.m. Actualmente son las " + timeString + ". ¿Deseas visitarnos en el taller o cotizar un servicio?";
+          } else if (/(est[aá]n\s+abiertos|abierto\s+hoy|abiertos\s+ahora)/i.test(lower)) {
+            if (isOpen) {
+              scheduleReply = "¡Sí, estamos abiertos! Son las " + timeString + " y laboramos hoy hasta las " + closeTimeStr + ". ¿En qué podemos asistirle hoy?";
+            } else {
+              scheduleReply = "En este momento nuestras instalaciones están cerradas (son las " + timeString + "). Nuestro horario es de lunes a viernes de 8:00 a.m. a 6:00 p.m. y sábados hasta la 1:00 p.m.";
+            }
+          } else if (day >= 1 && day <= 5) {
+            scheduleReply = "Hoy estamos laborando hasta las 6:00 p.m. (son las " + timeString + "). ¿En qué podemos servirle hoy?";
+          } else if (day === 6) {
+            scheduleReply = "Hoy sábado estamos laborando hasta la 1:00 p.m. (son las " + timeString + "). ¿En qué podemos servirle hoy?";
+          } else {
+            scheduleReply = "Hoy domingo estamos cerrados; abrimos mañana lunes a las 8:00 a.m. ¿En qué podemos asistirle?";
+          }
+        } catch (errTime) {
+          scheduleReply = "Nuestro horario regular en WES es de lunes a viernes de 8:00 a.m. a 6:00 p.m. y sábados hasta la 1:00 p.m. ¿En qué podemos servirle hoy?";
         }
 
         removeTypingIndicator();

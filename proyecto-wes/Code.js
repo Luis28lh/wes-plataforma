@@ -1190,7 +1190,36 @@ function queryGeminiChatHandler(data) {
     }
 
     const activeKnowledge = getActiveSofiaKnowledgeList_();
-    const augmentedPrompt = buildKnowledgeAugmentedPrompt_(config.systemPrompt, activeKnowledge);
+    
+    // Inyectar contexto temporal en vivo de República Dominicana (GMT-4) para que Gemini siempre conozca la hora y estado de apertura
+    var nowRDObj = new Date();
+    var timeFormatted = Utilities.formatDate(nowRDObj, 'GMT-4', 'hh:mm a');
+    var dateFormatted = Utilities.formatDate(nowRDObj, 'GMT-4', 'EEEE, dd \'de\' MMMM \'de\' yyyy');
+    var dayOfWeek = parseInt(Utilities.formatDate(nowRDObj, 'GMT-4', 'u'), 10); // 1: Lun, ..., 6: Sáb, 7: Dom
+    var hour24 = parseInt(Utilities.formatDate(nowRDObj, 'GMT-4', 'H'), 10);
+    var minNow = parseInt(Utilities.formatDate(nowRDObj, 'GMT-4', 'm'), 10);
+    var totalMin = hour24 * 60 + minNow;
+
+    var isOpenNow = false;
+    var scheduleDetail = '';
+    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+      isOpenNow = (totalMin >= 480 && totalMin < 1080); // 8:00 AM a 6:00 PM
+      scheduleDetail = 'Lunes a Viernes (8:00 AM a 6:00 PM)';
+    } else if (dayOfWeek === 6) {
+      isOpenNow = (totalMin >= 480 && totalMin < 780); // 8:00 AM a 1:00 PM
+      scheduleDetail = 'Sábado (8:00 AM a 1:00 PM)';
+    } else {
+      isOpenNow = false;
+      scheduleDetail = 'Domingo (Cerrado)';
+    }
+
+    var temporalContext = "\n\nINFORMACIÓN DE TIEMPO REAL (OFICIAL DE WES EN MOCA, REP. DOMINICANA):\n" +
+      "- Fecha actual: " + dateFormatted + "\n" +
+      "- Hora actual exacta: " + timeFormatted + " (Zona Horaria GMT-4 / Hora oficial de República Dominicana)\n" +
+      "- Estado operativo en este instante: " + (isOpenNow ? "ESTAMOS ABIERTOS Y LABORANDO" : "ESTAMOS CERRADOS EN ESTE MOMENTO") + "\n" +
+      "- Horario regular de WES: Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM | Domingos cerrado.\n" +
+      "- REGLA TEMPORAL: Cuando el usuario te pregunte la hora, qué hora es, o si están abiertos o cerrados, utiliza SIEMPRE estos datos exactos de República Dominicana y responde con naturalidad en máximo 2 frases.\n";
+    const augmentedPrompt = buildKnowledgeAugmentedPrompt_(config.systemPrompt + temporalContext, activeKnowledge);
 
     const candidateModels = [
       'gemini-3.5-flash',

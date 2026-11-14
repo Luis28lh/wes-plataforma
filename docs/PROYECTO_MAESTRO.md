@@ -14,11 +14,11 @@
 | **Propietario / organización** | Ing. Luis Miguel Lizardo / Warn Electrical Services, SRL (WES) |
 | **Sede física** | Autopista Ramón Cáceres, Moca, Provincia Espaillat, República Dominicana |
 | **Fecha de inicio** | 2017 (operaciones WES) / Septiembre 2026 (fase plataforma digital) |
-| **Última actualización** | 2026-11-14 15:57 (GMT-4) |
+| **Última actualización** | 2026-11-14 16:44 (GMT-4) |
 | **Repositorio GitHub (privado)** | `https://github.com/Luis28lh/wes-plataforma.git` (remoto `origin`) y `https://github.com/Luis28lh/wes-plataforma-v1.git` (remoto `v1`) |
 | **Rama principal / política de cambios** | `main` (despliegue continuo a producción). Commits atómicos con verificación previa obligatoria. |
 | **Estado general** | **OPERATIVO EN PRODUCCIÓN** |
-| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #72) |
+| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #73) |
 
 ---
 
@@ -158,6 +158,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 | **2026-11-11** | Autenticación sin contraseña (Magic Code 6 dígitos) y blindaje RBAC de Servicio Técnico | Simplificar acceso unificado de clientes y personal sin contraseñas; proteger tablero técnico | Entrada directa con correo, código de 6 dígitos válido 10 min (un solo uso, máx 5 intentos), botón "Servicio Técnico" oculto a visitantes y clientes, guardia estricta en servidor y frontend |
 | **2026-11-13** | Atención inmediata a saludos y optimización de cuota de IA (v63) | Resolver fallo intermitente con "HOLA" y evitar consumo innecesario de tokens en plan Pro | Saludos y agradecimientos respondidos instantáneamente en frontend sin invocar Gemini; retiro garantizado de indicador de escritura; soporte de API key prioritaria en backend |
 | **2026-11-14** | Notificación pop-up e instrucción en vivo para Luis Lizardo (v68) | Permitir al propietario instruir a Sofía en tiempo real ante preguntas de clientes no resueltas | Alerta emergente en sesión de `ing.lmlh@gmail.com` para responder preguntas no catalogadas, registro en `Preguntas_Pendientes_Sofia` y autoaprendizaje directo a `Conocimiento_Sofia` |
+| **2026-11-14** | Acceso a hora real dominicana y evaluación automática de apertura/cierre para Sofía (v73) | Evitar respuesta errónea "no tengo acceso a la hora" y permitir a Sofía responder con la hora exacta y evaluar si WES está abierto | Detección nativa en frontend de zona horaria República Dominicana (GMT-4) y cálculo instantáneo de minutos de apertura/cierre; inyección de contexto temporal dinámico en el backend de Google Apps Script hacia Gemini |
 | **2026-11-14** | Despliegue de producción v1.72 con bundle total de scripts y fallback dual de iconos (v72) | Resolver visualización universal de iconos y garantizar la ejecución completa de login con código de 6 dígitos en la nube | Fallback dual CDN (Cloudflare + JSDelivr) para Font Awesome; empaquetado autocontenido de user_auth, chat_cliente y KDS en el deployer de Apps Script; verificación de envío de correos sin requerir API keys adicionales de Gmail |
 | **2026-11-14** | Sincronización visual de versión de producción v1.71 en footer y botón de actualización (v71) | Sustituir versión vieja fija (v0.1.100) por versión real en vivo y permitir a clientes y móviles refrescar caché en 1 clic | Footer con badge oficial v1.71 (Build 71) con pulsador de estado y botón interactivo "Actualizar app" que ejecuta limpieza de caché PWA y recarga forzada |
 | **2026-11-14** | Bandeja de mensajes directos en header con salto interactivo a Sofía (v70) | Permitir que los clientes reciban mensajes de gerencia y pasen a interactuar con el chat | Botón `#header-user-messages-btn` con badge de no leídos al lado del avatar, bandeja modal y botón "Interactuar en el Chat" para conectar la conversación con Sofía |
