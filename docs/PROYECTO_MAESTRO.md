@@ -18,7 +18,7 @@
 | **Repositorio GitHub (privado)** | `https://github.com/Luis28lh/wes-plataforma.git` (remoto `origin`) y `https://github.com/Luis28lh/wes-plataforma-v1.git` (remoto `v1`) |
 | **Rama principal / política de cambios** | `main` (despliegue continuo a producción). Commits atómicos con verificación previa obligatoria. |
 | **Estado general** | **OPERATIVO EN PRODUCCIÓN** |
-| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #68) |
+| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #70) |
 
 ---
 
@@ -158,6 +158,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 | **2026-11-11** | Autenticación sin contraseña (Magic Code 6 dígitos) y blindaje RBAC de Servicio Técnico | Simplificar acceso unificado de clientes y personal sin contraseñas; proteger tablero técnico | Entrada directa con correo, código de 6 dígitos válido 10 min (un solo uso, máx 5 intentos), botón "Servicio Técnico" oculto a visitantes y clientes, guardia estricta en servidor y frontend |
 | **2026-11-13** | Atención inmediata a saludos y optimización de cuota de IA (v63) | Resolver fallo intermitente con "HOLA" y evitar consumo innecesario de tokens en plan Pro | Saludos y agradecimientos respondidos instantáneamente en frontend sin invocar Gemini; retiro garantizado de indicador de escritura; soporte de API key prioritaria en backend |
 | **2026-11-14** | Notificación pop-up e instrucción en vivo para Luis Lizardo (v68) | Permitir al propietario instruir a Sofía en tiempo real ante preguntas de clientes no resueltas | Alerta emergente en sesión de `ing.lmlh@gmail.com` para responder preguntas no catalogadas, registro en `Preguntas_Pendientes_Sofia` y autoaprendizaje directo a `Conocimiento_Sofia` |
+| **2026-11-14** | Bandeja de mensajes directos en header con salto interactivo a Sofía (v70) | Permitir que los clientes reciban mensajes de gerencia y pasen a interactuar con el chat | Botón `#header-user-messages-btn` con badge de no leídos al lado del avatar, bandeja modal y botón "Interactuar en el Chat" para conectar la conversación con Sofía |
 
 ---
 

@@ -3543,6 +3543,203 @@ window.closeMobileMenu = window.closeMobileMenu || function() {
 
 
 
+// ============================================================================
+// SISTEMA DE BANDEJA DE MENSAJES Y NOTIFICACIONES DE USUARIO (HEADER)
+// ============================================================================
+const UserMessagesService = (function() {
+  const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+  const READ_STORAGE_KEY = 'wes_read_message_ids';
+  let cachedMessages = [];
+
+  function getReadIds() {
+    try {
+      return JSON.parse(localStorage.getItem(READ_STORAGE_KEY) || '[]');
+    } catch(e) { return []; }
+  }
+
+  function markAsRead(id) {
+    if (!id) return;
+    const reads = getReadIds();
+    if (!reads.includes(id)) {
+      reads.push(id);
+      localStorage.setItem(READ_STORAGE_KEY, JSON.stringify(reads));
+    }
+    updateBadge();
+  }
+
+  async function fetchMessagesForUser() {
+    if (typeof UserAuth === 'undefined') return [];
+    const user = UserAuth.getCurrentUser();
+    if (!user || !user.email) return [];
+
+    try {
+      const res = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'get_user_direct_messages',
+          userEmail: user.email
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success && Array.isArray(data.messages)) {
+          cachedMessages = data.messages;
+          updateBadge();
+          return data.messages;
+        }
+      }
+    } catch(e) {
+      console.warn('[UserMessages] Error al consultar mensajes:', e);
+    }
+    return cachedMessages;
+  }
+
+  function updateBadge() {
+    const badge = document.getElementById('header-user-messages-badge');
+    if (!badge) return;
+
+    if (typeof UserAuth === 'undefined' || !UserAuth.getCurrentUser()) {
+      badge.classList.add('hidden');
+      return;
+    }
+
+    const readIds = getReadIds();
+    const unreadCount = cachedMessages.filter(m => !readIds.includes(m.id)).length;
+
+    if (unreadCount > 0) {
+      badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+
+  function renderMessages() {
+    const list = document.getElementById('user-messages-list');
+    const recipient = document.getElementById('user-messages-recipient');
+    if (!list) return;
+
+    const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+    if (recipient) {
+      recipient.textContent = user ? `Para: ${user.name} (${user.email})` : 'Mensajes de gerencia y soporte';
+    }
+
+    if (!user) {
+      list.innerHTML = `
+        <div class="p-8 text-center text-slate-500 text-xs space-y-3">
+          <i class="fas fa-user-lock text-3xl text-slate-300 block"></i>
+          <p class="font-bold text-slate-800">Inicia sesión para ver tus mensajes y notificaciones</p>
+          <p class="text-[11px] text-slate-400">Aquí podrás leer comunicados oficiales, cotizaciones y respuestas enviadas a tu correo.</p>
+          <button type="button" onclick="closeUserMessagesModal(); openAuthModal('login');" class="px-4 py-2 bg-wes-blue text-white rounded-xl font-bold text-xs shadow-md">
+            Iniciar Sesión
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    if (cachedMessages.length === 0) {
+      list.innerHTML = `
+        <div class="p-8 text-center text-slate-400 text-xs">
+          <i class="fas fa-envelope-open text-3xl mb-2 text-slate-300 block"></i>
+          <span class="font-medium text-slate-600 block">No tienes mensajes pendientes</span>
+          <span class="text-[11px] text-slate-400 mt-1 block">Cualquier respuesta o notificación de WES aparecerá aquí.</span>
+        </div>
+      `;
+      return;
+    }
+
+    const readIds = getReadIds();
+    list.innerHTML = cachedMessages.map(m => {
+      const isUnread = !readIds.includes(m.id);
+      return `
+        <div class="p-3.5 bg-white rounded-2xl border ${isUnread ? 'border-amber-400 shadow-sm' : 'border-slate-200'} space-y-2 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              ${isUnread ? '<span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>' : '<i class="fas fa-check text-slate-400 text-[10px]"></i>'}
+              <span class="font-bold text-xs text-slate-900">${escapeHtml(m.sender || 'Equipo WES')}</span>
+            </div>
+            <span class="text-[10px] text-slate-400 font-mono">${m.date || ''}</span>
+          </div>
+
+          <div class="text-xs font-semibold text-wes-blue">${escapeHtml(m.subject || 'Notificación WES')}</div>
+          <p class="text-xs text-slate-700 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            ${escapeHtml(m.content || '')}
+          </p>
+
+          <div class="pt-1 flex items-center justify-end space-x-2 text-xs">
+            <button type="button" onclick="UserMessagesService.jumpToChat('${m.id}', '${escapeHtml(m.content || '').replace(/'/g, "\\'")}', '${escapeHtml(m.suggestedPrompt || 'Hola, deseo consultar sobre este mensaje.').replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-[#0D2A5C] hover:bg-[#071836] text-amber-300 font-extrabold text-[11px] rounded-xl flex items-center space-x-1 shadow-xs transition active:scale-95">
+              <i class="fas fa-comments"></i>
+              <span>Interactuar en el Chat</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function jumpToChat(id, contentText, suggestedPrompt) {
+    markAsRead(id);
+    closeUserMessagesModal();
+    if (typeof window.openChatWithMessageContext === 'function') {
+      window.openChatWithMessageContext(contentText, suggestedPrompt);
+    } else if (typeof window.toggleClientChat === 'function') {
+      window.toggleClientChat();
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function init() {
+    setTimeout(fetchMessagesForUser, 3000);
+    setInterval(fetchMessagesForUser, 30000);
+    window.addEventListener('wes_user_login', fetchMessagesForUser);
+    window.addEventListener('wes_user_logout', () => {
+      cachedMessages = [];
+      updateBadge();
+    });
+  }
+
+  return {
+    init,
+    fetchMessagesForUser,
+    renderMessages,
+    markAsRead,
+    jumpToChat
+  };
+})();
+
+function openUserMessagesModal() {
+  const modal = document.getElementById('user-messages-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    UserMessagesService.renderMessages();
+    UserMessagesService.fetchMessagesForUser().then(() => {
+      UserMessagesService.renderMessages();
+    });
+  }
+}
+
+function closeUserMessagesModal() {
+  const modal = document.getElementById('user-messages-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+window.UserMessagesService = UserMessagesService;
+window.openUserMessagesModal = openUserMessagesModal;
+window.closeUserMessagesModal = closeUserMessagesModal;
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', UserMessagesService.init);
+} else {
+  UserMessagesService.init();
+}
+
 // Función de sincronización y limpieza de caché para aplicaciones móviles PWA
 function forceRefreshApp() {
   if (window.showToast) window.showToast('Actualizando aplicación móvil WES...', 'info');

@@ -982,6 +982,27 @@ if (typeof window !== 'undefined') {
     window.startServiceRequestFlow = startServiceRequestFlow;
     window.confirmTicketDraft = confirmTicketDraft;
     window.cancelTicketDraft = cancelTicketDraft;
+    window.openChatWithMessageContext = function(topicText, promptQuestion) {
+      if (!chatSession.isOpen) {
+        toggleClientChat();
+      }
+      if (topicText) {
+        appendBotMessage(`
+          <div class="p-2.5 bg-blue-50 border border-blue-200 rounded-xl mb-2 text-xs">
+            <span class="text-[10px] font-bold text-blue-900 uppercase block mb-1">
+              <i class="fas fa-envelope-open mr-1 text-blue-600"></i> Mensaje de WES:
+            </span>
+            <p class="text-slate-800 leading-relaxed">${escapeHtml(topicText)}</p>
+          </div>
+          <p class="text-slate-700 text-xs">He cargado este mensaje en nuestra conversación. ¿Tienes alguna pregunta o deseas cotizar sobre este tema?</p>
+        `);
+      }
+      const input = document.getElementById('wes-chat-user-input');
+      if (input && promptQuestion) {
+        input.value = promptQuestion;
+        input.focus();
+      }
+    };
 
     if (typeof document !== 'undefined') {
       if (document.readyState === 'loading') {

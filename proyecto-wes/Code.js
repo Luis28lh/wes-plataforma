@@ -109,6 +109,14 @@ function doPost(e) {
         response = answerAndTrainSofiaHandler(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+      case 'get_user_direct_messages':
+        response = getUserDirectMessagesHandler(payload.userEmail);
+        break;
+
+      case 'send_user_direct_message':
+        response = sendUserDirectMessageHandler(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -1752,5 +1760,119 @@ function answerAndTrainSofiaHandler(data, adminToken, userEmail) {
     };
   } catch (err) {
     return { success: false, message: 'Error al instruir a Sofía: ' + err.toString() };
+  }
+}
+
+/**
+ * =========================================================================
+ * BANDEJA DE MENSAJES DIRECTOS Y COMUNICADOS PARA CLIENTES REGISTRADOS
+ * =========================================================================
+ */
+
+function getCustomerMessagesSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Mensajes_Directos_Clientes');
+  if (!sheet) {
+    sheet = ss.insertSheet('Mensajes_Directos_Clientes');
+    sheet.appendRow([
+      'ID', 'Fecha', 'Email_Cliente', 'Remitente', 
+      'Asunto', 'Contenido', 'Prompt_Sugerido_Chat', 'Estado'
+    ]);
+    sheet.getRange(1, 1, 1, 8).setFontWeight('bold').setBackground('#075985').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function getUserDirectMessagesHandler(userEmail) {
+  try {
+    if (!userEmail) {
+      return { success: false, message: 'Correo no especificado.' };
+    }
+
+    const cleanEmail = String(userEmail).toLowerCase().trim();
+    const sheet = getCustomerMessagesSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const messages = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const targetEmail = String(r[2] || '').toLowerCase().trim();
+      if (targetEmail === cleanEmail || targetEmail === 'todos' || targetEmail === 'all') {
+        messages.unshift({
+          id: String(r[0]),
+          date: String(r[1]),
+          email: targetEmail,
+          sender: String(r[3] || 'Warn Electrical Services'),
+          subject: String(r[4] || 'Notificación WES'),
+          content: String(r[5] || ''),
+          suggestedPrompt: String(r[6] || 'Hola, deseo consultar sobre este mensaje.'),
+          status: String(r[7] || 'activo')
+        });
+      }
+    }
+
+    return {
+      success: true,
+      count: messages.length,
+      messages: messages
+    };
+  } catch (err) {
+    return { success: false, message: 'Error consultando mensajes: ' + err.toString() };
+  }
+}
+
+function sendUserDirectMessageHandler(data, adminToken, userEmail) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
+
+    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
+      return { success: false, message: 'Acceso denegado: solo personal autorizado puede enviar mensajes directos.' };
+    }
+
+    if (!data || !data.targetEmail || !data.content) {
+      return { success: false, message: 'Email de destino y contenido son requeridos.' };
+    }
+
+    const sheet = getCustomerMessagesSheet_();
+    const id = 'MSG-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const sender = data.sender || 'Ing. Luis Lizardo · WES';
+
+    sheet.appendRow([
+      id,
+      now,
+      String(data.targetEmail).toLowerCase().trim(),
+      sender,
+      data.subject || 'Mensaje de WES',
+      data.content.trim(),
+      data.suggestedPrompt || 'Hola, deseo consultar sobre este mensaje.',
+      'activo'
+    ]);
+
+    // Opcional: Notificar por correo al cliente si tiene habilitado envío
+    if (data.sendEmailCopy && data.targetEmail.includes('@')) {
+      try {
+        MailApp.sendEmail({
+          to: data.targetEmail,
+          subject: data.subject || 'Mensaje de Warn Electrical Services (WES)',
+          htmlBody: '<div style="font-family:Arial,sans-serif;padding:20px;border:1px solid #e2e8f0;border-radius:10px;">' +
+                    '<h3 style="color:#0D2A5C;">Warn Electrical Services (WES)</h3>' +
+                    '<p>Tienes un nuevo mensaje directo de nuestro equipo:</p>' +
+                    '<blockquote style="background:#f8fafc;padding:12px;border-left:4px solid #0D2A5C;">' + data.content + '</blockquote>' +
+                    '<p>Puedes acceder a la plataforma para interactuar con nosotros o con nuestro asistente virtual Sofía.</p>' +
+                    '</div>'
+        });
+      } catch (mErr) {}
+    }
+
+    return {
+      success: true,
+      message: 'Mensaje enviado exitosamente a ' + data.targetEmail,
+      messageId: id
+    };
+  } catch (err) {
+    return { success: false, message: 'Error enviando mensaje: ' + err.toString() };
   }
 }
