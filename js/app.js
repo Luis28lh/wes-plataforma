@@ -1642,8 +1642,10 @@ function closePolicyModal() {
   const modal = document.getElementById('policy-modal');
   if (modal) {
     modal.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden');
+    modal.style.display = 'none';
   }
+  document.body.classList.remove('overflow-hidden');
+  document.body.style.overflow = '';
 }
 
 function checkCookieConsent() {
@@ -1770,25 +1772,40 @@ function setupEventListeners() {
     });
   }
 
-  const authModal = document.getElementById('auth-modal');
-  if (authModal) {
-    authModal.addEventListener('click', (e) => {
-      if (e.target === authModal) closeAuthModal();
-    });
-  }
+  // Cierre automático por clic en backdrop (fondo oscuro) y tecla Escape para TODOS los modales
+  const modalCloseRegistry = [
+    { id: 'policy-modal', closeFn: () => typeof closePolicyModal === 'function' && closePolicyModal() },
+    { id: 'quote-modal', closeFn: () => typeof closeQuoteModal === 'function' && closeQuoteModal() },
+    { id: 'confirmation-modal', closeFn: () => typeof closeConfirmationModal === 'function' && closeConfirmationModal() },
+    { id: 'product-detail-modal', closeFn: () => typeof closeProductDetailModal === 'function' && closeProductDetailModal() },
+    { id: 'project-photo-modal', closeFn: () => typeof closeProjectImageModal === 'function' && closeProjectImageModal() },
+    { id: 'pwa-ios-modal', closeFn: () => typeof closePwaIosModal === 'function' && closePwaIosModal() },
+    { id: 'pwa-guide-modal', closeFn: () => typeof closePwaGuideModal === 'function' && closePwaGuideModal() },
+    { id: 'user-profile-modal', closeFn: () => typeof closeUserProfileModal === 'function' && closeUserProfileModal() },
+    { id: 'ongoing-support-modal', closeFn: () => typeof closeOngoingSupportModal === 'function' && closeOngoingSupportModal() },
+    { id: 'auth-modal', closeFn: () => typeof closeAuthModal === 'function' && closeAuthModal() },
+    { id: 'modal-tecnico-externo', closeFn: () => typeof closeTecnicoExternoPortal === 'function' && closeTecnicoExternoPortal() }
+  ];
 
-  const userProfileModal = document.getElementById('user-profile-modal');
-  if (userProfileModal) {
-    userProfileModal.addEventListener('click', (e) => {
-      if (e.target === userProfileModal) closeUserProfileModal();
-    });
-  }
+  modalCloseRegistry.forEach(item => {
+    const el = document.getElementById(item.id);
+    if (el) {
+      el.addEventListener('click', (e) => {
+        if (e.target === el) {
+          item.closeFn();
+          document.body.classList.remove('overflow-hidden');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+  });
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      closeAuthModal();
-      closeUserProfileModal();
-      closeConfirmationModal();
+      modalCloseRegistry.forEach(item => item.closeFn());
+      if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+      document.body.classList.remove('overflow-hidden');
+      document.body.style.overflow = '';
     }
   });
 }

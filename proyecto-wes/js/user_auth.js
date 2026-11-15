@@ -1561,6 +1561,10 @@ const SofiaInstructorPopup = (function() {
       </div>
     `;
 
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
     document.body.appendChild(modal);
     activeModal = modal;
   }
