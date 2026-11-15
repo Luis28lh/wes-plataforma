@@ -841,26 +841,40 @@ function setupChatEvents() {
             isOpen = false;
           }
 
+          let nextOpenDesc = '';
+          if (day >= 1 && day <= 4) nextOpenDesc = 'mañana a partir de las 8:00 a.m.';
+          else if (day === 5) nextOpenDesc = 'mañana sábado de 8:00 a.m. a 1:00 p.m.';
+          else if (day === 6) nextOpenDesc = 'el lunes a partir de las 8:00 a.m.';
+          else nextOpenDesc = 'mañana lunes a partir de las 8:00 a.m.';
+
           if (isDirectTimeQuery) {
             if (isOpen) {
-              scheduleReply = "Son las " + timeString + " aquí en Moca y estamos ABIERTOS laborando hoy hasta las " + closeTimeStr + ". ¿En qué podemos servirle?";
+              scheduleReply = "Son las " + timeString + " en República Dominicana y estamos ABIERTOS laborando hoy hasta las " + closeTimeStr + ". ¿En qué podemos asistirle?";
             } else {
-              scheduleReply = "Son las " + timeString + " aquí en Moca y nuestras oficinas están CERRADAS en este momento (abrimos en horario regular de 8:00 a.m.). ¿Desea dejar su consulta?";
+              scheduleReply = "Son las " + timeString + " en República Dominicana y estamos fuera de horario laboral. Le podemos recibir con gusto en nuestro horario de atención (" + nextOpenDesc + "), nunca antes ni después. ¿Desea dejar su mensaje?";
             }
           } else if (asksAboutSaturday) {
-            scheduleReply = "Los sábados laboramos de 8:00 a.m. a 1:00 p.m. Actualmente son las " + timeString + ". ¿Deseas visitarnos en el taller o cotizar un servicio?";
+            scheduleReply = "Los sábados laboramos de 8:00 a.m. a 1:00 p.m. Actualmente son las " + timeString + ". En ese horario podemos recibirle con mucho gusto en nuestro taller.";
           } else if (/(habiento|abierto|abiertos|est[aá]n?\s*abierto|abierto\s*hoy)/i.test(lower)) {
             if (isOpen) {
-              scheduleReply = "¡Sí, estamos abiertos! Son las " + timeString + " y laboramos hoy hasta las " + closeTimeStr + ". ¿En qué podemos asistirle hoy?";
+              scheduleReply = "¡Sí, estamos abiertos! Son las " + timeString + " y laboramos hoy hasta las " + closeTimeStr + ". ¿En qué podemos servirle?";
             } else {
-              scheduleReply = "En este momento nuestras instalaciones están cerradas (son las " + timeString + "). Nuestro horario es de lunes a viernes de 8:00 a.m. a 6:00 p.m. y sábados hasta la 1:00 p.m.";
+              scheduleReply = "En este momento estamos fuera de horario laboral (son las " + timeString + "). Le podemos recibir con gusto en horario oficial: de lunes a viernes (8:00 a.m. a 6:00 p.m.) y sábados (8:00 a.m. a 1:00 p.m.), nunca antes ni después. ¿En qué podemos colaborar?";
             }
           } else if (day >= 1 && day <= 5) {
-            scheduleReply = "Hoy estamos laborando hasta las 6:00 p.m. (son las " + timeString + "). ¿En qué podemos servirle hoy?";
+            if (isOpen) {
+              scheduleReply = "Hoy estamos laborando hasta las 6:00 p.m. (son las " + timeString + "). ¿En qué podemos servirle hoy?";
+            } else {
+              scheduleReply = "En este momento estamos fuera de horario (son las " + timeString + "). Le podemos recibir " + nextOpenDesc + ". ¿Desea dejar su consulta?";
+            }
           } else if (day === 6) {
-            scheduleReply = "Hoy sábado estamos laborando hasta la 1:00 p.m. (son las " + timeString + "). ¿En qué podemos servirle hoy?";
+            if (isOpen) {
+              scheduleReply = "Hoy sábado estamos laborando hasta la 1:00 p.m. (son las " + timeString + "). ¿En qué podemos servirle hoy?";
+            } else {
+              scheduleReply = "Estamos fuera de horario de fin de semana (son las " + timeString + "). Le podemos recibir el lunes a partir de las 8:00 a.m. en horario laboral.";
+            }
           } else {
-            scheduleReply = "Hoy domingo estamos cerrados; abrimos mañana lunes a las 8:00 a.m. ¿En qué podemos asistirle?";
+            scheduleReply = "Hoy domingo estamos cerrados. Le podemos recibir con mucho gusto en horario laboral mañana lunes a partir de las 8:00 a.m. (nunca antes ni después). ¿En qué podemos asistirle?";
           }
         } catch (errTime) {
           scheduleReply = "Nuestro horario regular en WES es de lunes a viernes de 8:00 a.m. a 6:00 p.m. y sábados hasta la 1:00 p.m. ¿En qué podemos servirle hoy?";

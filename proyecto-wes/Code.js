@@ -988,7 +988,11 @@ var WES_DEFAULT_SOFIA_PROMPT = "Eres Sofía, Asesora Técnica y Comercial Oficia
   "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
   "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
   "   - No inventes precios, disponibilidad ni productos inexistentes.\n" +
-  "   - NUNCA confirmes citas, visitas técnicas ni des por asentada una fecha u hora (ej. 'Martes a las 10', 'agendado') sin antes contar con un registro formal validado por el equipo humano. Ante propuestas de fecha u hora, responde que tomas nota de su preferencia y solicita su nombre, teléfono y ubicación para que un asesor valide disponibilidad y formalice la cita.\n\n" +
+  "   - POLÍTICA ESTRICTA DE HORARIO LABORAL Y CITAS:\n" +
+  "     * Horario laboral oficial de WES en Moca: Lunes a Viernes de 8:00 a.m. a 6:00 p.m. y Sábados de 8:00 a.m. a 1:00 p.m. Domingos cerrado.\n" +
+  "     * Si alguien escribe fuera de horario (a deshoras, en la noche, madrugada o domingos), infórmale amablemente que estamos fuera de horario laboral pero que lo podemos recibir en nuestro horario oficial (a partir de las 8:00 a.m.). NUNCA antes de las 8:00 a.m. ni después de la hora de cierre.\n" +
+  "     * Si el cliente propone una cita o visita técnica fuera del horario laboral (ej. un domingo, a las 7:00 a.m., o a las 8:00 p.m.), aclárale con cortesía y firmeza que SOLO se le puede recibir dentro de nuestro horario laboral (Lunes a Viernes 8:00 a.m. - 6:00 p.m. o Sábados 8:00 a.m. - 1:00 p.m.).\n" +
+  "     * NUNCA confirmes citas fijas de forma autónoma: toma nota de su solicitud y pídele su nombre y teléfono para que un asesor humano confirme en horario de trabajo.\n\n" +
   "5. EXCEPCIÓN DE AMPLIACIÓN:\n" +
   "   - Amplía la explicación con detalles técnicos ÚNICAMENTE cuando el usuario solicite explícitamente detalles (ej. \"explícame con más detalle\"), desglose técnico o advertencias de seguridad.\n\n" +
   "6. HORARIOS Y SEDE:\n" +
@@ -1233,12 +1237,24 @@ function queryGeminiChatHandler(data) {
       scheduleDetail = 'Domingo (Cerrado)';
     }
 
+    var nextOpenText = '';
+    if (dayOfWeek >= 1 && dayOfWeek <= 4) {
+      nextOpenText = 'mañana a las 8:00 a.m.';
+    } else if (dayOfWeek === 5) {
+      nextOpenText = 'mañana sábado a las 8:00 a.m. (hasta la 1:00 p.m.)';
+    } else if (dayOfWeek === 6) {
+      nextOpenText = 'el lunes a las 8:00 a.m.';
+    } else {
+      nextOpenText = 'mañana lunes a las 8:00 a.m.';
+    }
+
     var temporalContext = "\n\nINFORMACIÓN DE TIEMPO REAL (OFICIAL DE WES EN MOCA, REP. DOMINICANA):\n" +
       "- Fecha actual: " + dateFormatted + "\n" +
       "- Hora actual exacta: " + timeFormatted + " (Zona Horaria GMT-4 / Hora oficial de República Dominicana)\n" +
-      "- Estado operativo en este instante: " + (isOpenNow ? "ESTAMOS ABIERTOS Y LABORANDO" : "ESTAMOS CERRADOS EN ESTE MOMENTO") + "\n" +
-      "- Horario regular de WES: Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM | Domingos cerrado.\n" +
-      "- REGLA TEMPORAL: Cuando el usuario te pregunte la hora, qué hora es, o si están abiertos o cerrados, utiliza SIEMPRE estos datos exactos de República Dominicana y responde con naturalidad en máximo 2 frases.\n";
+      "- Estado operativo en este instante: " + (isOpenNow ? "ESTAMOS ABIERTOS Y LABORANDO" : "ESTAMOS FUERA DE HORARIO LABORAL / CERRADOS") + "\n" +
+      "- Próxima apertura oficial: " + nextOpenText + "\n" +
+      "- Horario regular de atención: Lunes a Viernes de 8:00 a.m. a 6:00 p.m. | Sábados de 8:00 a.m. a 1:00 p.m. | Domingos cerrado.\n" +
+      "- REGLA OBLIGATORIA DE CITAS Y DESHORAS: Si el usuario escribe fuera de horario laboral o pide una cita/reunión/visita fuera de este horario, indícale amablemente que estamos fuera de horario laboral pero que lo podemos recibir con gusto en nuestro horario de servicio (de " + nextOpenText + "). RECUERDA: Solo lo podemos recibir en horario laboral, NUNCA antes de las 8:00 a.m. ni después del cierre.\n";
     const augmentedPrompt = buildKnowledgeAugmentedPrompt_(config.systemPrompt + temporalContext, activeKnowledge);
 
     const candidateModels = [
