@@ -117,6 +117,8 @@ function doPost(e) {
         response = sendUserDirectMessageHandler(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+                  
+
       case 'request_auth_otp':
         response = handleRequestAuthOtp(payload.data || payload);
         break;
@@ -851,12 +853,25 @@ function procesarNuevoMensajeContacto(data) {
         </div>
       `;
 
-      MailApp.sendEmail({
-        to: CONFIG.COMPANY_EMAIL_GENERAL,
-        subject: subjectEmpresa,
-        htmlBody: htmlEmpresa,
-        replyTo: data.email
-      });
+            try {
+        GmailApp.sendEmail(CONFIG.COMPANY_EMAIL_GENERAL, subjectEmpresa, (data.message || ''), {
+          name: 'Portal WES (Notificación Interna)',
+          htmlBody: htmlEmpresa,
+          replyTo: data.email
+        });
+      } catch (empMailErr) {
+        console.warn('Alerta enviando copia interna a empresa:', empMailErr);
+        try {
+          MailApp.sendEmail({
+            to: CONFIG.COMPANY_EMAIL_GENERAL,
+            subject: subjectEmpresa,
+            htmlBody: htmlEmpresa,
+            replyTo: data.email
+          });
+        } catch (mErr) {
+          console.warn('MailApp a empresa también falló:', mErr);
+        }
+      }
 
       // 2. Correo de confirmación con el TICKET al cliente
       if (data.email) {
@@ -2012,29 +2027,31 @@ function sendTransactionalEmail_(email, subject, plainMessage, htmlContent) {
   const senderName = 'WES · Seguridad de cuenta';
   const replyToEmail = (typeof CONFIG !== 'undefined' && CONFIG.COMPANY_EMAIL_GENERAL) ? CONFIG.COMPANY_EMAIL_GENERAL : 'wes.inform@gmail.com';
   
-  // Preferir MailApp con replyTo para evitar que Gmail archive el auto-envío cuando origen y destino coinciden
+  // 1. Intentar con GmailApp (scope validado https://www.googleapis.com/auth/gmail.send)
   try {
-    MailApp.sendEmail({
-      to: email,
-      subject: subject,
-      body: plainMessage,
-      htmlBody: htmlContent,
+    GmailApp.sendEmail(email, subject, plainMessage, {
       name: senderName,
+      htmlBody: htmlContent,
       replyTo: replyToEmail
     });
-    return { success: true, provider: 'MailApp' };
-  } catch (mErr) {
-    console.warn('MailApp falló, intentando con GmailApp:', mErr);
+    console.log('Correo transaccional despachado exitosamente vía GmailApp a:', email);
+    return { success: true, provider: 'GmailApp' };
+  } catch (gErr) {
+    console.warn('GmailApp falló enviando correo transaccional, intentando con MailApp:', gErr);
     try {
-      GmailApp.sendEmail(email, subject, plainMessage, {
-        name: senderName,
+      MailApp.sendEmail({
+        to: email,
+        subject: subject,
+        body: plainMessage,
         htmlBody: htmlContent,
+        name: senderName,
         replyTo: replyToEmail
       });
-      return { success: true, provider: 'GmailApp' };
-    } catch (gErr) {
-      console.error('Error crítico enviando correo OTP:', gErr);
-      return { success: false, error: gErr.toString() };
+      console.log('Correo transaccional despachado vía MailApp a:', email);
+      return { success: true, provider: 'MailApp' };
+    } catch (mErr) {
+      console.error('Error crítico enviando correo OTP con ambos proveedores:', mErr);
+      return { success: false, error: 'GmailApp: ' + gErr.toString() + ' | MailApp: ' + mErr.toString() };
     }
   }
 }
@@ -2200,7 +2217,7 @@ function handleRequestAuthOtp(data) {
 
     const mailRes = sendTransactionalEmail_(email, subjectEmail, plainMsg, htmlEmail);
     if (!mailRes.success) {
-      return { success: false, message: 'No se pudo despachar el correo electrónico. Intente más tarde.' };
+      return { success: false, message: 'No se pudo despachar el correo electrónico: ' + (mailRes.error || 'Error de proveedor') };
     }
 
     return {

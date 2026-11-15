@@ -1213,173 +1213,184 @@ Moca, Provincia Espaillat, República Dominicana`;
       return this.verifyAndActivateAccount(email, code);
     },
 
-    // Solicitar código de 6 dígitos sin contraseña (para login o registro unificado)
+    // Solicitar código de 6 dígitos sin contraseña (backend criptográfico seguro)
     async requestAccessCode(email) {
       if (!email || !email.trim() || !email.includes("@")) {
         return { success: false, message: "Por favor ingresa un correo electrónico válido." };
       }
       const cleanEmail = email.trim().toLowerCase();
-      const existingUser = findUserByIdentifier(cleanEmail);
-      const isExisting = Boolean(existingUser);
-      const userName = existingUser ? existingUser.name : "";
-
-      const code = generate6DigitCode();
-      const now = Date.now();
-      const expiresAt = now + (10 * 60 * 1000); // 10 minutos de validez
+      const backendUrl = (typeof AppState !== "undefined" && AppState.backendUrl) ? AppState.backendUrl : BACKEND_URL_DEFAULT;
 
       try {
-        const authCodes = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
-        const prev = authCodes[cleanEmail];
-        let resendCount = (prev && prev.resendCount) ? prev.resendCount : 0;
-
-        // Control de reenvío: esperar 60 segundos
-        if (prev && (now - prev.createdAt) < 60000) {
-          const remainingSecs = Math.ceil((60000 - (now - prev.createdAt)) / 1000);
-          return {
-            success: false,
-            message: "Por favor espera " + remainingSecs + " segundos antes de solicitar otro código."
-          };
-        }
-
-        // Límite de solicitudes por correo (máximo 5)
-        if (resendCount >= 5) {
-          return {
-            success: false,
-            message: "Has alcanzado el límite de códigos para este correo hoy. Por favor contacta a soporte."
-          };
-        }
-
-        authCodes[cleanEmail] = {
-          code: code,
-          expiresAt: expiresAt,
-          createdAt: now,
-          attempts: 0,
-          resendCount: resendCount + 1,
-          isExisting: isExisting,
-          existingUser: existingUser ? { id: existingUser.id, name: existingUser.name, role: existingUser.role, isEmployee: existingUser.isEmployee } : null
+        const payload = {
+          action: "request_auth_otp",
+          data: {
+            email: cleanEmail,
+            purpose: "acceso"
+          }
         };
-        localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
-      } catch (e) {
-        console.warn("[UserAuth] Error guardando código en almacenamiento:", e);
-      }
 
-      // Enviar correo real con plantilla "WES · Código de acceso"
-      const emailRes = await sendMagicAccessCode(cleanEmail, code, userName, isExisting);
-      if (!emailRes.success) {
+        const response = await fetch(backendUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          return { success: false, message: "El servidor respondió con error HTTP " + response.status };
+        }
+
+        const result = await response.json().catch(() => null);
+        if (!result) {
+          return { success: false, message: "Respuesta inválida del servidor de autenticación." };
+        }
+
+        if (result.success === false) {
+          return { success: false, message: result.message || "No se pudo generar el código de acceso." };
+        }
+
+        // Guardar identificador de solicitud en almacenamiento de sesión
         try {
-          const authCodes = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
-          delete authCodes[cleanEmail];
-          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
+          const authSessions = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
+          authSessions[cleanEmail] = {
+            requestId: result.requestId || "",
+            email: cleanEmail,
+            createdAt: Date.now(),
+            isExisting: Boolean(result.isExisting)
+          };
+          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authSessions));
         } catch (e) {}
-        return {
-          success: false,
-          message: emailRes.message || "No pudimos enviar el correo en este momento. Por favor verifica tu conexión o intenta más tarde."
-        };
-      }
 
-      return {
-        success: true,
-        email: cleanEmail,
-        isExisting: isExisting,
-        codeDemo: code,
-        expiresInMinutes: 10,
-        message: "Hemos enviado un código de acceso de 6 dígitos a " + cleanEmail + ". Vence en 10 minutos."
-      };
+        return {
+          success: true,
+          email: cleanEmail,
+          requestId: result.requestId,
+          isExisting: result.isExisting,
+          expiresInMinutes: result.expiresInMinutes || 10,
+          message: result.message || ("Hemos enviado un código de acceso de 6 dígitos a " + cleanEmail)
+        };
+      } catch (err) {
+        console.error("[UserAuth] Error solicitando código al backend:", err);
+        return { success: false, message: "Error al conectar con el servidor: " + (err.message || err) };
+      }
     },
 
-    // Verificar código de 6 dígitos
-    verifyAccessCode(email, inputCode, remember = true) {
+    // Verificar código de 6 dígitos contra el backend (consumo atómico)
+    async verifyAccessCode(email, inputCode, remember = true) {
       if (!email || !inputCode) {
         return { success: false, message: "Por favor introduce el código de 6 dígitos." };
       }
       const cleanEmail = email.trim().toLowerCase();
       const cleanCode = String(inputCode).trim();
+      const backendUrl = (typeof AppState !== "undefined" && AppState.backendUrl) ? AppState.backendUrl : BACKEND_URL_DEFAULT;
+
+      let requestId = "";
+      try {
+        const authSessions = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
+        if (authSessions[cleanEmail] && authSessions[cleanEmail].requestId) {
+          requestId = authSessions[cleanEmail].requestId;
+        }
+      } catch (e) {}
 
       try {
-        const authCodes = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
-        const entry = authCodes[cleanEmail];
+        const payload = {
+          action: "verify_auth_otp",
+          data: {
+            email: cleanEmail,
+            code: cleanCode,
+            requestId: requestId,
+            purpose: "acceso"
+          }
+        };
 
-        if (!entry) {
+        const response = await fetch(backendUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          return { success: false, message: "El servidor respondió con error HTTP " + response.status };
+        }
+
+        const result = await response.json().catch(() => null);
+        if (!result) {
+          return { success: false, message: "Respuesta inválida del servidor al verificar el código." };
+        }
+
+        if (result.success === false) {
           return {
             success: false,
-            message: "No hay ninguna solicitud de acceso activa para este correo o el código ya fue utilizado."
+            expired: Boolean(result.expired),
+            message: result.message || "Código incorrecto."
           };
         }
 
-        // Control de intentos fallidos (máximo 5)
-        entry.attempts = (entry.attempts || 0) + 1;
-        if (entry.attempts > 5) {
-          delete authCodes[cleanEmail];
-          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
-          return {
-            success: false,
-            message: "Has superado el límite de 5 intentos incorrectos. El código ha sido invalidado por seguridad. Solicita uno nuevo."
-          };
-        }
+        // Limpiar solicitud consumida
+        try {
+          const authSessions = JSON.parse(localStorage.getItem(AUTH_CODES_KEY) || "{}");
+          delete authSessions[cleanEmail];
+          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authSessions));
+        } catch (e) {}
 
-        // Control de vencimiento (10 min)
-        if (Date.now() > entry.expiresAt) {
-          delete authCodes[cleanEmail];
-          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
-          return {
-            success: false,
-            expired: true,
-            message: "El código ha expirado (vence en 10 minutos). Haz clic en \"Reenviar código\" para recibir uno nuevo."
-          };
-        }
-
-        // Validación de dígitos
-        if (entry.code !== cleanCode) {
-          localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
-          const rem = 5 - entry.attempts;
-          return {
-            success: false,
-            message: "Código de 6 dígitos incorrecto. Te quedan " + rem + " intento" + (rem === 1 ? "" : "s") + "."
-          };
-        }
-
-        // CÓDIGO VÁLIDO: QUEMAR INMEDIATAMENTE (UN SOLO USO)
-        const wasExisting = entry.isExisting;
-        delete authCodes[cleanEmail];
-        localStorage.setItem(AUTH_CODES_KEY, JSON.stringify(authCodes));
-
-        // Limpiar cualquier revocación previa si existiera
+        // Limpiar lista de revocados si existiera
         try {
           const revoked = JSON.parse(localStorage.getItem(REVOKED_SESSIONS_KEY) || "[]");
           const cleanRevoked = revoked.filter(e => e !== cleanEmail);
           localStorage.setItem(REVOKED_SESSIONS_KEY, JSON.stringify(cleanRevoked));
         } catch (e) {}
 
-        // CASO A: Usuario existente (empleado o cliente registrado)
-        if (wasExisting) {
-          const user = findUserByIdentifier(cleanEmail);
-          if (user) {
-            if (user.isEmployee && typeof AdminAuth !== "undefined") {
-              try {
-                sessionStorage.setItem(AdminAuth.SESSION_KEY, JSON.stringify(user));
-              } catch (e) {}
-            }
-            const session = this.setSession(user, remember);
-            return {
-              success: true,
-              isNewUser: false,
-              user: session,
-              message: "¡Bienvenido/a de nuevo a WES, " + user.name + "!"
-            };
-          }
+        // Si es usuario nuevo
+        if (result.isNewUser) {
+          return {
+            success: true,
+            isNewUser: true,
+            email: cleanEmail,
+            message: result.message || "Correo verificado con éxito. Por favor completa tu nombre."
+          };
         }
 
-        // CASO B: Usuario nuevo verificado -> Requiere solo solicitar nombre para crear la cuenta definitiva
+        // Si es usuario existente
+        let userObj = result.user;
+        if (!userObj) {
+          userObj = findUserByIdentifier(cleanEmail);
+        }
+
+        if (userObj) {
+          if (userObj.isEmployee && typeof AdminAuth !== "undefined") {
+            try {
+              sessionStorage.setItem(AdminAuth.SESSION_KEY, JSON.stringify(userObj));
+            } catch (e) {}
+          }
+          const session = this.setSession(userObj, remember);
+          return {
+            success: true,
+            isNewUser: false,
+            user: session,
+            message: result.message || ("¡Bienvenido/a de nuevo a WES, " + (userObj.name || "") + "!")
+          };
+        }
+
+        // Fallback genérico
+        const fallbackSession = this.setSession({
+          id: "CLI-" + Date.now(),
+          name: cleanEmail.split("@")[0],
+          email: cleanEmail,
+          role: "cliente",
+          roleLabel: "Vista Cliente",
+          isEmployee: false
+        }, remember);
+
         return {
           success: true,
-          isNewUser: true,
-          email: cleanEmail,
-          message: "Correo verificado con éxito. Por favor indícanos tu nombre para completar tu acceso."
+          isNewUser: false,
+          user: fallbackSession,
+          message: "¡Bienvenido/a a WES!"
         };
 
       } catch (err) {
-        console.error("[UserAuth] Error al verificar código de acceso:", err);
-        return { success: false, message: "Error interno al verificar el código." };
+        console.error("[UserAuth] Error verificando código con backend:", err);
+        return { success: false, message: "Error al validar con el servidor: " + (err.message || err) };
       }
     },
 
