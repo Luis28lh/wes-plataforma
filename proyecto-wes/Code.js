@@ -2010,25 +2010,31 @@ function generateSecure6DigitCode_() {
 
 function sendTransactionalEmail_(email, subject, plainMessage, htmlContent) {
   const senderName = 'WES · Seguridad de cuenta';
+  const replyToEmail = (typeof CONFIG !== 'undefined' && CONFIG.COMPANY_EMAIL_GENERAL) ? CONFIG.COMPANY_EMAIL_GENERAL : 'wes.inform@gmail.com';
+  
+  // Preferir MailApp con replyTo para evitar que Gmail archive el auto-envío cuando origen y destino coinciden
   try {
-    GmailApp.sendEmail(email, subject, plainMessage, {
+    MailApp.sendEmail({
+      to: email,
+      subject: subject,
+      body: plainMessage,
+      htmlBody: htmlContent,
       name: senderName,
-      htmlBody: htmlContent
+      replyTo: replyToEmail
     });
-    return { success: true, provider: 'GmailApp' };
-  } catch (gErr) {
+    return { success: true, provider: 'MailApp' };
+  } catch (mErr) {
+    console.warn('MailApp falló, intentando con GmailApp:', mErr);
     try {
-      MailApp.sendEmail({
-        to: email,
-        subject: subject,
-        body: plainMessage,
+      GmailApp.sendEmail(email, subject, plainMessage, {
+        name: senderName,
         htmlBody: htmlContent,
-        name: senderName
+        replyTo: replyToEmail
       });
-      return { success: true, provider: 'MailApp' };
-    } catch (mErr) {
-      console.error('Error enviando correo OTP:', mErr);
-      return { success: false, error: mErr.toString() };
+      return { success: true, provider: 'GmailApp' };
+    } catch (gErr) {
+      console.error('Error crítico enviando correo OTP:', gErr);
+      return { success: false, error: gErr.toString() };
     }
   }
 }
@@ -2157,7 +2163,8 @@ function handleRequestAuthOtp(data) {
 
     // Redactar correo formal con remitente "WES · Seguridad de cuenta"
     const displayName = clientName || (isExisting ? 'Usuario de WES' : 'Nuevo Usuario');
-    const subjectEmail = 'WES · Código de acceso seguro: ' + rawCode;
+    const timeTag = Utilities.formatDate(new Date(), 'GMT-4', 'hh:mm:ss a');
+    const subjectEmail = 'WES · Tu código de acceso es ' + rawCode + ' [' + timeTag + ']';
     const plainMsg = 'WARN ELECTRICAL SERVICES (WES)\nMoca, República Dominicana\n\n' +
       'Hola ' + displayName + ',\n\n' +
       'Tu código de acceso de 6 dígitos para entrar o crear tu cuenta es:\n\n' +
