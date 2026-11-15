@@ -1840,7 +1840,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.85 (Build 85)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.86 (Build 86)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -2981,10 +2981,10 @@
                 <input type="text" id="magic-digit-6" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
               </div>
 
-              <div class="text-center mt-2">
-                <button type="button" onclick="handlePasteMagicCode()" class="inline-flex items-center space-x-1 text-[11px] font-semibold text-wes-blue hover:text-blue-800 transition">
-                  <i class="fas fa-paste text-xs"></i>
-                  <span>Pegar código desde el portapapeles</span>
+              <div class="text-center mt-2.5">
+                <button type="button" id="auth-paste-otp-btn" onclick="handlePasteMagicCode()" class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-wes-blue border border-blue-200 rounded-lg text-xs font-bold transition shadow-xs">
+                  <i class="fas fa-paste text-amber-500"></i>
+                  <span>Pegar código y entrar</span>
                 </button>
               </div>
             </div>

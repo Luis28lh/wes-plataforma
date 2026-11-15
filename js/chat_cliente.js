@@ -644,14 +644,14 @@ function setupChatEvents() {
     };
 
     appendBotMessage(`
-      <p class="font-bold text-slate-900 mb-1">🛠️ Registro Asistido de Solicitud Técnica</p>
-      <p class="text-slate-600 mb-2">Con gusto preparamos tu solicitud. Para ingresar tu orden directamente a nuestro sistema, por favor indícame:</p>
-      <div class="p-2.5 bg-blue-50/80 border border-blue-200 rounded-xl text-blue-950 space-y-1 mb-2">
+      <p class="font-bold text-slate-900 mb-1">🛠️ Asistencia y Soporte Técnico WES</p>
+      <p class="text-slate-700 mb-2 text-xs">Te voy a tomar el número y el nombre y la indicación del problema. El lunes uno de nuestros técnicos te estará atendiendo:</p>
+      <div class="p-2.5 bg-blue-50/80 border border-blue-200 rounded-xl text-blue-950 space-y-1 mb-2 text-xs">
         <div>1. <strong>Tu Nombre Completo</strong></div>
         <div>2. <strong>Tu Teléfono o WhatsApp</strong></div>
-        <div>3. <strong>Equipo y Falla</strong> que presenta</div>
+        <div>3. <strong>Equipo y Falla o Problema</strong> que presenta</div>
       </div>
-      <p class="text-[11px] text-slate-500">Puedes escribirlo todo en un solo mensaje. Ejemplo:<br><em>"Carlos Peña, 809-578-1234, Moca, mi inversor Trace no enciende."</em></p>
+      <p class="text-[11px] text-slate-500">Puedes escribir tus datos en un solo mensaje. Ejemplo:<br><em>"Carlos Peña, 809-578-1234, mi motor de portón no responde al control."</em></p>
     `);
   }
 
@@ -680,9 +680,9 @@ function setupChatEvents() {
       <div class="p-3 bg-white rounded-xl border border-amber-300 shadow-sm space-y-2">
         <div class="flex items-center space-x-1.5 font-bold text-amber-900 text-xs border-b border-amber-100 pb-1.5">
           <i class="fas fa-clipboard-check text-amber-600"></i>
-          <span>Borrador de Solicitud de Servicio Técnico</span>
+          <span>Confirmación de Datos para Soporte Técnico</span>
         </div>
-        <p class="text-[11px] text-slate-600">Por favor confirma los datos antes de ingresarlo al sistema:</p>
+        <p class="text-[11px] text-slate-600">Por favor confirma que tus datos estén correctos:</p>
         <div class="space-y-1 text-slate-700 text-xs">
           <div><span class="text-slate-400 font-bold">Cliente:</span> <strong>${escapeHtml(chatSession.ticketDraft.name)}</strong></div>
           <div><span class="text-slate-400 font-bold">Teléfono:</span> <strong>${escapeHtml(chatSession.ticketDraft.phone)}</strong></div>
@@ -691,7 +691,7 @@ function setupChatEvents() {
         <div class="pt-2 flex items-center space-x-2">
           <button type="button" onclick="confirmTicketDraft()" class="flex-1 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold text-xs transition shadow-xs flex items-center justify-center space-x-1 border border-wes-gold/40">
             <i class="fas fa-check text-wes-gold"></i>
-            <span>Confirmar e Ingresar Ticket</span>
+            <span>Confirmar y Enviar Datos</span>
           </button>
           <button type="button" onclick="cancelTicketDraft()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition">
             Cancelar
@@ -725,13 +725,15 @@ function setupChatEvents() {
         <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-950 space-y-2">
           <div class="flex items-center space-x-1.5 font-black text-emerald-800 text-xs">
             <i class="fas fa-check-circle text-emerald-600 text-sm"></i>
-            <span>¡Solicitud Registrada Exitosamente!</span>
+            <span>¡Datos Recibidos Correctamente!</span>
           </div>
-          <p class="text-xs">Tu orden ha sido ingresada en tiempo real al tablero de nuestros técnicos de taller con el código:</p>
-          <div class="p-2 bg-white rounded-lg border border-emerald-200 text-center font-mono font-black text-sm text-wes-blue">
-            ${escapeHtml(res.service.id)}
+          <p class="text-xs text-slate-800 leading-relaxed">
+            Hemos tomado tu nombre, tu número de teléfono y la indicación de tu requerimiento técnico.
+          </p>
+          <div class="p-2.5 bg-white rounded-lg border border-emerald-200 text-xs text-slate-800 font-semibold">
+            El lunes uno de nuestros técnicos te estará atendiendo para dar seguimiento directo a tu caso.
           </div>
-          <p class="text-[11px] text-emerald-800">Un técnico de WES se pondrá en contacto contigo a la brevedad para coordinar la revisión.</p>
+          <p class="text-[11px] text-emerald-800">Muchas gracias por comunicarte con Warn Electrical Services.</p>
         </div>
       `);
       chatSession.step = 'idle';

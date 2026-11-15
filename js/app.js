@@ -3059,7 +3059,7 @@ async function handleRequestAccessCodeSubmit(e) {
   }
 }
 
-// 2. CONFIGURACIÓN DE LAS 6 CAJAS DE ENTRADA OTP
+// 2. CONFIGURACIÓN DE LAS 6 CAJAS DE ENTRADA OTP (COPIA, PEGA Y AUTO-ENTRADA ULTRA-FÁCIL)
 function setupMagicOtpInputs() {
   const inputs = [
     document.getElementById('magic-digit-1'),
@@ -3070,15 +3070,50 @@ function setupMagicOtpInputs() {
     document.getElementById('magic-digit-6')
   ].filter(Boolean);
 
+  function checkAndAutoSubmitOtp() {
+    const fullCode = inputs.map(inp => (inp.value || '').trim()).join('');
+    if (fullCode.length === 6) {
+      setTimeout(() => {
+        handleVerifyAccessCodeSubmit();
+      }, 120);
+    }
+  }
+
+  function applyDigitsToInputs(digits) {
+    if (!digits) return;
+    const cleanDigits = String(digits).replace(/\D/g, '').slice(0, 6);
+    if (!cleanDigits) return;
+
+    for (let i = 0; i < 6; i++) {
+      if (inputs[i]) {
+        inputs[i].value = cleanDigits[i] || '';
+      }
+    }
+
+    const lastIdx = Math.min(cleanDigits.length - 1, inputs.length - 1);
+    if (inputs[lastIdx]) inputs[lastIdx].focus();
+
+    if (cleanDigits.length === 6) {
+      showToast('Código completado. Verificando...', 'info');
+      checkAndAutoSubmitOtp();
+    }
+  }
+
   inputs.forEach((input, index) => {
     input.value = '';
 
     input.oninput = () => {
       const val = input.value.replace(/\D/g, '');
+      if (val.length > 1) {
+        // En caso de que el móvil o autocompletado inserte varios dígitos de golpe
+        applyDigitsToInputs(val);
+        return;
+      }
       input.value = val.slice(0, 1);
       if (val && index < inputs.length - 1) {
         inputs[index + 1].focus();
       }
+      checkAndAutoSubmitOtp();
     };
 
     input.onkeydown = (e) => {
@@ -3090,21 +3125,7 @@ function setupMagicOtpInputs() {
     input.onpaste = (e) => {
       e.preventDefault();
       const rawText = (e.clipboardData || window.clipboardData)?.getData('text') || '';
-      const digits = rawText.replace(/\D/g, '').slice(0, 6);
-      if (digits.length > 0) {
-        for (let i = 0; i < 6; i++) {
-          if (inputs[i]) {
-            inputs[i].value = digits[i] || '';
-          }
-        }
-        const lastFilledIdx = Math.min(digits.length - 1, inputs.length - 1);
-        if (inputs[lastFilledIdx]) {
-          inputs[lastFilledIdx].focus();
-        }
-        if (digits.length === 6) {
-          showToast('Código de 6 dígitos pegado correctamente.', 'info');
-        }
-      }
+      applyDigitsToInputs(rawText);
     };
   });
 
@@ -3114,26 +3135,48 @@ function setupMagicOtpInputs() {
 }
 
 async function handlePasteMagicCode() {
+  const inputs = [
+    document.getElementById('magic-digit-1'),
+    document.getElementById('magic-digit-2'),
+    document.getElementById('magic-digit-3'),
+    document.getElementById('magic-digit-4'),
+    document.getElementById('magic-digit-5'),
+    document.getElementById('magic-digit-6')
+  ].filter(Boolean);
+
+  function applyDigits(cleanDigits) {
+    for (let i = 0; i < 6; i++) {
+      if (inputs[i]) {
+        inputs[i].value = cleanDigits[i] || '';
+      }
+    }
+    const lastInp = document.getElementById('magic-digit-' + Math.min(cleanDigits.length, 6));
+    if (lastInp) lastInp.focus();
+
+    if (cleanDigits.length === 6) {
+      showToast('Código de 6 dígitos pegado. Verificando y entrando...', 'success');
+      setTimeout(() => {
+        handleVerifyAccessCodeSubmit();
+      }, 120);
+    } else {
+      showToast('Se pegaron ' + cleanDigits.length + ' dígitos. Complete los 6.', 'info');
+    }
+  }
+
   try {
     if (navigator.clipboard && navigator.clipboard.readText) {
       const text = await navigator.clipboard.readText();
       const digits = text.replace(/\D/g, '').slice(0, 6);
       if (!digits) {
-        showToast('No se encontraron números en el portapapeles.', 'warning');
+        showToast('No se encontraron números en el portapapeles. Copia el código desde tu correo.', 'warning');
         return;
       }
-      for (let i = 1; i <= 6; i++) {
-        const inp = document.getElementById('magic-digit-' + i);
-        if (inp) inp.value = digits[i - 1] || '';
-      }
-      const lastInp = document.getElementById('magic-digit-' + Math.min(digits.length, 6));
-      if (lastInp) lastInp.focus();
-      showToast('Código de ' + digits.length + ' dígitos pegado.', 'success');
+      applyDigits(digits);
     } else {
-      showToast('Usa Ctrl+V o mantén presionado para pegar en las casillas.', 'info');
+      showToast('Mantén presionada una casilla o presiona Ctrl+V para pegar.', 'info');
     }
   } catch (e) {
-    showToast('Toca una casilla y presiona Pegar.', 'info');
+    showToast('Toca una casilla y selecciona Pegar.', 'info');
   }
 }
 

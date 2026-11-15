@@ -1003,11 +1003,14 @@ var WES_DEFAULT_SOFIA_PROMPT = "Eres Sofía, Asesora Técnica y Comercial Oficia
   "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
   "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
   "   - No inventes precios, disponibilidad ni productos inexistentes.\n" +
-  "   - POLÍTICA ESTRICTA DE HORARIO LABORAL Y CITAS:\n" +
+  "   - POLÍTICA ESTRICTA DE SERVICIO TÉCNICO, TICKETS Y HORARIO LABORAL:\n" +
+  "     * SOFÍA NO ESTÁ CAPACITADA PARA GENERAR TICKETS, EMITIR NÚMEROS DE TICKET NI ENVIARLE AL CLIENTE UN TICKET REALIZADO.\n" +
+  "     * NUNCA inventes números de ticket (como TK-..., TKT-... o SRV-...) ni digas \"tu ticket ha sido generado o resuelto\".\n" +
+  "     * Ante cualquier solicitud de soporte técnico, reparación o reporte de avería, mantén la función del chat exactamente hasta donde se solicitan los datos:\n" +
+  "       \"Te voy a tomar el número, el nombre y la indicación del problema. El lunes uno de nuestros técnicos te estará atendiendo.\" (si estamos en fin de semana/domingo) o \"uno de nuestros técnicos te estará atendiendo en horario laboral de servicio\".\n" +
   "     * Horario laboral oficial de WES en Moca: Lunes a Viernes de 8:00 a.m. a 6:00 p.m. y Sábados de 8:00 a.m. a 1:00 p.m. Domingos cerrado.\n" +
-  "     * Si alguien escribe fuera de horario (a deshoras, en la noche, madrugada o domingos), infórmale amablemente que estamos fuera de horario laboral pero que lo podemos recibir en nuestro horario oficial (a partir de las 8:00 a.m.). NUNCA antes de las 8:00 a.m. ni después de la hora de cierre.\n" +
-  "     * Si el cliente propone una cita o visita técnica fuera del horario laboral (ej. un domingo, a las 7:00 a.m., o a las 8:00 p.m.), aclárale con cortesía y firmeza que SOLO se le puede recibir dentro de nuestro horario laboral (Lunes a Viernes 8:00 a.m. - 6:00 p.m. o Sábados 8:00 a.m. - 1:00 p.m.).\n" +
-  "     * NUNCA confirmes citas fijas de forma autónoma: toma nota de su solicitud y pídele su nombre y teléfono para que un asesor humano confirme en horario de trabajo.\n\n" +
+  "     * Si alguien escribe fuera de horario (a deshoras, en la noche, madrugada o domingos), infórmale con amabilidad que estamos fuera de horario laboral pero que lo podemos recibir en nuestro horario oficial (a partir de las 8:00 a.m.). NUNCA antes de las 8:00 a.m. ni después de la hora de cierre.\n" +
+  "     * Si el cliente propone una cita o visita técnica fuera del horario laboral, aclárale con cortesía que SOLO se le puede recibir dentro de nuestro horario laboral. NUNCA confirmes citas fijas de forma autónoma.\n\n" +
   "5. EXCEPCIÓN DE AMPLIACIÓN:\n" +
   "   - Amplía la explicación con detalles técnicos ÚNICAMENTE cuando el usuario solicite explícitamente detalles (ej. \"explícame con más detalle\"), desglose técnico o advertencias de seguridad.\n\n" +
   "6. HORARIOS Y SEDE:\n" +
@@ -1269,7 +1272,8 @@ function queryGeminiChatHandler(data) {
       "- Estado operativo en este instante: " + (isOpenNow ? "ESTAMOS ABIERTOS Y LABORANDO" : "ESTAMOS FUERA DE HORARIO LABORAL / CERRADOS") + "\n" +
       "- Próxima apertura oficial: " + nextOpenText + "\n" +
       "- Horario regular de atención: Lunes a Viernes de 8:00 a.m. a 6:00 p.m. | Sábados de 8:00 a.m. a 1:00 p.m. | Domingos cerrado.\n" +
-      "- REGLA OBLIGATORIA DE CITAS Y DESHORAS: Si el usuario escribe fuera de horario laboral o pide una cita/reunión/visita fuera de este horario, indícale amablemente que estamos fuera de horario laboral pero que lo podemos recibir con gusto en nuestro horario de servicio (de " + nextOpenText + "). RECUERDA: Solo lo podemos recibir en horario laboral, NUNCA antes de las 8:00 a.m. ni después del cierre.\n";
+      "- REGLA OBLIGATORIA DE SERVICIO TÉCNICO Y TICKETS: Sofía NO está capacitada para generar tickets ni emitir números de ticket o resoluciones al cliente. Si el cliente reporta un problema técnico o pide asistencia, mantén la función del chat limitándote a pedir su nombre, número de teléfono y la indicación del problema, indicándole textualmente: 'Te voy a tomar el número y el nombre y la indicación del problema. El lunes uno de nuestros técnicos te estará atendiendo.' (o en horario laboral: 'uno de nuestros técnicos te estará atendiendo').\n" +
+      "- REGLA OBLIGATORIA DE CITAS Y DESHORAS: Si el usuario escribe fuera de horario laboral o pide una cita fuera de este horario, indícale amablemente que estamos fuera de horario laboral pero que lo podemos recibir con gusto en nuestro horario de servicio (de " + nextOpenText + "). RECUERDA: Solo lo podemos recibir en horario laboral, NUNCA antes de las 8:00 a.m. ni después del cierre.\n";
     const augmentedPrompt = buildKnowledgeAugmentedPrompt_(config.systemPrompt + temporalContext, activeKnowledge);
 
     const candidateModels = [
@@ -2192,18 +2196,19 @@ function handleRequestAuthOtp(data) {
       '• Si no lo solicitaste, ignora este mensaje.\n\n' +
       'Warn Electrical Services, SRL';
 
-    const htmlEmail = '<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:18px;background:#ffffff;box-shadow:0 4px 12px rgba(0,0,0,0.05);">' +
+    const htmlEmail = '<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:18px;background:#ffffff;box-shadow:0 4px 16px rgba(0,0,0,0.06);">' +
       '<div style="text-align:center;background:linear-gradient(135deg,#071836,#0D2A5C);color:#ffffff;padding:26px 20px;border-radius:14px;">' +
-      '<div style="display:inline-block;padding:4px 12px;background:rgba(255,255,255,0.12);border-radius:20px;margin-bottom:8px;font-size:11px;font-weight:bold;letter-spacing:1px;color:#F5B300;">WARN ELECTRICAL SERVICES (WES)</div>' +
+      '<div style="display:inline-block;padding:4px 14px;background:rgba(255,255,255,0.12);border-radius:20px;margin-bottom:8px;font-size:11px;font-weight:bold;letter-spacing:1px;color:#F5B300;">WARN ELECTRICAL SERVICES (WES)</div>' +
       '<h2 style="color:#ffffff;margin:4px 0 0 0;font-size:22px;letter-spacing:0.5px;font-weight:800;">Código de verificación</h2>' +
       '<p style="margin:6px 0 0 0;font-size:12px;color:#cbd5e1;">Moca, República Dominicana · Acceso Seguro</p>' +
       '</div>' +
       '<div style="padding:28px 16px;color:#334155;line-height:1.6;font-size:14px;">' +
       '<p style="margin:0 0 16px 0;">Hola, <strong>' + displayName + '</strong>:</p>' +
-      '<p style="margin:0 0 20px 0;color:#475569;">Usa este código de 6 dígitos para identificarte de forma segura en Warn Electrical Services:</p>' +
+      '<p style="margin:0 0 20px 0;color:#475569;">Usa este código de 6 dígitos para identificarte de forma segura en Warn Electrical Services. Puedes copiarlo tocando sobre él:</p>' +
       '<div style="text-align:center;margin:24px 0;padding:22px;background:#f8fafc;border:2px dashed #0D2A5C;border-radius:14px;">' +
-      '<span style="display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:6px;">Tu código de seis dígitos</span>' +
-      '<div style="font-family:Courier New,Courier,monospace;font-size:40px;font-weight:900;letter-spacing:8px;color:#0D2A5C;padding:4px 0;user-select:all;">' + rawCode + '</div>' +
+      '<span style="display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:8px;">Toca para seleccionar y copiar</span>' +
+      '<div style="font-family:Consolas,Monaco,Lucida Console,Courier New,monospace;font-size:42px;font-weight:900;letter-spacing:10px;color:#0D2A5C;padding:8px 12px;display:inline-block;background:#ffffff;border:1px solid #cbd5e1;border-radius:10px;user-select:all;-webkit-user-select:all;-moz-user-select:all;cursor:pointer;" title="Toca o haz clic para copiar">' + rawCode + '</div>' +
+      '<div style="margin-top:10px;font-size:12px;color:#0284c7;font-weight:bold;">📋 En la web, presiona el botón «Pegar código y entrar» para acceder de inmediato.</div>' +
       '</div>' +
       '<div style="background:#fffbeb;border:1px solid #fef3c7;border-left:4px solid #f59e0b;padding:12px 14px;border-radius:10px;font-size:12px;color:#92400e;margin-bottom:20px;">' +
       '⏱️ <strong>Vencimiento:</strong> Este código es válido durante <strong>10 minutos</strong> y es de un solo uso.<br>' +
