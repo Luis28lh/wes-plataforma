@@ -97,6 +97,46 @@ async function deployToAppsScript() {
   // Remover scripts externos que apuntan a js/... y poner el bundle completo
   htmlContent = htmlContent.replace(/<script src="js\/products\.js[^>]*><\/script>[\s\S]*?<script src="js\/pwa-install\.js[^>]*><\/script>/, scriptsBundle);
 
+  // 3. Determinar número de versión correlativo
+  console.log('\n3. Consultando historial de versiones en Apps Script...');
+  let nextVersionNumber = 81;
+  try {
+    const listVerRes = await fetch(`https://script.googleapis.com/v1/projects/${scriptId}/versions`, {
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    const listVerData = await listVerRes.json();
+    if (listVerData && listVerData.versions && listVerData.versions.length > 0) {
+      const maxVer = Math.max(...listVerData.versions.map(v => v.versionNumber || 0));
+      nextVersionNumber = maxVer + 1;
+    }
+  } catch (err) {
+    console.warn('No se pudo consultar historial de versiones, usando fallback:', err.message);
+  }
+
+  console.log(`ℹ Próxima versión calculada: #${nextVersionNumber} (v1.${nextVersionNumber})`);
+
+  // Actualizar versión en footer del HTML empaquetado y en los index.html locales
+  htmlContent = htmlContent.replace(/v1\.\d+\s*\(Build\s*\d+\)/gi, `v1.${nextVersionNumber} (Build ${nextVersionNumber})`);
+  
+  try {
+    const localIdxPath = path.join(__dirname, '..', '..', 'index.html');
+    if (fs.existsSync(localIdxPath)) {
+      let rootHtml = fs.readFileSync(localIdxPath, 'utf8');
+      rootHtml = rootHtml.replace(/v1\.\d+\s*\(Build\s*\d+\)/gi, `v1.${nextVersionNumber} (Build ${nextVersionNumber})`);
+      fs.writeFileSync(localIdxPath, rootHtml, 'utf8');
+      console.log(`✓ index.html raíz actualizado a v1.${nextVersionNumber} (Build ${nextVersionNumber})`);
+    }
+    const wesIdxPath = path.join(__dirname, '..', 'index.html');
+    if (fs.existsSync(wesIdxPath)) {
+      let subHtml = fs.readFileSync(wesIdxPath, 'utf8');
+      subHtml = subHtml.replace(/v1\.\d+\s*\(Build\s*\d+\)/gi, `v1.${nextVersionNumber} (Build ${nextVersionNumber})`);
+      fs.writeFileSync(wesIdxPath, subHtml, 'utf8');
+      console.log(`✓ proyecto-wes/index.html actualizado a v1.${nextVersionNumber} (Build ${nextVersionNumber})`);
+    }
+  } catch (wErr) {
+    console.warn('Aviso actualizando archivos locales:', wErr);
+  }
+
   // Leer Code.js y appsscript.json
   const codeJs = fs.readFileSync(path.join(ROOT_DIR, 'Code.js'), 'utf8');
   const appsscriptJson = fs.readFileSync(path.join(ROOT_DIR, 'appsscript.json'), 'utf8');
@@ -147,7 +187,7 @@ async function deployToAppsScript() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      description: 'Publicación Web App v1.72 - Sincronización Completa de Módulos y Códigos de Acceso'
+      description: `Producción Web App v1.${nextVersionNumber} (Build ${nextVersionNumber}) - WES`
     })
   });
 
@@ -170,7 +210,7 @@ async function deployToAppsScript() {
         scriptId: scriptId,
         versionNumber: versionNumber,
         manifestFileName: 'appsscript',
-        description: 'Producción Web WES v1.72 - Módulos Unificados y Acceso 6 Dígitos'
+        description: `Producción Web WES v1.${versionNumber} (Build ${versionNumber})`
       }
     })
   });
