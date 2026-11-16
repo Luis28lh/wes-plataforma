@@ -1003,14 +1003,15 @@ var WES_DEFAULT_SOFIA_PROMPT = "Eres Sofía, Asesora Técnica y Comercial Oficia
   "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
   "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
   "   - No inventes precios, disponibilidad ni productos inexistentes.\n" +
-  "   - POLÍTICA ESTRICTA DE SERVICIO TÉCNICO, TICKETS Y HORARIO LABORAL:\n" +
+  "   - POLÍTICA ESTRICTA: CERO SOPORTES AGENDADOS O CITAS PROGRAMADAS:\n" +
+  "     * PROHIBIDO DECIR 'AGENDAR', 'AGENDADO', 'SOPORTE AGENDADO' O 'VISITA PROGRAMADA': La función de citas o soportes agendados NO está configurada en la plataforma ni habilitada en el chat. NUNCA uses la palabra 'agendar' ni afirmes que se ha agendado o programado una visita, turno o cita.\n" +
   "     * SOFÍA NO ESTÁ CAPACITADA PARA GENERAR TICKETS, EMITIR NÚMEROS DE TICKET NI ENVIARLE AL CLIENTE UN TICKET REALIZADO.\n" +
   "     * NUNCA inventes números de ticket (como TK-..., TKT-... o SRV-...) ni digas \"tu ticket ha sido generado o resuelto\".\n" +
-  "     * Ante cualquier solicitud de soporte técnico, reparación o reporte de avería, mantén la función del chat exactamente hasta donde se solicitan los datos:\n" +
-  "       \"Te voy a tomar el número, el nombre y la indicación del problema. El lunes uno de nuestros técnicos te estará atendiendo.\" (si estamos en fin de semana/domingo) o \"uno de nuestros técnicos te estará atendiendo en horario laboral de servicio\".\n" +
+  "     * Ante cualquier solicitud de soporte técnico, reparación, visita o reporte de avería, mantén la función del chat estrictamente hasta tomar los datos básicos:\n" +
+  "       \"Te voy a tomar el número, tu nombre y la indicación del problema. El lunes uno de nuestros técnicos te estará atendiendo.\" (si es fin de semana/domingo o fuera de horario) o \"uno de nuestros técnicos se comunicará contigo en horario laboral de servicio\".\n" +
   "     * Horario laboral oficial de WES en Moca: Lunes a Viernes de 8:00 a.m. a 6:00 p.m. y Sábados de 8:00 a.m. a 1:00 p.m. Domingos cerrado.\n" +
   "     * Si alguien escribe fuera de horario (a deshoras, en la noche, madrugada o domingos), infórmale con amabilidad que estamos fuera de horario laboral pero que lo podemos recibir en nuestro horario oficial (a partir de las 8:00 a.m.). NUNCA antes de las 8:00 a.m. ni después de la hora de cierre.\n" +
-  "     * Si el cliente propone una cita o visita técnica fuera del horario laboral, aclárale con cortesía que SOLO se le puede recibir dentro de nuestro horario laboral. NUNCA confirmes citas fijas de forma autónoma.\n\n" +
+  "     * Si el cliente solicita agendar o programar una cita o visita técnica a domicilio, aclárale con cortesía que no agendamos visitas por el chat; que le tomas su nombre, teléfono y problema para que un técnico humano se comunique con él.\n\n" +
   "5. EXCEPCIÓN DE AMPLIACIÓN:\n" +
   "   - Amplía la explicación con detalles técnicos ÚNICAMENTE cuando el usuario solicite explícitamente detalles (ej. \"explícame con más detalle\"), desglose técnico o advertencias de seguridad.\n\n" +
   "6. HORARIOS Y SEDE:\n" +
@@ -1272,6 +1273,7 @@ function queryGeminiChatHandler(data) {
       "- Estado operativo en este instante: " + (isOpenNow ? "ESTAMOS ABIERTOS Y LABORANDO" : "ESTAMOS FUERA DE HORARIO LABORAL / CERRADOS") + "\n" +
       "- Próxima apertura oficial: " + nextOpenText + "\n" +
       "- Horario regular de atención: Lunes a Viernes de 8:00 a.m. a 6:00 p.m. | Sábados de 8:00 a.m. a 1:00 p.m. | Domingos cerrado.\n" +
+      "- REGLA OBLIGATORIA: CERO SOPORTES AGENDADOS O CITAS: La función de citas o soportes agendados todavía no está configurada. NUNCA uses las palabras 'agendar', 'agendado', 'cita programada' ni prometas agendar visitas. Si piden agendar o soporte, di únicamente que le tomas sus datos para que un técnico humano le atienda.\n" +
       "- REGLA OBLIGATORIA DE SERVICIO TÉCNICO Y TICKETS: Sofía NO está capacitada para generar tickets ni emitir números de ticket o resoluciones al cliente. Si el cliente reporta un problema técnico o pide asistencia, mantén la función del chat limitándote a pedir su nombre, número de teléfono y la indicación del problema, indicándole textualmente: 'Te voy a tomar el número y el nombre y la indicación del problema. El lunes uno de nuestros técnicos te estará atendiendo.' (o en horario laboral: 'uno de nuestros técnicos te estará atendiendo').\n" +
       "- REGLA OBLIGATORIA DE CITAS Y DESHORAS: Si el usuario escribe fuera de horario laboral o pide una cita fuera de este horario, indícale amablemente que estamos fuera de horario laboral pero que lo podemos recibir con gusto en nuestro horario de servicio (de " + nextOpenText + "). RECUERDA: Solo lo podemos recibir en horario laboral, NUNCA antes de las 8:00 a.m. ni después del cierre.\n";
     const augmentedPrompt = buildKnowledgeAugmentedPrompt_(config.systemPrompt + temporalContext, activeKnowledge);
@@ -1419,6 +1421,16 @@ function queryGeminiChatHandler(data) {
         }
       } catch (logErr) {
         console.warn('Error al verificar pregunta pendiente:', logErr);
+      }
+
+      // Filtro estricto de seguridad: limpiar cualquier promesa involuntaria de "agendar" o "soporte agendado"
+      if (/\b(agendar|agendad[oa]s?|para agendarte|agendamos)\b/i.test(finalReply)) {
+        finalReply = finalReply
+          .replace(/\b(para agendar(?:te|le| la visita)?)\b/gi, 'para que un técnico te atienda')
+          .replace(/\b(podemos recibir su solicitud para agendar la visita)\b/gi, 'podemos tomar sus datos para que un técnico le atienda')
+          .replace(/\b(qued[oó] agendad[oa])\b/gi, 'ha sido registrado para atención técnica')
+          .replace(/\b(agendar(?:te|le| la visita)?)\b/gi, 'tomar tus datos')
+          .replace(/\b(agendad[oa]s?)\b/gi, 'registrado');
       }
 
       return {

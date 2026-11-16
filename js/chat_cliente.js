@@ -357,7 +357,7 @@ function setupChatEvents() {
     "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
     "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
     "   - No inventes precios, disponibilidad ni productos inexistentes.\n" +
-  "   - NUNCA confirmes citas, visitas técnicas ni des por asentada una fecha u hora (ej. 'Martes a las 10', 'agendado') sin antes contar con un registro formal validado por el equipo humano. Ante propuestas de fecha u hora, responde que tomas nota de su preferencia y solicita su nombre, teléfono y ubicación para que un asesor valide disponibilidad y formalice la cita.\n\n" +
+  "   - POLÍTICA ESTRICTA: CERO SOPORTES AGENDADOS O CITAS: La función de citas o soportes agendados NO está configurada en la plataforma. NUNCA uses palabras como 'agendar', 'agendado' ni prometas fechas fijas. Ante cualquier reporte o solicitud de soporte, mantén la función del chat estrictamente hasta pedir su nombre, número de teléfono y el problema para que un técnico humano le atienda en horario laboral.\n\n" +
     "5. EXCEPCIÓN DE AMPLIACIÓN:\n" +
     "   - Amplía la explicación con detalles técnicos ÚNICAMENTE cuando el usuario solicite explícitamente detalles (ej. \"explícame con más detalle\"), desglose técnico o advertencias de seguridad.\n\n" +
     "6. HORARIOS Y SEDE:\n" +
@@ -932,9 +932,20 @@ function setupChatEvents() {
       removeTypingIndicator();
 
       if (aiResult && aiResult.ok && aiResult.reply) {
+        // Limpieza de seguridad contra términos de citas o soporte agendado no configurado
+        let sanitizedReply = aiResult.reply;
+        if (/\b(agendar|agendad[oa]s?|para agendarte|agendamos)\b/i.test(sanitizedReply)) {
+          sanitizedReply = sanitizedReply
+            .replace(/\b(para agendar(?:te|le| la visita)?)\b/gi, 'para que un técnico te atienda')
+            .replace(/\b(podemos recibir su solicitud para agendar la visita)\b/gi, 'podemos tomar sus datos para que un técnico le atienda')
+            .replace(/\b(qued[oó] agendad[oa])\b/gi, 'ha sido registrado para atención técnica')
+            .replace(/\b(agendar(?:te|le| la visita)?)\b/gi, 'tomar tus datos')
+            .replace(/\b(agendad[oa]s?)\b/gi, 'registrado');
+        }
+
         // Respuesta puramente conversacional en burbuja limpia, SIN botones externos (MÁXIMO 2 LÍNEAS)
         appendBotMessage(`
-          <div class="leading-relaxed text-slate-800 text-xs">${escapeHtml(aiResult.reply).replace(/\n\n/g, '<br>').replace(/\n/g, '<br>')}</div>
+          <div class="leading-relaxed text-slate-800 text-xs">${escapeHtml(sanitizedReply).replace(/\n\n/g, '<br>').replace(/\n/g, '<br>')}</div>
         `);
         
         // Actualizar memoria conversacional con rol user y model
