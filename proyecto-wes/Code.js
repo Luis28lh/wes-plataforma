@@ -117,6 +117,26 @@ function doPost(e) {
         response = sendUserDirectMessageHandler(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+      case 'list_registered_clients_admin':
+        response = listRegisteredClientsAdminHandler(payload.adminToken, payload.userEmail);
+        break;
+
+      case 'update_client_admin':
+        response = updateClientAdminHandler(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'save_push_subscription':
+        response = savePushSubscriptionHandler(payload.data);
+        break;
+
+      case 'remove_push_subscription':
+        response = removePushSubscriptionHandler(payload.data);
+        break;
+
+      case 'mark_message_read_user':
+        response = markMessageReadUserHandler(payload.messageId, payload.userEmail);
+        break;
+
                   
 
       case 'request_auth_otp':
@@ -1866,6 +1886,260 @@ function answerAndTrainSofiaHandler(data, adminToken, userEmail) {
  * =========================================================================
  */
 
+
+/**
+ * =========================================================================
+ * GESTIÓN DE SUSCRIPCIONES PUSH WEB (WES PWA PUSH)
+ * =========================================================================
+ */
+function getPushSubscriptionsSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Push_Subscriptions');
+  if (!sheet) {
+    sheet = ss.insertSheet('Push_Subscriptions');
+    sheet.appendRow([
+      'ID_Sub', 'User_ID', 'Email', 'Endpoint', 'P256DH', 'Auth', 
+      'UserAgent', 'DeviceType', 'Status', 'Created_At', 'Updated_At'
+    ]);
+    sheet.getRange(1, 1, 1, 11).setFontWeight('bold').setBackground('#0369a1').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function savePushSubscriptionHandler(data) {
+  try {
+    if (!data || !data.endpoint || !data.keys || !data.keys.p256dh || !data.keys.auth) {
+      return { success: false, message: 'Datos de suscripción incompletos.' };
+    }
+
+    const sheet = getPushSubscriptionsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const endpoint = String(data.endpoint).trim();
+    const email = String(data.email || '').toLowerCase().trim();
+    const userId = String(data.userId || '').trim();
+    const p256dh = String(data.keys.p256dh).trim();
+    const auth = String(data.keys.auth).trim();
+    const userAgent = String(data.userAgent || '').slice(0, 255);
+    const deviceType = String(data.deviceType || (userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'));
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    let existingRowIndex = -1;
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][3]).trim() === endpoint) {
+        existingRowIndex = i + 1;
+        break;
+      }
+    }
+
+    if (existingRowIndex > 0) {
+      // Actualizar registro existente
+      sheet.getRange(existingRowIndex, 2).setValue(userId || rows[existingRowIndex - 1][1]);
+      sheet.getRange(existingRowIndex, 3).setValue(email || rows[existingRowIndex - 1][2]);
+      sheet.getRange(existingRowIndex, 5).setValue(p256dh);
+      sheet.getRange(existingRowIndex, 6).setValue(auth);
+      sheet.getRange(existingRowIndex, 9).setValue('ACTIVO');
+      sheet.getRange(existingRowIndex, 11).setValue(now);
+    } else {
+      // Insertar nueva suscripción
+      const subId = 'SUB-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random() * 899 + 100);
+      sheet.appendRow([
+        subId, userId, email, endpoint, p256dh, auth,
+        userAgent, deviceType, 'ACTIVO', now, now
+      ]);
+    }
+
+    return { success: true, message: 'Dispositivo suscrito a notificaciones exitosamente.' };
+  } catch (err) {
+    return { success: false, message: 'Error guardando suscripción push: ' + err.toString() };
+  }
+}
+
+function removePushSubscriptionHandler(data) {
+  try {
+    if (!data || !data.endpoint) {
+      return { success: false, message: 'Endpoint requerido.' };
+    }
+    const sheet = getPushSubscriptionsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const endpoint = String(data.endpoint).trim();
+
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][3]).trim() === endpoint) {
+        sheet.getRange(i + 1, 9).setValue('DESVINCULADO');
+        sheet.getRange(i + 1, 11).setValue(Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss'));
+        break;
+      }
+    }
+    return { success: true, message: 'Suscripción desvinculada.' };
+  } catch (err) {
+    return { success: false, message: 'Error: ' + err.toString() };
+  }
+}
+
+function countActivePushDevicesForUser_(userId, userEmail) {
+  try {
+    const sheet = getPushSubscriptionsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    let count = 0;
+    const cleanId = String(userId || '').trim();
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+
+    for (let i = 1; i < rows.length; i++) {
+      const rUid = String(rows[i][1]).trim();
+      const rEmail = String(rows[i][2]).toLowerCase().trim();
+      const rStatus = String(rows[i][8]).toUpperCase().trim();
+
+      if (rStatus === 'ACTIVO') {
+        if ((cleanId && rUid === cleanId) || (cleanEmail && rEmail === cleanEmail)) {
+          count++;
+        }
+      }
+    }
+    return count;
+  } catch (e) {
+    return 0;
+  }
+}
+
+/**
+ * =========================================================================
+ * GESTIÓN DE USUARIOS REGISTRADOS PARA EL PANEL ADMINISTRATIVO
+ * =========================================================================
+ */
+function listRegisteredClientsAdminHandler(adminToken, userEmail) {
+  try {
+    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+
+    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
+      return { success: false, message: 'Acceso denegado: solo administradores autorizados.' };
+    }
+
+    const sheet = getClientsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const clients = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      const id = String(r[0] || '').trim();
+      const name = String(r[1] || '').trim();
+      const email = String(r[2] || '').toLowerCase().trim();
+      if (!email) continue;
+
+      const phone = String(r[3] || '').trim();
+      const role = String(r[4] || 'cliente').trim();
+      const roleLabel = String(r[5] || 'Vista Cliente').trim();
+      const isEmployee = Boolean(r[6]);
+      const createdAt = r[7] ? Utilities.formatDate(new Date(r[7]), 'GMT-4', "yyyy-MM-dd'T'HH:mm:ss'Z'") : '';
+      const lastLogin = r[8] ? Utilities.formatDate(new Date(r[8]), 'GMT-4', "yyyy-MM-dd HH:mm:ss") : 'Sin accesos';
+      const status = String(r[9] || 'ACTIVO').toUpperCase().trim();
+      const pushCount = countActivePushDevicesForUser_(id, email);
+
+      clients.push({
+        id: id || ('CLI-' + i),
+        name: name || 'Usuario',
+        email: email,
+        phone: phone,
+        role: role,
+        roleLabel: roleLabel,
+        isEmployee: isEmployee,
+        createdAt: createdAt,
+        lastLogin: lastLogin,
+        status: status,
+        verified: true, // Todas las cuentas en Clientes provienen de verificación OTP
+        pushDevicesCount: pushCount
+      });
+    }
+
+    return {
+      success: true,
+      count: clients.length,
+      clients: clients
+    };
+  } catch (err) {
+    return { success: false, message: 'Error consultando usuarios: ' + err.toString() };
+  }
+}
+
+function updateClientAdminHandler(data, adminToken, userEmail) {
+  try {
+    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+
+    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
+      return { success: false, message: 'Acceso denegado.' };
+    }
+
+    if (!data || (!data.email && !data.id)) {
+      return { success: false, message: 'Identificador de usuario requerido.' };
+    }
+
+    const sheet = getClientsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const targetEmail = String(data.email || '').toLowerCase().trim();
+    const targetId = String(data.id || '').trim();
+
+    let targetRowIndex = -1;
+    for (let i = 1; i < rows.length; i++) {
+      if ((targetEmail && String(rows[i][2]).toLowerCase().trim() === targetEmail) ||
+          (targetId && String(rows[i][0]).trim() === targetId)) {
+        targetRowIndex = i + 1;
+        break;
+      }
+    }
+
+    if (targetRowIndex < 0) {
+      return { success: false, message: 'Usuario no encontrado en la base de datos.' };
+    }
+
+    if (data.role) {
+      sheet.getRange(targetRowIndex, 5).setValue(data.role);
+      const roleLabels = {
+        cliente: 'Vista Cliente',
+        tecnico_interno: 'Técnico Interno WES',
+        tecnico_externo: 'Técnico Externo',
+        administrador: 'Administrador WES'
+      };
+      sheet.getRange(targetRowIndex, 6).setValue(roleLabels[data.role] || data.role);
+      sheet.getRange(targetRowIndex, 7).setValue(data.role !== 'cliente');
+    }
+
+    if (data.status) {
+      sheet.getRange(targetRowIndex, 10).setValue(String(data.status).toUpperCase().trim());
+    }
+
+    return { success: true, message: 'Usuario actualizado correctamente.' };
+  } catch (err) {
+    return { success: false, message: 'Error actualizando usuario: ' + err.toString() };
+  }
+}
+
+function markMessageReadUserHandler(messageId, userEmail) {
+  try {
+    if (!messageId) return { success: false, message: 'ID de mensaje requerido.' };
+    const sheet = getCustomerMessagesSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]) === String(messageId)) {
+        // Verificar destinatario
+        const targetEmail = String(rows[i][2] || '').toLowerCase().trim();
+        if (cleanEmail && targetEmail !== cleanEmail && targetEmail !== 'todos' && targetEmail !== 'all') {
+          return { success: false, message: 'No autorizado para marcar este mensaje.' };
+        }
+        sheet.getRange(i + 1, 8).setValue('LEIDO');
+        break;
+      }
+    }
+    return { success: true, message: 'Mensaje marcado como leído.' };
+  } catch (err) {
+    return { success: false, message: err.toString() };
+  }
+}
+
 function getCustomerMessagesSheet_() {
   const ss = getOrCreateDatabase();
   let sheet = ss.getSheetByName('Mensajes_Directos_Clientes');
@@ -1937,16 +2211,26 @@ function sendUserDirectMessageHandler(data, adminToken, userEmail) {
     const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
     const sender = data.sender || 'Ing. Luis Lizardo · WES';
 
+    const targetUserId = data.targetUserId || '';
+    const targetEmail = String(data.targetEmail).toLowerCase().trim();
+
     sheet.appendRow([
       id,
       now,
-      String(data.targetEmail).toLowerCase().trim(),
+      targetEmail,
       sender,
       data.subject || 'Mensaje de WES',
       data.content.trim(),
       data.suggestedPrompt || 'Hola, deseo consultar sobre este mensaje.',
-      'activo'
+      'NO_LEIDO',
+      targetUserId // Columna 9: ID permanente del usuario
     ]);
+
+    // Registrar aviso Push si el usuario tiene dispositivos registrados
+    let pushCount = 0;
+    try {
+      pushCount = countActivePushDevicesForUser_(targetUserId, targetEmail);
+    } catch(pErr) {}
 
     // Opcional: Notificar por correo al cliente si tiene habilitado envío
     if (data.sendEmailCopy && data.targetEmail.includes('@')) {

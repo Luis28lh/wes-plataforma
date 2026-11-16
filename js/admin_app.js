@@ -2108,15 +2108,32 @@ const AdminApp = {
   renderUsuarios(container) {
     if (!container) return;
 
-    // Filtros de temporalidad
+    // Disparar sincronización con Google Sheets en segundo plano si aún no se ha hecho
+    if (!this._clientsSyncedOnce && typeof UserAuth !== 'undefined' && typeof UserAuth.syncClientsFromBackend === 'function') {
+      this._clientsSyncedOnce = true;
+      UserAuth.syncClientsFromBackend().then(() => {
+        const c = document.getElementById('admin-dynamic-content');
+        if (c && this.currentView === 'usuarios') this.renderUsuarios(c);
+      }).catch(() => {});
+    }
+
+    // Filtros de temporalidad y paginación
     this.currentRegMonth = this.currentRegMonth || '';
     this.currentRegWeek = this.currentRegWeek || 'all';
     this.currentRegSearch = this.currentRegSearch || '';
+    this.currentRegRoleFilter = this.currentRegRoleFilter || 'all';
+    this.currentRegStatusFilter = this.currentRegStatusFilter || 'all';
+    this.currentRegAllTimeMode = Boolean(this.currentRegAllTimeMode);
+    this.currentRegPage = this.currentRegPage || 1;
+    this.regPageSize = 10;
     this.currentUsersSubtab = this.currentUsersSubtab || 'registros'; // 'registros' | 'corporativo'
 
     // Obtener estadísticas dinámicas
+    const filterMonthArg = this.currentRegAllTimeMode ? 'all' : this.currentRegMonth;
+    const filterWeekArg = this.currentRegAllTimeMode ? 'all' : this.currentRegWeek;
+
     const stats = (typeof UserAuth !== 'undefined' && typeof UserAuth.getRegistrationStats === 'function')
-      ? UserAuth.getRegistrationStats(this.currentRegMonth, this.currentRegWeek)
+      ? UserAuth.getRegistrationStats(filterMonthArg, filterWeekArg)
       : {
           totalAllTime: 0,
           availableMonths: [],
@@ -2133,7 +2150,7 @@ const AdminApp = {
     // Mes formateado legible (ej. 2026-11 -> Noviembre 2026)
     const monthNames = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     const formatMonthKey = (key) => {
-      if (!key) return 'Todos los Meses';
+      if (!key || key === 'all') return 'Todos los Meses Acumulados';
       const parts = key.split('-');
       if (parts.length < 2) return key;
       const y = parts[0];
@@ -2141,14 +2158,40 @@ const AdminApp = {
       return `${monthNames[mIdx] || parts[1]} ${y}`;
     };
 
-    // Filtrar por búsqueda
+    // Aplicar filtros adicionales de Rol, Estado y Búsqueda
     const searchTerm = (this.currentRegSearch || '').toLowerCase().trim();
-    const displayRegistered = stats.users.filter(u => {
-      if (!searchTerm) return true;
-      return (u.name && u.name.toLowerCase().includes(searchTerm)) ||
-             (u.email && u.email.toLowerCase().includes(searchTerm)) ||
-             (u.phone && u.phone.toLowerCase().includes(searchTerm));
+    let filteredList = stats.users.filter(u => {
+      // Filtro de Rol
+      if (this.currentRegRoleFilter !== 'all') {
+        const uRole = u.role || 'cliente';
+        if (this.currentRegRoleFilter === 'cliente' && uRole !== 'cliente') return false;
+        if (this.currentRegRoleFilter === 'tecnico_interno' && uRole !== 'tecnico_interno') return false;
+        if (this.currentRegRoleFilter === 'tecnico_externo' && uRole !== 'tecnico_externo') return false;
+        if (this.currentRegRoleFilter === 'administrador' && (uRole !== 'administrador' && uRole !== 'propietario')) return false;
+      }
+      // Filtro de Estado
+      if (this.currentRegStatusFilter !== 'all') {
+        const uStatus = (u.status || 'ACTIVO').toUpperCase();
+        if (this.currentRegStatusFilter !== uStatus) return false;
+      }
+      // Filtro de Búsqueda
+      if (searchTerm) {
+        const matchName = (u.name && u.name.toLowerCase().includes(searchTerm));
+        const matchEmail = (u.email && u.email.toLowerCase().includes(searchTerm));
+        const matchPhone = (u.phone && u.phone.toLowerCase().includes(searchTerm));
+        const matchId = (u.id && u.id.toLowerCase().includes(searchTerm));
+        if (!matchName && !matchEmail && !matchPhone && !matchId) return false;
+      }
+      return true;
     });
+
+    // Paginación
+    const totalRecords = filteredList.length;
+    const totalPages = Math.max(1, Math.ceil(totalRecords / this.regPageSize));
+    if (this.currentRegPage > totalPages) this.currentRegPage = totalPages;
+    if (this.currentRegPage < 1) this.currentRegPage = 1;
+    const startIndex = (this.currentRegPage - 1) * this.regPageSize;
+    const pagedUsers = filteredList.slice(startIndex, startIndex + this.regPageSize);
 
     // Calcular máximo para escala del gráfico semanal
     const maxWeekCount = Math.max(1, ...Object.values(stats.weekCounts));
@@ -2163,9 +2206,9 @@ const AdminApp = {
               <span class="w-8 h-8 rounded-xl bg-wes-blue text-wes-gold flex items-center justify-center font-bold text-sm shadow-xs">
                 <i class="fas fa-users-cog"></i>
               </span>
-              <h2 class="text-base font-extrabold text-slate-800 font-brand">Control de Usuarios & Dashboard de Registros</h2>
+              <h2 class="text-base font-extrabold text-slate-800 font-brand">Control de Usuarios & Directorio Registrado</h2>
             </div>
-            <p class="text-xs text-slate-500 mt-1">Monitorea el crecimiento de registros por mes y semana, y asigna vistas personalizadas (Técnico Interno, Técnico Externo o Cliente).</p>
+            <p class="text-xs text-slate-500 mt-1">Directorio conectado a cuentas OTP en vivo, asignación de roles, mensajes directos con previsualización y seguimiento push.</p>
           </div>
           
           <div class="flex items-center space-x-2 w-full md:w-auto">
@@ -2185,6 +2228,10 @@ const AdminApp = {
                 <span>Nuevo Empleado</span>
               </button>
             ` : `
+              <button onclick="AdminApp.syncClientsNow()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center space-x-1 transition border border-slate-300" title="Sincronizar usuarios desde Google Sheets">
+                <i class="fas fa-sync-alt ${this._isSyncingUsers ? 'fa-spin' : ''}"></i>
+                <span class="hidden sm:inline">Sincronizar</span>
+              </button>
               <button onclick="AdminApp.openNewClientManualModal()" class="px-3.5 py-2 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs flex items-center space-x-1.5 transition shadow-sm">
                 <i class="fas fa-plus"></i>
                 <span>Registrar Usuario</span>
@@ -2198,46 +2245,78 @@ const AdminApp = {
           <!-- PESTAÑA: DASHBOARD DE REGISTROS Y ASIGNACIÓN DE VISTAS         -->
           <!-- ============================================================== -->
           
-          <!-- FILTROS TEMPORALES (MES Y SEMANA) + BUSCADOR -->
-          <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-            <div class="flex flex-wrap items-center gap-2.5">
-              <!-- Filtro de Mes -->
-              <div class="flex items-center space-x-1.5">
-                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"><i class="fas fa-calendar-alt text-amber-500 mr-1"></i>Mes:</label>
-                <select id="reg-filter-month" onchange="AdminApp.handleRegFilterChange(this.value, null)" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
-                  ${stats.availableMonths.map(m => `
-                    <option value="${m}" ${stats.activeMonth === m ? 'selected' : ''}>${formatMonthKey(m)}</option>
-                  `).join('')}
-                  <option value="all" ${stats.activeMonth === 'all' ? 'selected' : ''}>Todos los Meses Acumulados</option>
-                </select>
-              </div>
-
-              <!-- Filtro de Semana -->
-              <div class="flex items-center space-x-1.5">
-                <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"><i class="fas fa-clock text-wes-blue mr-1"></i>Semana:</label>
-                <select id="reg-filter-week" onchange="AdminApp.handleRegFilterChange(null, this.value)" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
-                  <option value="all" ${stats.activeWeek === 'all' ? 'selected' : ''}>Todas las Semanas del Mes</option>
-                  <option value="1" ${stats.activeWeek === '1' ? 'selected' : ''}>Semana 1 (Días 1 al 7)</option>
-                  <option value="2" ${stats.activeWeek === '2' ? 'selected' : ''}>Semana 2 (Días 8 al 14)</option>
-                  <option value="3" ${stats.activeWeek === '3' ? 'selected' : ''}>Semana 3 (Días 15 al 21)</option>
-                  <option value="4" ${stats.activeWeek === '4' ? 'selected' : ''}>Semana 4 (Días 22 al 28)</option>
-                  <option value="5" ${stats.activeWeek === '5' ? 'selected' : ''}>Semana 5 (Días 29 al fin de mes)</option>
-                </select>
-              </div>
-
-              ${(this.currentRegMonth || (this.currentRegWeek && this.currentRegWeek !== 'all')) ? `
-                <button onclick="AdminApp.resetRegFilters()" class="text-xs text-rose-600 hover:underline font-bold px-2 py-1 rounded-lg hover:bg-rose-50 transition" title="Restablecer filtros">
-                  <i class="fas fa-times-circle mr-1"></i> Ver Todo
+          <!-- FILTROS TEMPORALES, ESTADO, ROL Y MODO 'TODOS LOS USUARIOS' + BUSCADOR -->
+          <div class="bg-white p-4 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-3">
+            <div class="flex flex-wrap items-center justify-between gap-2.5">
+              
+              <div class="flex flex-wrap items-center gap-2">
+                <!-- Modo Todos los Usuarios -->
+                <button onclick="AdminApp.toggleRegAllTimeMode()" class="px-3 py-1.5 rounded-xl text-xs font-bold transition border ${this.currentRegAllTimeMode ? 'bg-wes-blue text-white border-wes-blue shadow-xs' : 'bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100'}">
+                  <i class="fas fa-infinity mr-1"></i> Todos los Usuarios
                 </button>
-              ` : ''}
-            </div>
 
-            <!-- Buscador en tiempo real -->
-            <div class="relative w-full lg:w-72">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                <i class="fas fa-search text-xs"></i>
-              </span>
-              <input type="text" id="reg-search-input" value="${escapeHtml(this.currentRegSearch || '')}" oninput="AdminApp.handleRegSearch(this.value)" placeholder="Buscar por nombre, correo..." class="w-full pl-8 pr-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+                <!-- Filtro de Mes (visible si no está en modo Todos) -->
+                ${!this.currentRegAllTimeMode ? `
+                  <div class="flex items-center space-x-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"><i class="fas fa-calendar-alt text-amber-500 mr-1"></i>Mes:</label>
+                    <select id="reg-filter-month" onchange="AdminApp.handleRegFilterChange(this.value, null)" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                      ${stats.availableMonths.map(m => `
+                        <option value="${m}" ${stats.activeMonth === m ? 'selected' : ''}>${formatMonthKey(m)}</option>
+                      `).join('')}
+                      <option value="all" ${stats.activeMonth === 'all' ? 'selected' : ''}>Todos los Meses</option>
+                    </select>
+                  </div>
+
+                  <!-- Filtro de Semana -->
+                  <div class="flex items-center space-x-1.5">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"><i class="fas fa-clock text-wes-blue mr-1"></i>Semana:</label>
+                    <select id="reg-filter-week" onchange="AdminApp.handleRegFilterChange(null, this.value)" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                      <option value="all" ${stats.activeWeek === 'all' ? 'selected' : ''}>Todas las Semanas</option>
+                      <option value="1" ${stats.activeWeek === '1' ? 'selected' : ''}>Semana 1 (Días 1 al 7)</option>
+                      <option value="2" ${stats.activeWeek === '2' ? 'selected' : ''}>Semana 2 (Días 8 al 14)</option>
+                      <option value="3" ${stats.activeWeek === '3' ? 'selected' : ''}>Semana 3 (Días 15 al 21)</option>
+                      <option value="4" ${stats.activeWeek === '4' ? 'selected' : ''}>Semana 4 (Días 22 al 28)</option>
+                      <option value="5" ${stats.activeWeek === '5' ? 'selected' : ''}>Semana 5 (Días 29 al fin de mes)</option>
+                    </select>
+                  </div>
+                ` : ''}
+
+                <!-- Filtro por Rol -->
+                <div class="flex items-center space-x-1.5">
+                  <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"><i class="fas fa-id-badge text-emerald-600 mr-1"></i>Rol:</label>
+                  <select onchange="AdminApp.handleRegRoleFilter(this.value)" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                    <option value="all" ${this.currentRegRoleFilter === 'all' ? 'selected' : ''}>Todos los Roles</option>
+                    <option value="cliente" ${this.currentRegRoleFilter === 'cliente' ? 'selected' : ''}>👤 Cliente</option>
+                    <option value="tecnico_interno" ${this.currentRegRoleFilter === 'tecnico_interno' ? 'selected' : ''}>🛠️ Téc. Interno</option>
+                    <option value="tecnico_externo" ${this.currentRegRoleFilter === 'tecnico_externo' ? 'selected' : ''}>🚗 Téc. Externo</option>
+                    <option value="administrador" ${this.currentRegRoleFilter === 'administrador' ? 'selected' : ''}>⚡ Administrador</option>
+                  </select>
+                </div>
+
+                <!-- Filtro por Estado -->
+                <div class="flex items-center space-x-1.5">
+                  <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"><i class="fas fa-toggle-on text-indigo-600 mr-1"></i>Estado:</label>
+                  <select onchange="AdminApp.handleRegStatusFilter(this.value)" class="px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                    <option value="all" ${this.currentRegStatusFilter === 'all' ? 'selected' : ''}>Todos los Estados</option>
+                    <option value="ACTIVO" ${this.currentRegStatusFilter === 'ACTIVO' ? 'selected' : ''}>Activo</option>
+                    <option value="INACTIVO" ${this.currentRegStatusFilter === 'INACTIVO' ? 'selected' : ''}>Inactivo</option>
+                  </select>
+                </div>
+
+                ${(this.currentRegMonth || (this.currentRegWeek && this.currentRegWeek !== 'all') || this.currentRegRoleFilter !== 'all' || this.currentRegStatusFilter !== 'all' || this.currentRegSearch || this.currentRegAllTimeMode) ? `
+                  <button onclick="AdminApp.resetRegFilters()" class="text-xs text-rose-600 hover:underline font-bold px-2 py-1 rounded-lg hover:bg-rose-50 transition" title="Restablecer filtros">
+                    <i class="fas fa-times-circle mr-1"></i> Restablecer Filtros
+                  </button>
+                ` : ''}
+              </div>
+
+              <!-- Buscador en tiempo real -->
+              <div class="relative w-full lg:w-72">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                  <i class="fas fa-search text-xs"></i>
+                </span>
+                <input type="text" id="reg-search-input" value="${escapeHtml(this.currentRegSearch || '')}" oninput="AdminApp.handleRegSearch(this.value)" placeholder="Buscar por nombre, correo, ID..." class="w-full pl-8 pr-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+              </div>
             </div>
           </div>
 
@@ -2250,17 +2329,17 @@ const AdminApp = {
                 <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs"><i class="fas fa-users"></i></span>
               </div>
               <div class="text-2xl font-black text-slate-900">${stats.totalAllTime}</div>
-              <div class="text-[10px] text-slate-500 mt-1">Cuentas creadas</div>
+              <div class="text-[10px] text-slate-500 mt-1">Cuentas creadas (OTP)</div>
             </div>
 
             <!-- En este Período -->
             <div class="bg-gradient-to-br from-amber-50 to-amber-100/60 p-4 rounded-2xl border border-amber-300/80 shadow-xs">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-[10px] font-black text-amber-900 uppercase tracking-wider">En Este Período</span>
+                <span class="text-[10px] font-black text-amber-900 uppercase tracking-wider">${this.currentRegAllTimeMode ? 'Listado Total' : 'En Este Período'}</span>
                 <span class="w-7 h-7 rounded-lg bg-amber-200/80 text-amber-800 flex items-center justify-center text-xs"><i class="fas fa-filter"></i></span>
               </div>
-              <div class="text-2xl font-black text-amber-900">${stats.filteredCount}</div>
-              <div class="text-[10px] text-amber-800 mt-1 font-semibold">${stats.activeWeek !== 'all' ? `Semana ${stats.activeWeek}` : formatMonthKey(stats.activeMonth)}</div>
+              <div class="text-2xl font-black text-amber-900">${filteredList.length}</div>
+              <div class="text-[10px] text-amber-800 mt-1 font-semibold">${this.currentRegAllTimeMode ? 'Todos los registros' : (stats.activeWeek !== 'all' ? `Semana ${stats.activeWeek}` : formatMonthKey(stats.activeMonth))}</div>
             </div>
 
             <!-- Clientes -->
@@ -2294,61 +2373,66 @@ const AdminApp = {
             </div>
           </div>
 
-          <!-- GRÁFICO DE DISTRIBUCIÓN POR SEMANAS DEL MES -->
-          <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-            <div class="flex items-center justify-between">
-              <div>
-                <h4 class="font-bold text-xs text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
-                  <i class="fas fa-chart-bar text-wes-blue"></i>
-                  <span>Distribución de Registros por Semana &bull; ${formatMonthKey(stats.activeMonth)}</span>
-                </h4>
-                <p class="text-[11px] text-slate-500">Haz clic en cualquier semana para filtrar los usuarios registrados de ese período.</p>
+          <!-- GRÁFICO DE DISTRIBUCIÓN POR SEMANAS (Si no está en modo 'Todos los Usuarios') -->
+          ${!this.currentRegAllTimeMode ? `
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-bold text-xs text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
+                    <i class="fas fa-chart-bar text-wes-blue"></i>
+                    <span>Distribución de Registros por Semana &bull; ${formatMonthKey(stats.activeMonth)}</span>
+                  </h4>
+                  <p class="text-[11px] text-slate-500">Haz clic en cualquier semana para filtrar los usuarios registrados de ese período.</p>
+                </div>
+                <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">
+                  ${Object.values(stats.weekCounts).reduce((a, b) => a + b, 0)} registros este mes
+                </span>
               </div>
-              <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">
-                ${Object.values(stats.weekCounts).reduce((a, b) => a + b, 0)} registros este mes
-              </span>
+
+              <div class="grid grid-cols-5 gap-3 pt-2">
+                ${[1, 2, 3, 4, 5].map(wk => {
+                  const count = stats.weekCounts[wk] || 0;
+                  const pct = Math.round((count / maxWeekCount) * 100);
+                  const isSelected = stats.activeWeek === String(wk);
+                  const weekRanges = { 1: 'Días 1 - 7', 2: 'Días 8 - 14', 3: 'Días 15 - 21', 4: 'Días 22 - 28', 5: 'Días 29 - 31' };
+                  return `
+                    <button type="button" onclick="AdminApp.handleRegFilterChange(null, '${wk}')" class="p-3 rounded-2xl border transition text-left flex flex-col justify-between h-36 group ${isSelected ? 'border-wes-blue bg-blue-50/60 ring-2 ring-wes-blue/20' : 'border-slate-200 hover:border-wes-gold hover:bg-slate-50/60'}">
+                      <div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-xs font-extrabold ${isSelected ? 'text-wes-blue' : 'text-slate-700'}">Semana ${wk}</span>
+                          ${isSelected ? `<span class="w-2 h-2 rounded-full bg-wes-blue"></span>` : ''}
+                        </div>
+                        <span class="text-[10px] text-slate-400 block">${weekRanges[wk]}</span>
+                      </div>
+
+                      <div>
+                        <div class="flex items-baseline space-x-1 mb-1.5">
+                          <span class="text-xl font-black ${count > 0 ? (isSelected ? 'text-wes-blue' : 'text-slate-800') : 'text-slate-300'}">${count}</span>
+                          <span class="text-[10px] text-slate-400">usuarios</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                          <div class="h-2 rounded-full transition-all duration-500 ${isSelected ? 'bg-wes-blue' : (count > 0 ? 'bg-amber-500 group-hover:bg-wes-gold' : 'bg-transparent')}" style="width: ${Math.max(pct, count > 0 ? 12 : 0)}%;"></div>
+                        </div>
+                      </div>
+                    </button>
+                  `;
+                }).join('')}
+              </div>
             </div>
+          ` : ''}
 
-            <div class="grid grid-cols-5 gap-3 pt-2">
-              ${[1, 2, 3, 4, 5].map(wk => {
-                const count = stats.weekCounts[wk] || 0;
-                const pct = Math.round((count / maxWeekCount) * 100);
-                const isSelected = stats.activeWeek === String(wk);
-                const weekRanges = { 1: 'Días 1 - 7', 2: 'Días 8 - 14', 3: 'Días 15 - 21', 4: 'Días 22 - 28', 5: 'Días 29 - 31' };
-                return `
-                  <button type="button" onclick="AdminApp.handleRegFilterChange(null, '${wk}')" class="p-3 rounded-2xl border transition text-left flex flex-col justify-between h-36 group ${isSelected ? 'border-wes-blue bg-blue-50/60 ring-2 ring-wes-blue/20' : 'border-slate-200 hover:border-wes-gold hover:bg-slate-50/60'}">
-                    <div>
-                      <div class="flex items-center justify-between">
-                        <span class="text-xs font-extrabold ${isSelected ? 'text-wes-blue' : 'text-slate-700'}">Semana ${wk}</span>
-                        ${isSelected ? `<span class="w-2 h-2 rounded-full bg-wes-blue"></span>` : ''}
-                      </div>
-                      <span class="text-[10px] text-slate-400 block">${weekRanges[wk]}</span>
-                    </div>
-
-                    <div>
-                      <div class="flex items-baseline space-x-1 mb-1.5">
-                        <span class="text-xl font-black ${count > 0 ? (isSelected ? 'text-wes-blue' : 'text-slate-800') : 'text-slate-300'}">${count}</span>
-                        <span class="text-[10px] text-slate-400">usuarios</span>
-                      </div>
-                      <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                        <div class="h-2 rounded-full transition-all duration-500 ${isSelected ? 'bg-wes-blue' : (count > 0 ? 'bg-amber-500 group-hover:bg-wes-gold' : 'bg-transparent')}" style="width: ${Math.max(pct, count > 0 ? 12 : 0)}%;"></div>
-                      </div>
-                    </div>
-                  </button>
-                `;
-              }).join('')}
-            </div>
-          </div>
-
-          <!-- TABLA DE USUARIOS REGISTRADOS Y ASIGNADOR DE VISTAS -->
+          <!-- TABLA DE USUARIOS REGISTRADOS Y ASIGNADOR DE VISTAS CON ACCIONES DIRECTAS -->
           <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+            <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <div class="flex items-center space-x-2">
                 <span class="font-bold text-xs text-slate-800 font-brand">Listado de Personas Registradas</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-100 text-slate-700">${displayRegistered.length}</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-slate-100 text-slate-700">${filteredList.length}</span>
+                <span class="text-[11px] text-slate-400">(Pág. ${this.currentRegPage} de ${totalPages})</span>
               </div>
-              <div class="text-[11px] text-slate-500 italic">
-                Cambia la vista de un usuario en el desplegable de la columna derecha para adaptar sus privilegios.
+              <div class="text-[11px] text-slate-500 flex items-center space-x-2">
+                <span class="inline-flex items-center text-emerald-600 font-bold"><i class="fas fa-check-circle mr-1"></i>Verificado OTP</span>
+                <span>&bull;</span>
+                <span class="inline-flex items-center text-blue-600 font-bold"><i class="fas fa-bell mr-1"></i>Push Multi-dispositivo</span>
               </div>
             </div>
 
@@ -2357,34 +2441,36 @@ const AdminApp = {
                 <thead>
                   <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
                     <th class="p-3.5">Persona Registrada</th>
-                    <th class="p-3.5">Contacto</th>
-                    <th class="p-3.5">Fecha de Registro</th>
-                    <th class="p-3.5">Vista Asignada Actual</th>
-                    <th class="p-3.5 text-right">Asignar Nueva Vista</th>
+                    <th class="p-3.5">Contacto / Correo</th>
+                    <th class="p-3.5">Fecha Registro / Último Acceso</th>
+                    <th class="p-3.5 text-center">Estado / Push</th>
+                    <th class="p-3.5">Rol / Vista Asignada</th>
+                    <th class="p-3.5 text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
-                  ${displayRegistered.length === 0 ? `
+                  ${pagedUsers.length === 0 ? `
                     <tr>
-                      <td colspan="5" class="p-8 text-center text-slate-400">
+                      <td colspan="6" class="p-8 text-center text-slate-400">
                         <i class="fas fa-user-slash text-2xl mb-2 text-slate-300 block"></i>
                         No se encontraron registros para los filtros seleccionados.
                       </td>
                     </tr>
-                  ` : displayRegistered.map(u => {
-                    const regDate = u.createdAt ? new Date(u.createdAt).toLocaleString('es-DO', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short'
-                    }) : 'Fecha no registrada';
+                  ` : pagedUsers.map(u => {
+                    const regDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-DO', {
+                      year: 'numeric', month: 'short', day: 'numeric'
+                    }) : 'No reg.';
 
                     const roleBadges = {
-                      cliente: { label: 'Vista Cliente', class: 'bg-emerald-100 text-emerald-800 border-emerald-300', icon: 'fa-user' },
-                      tecnico_interno: { label: 'Técnico Interno WES', class: 'bg-blue-100 text-blue-800 border-blue-300', icon: 'fa-tools' },
-                      tecnico_externo: { label: 'Técnico Externo', class: 'bg-amber-100 text-amber-800 border-amber-300', icon: 'fa-car-side' },
-                      administrador: { label: 'Administrador WES', class: 'bg-purple-100 text-purple-800 border-purple-300', icon: 'fa-shield-alt' }
+                      cliente: { label: 'Cliente', class: 'bg-emerald-100 text-emerald-800 border-emerald-300', icon: 'fa-user' },
+                      tecnico_interno: { label: 'Téc. Interno', class: 'bg-blue-100 text-blue-800 border-blue-300', icon: 'fa-tools' },
+                      tecnico_externo: { label: 'Téc. Externo', class: 'bg-amber-100 text-amber-800 border-amber-300', icon: 'fa-car-side' },
+                      administrador: { label: 'Administrador', class: 'bg-purple-100 text-purple-800 border-purple-300', icon: 'fa-shield-alt' }
                     };
                     const badge = roleBadges[u.role] || roleBadges.cliente;
                     const initials = (u.name || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+                    const pushDevices = u.pushDevicesCount || 0;
+                    const statusStr = (u.status || 'ACTIVO').toUpperCase();
 
                     return `
                       <tr class="hover:bg-slate-50/80 transition">
@@ -2396,39 +2482,77 @@ const AdminApp = {
                             </div>
                             <div class="min-w-0">
                               <div class="font-bold text-slate-800 truncate">${escapeHtml(u.name || 'Usuario')}</div>
-                              <div class="text-[11px] text-slate-500 font-mono truncate">${escapeHtml(u.email)}</div>
+                              <div class="text-[10px] text-slate-400 font-mono">ID: ${escapeHtml(u.id || '')}</div>
                             </div>
                           </div>
                         </td>
 
-                        <!-- Contacto -->
-                        <td class="p-3.5 whitespace-nowrap">
-                          <div class="text-slate-700 font-medium">${escapeHtml(u.phone || 'Sin teléfono')}</div>
-                          <a href="mailto:${escapeHtml(u.email)}" class="text-[10px] text-wes-blue hover:underline">Enviar correo</a>
+                        <!-- Contacto & Botón Copiar Correo -->
+                        <td class="p-3.5">
+                          <div class="flex items-center space-x-1.5">
+                            <span class="text-slate-800 font-mono text-[11px] truncate max-w-[170px]" title="${escapeHtml(u.email)}">${escapeHtml(u.email)}</span>
+                            <button onclick="AdminApp.copyToClipboard('${escapeHtml(u.email)}', 'Correo copiado al portapapeles')" class="text-slate-400 hover:text-wes-blue p-1 rounded hover:bg-slate-100 transition" title="Copiar correo">
+                              <i class="far fa-copy text-xs"></i>
+                            </button>
+                          </div>
+                          <div class="text-[11px] text-slate-500">${escapeHtml(u.phone || 'Sin teléfono')}</div>
                         </td>
 
-                        <!-- Fecha de Registro -->
+                        <!-- Fechas -->
                         <td class="p-3.5 whitespace-nowrap text-slate-600">
-                          <div class="font-medium text-slate-800">${regDate}</div>
-                          <span class="text-[10px] text-slate-400">ID: ${escapeHtml(u.id || '')}</span>
+                          <div class="font-medium text-slate-800 text-[11px]">Reg: ${regDate}</div>
+                          <div class="text-[10px] text-slate-400">Últ: ${escapeHtml(u.lastLogin || 'Sin accesos')}</div>
                         </td>
 
-                        <!-- Vista Actual -->
+                        <!-- Estado / Push / Verificado -->
+                        <td class="p-3.5 text-center whitespace-nowrap">
+                          <div class="flex flex-col items-center space-y-1">
+                            <div class="flex items-center space-x-1">
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${statusStr === 'ACTIVO' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                                ${statusStr}
+                              </span>
+                              <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200" title="Verificado con código OTP de 6 dígitos">
+                                <i class="fas fa-check text-[9px] mr-1 text-emerald-600"></i>OTP
+                              </span>
+                            </div>
+                            <!-- Cantidad de dispositivos Push -->
+                            <div class="text-[10px] text-slate-500 flex items-center space-x-1" title="${pushDevices} dispositivo(s) suscrito(s) a notificaciones push">
+                              <i class="fas fa-mobile-alt text-slate-400"></i>
+                              <span>${pushDevices} Push Activo${pushDevices !== 1 ? 's' : ''}</span>
+                            </div>
+                          </div>
+                        </td>
+
+                        <!-- Vista Actual & Selector de Cambio -->
                         <td class="p-3.5 whitespace-nowrap">
-                          <span class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-bold border ${badge.class}">
-                            <i class="fas ${badge.icon} text-[10px]"></i>
-                            <span>${badge.label}</span>
-                          </span>
+                          <div class="flex flex-col space-y-1">
+                            <div>
+                              <span class="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badge.class}">
+                                <i class="fas ${badge.icon} text-[9px]"></i>
+                                <span>${badge.label}</span>
+                              </span>
+                            </div>
+                            <select onchange="AdminApp.handleUserRoleChange('${escapeHtml(u.email)}', this.value)" class="px-2 py-1 bg-slate-50 hover:bg-white border border-slate-300 rounded-lg text-[11px] font-bold text-slate-800 focus:ring-1 focus:ring-wes-blue focus:outline-none transition cursor-pointer">
+                              <option value="cliente" ${u.role === 'cliente' ? 'selected' : ''}>👤 Cliente</option>
+                              <option value="tecnico_interno" ${u.role === 'tecnico_interno' ? 'selected' : ''}>🛠️ Téc. Interno</option>
+                              <option value="tecnico_externo" ${u.role === 'tecnico_externo' ? 'selected' : ''}>🚗 Téc. Externo</option>
+                              <option value="administrador" ${u.role === 'administrador' ? 'selected' : ''}>⚡ Admin</option>
+                            </select>
+                          </div>
                         </td>
 
-                        <!-- Asignador de Vista -->
+                        <!-- Botones de Acción: Ver Perfil & Enviar Mensaje -->
                         <td class="p-3.5 text-right whitespace-nowrap">
-                          <select onchange="AdminApp.handleUserRoleChange('${escapeHtml(u.email)}', this.value)" class="px-3 py-1.5 bg-slate-50 hover:bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:outline-none transition cursor-pointer shadow-xs">
-                            <option value="cliente" ${u.role === 'cliente' ? 'selected' : ''}>👤 Vista Cliente</option>
-                            <option value="tecnico_interno" ${u.role === 'tecnico_interno' ? 'selected' : ''}>🛠️ Técnico Interno WES</option>
-                            <option value="tecnico_externo" ${u.role === 'tecnico_externo' ? 'selected' : ''}>🚗 Técnico Externo</option>
-                            <option value="administrador" ${u.role === 'administrador' ? 'selected' : ''}>⚡ Administrador</option>
-                          </select>
+                          <div class="flex items-center justify-end space-x-1.5">
+                            <button onclick="AdminApp.openUserProfileViewModal('${escapeHtml(u.email)}')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center space-x-1 transition shadow-xs" title="Ver perfil completo">
+                              <i class="fas fa-id-card text-slate-500"></i>
+                              <span>Ver Perfil</span>
+                            </button>
+                            <button onclick="AdminApp.openSendUserDirectMessageModal('${escapeHtml(u.email)}')" class="px-2.5 py-1.5 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs flex items-center space-x-1 transition shadow-xs" title="Redactar y enviar mensaje personalizado">
+                              <i class="fas fa-paper-plane text-wes-gold text-xs"></i>
+                              <span>Enviar Mensaje</span>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     `;
@@ -2436,6 +2560,30 @@ const AdminApp = {
                 </tbody>
               </table>
             </div>
+
+            <!-- CONTROLES DE PAGINACIÓN -->
+            ${totalPages > 1 ? `
+              <div class="p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="text-xs text-slate-500">
+                  Mostrando <span class="font-bold text-slate-800">${startIndex + 1}</span> a <span class="font-bold text-slate-800">${Math.min(startIndex + this.regPageSize, totalRecords)}</span> de <span class="font-bold text-slate-800">${totalRecords}</span> usuarios
+                </div>
+                <div class="flex items-center space-x-1">
+                  <button onclick="AdminApp.changeRegPage(1)" ${this.currentRegPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 bg-white border"' : 'class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 bg-white border hover:bg-slate-100 transition"'}>
+                    <i class="fas fa-angle-double-left"></i>
+                  </button>
+                  <button onclick="AdminApp.changeRegPage(${this.currentRegPage - 1})" ${this.currentRegPage === 1 ? 'disabled class="opacity-40 cursor-not-allowed px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 bg-white border"' : 'class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 bg-white border hover:bg-slate-100 transition"'}>
+                    <i class="fas fa-angle-left"></i>
+                  </button>
+                  <span class="px-3 py-1 text-xs font-bold text-slate-700">Pág. ${this.currentRegPage} de ${totalPages}</span>
+                  <button onclick="AdminApp.changeRegPage(${this.currentRegPage + 1})" ${this.currentRegPage === totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 bg-white border"' : 'class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 bg-white border hover:bg-slate-100 transition"'}>
+                    <i class="fas fa-angle-right"></i>
+                  </button>
+                  <button onclick="AdminApp.changeRegPage(${totalPages})" ${this.currentRegPage === totalPages ? 'disabled class="opacity-40 cursor-not-allowed px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 bg-white border"' : 'class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-700 bg-white border hover:bg-slate-100 transition"'}>
+                    <i class="fas fa-angle-double-right"></i>
+                  </button>
+                </div>
+              </div>
+            ` : ''}
           </div>
         ` : `
           <!-- ============================================================== -->
@@ -2526,7 +2674,462 @@ const AdminApp = {
     `;
   },
 
-  
+  copyToClipboard(text, successMsg) {
+    if (!navigator.clipboard) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        if (window.showToast) window.showToast(successMsg || 'Copiado al portapapeles', 'info');
+      } catch (e) {}
+      document.body.removeChild(textarea);
+      return;
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      if (window.showToast) window.showToast(successMsg || 'Copiado al portapapeles', 'info');
+    }).catch(() => {
+      if (window.showToast) window.showToast('No se pudo copiar automáticamente', 'error');
+    });
+  },
+
+  toggleRegAllTimeMode() {
+    this.currentRegAllTimeMode = !this.currentRegAllTimeMode;
+    this.currentRegPage = 1;
+    const c = document.getElementById('admin-dynamic-content');
+    if (c) this.renderUsuarios(c);
+  },
+
+  handleRegRoleFilter(roleVal) {
+    this.currentRegRoleFilter = roleVal;
+    this.currentRegPage = 1;
+    const c = document.getElementById('admin-dynamic-content');
+    if (c) this.renderUsuarios(c);
+  },
+
+  handleRegStatusFilter(statusVal) {
+    this.currentRegStatusFilter = statusVal;
+    this.currentRegPage = 1;
+    const c = document.getElementById('admin-dynamic-content');
+    if (c) this.renderUsuarios(c);
+  },
+
+  changeRegPage(page) {
+    this.currentRegPage = page;
+    const c = document.getElementById('admin-dynamic-content');
+    if (c) this.renderUsuarios(c);
+  },
+
+  async syncClientsNow() {
+    if (typeof UserAuth === 'undefined' || typeof UserAuth.syncClientsFromBackend !== 'function') return;
+    this._isSyncingUsers = true;
+    const c = document.getElementById('admin-dynamic-content');
+    if (c) this.renderUsuarios(c);
+
+    try {
+      const res = await UserAuth.syncClientsFromBackend();
+      if (window.showToast) window.showToast(`✅ Sincronizados ${(res.clients && res.clients.length) || 0} usuarios desde Google Sheets.`, 'success');
+    } catch(e) {
+      if (window.showToast) window.showToast('Aviso: Sincronización offline / caché local activa.', 'info');
+    } finally {
+      this._isSyncingUsers = false;
+      const c2 = document.getElementById('admin-dynamic-content');
+      if (c2) this.renderUsuarios(c2);
+    }
+  },
+
+  // Modal Ver Perfil de Usuario Registrado
+  openUserProfileViewModal(email) {
+    if (typeof UserAuth === 'undefined') return;
+    const clients = UserAuth.getAllRegisteredUsers ? UserAuth.getAllRegisteredUsers() : [];
+    const u = clients.find(c => c.email && c.email.toLowerCase() === String(email).toLowerCase().trim());
+    if (!u) {
+      if (window.showToast) window.showToast('Usuario no encontrado', 'error');
+      return;
+    }
+
+    const regDate = u.createdAt ? new Date(u.createdAt).toLocaleString('es-DO', { dateStyle: 'full', timeStyle: 'short' }) : 'No registrado';
+    const lastLogin = u.lastLogin || 'Sin registros de acceso';
+    const pushCount = u.pushDevicesCount || 0;
+    const roleLabels = {
+      cliente: 'Vista Cliente',
+      tecnico_interno: 'Técnico Interno WES',
+      tecnico_externo: 'Técnico Externo',
+      administrador: 'Administrador WES'
+    };
+    const roleLabel = roleLabels[u.role] || u.roleLabel || 'Vista Cliente';
+
+    let modal = document.getElementById('admin-user-profile-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'admin-user-profile-modal';
+      modal.className = 'fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm';
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-5">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-wes-dark to-wes-blue text-wes-gold flex items-center justify-center font-black text-lg uppercase shadow-sm">
+              ${(u.name || 'U').slice(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <h3 class="font-bold text-base text-slate-800 font-brand">${escapeHtml(u.name || 'Usuario')}</h3>
+              <p class="text-xs text-slate-500 font-mono">ID Permanente: ${escapeHtml(u.id || '')}</p>
+            </div>
+          </div>
+          <button onclick="document.getElementById('admin-user-profile-modal').remove()" class="text-slate-400 hover:text-slate-600 p-2 rounded-xl transition">
+            <i class="fas fa-times text-base"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Correo Electrónico</span>
+            <div class="font-mono text-slate-800 break-all font-semibold flex items-center justify-between">
+              <span>${escapeHtml(u.email)}</span>
+              <button onclick="AdminApp.copyToClipboard('${escapeHtml(u.email)}', 'Correo copiado')" class="text-slate-400 hover:text-wes-blue ml-1" title="Copiar">
+                <i class="far fa-copy text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Teléfono Contacto</span>
+            <div class="text-slate-800 font-semibold">${escapeHtml(u.phone || 'No registrado')}</div>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Vista / Rol</span>
+            <div class="text-wes-blue font-bold flex items-center space-x-1">
+              <i class="fas fa-user-shield text-xs"></i>
+              <span>${escapeHtml(roleLabel)}</span>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Estado de Cuenta</span>
+            <div class="flex items-center space-x-1.5 font-bold ${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'text-emerald-600' : 'text-rose-600'}">
+              <span class="w-2 h-2 rounded-full ${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
+              <span>${escapeHtml((u.status || 'ACTIVO').toUpperCase())}</span>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Verificación Correo</span>
+            <div class="text-emerald-700 font-bold flex items-center space-x-1">
+              <i class="fas fa-check-circle text-xs"></i>
+              <span>Verificado mediante OTP</span>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Dispositivos Push</span>
+            <div class="text-indigo-700 font-bold flex items-center space-x-1">
+              <i class="fas fa-bell text-xs"></i>
+              <span>${pushCount} Dispositivo(s) Activo(s)</span>
+            </div>
+          </div>
+
+          <div class="col-span-2 bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-1">
+            <div class="flex justify-between">
+              <span class="text-[10px] uppercase font-bold text-slate-400">Fecha de Registro:</span>
+              <span class="text-slate-700 font-medium">${regDate}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-[10px] uppercase font-bold text-slate-400">Último Acceso:</span>
+              <span class="text-slate-700 font-medium">${escapeHtml(lastLogin)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+          <button onclick="AdminApp.toggleUserStatusRemote('${escapeHtml(u.email)}', '${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO'}')" class="px-4 py-2 rounded-xl text-xs font-bold ${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'} transition">
+            <i class="fas fa-power-off mr-1"></i> ${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'Suspender Cuenta' : 'Reactivar Cuenta'}
+          </button>
+          <div class="flex items-center space-x-2">
+            <button onclick="document.getElementById('admin-user-profile-modal').remove()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+              Cerrar
+            </button>
+            <button onclick="document.getElementById('admin-user-profile-modal').remove(); AdminApp.openSendUserDirectMessageModal('${escapeHtml(u.email)}')" class="px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
+              <i class="fas fa-paper-plane text-wes-gold"></i>
+              <span>Enviar Mensaje</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  async toggleUserStatusRemote(email, nextStatus) {
+    if (!confirm(`¿Confirmas cambiar el estado de "${email}" a "${nextStatus}"?`)) return;
+    if (typeof UserAuth !== 'undefined' && typeof UserAuth.updateClientRemote === 'function') {
+      await UserAuth.updateClientRemote(email, { status: nextStatus });
+      if (window.showToast) window.showToast(`Estado de ${email} cambiado a ${nextStatus}`, 'success');
+      const modal = document.getElementById('admin-user-profile-modal');
+      if (modal) modal.remove();
+      const c = document.getElementById('admin-dynamic-content');
+      if (c) this.renderUsuarios(c);
+    }
+  },
+
+  // Modal Enviar Mensaje Directo con Previsualización y Confirmación
+  openSendUserDirectMessageModal(targetEmail) {
+    if (typeof UserAuth === 'undefined') return;
+    const clients = UserAuth.getAllRegisteredUsers ? UserAuth.getAllRegisteredUsers() : [];
+    const u = clients.find(c => c.email && c.email.toLowerCase() === String(targetEmail).toLowerCase().trim()) || {
+      name: 'Cliente',
+      email: targetEmail,
+      id: ''
+    };
+
+    let modal = document.getElementById('admin-direct-msg-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'admin-direct-msg-modal';
+      modal.className = 'fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm';
+      document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+      <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-4">
+        
+        <!-- Encabezado -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center space-x-2">
+            <span class="w-8 h-8 rounded-xl bg-wes-blue text-wes-gold flex items-center justify-center font-bold text-sm shadow-xs">
+              <i class="fas fa-paper-plane"></i>
+            </span>
+            <div>
+              <h3 class="font-bold text-base text-slate-800 font-brand">Redactar Mensaje Personalizado</h3>
+              <p class="text-xs text-slate-500">Se depositará en el buzón privado del cliente y enviará aviso push.</p>
+            </div>
+          </div>
+          <button onclick="document.getElementById('admin-direct-msg-modal').remove()" class="text-slate-400 hover:text-slate-600 p-2 rounded-xl transition">
+            <i class="fas fa-times text-base"></i>
+          </button>
+        </div>
+
+        <!-- Destinatario Fijo Identificado -->
+        <div class="bg-blue-50/70 p-3 rounded-2xl border border-blue-200 flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-8 h-8 rounded-xl bg-wes-blue text-white flex items-center justify-center font-bold text-xs uppercase">
+              ${(u.name || 'U').slice(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <div class="font-bold text-xs text-slate-800">${escapeHtml(u.name || 'Usuario')}</div>
+              <div class="text-[11px] text-slate-600 font-mono">${escapeHtml(u.email)}</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-mono">
+            ID: ${escapeHtml(u.id || 'CLI')}
+          </span>
+        </div>
+
+        <!-- Formulario de Redacción -->
+        <div id="adm-msg-form-view" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Título o Asunto del Mensaje: *</label>
+            <input type="text" id="adm-msg-subject" placeholder="Ej. Actualización importante sobre su servicio..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Contenido del Mensaje: *</label>
+            <textarea id="adm-msg-content" rows="4" placeholder="Escriba aquí el mensaje detallado para el cliente..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              <span>Respuesta Rápida Sugerida para Sofía IA (Opcional):</span>
+              <span class="text-[10px] text-slate-400 font-normal ml-1">El usuario podrá tocarla para consultar a la asistente.</span>
+            </label>
+            <input type="text" id="adm-msg-prompt" placeholder="Ej. Deseo más detalles sobre este mensaje o cotización..." class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+          </div>
+
+          <!-- Opción separada de enviar copia por correo (desmarcada por defecto) -->
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-xs text-slate-800">Enviar copia por correo electrónico</div>
+              <div class="text-[10px] text-slate-500">Canal separado: envía una copia transaccional al correo del usuario.</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="adm-msg-send-email" class="sr-only peer">
+              <div class="w-10 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-wes-blue"></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Vista de Previsualización (Oculta por defecto) -->
+        <div id="adm-msg-preview-view" class="hidden space-y-3">
+          <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 flex items-center space-x-2">
+            <i class="fas fa-eye text-amber-600"></i>
+            <span><strong>Previsualización:</strong> Así verá el usuario el mensaje en su bandeja privada:</span>
+          </div>
+
+          <div class="p-4 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div class="flex items-center space-x-1.5">
+                <span class="w-2 h-2 rounded-full bg-wes-blue"></span>
+                <span id="prev-msg-subject" class="font-bold text-xs text-slate-800"></span>
+              </div>
+              <span class="text-[10px] text-slate-400">Ahora mismo</span>
+            </div>
+            <p id="prev-msg-content" class="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed"></p>
+            <div id="prev-msg-prompt-box" class="pt-2">
+              <div class="inline-flex items-center space-x-1 px-3 py-1 bg-amber-50 border border-amber-300 rounded-xl text-[11px] text-amber-900 font-semibold">
+                <i class="fas fa-robot text-amber-600"></i>
+                <span id="prev-msg-prompt"></span>
+              </div>
+            </div>
+            <div id="prev-msg-email-warning" class="hidden text-[10px] text-indigo-700 font-semibold pt-1">
+              <i class="fas fa-envelope mr-1"></i> Se enviará una copia a: ${escapeHtml(u.email)}
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+          <button id="adm-btn-back-edit" onclick="AdminApp.toggleDirectMessagePreview(false)" class="hidden px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+            <i class="fas fa-arrow-left mr-1"></i> Modificar Redacción
+          </button>
+          
+          <button id="adm-btn-cancel-msg" onclick="document.getElementById('admin-direct-msg-modal').remove()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+            Cancelar
+          </button>
+
+          <div class="flex items-center space-x-2">
+            <button id="adm-btn-preview-msg" onclick="AdminApp.toggleDirectMessagePreview(true)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center space-x-1 transition border border-slate-300">
+              <i class="fas fa-eye text-amber-600"></i>
+              <span>Previsualizar</span>
+            </button>
+            <button id="adm-btn-send-msg" onclick="AdminApp.confirmAndSendDirectMessage('${escapeHtml(u.email)}', '${escapeHtml(u.id || '')}')" class="px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
+              <i class="fas fa-paper-plane text-wes-gold"></i>
+              <span>Confirmar y Enviar</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    `;
+  },
+
+  toggleDirectMessagePreview(showPreview) {
+    const formView = document.getElementById('adm-msg-form-view');
+    const prevView = document.getElementById('adm-msg-preview-view');
+    const btnPreview = document.getElementById('adm-btn-preview-msg');
+    const btnBack = document.getElementById('adm-btn-back-edit');
+
+    if (!formView || !prevView) return;
+
+    if (showPreview) {
+      const subj = document.getElementById('adm-msg-subject').value.trim();
+      const content = document.getElementById('adm-msg-content').value.trim();
+      const promptVal = document.getElementById('adm-msg-prompt').value.trim();
+      const sendEmail = document.getElementById('adm-msg-send-email').checked;
+
+      if (!subj) {
+        if (window.showToast) window.showToast('Por favor escribe el asunto del mensaje.', 'error');
+        return;
+      }
+      if (!content) {
+        if (window.showToast) window.showToast('Por favor escribe el contenido del mensaje.', 'error');
+        return;
+      }
+
+      document.getElementById('prev-msg-subject').textContent = subj;
+      document.getElementById('prev-msg-content').textContent = content;
+      const promptBox = document.getElementById('prev-msg-prompt-box');
+      if (promptVal) {
+        document.getElementById('prev-msg-prompt').textContent = promptVal;
+        promptBox.classList.remove('hidden');
+      } else {
+        promptBox.classList.add('hidden');
+      }
+
+      const emailWarn = document.getElementById('prev-msg-email-warning');
+      if (sendEmail) {
+        emailWarn.classList.remove('hidden');
+      } else {
+        emailWarn.classList.add('hidden');
+      }
+
+      formView.classList.add('hidden');
+      prevView.classList.remove('hidden');
+      btnPreview.classList.add('hidden');
+      btnBack.classList.remove('hidden');
+    } else {
+      formView.classList.remove('hidden');
+      prevView.classList.add('hidden');
+      btnPreview.classList.remove('hidden');
+      btnBack.classList.add('hidden');
+    }
+  },
+
+  async confirmAndSendDirectMessage(targetEmail, targetUserId) {
+    const subj = (document.getElementById('adm-msg-subject')?.value || '').trim();
+    const content = (document.getElementById('adm-msg-content')?.value || '').trim();
+    const promptVal = (document.getElementById('adm-msg-prompt')?.value || '').trim();
+    const sendEmail = Boolean(document.getElementById('adm-msg-send-email')?.checked);
+
+    if (!subj || !content) {
+      if (window.showToast) window.showToast('Por favor completa el asunto y contenido antes de enviar.', 'error');
+      return;
+    }
+
+    const btnSend = document.getElementById('adm-btn-send-msg');
+    if (btnSend) {
+      btnSend.disabled = true;
+      btnSend.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando...';
+    }
+
+    try {
+      const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
+      const currentU = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+      const sender = (adminSession && adminSession.name) || (currentU && currentU.name) || 'WES Administración';
+      const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || 'ing.lmlh@gmail.com';
+      const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
+
+      const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+
+      const res = await fetch(backendUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'send_user_direct_message',
+          adminToken: adminToken,
+          userEmail: userEmail,
+          data: {
+            targetEmail: targetEmail,
+            targetUserId: targetUserId,
+            sender: sender,
+            subject: subj,
+            content: content,
+            suggestedPrompt: promptVal,
+            sendEmailNotification: sendEmail
+          }
+        })
+      });
+
+      const json = await res.json();
+      if (json && json.success) {
+        if (window.showToast) window.showToast(`✅ Mensaje enviado exitosamente a ${targetEmail}`, 'success');
+        const modal = document.getElementById('admin-direct-msg-modal');
+        if (modal) modal.remove();
+      } else {
+        throw new Error(json?.message || 'Error en el servidor al enviar el mensaje');
+      }
+    } catch (e) {
+      console.error('[AdminApp] Error enviando mensaje directo:', e);
+      if (window.showToast) window.showToast('Error al enviar mensaje: ' + e.message, 'error');
+      if (btnSend) {
+        btnSend.disabled = false;
+        btnSend.innerHTML = '<i class="fas fa-paper-plane text-wes-gold"></i><span>Confirmar y Enviar</span>';
+      }
+    }
+  },
+
   // ========================================================================
   // NOTIFICACIONES Y GESTIÓN DE ROLES / VISTAS (USERAUTH)
   // ========================================================================

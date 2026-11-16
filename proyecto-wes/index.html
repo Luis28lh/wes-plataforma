@@ -1840,7 +1840,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.88 (Build 88)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.89 (Build 89)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -2700,6 +2700,16 @@
           </button>
         </div>
 
+
+        <!-- Botón de Notificaciones Web Push Oficial WES -->
+        <div id="profile-push-container" class="pt-1">
+          <button type="button" id="profile-push-toggle-btn" onclick="UserMessagesService.togglePushSubscriptionFromProfile()" class="w-full py-2.5 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-900 border border-blue-200 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
+            <i class="fas fa-bell text-amber-500"></i>
+            <span id="profile-push-btn-text">Activar Notificaciones Push</span>
+          </button>
+          <p id="profile-push-status-hint" class="text-[10px] text-slate-400 text-center mt-1">Recibe avisos discretos de mensajes directos y cotizaciones en tu teléfono.</p>
+        </div>
+
         <!-- Botón de Sincronización para Teléfono Móvil -->
         <button type="button" onclick="forceRefreshApp()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center justify-center space-x-2 border border-slate-200">
           <i class="fas fa-sync-alt text-wes-blue text-xs"></i>
@@ -3216,5 +3226,58 @@
   <script src="js/chat_cliente.js?v=202611141315"></script>
   <script src="js/app.js?v=202611141315"></script>
   <script src="js/pwa-install.js?v=20261104_1245"></script>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: BANDEJA PRIVADA DE MENSAJES Y NOTIFICACIONES WES (HEADER)     -->
+  <!-- ==================================================================== -->
+  <div id="user-messages-modal" class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all flex flex-col max-h-[90vh]">
+      
+      <!-- Cabecera del Modal -->
+      <div class="bg-gradient-to-r from-[#071836] via-[#0D2A5C] to-[#0A224A] text-white p-5 flex items-center justify-between border-b border-wes-gold/30 shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-wes-gold text-lg shadow-inner">
+            <i class="fas fa-envelope-open-text"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-white font-brand flex items-center space-x-2">
+              <span>Bandeja de Mensajes</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-wes-gold text-slate-950">WES</span>
+            </h3>
+            <p id="user-messages-recipient" class="text-[11px] text-slate-300">Mensajes de gerencia y soporte técnico</p>
+          </div>
+        </div>
+        <button onclick="closeUserMessagesModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 flex items-center justify-center transition" aria-label="Cerrar ventana">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Barra de Estado Push y Filtros dentro del Modal -->
+      <div id="user-messages-push-bar" class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2 text-xs shrink-0">
+        <div class="flex items-center space-x-2 min-w-0">
+          <i class="fas fa-bell text-amber-500 text-sm shrink-0"></i>
+          <span id="user-messages-push-label" class="text-[11px] text-slate-600 truncate">Notificaciones en este navegador: <strong>Desactivadas</strong></span>
+        </div>
+        <button type="button" id="user-messages-push-btn" onclick="UserMessagesService.togglePushSubscriptionFromProfile()" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-wes-blue border border-slate-300 rounded-lg text-[10px] font-bold shrink-0 transition">
+          Activar
+        </button>
+      </div>
+
+      <!-- Lista Scrollable de Mensajes -->
+      <div id="user-messages-list" class="p-4 overflow-y-auto space-y-3 flex-1 bg-slate-50/50">
+        <!-- Renderizado dinámico vía UserMessagesService -->
+      </div>
+
+      <!-- Pie del Modal -->
+      <div class="p-3 bg-white border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 shrink-0">
+        <span>Warn Electrical Services · Confidencial</span>
+        <button type="button" onclick="closeUserMessagesModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
 </body>
 </html>

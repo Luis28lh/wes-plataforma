@@ -76,3 +76,67 @@ self.addEventListener('message', event => {
     self.skipWaiting();
   }
 });
+
+
+// ============================================================================
+// RECEPCIÓN Y GESTIÓN DE NOTIFICACIONES WEB PUSH WES
+// ============================================================================
+
+self.addEventListener('push', event => {
+  let data = {};
+  if (event.data) {
+    try {
+      data = event.data.json();
+    } catch(e) {
+      data = { title: 'WES · Notificación', body: event.data.text() };
+    }
+  }
+
+  // Aviso por defecto discreto: No expone información privada en la pantalla bloqueada
+  const title = data.title || 'WES: tiene un nuevo mensaje';
+  const options = {
+    body: data.body || 'Tiene una nueva notificación en su cuenta de Warn Electrical Services.',
+    icon: 'assets/icon-192.png',
+    badge: 'assets/icon-192.png',
+    tag: data.tag || ('wes-msg-' + Date.now()),
+    data: {
+      url: data.url || 'index.html?openMessages=true',
+      messageId: data.messageId || null,
+      timestamp: Date.now()
+    },
+    vibrate: [100, 50, 100],
+    requireInteraction: false
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) 
+    ? event.notification.data.url 
+    : 'index.html?openMessages=true';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      // Si la ventana ya está abierta, enfocarla y navegar
+      for (let client of windowClients) {
+        if ('focus' in client) {
+          client.focus();
+          if ('navigate' in client) {
+            client.navigate(targetUrl);
+          } else {
+            client.postMessage({ action: 'open_user_messages', messageId: event.notification.data?.messageId });
+          }
+          return;
+        }
+      }
+      // Si no hay ventana abierta, abrir una nueva
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
+});

@@ -14,11 +14,11 @@
 | **Propietario / organización** | Ing. Luis Miguel Lizardo / Warn Electrical Services, SRL (WES) |
 | **Sede física** | Autopista Ramón Cáceres, Moca, Provincia Espaillat, República Dominicana |
 | **Fecha de inicio** | 2017 (operaciones WES) / Septiembre 2026 (fase plataforma digital) |
-| **Última actualización** | 2026-11-15 20:38 (GMT-4) |
+| **Última actualización** | 2026-11-16 09:10 (GMT-4) |
 | **Repositorio GitHub (privado)** | `https://github.com/Luis28lh/wes-plataforma.git` (remoto `origin`) y `https://github.com/Luis28lh/wes-plataforma-v1.git` (remoto `v1`) |
 | **Rama principal / política de cambios** | `main` (despliegue continuo a producción). Commits atómicos con verificación previa obligatoria. |
 | **Estado general** | **OPERATIVO EN PRODUCCIÓN** |
-| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #88) |
+| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #89) |
 
 ---
 

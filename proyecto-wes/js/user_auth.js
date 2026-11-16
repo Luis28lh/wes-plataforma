@@ -689,6 +689,87 @@ Moca, Provincia Espaillat, República Dominicana`;
       };
     },
 
+    // Sincronizar clientes reales desde Google Sheets (hoja Clientes) con respaldo en localStorage
+    async syncClientsFromBackend() {
+      try {
+        const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
+        const currentU = this.getCurrentUser();
+        const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || 'ing.lmlh@gmail.com';
+        const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
+
+        const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
+        const res = await fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'list_registered_clients_admin',
+            adminToken: adminToken,
+            userEmail: userEmail
+          })
+        });
+
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.success && Array.isArray(json.clients) && json.clients.length > 0) {
+            // Unir inteligentemente con los clientes locales
+            const local = getRegisteredClients();
+            const localMap = new Map(local.map(c => [c.email.toLowerCase(), c]));
+            
+            json.clients.forEach(remote => {
+              const rEmail = remote.email.toLowerCase();
+              const existing = localMap.get(rEmail);
+              if (existing) {
+                localMap.set(rEmail, { ...existing, ...remote });
+              } else {
+                localMap.set(rEmail, remote);
+              }
+            });
+
+            const merged = Array.from(localMap.values());
+            saveRegisteredClients(merged);
+            return { success: true, clients: merged };
+          }
+        }
+      } catch (e) {
+        console.warn('[UserAuth] No se pudo sincronizar usuarios de Sheets en este momento:', e);
+      }
+      return { success: true, clients: getRegisteredClients() };
+    },
+
+    // Actualizar rol o estado de un cliente en backend y local
+    async updateClientRemote(email, updateData) {
+      const clean = (email || '').trim().toLowerCase();
+      const clients = getRegisteredClients();
+      const idx = clients.findIndex(c => c.email && c.email.toLowerCase() === clean);
+      if (idx !== -1) {
+        clients[idx] = { ...clients[idx], ...updateData };
+        saveRegisteredClients(clients);
+      }
+
+      try {
+        const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
+        const currentU = this.getCurrentUser();
+        const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || 'ing.lmlh@gmail.com';
+        const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
+        const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
+
+        await fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'update_client_admin',
+            adminToken: adminToken,
+            userEmail: userEmail,
+            data: { email: clean, ...updateData }
+          })
+        });
+      } catch (e) {
+        console.warn('[UserAuth] Actualización guardada localmente, fallo en backend:', e);
+      }
+
+      return { success: true, user: clients[idx] };
+    },
+
     // Obtener todos los usuarios registrados para el panel de administración
     getAllRegisteredUsers() {
       return getRegisteredClients();

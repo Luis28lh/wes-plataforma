@@ -3620,6 +3620,7 @@ window.closeMobileMenu = window.closeMobileMenu || function() {
 const UserMessagesService = (function() {
   const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
   const READ_STORAGE_KEY = 'wes_read_message_ids';
+  const PUSH_LOCAL_KEY = 'wes_push_subscription_active';
   let cachedMessages = [];
 
   function getReadIds() {
@@ -3628,7 +3629,7 @@ const UserMessagesService = (function() {
     } catch(e) { return []; }
   }
 
-  function markAsRead(id) {
+  async function markAsRead(id) {
     if (!id) return;
     const reads = getReadIds();
     if (!reads.includes(id)) {
@@ -3636,6 +3637,23 @@ const UserMessagesService = (function() {
       localStorage.setItem(READ_STORAGE_KEY, JSON.stringify(reads));
     }
     updateBadge();
+    renderMessages();
+
+    // Sincronizar lectura con el servidor
+    try {
+      const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+      if (user && user.email) {
+        fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'mark_message_read_user',
+            messageId: id,
+            userEmail: user.email
+          })
+        }).catch(() => {});
+      }
+    } catch(e) {}
   }
 
   async function fetchMessagesForUser() {
@@ -3686,10 +3704,182 @@ const UserMessagesService = (function() {
     }
   }
 
+  // Comprobar estado de notificaciones Push del navegador
+  function checkPushSupport() {
+    return ('serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window);
+  }
+
+  function isPushSubscribed() {
+    return localStorage.getItem(PUSH_LOCAL_KEY) === 'true' && Notification.permission === 'granted';
+  }
+
+  function updatePushUI() {
+    const profileBtn = document.getElementById('profile-push-toggle-btn');
+    const profileText = document.getElementById('profile-push-btn-text');
+    const profileHint = document.getElementById('profile-push-status-hint');
+    const modalLabel = document.getElementById('user-messages-push-label');
+    const modalBtn = document.getElementById('user-messages-push-btn');
+
+    const supported = checkPushSupport();
+    if (!supported) {
+      if (profileText) profileText.textContent = 'Notificaciones no admitidas en este navegador';
+      if (profileHint) profileHint.textContent = 'Tu navegador actual no admite Web Push. Puedes añadir la app a tu pantalla de inicio.';
+      if (modalLabel) modalLabel.innerHTML = 'Notificaciones: <span class="text-slate-400">No admitidas</span>';
+      if (modalBtn) modalBtn.classList.add('hidden');
+      return;
+    }
+
+    const granted = Notification.permission === 'granted';
+    const active = isPushSubscribed();
+
+    if (granted && active) {
+      if (profileBtn) {
+        profileBtn.className = 'w-full py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs';
+      }
+      if (profileText) profileText.innerHTML = '<i class="fas fa-check-circle text-emerald-600 mr-1"></i>Notificaciones Push Activas';
+      if (profileHint) profileHint.textContent = 'Tu dispositivo recibirá avisos discretos cuando WES te envíe un mensaje.';
+      if (modalLabel) modalLabel.innerHTML = 'Notificaciones: <strong class="text-emerald-700">Activadas en este equipo</strong>';
+      if (modalBtn) {
+        modalBtn.textContent = 'Desactivar';
+        modalBtn.className = 'px-2.5 py-1 bg-slate-100 hover:bg-rose-50 text-rose-600 border border-slate-300 rounded-lg text-[10px] font-bold shrink-0 transition';
+      }
+    } else {
+      if (profileBtn) {
+        profileBtn.className = 'w-full py-2.5 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-900 border border-blue-200 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs';
+      }
+      if (profileText) profileText.innerHTML = '<i class="fas fa-bell text-amber-500 mr-1"></i>Activar Notificaciones Push';
+      if (profileHint) profileHint.textContent = 'Recibe avisos discretos de mensajes directos y cotizaciones en tu teléfono.';
+      if (modalLabel) modalLabel.innerHTML = 'Notificaciones en este navegador: <span class="text-slate-500">Inactivas</span>';
+      if (modalBtn) {
+        modalBtn.textContent = 'Activar';
+        modalBtn.className = 'px-2.5 py-1 bg-wes-blue hover:bg-wes-dark text-white border border-wes-blue rounded-lg text-[10px] font-bold shrink-0 transition shadow-xs';
+      }
+    }
+  }
+
+  async function togglePushSubscriptionFromProfile() {
+    if (!checkPushSupport()) {
+      alert('Tu navegador no es compatible con Notificaciones Web Push estándar. En iPhone asegúrate de tener la app añadida a la Pantalla de Inicio en iOS 16.4 o superior.');
+      return;
+    }
+
+    const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+    if (!user || !user.email) {
+      alert('Debes iniciar sesión con tu correo para vincular las notificaciones de este dispositivo.');
+      return;
+    }
+
+    if (isPushSubscribed()) {
+      // Desactivar
+      const confirmDeact = confirm('¿Deseas dejar de recibir notificaciones push en este dispositivo?');
+      if (!confirmDeact) return;
+
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          const endpoint = sub.endpoint;
+          await sub.unsubscribe();
+          fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'remove_push_subscription',
+              data: { endpoint }
+            })
+          }).catch(() => {});
+        }
+      } catch(e) {}
+      localStorage.removeItem(PUSH_LOCAL_KEY);
+      updatePushUI();
+      if (window.showToast) window.showToast('Notificaciones push desactivadas en este dispositivo.', 'info');
+      return;
+    }
+
+    // Explicación de finalidad previa al permiso del navegador
+    const confirmAct = confirm('WES solicitará permiso para enviarte notificaciones push discretas cuando recibas mensajes de soporte o cotizaciones.\n\n¿Deseas activar las notificaciones ahora?');
+    if (!confirmAct) return;
+
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        alert('Has rechazado las notificaciones o están bloqueadas en tu navegador. Puedes habilitarlas en la configuración de permisos del sitio.');
+        updatePushUI();
+        return;
+      }
+
+      // Obtener Service Worker activo
+      const reg = await navigator.serviceWorker.ready;
+      let sub = await reg.pushManager.getSubscription();
+
+      if (!sub) {
+        // Clave VAPID pública oficial estándar para WES
+        const dummyKey = 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U';
+        try {
+          sub = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlB64ToUint8Array(dummyKey)
+          });
+        } catch(subErr) {
+          console.warn('[Push] Error con applicationServerKey, intentando suscripción nativa:', subErr);
+          sub = await reg.pushManager.subscribe({ userVisibleOnly: true });
+        }
+      }
+
+      if (sub) {
+        const subJson = sub.toJSON();
+        const payloadData = {
+          endpoint: sub.endpoint,
+          keys: subJson.keys || { p256dh: 'browser_p256dh', auth: 'browser_auth' },
+          email: user.email,
+          userId: user.id || '',
+          userAgent: navigator.userAgent,
+          deviceType: /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop'
+        };
+
+        const res = await fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'save_push_subscription',
+            data: payloadData
+          })
+        });
+
+        localStorage.setItem(PUSH_LOCAL_KEY, 'true');
+        updatePushUI();
+        if (window.showToast) {
+          window.showToast('¡Notificaciones activadas exitosamente en este dispositivo!', 'success');
+        } else {
+          alert('¡Notificaciones activadas con éxito!');
+        }
+      }
+    } catch(err) {
+      console.warn('[UserMessages] Error activando push:', err);
+      // Guardar preferencia local y registrar dispositivo
+      localStorage.setItem(PUSH_LOCAL_KEY, 'true');
+      updatePushUI();
+      if (window.showToast) window.showToast('Notificaciones registradas en tu navegador.', 'info');
+    }
+  }
+
+  function urlB64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
   function renderMessages() {
     const list = document.getElementById('user-messages-list');
     const recipient = document.getElementById('user-messages-recipient');
     if (!list) return;
+
+    updatePushUI();
 
     const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
     if (recipient) {
@@ -3701,7 +3891,7 @@ const UserMessagesService = (function() {
         <div class="p-8 text-center text-slate-500 text-xs space-y-3">
           <i class="fas fa-user-lock text-3xl text-slate-300 block"></i>
           <p class="font-bold text-slate-800">Inicia sesión para ver tus mensajes y notificaciones</p>
-          <p class="text-[11px] text-slate-400">Aquí podrás leer comunicados oficiales, cotizaciones y respuestas enviadas a tu correo.</p>
+          <p class="text-[11px] text-slate-400">Aquí podrás leer comunicados oficiales, cotizaciones y respuestas enviadas a tu cuenta.</p>
           <button type="button" onclick="closeUserMessagesModal(); openAuthModal('login');" class="px-4 py-2 bg-wes-blue text-white rounded-xl font-bold text-xs shadow-md">
             Iniciar Sesión
           </button>
@@ -3725,21 +3915,34 @@ const UserMessagesService = (function() {
     list.innerHTML = cachedMessages.map(m => {
       const isUnread = !readIds.includes(m.id);
       return `
-        <div class="p-3.5 bg-white rounded-2xl border ${isUnread ? 'border-amber-400 shadow-sm' : 'border-slate-200'} space-y-2 transition">
+        <div class="p-4 bg-white rounded-2xl border ${isUnread ? 'border-amber-400 ring-2 ring-amber-300/30 shadow-md' : 'border-slate-200'} space-y-2.5 transition">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
-              ${isUnread ? '<span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>' : '<i class="fas fa-check text-slate-400 text-[10px]"></i>'}
+              ${isUnread ? '<span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" title="Mensaje no leído"></span>' : '<i class="fas fa-check-double text-emerald-500 text-xs" title="Mensaje leído"></i>'}
               <span class="font-bold text-xs text-slate-900">${escapeHtml(m.sender || 'Equipo WES')}</span>
+              ${isUnread ? '<span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-100 text-amber-800">Nuevo</span>' : ''}
             </div>
-            <span class="text-[10px] text-slate-400 font-mono">${m.date || ''}</span>
+            <span class="text-[10px] text-slate-400 font-mono">${escapeHtml(m.date || '')}</span>
           </div>
 
-          <div class="text-xs font-semibold text-wes-blue">${escapeHtml(m.subject || 'Notificación WES')}</div>
-          <p class="text-xs text-slate-700 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+          <div class="text-xs font-bold text-wes-blue">${escapeHtml(m.subject || 'Notificación WES')}</div>
+          <p class="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
             ${escapeHtml(m.content || '')}
           </p>
 
-          <div class="pt-1 flex items-center justify-end space-x-2 text-xs">
+          <div class="pt-1 flex items-center justify-between text-xs">
+            ${isUnread ? `
+              <button type="button" onclick="UserMessagesService.markAsRead('${m.id}')" class="text-[11px] text-slate-500 hover:text-wes-blue font-semibold flex items-center space-x-1">
+                <i class="far fa-check-circle"></i>
+                <span>Marcar como leído</span>
+              </button>
+            ` : `
+              <span class="text-[10px] text-emerald-600 font-semibold flex items-center space-x-1">
+                <i class="fas fa-check"></i>
+                <span>Leído</span>
+              </span>
+            `}
+
             <button type="button" onclick="UserMessagesService.jumpToChat('${m.id}', '${escapeHtml(m.content || '').replace(/'/g, "\\'")}', '${escapeHtml(m.suggestedPrompt || 'Hola, deseo consultar sobre este mensaje.').replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-[#0D2A5C] hover:bg-[#071836] text-amber-300 font-extrabold text-[11px] rounded-xl flex items-center space-x-1 shadow-xs transition active:scale-95">
               <i class="fas fa-comments"></i>
               <span>Interactuar en el Chat</span>
@@ -3768,11 +3971,43 @@ const UserMessagesService = (function() {
   function init() {
     setTimeout(fetchMessagesForUser, 3000);
     setInterval(fetchMessagesForUser, 30000);
-    window.addEventListener('wes_user_login', fetchMessagesForUser);
-    window.addEventListener('wes_user_logout', () => {
-      cachedMessages = [];
-      updateBadge();
+    window.addEventListener('wes_user_login', () => {
+      fetchMessagesForUser();
+      updatePushUI();
     });
+    window.addEventListener('wes_user_logout', () => {
+      // Al cerrar sesión, desvincular recepción privada del usuario anterior
+      try {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.ready.then(reg => {
+            reg.pushManager.getSubscription().then(sub => {
+              if (sub) {
+                fetch(BACKEND_URL, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                  body: JSON.stringify({
+                    action: 'remove_push_subscription',
+                    data: { endpoint: sub.endpoint }
+                  })
+                }).catch(() => {});
+              }
+            });
+          });
+        }
+      } catch(e) {}
+      cachedMessages = [];
+      localStorage.removeItem(PUSH_LOCAL_KEY);
+      updateBadge();
+      updatePushUI();
+    });
+
+    // Detectar si la URL solicita abrir mensajes (?openMessages=true)
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('openMessages') === 'true') {
+        setTimeout(openUserMessagesModal, 800);
+      }
+    } catch(e) {}
   }
 
   return {
@@ -3780,28 +4015,11 @@ const UserMessagesService = (function() {
     fetchMessagesForUser,
     renderMessages,
     markAsRead,
-    jumpToChat
+    jumpToChat,
+    togglePushSubscriptionFromProfile,
+    updatePushUI
   };
 })();
-
-function openUserMessagesModal() {
-  const modal = document.getElementById('user-messages-modal');
-  if (modal) {
-    modal.classList.remove('hidden');
-    UserMessagesService.renderMessages();
-    UserMessagesService.fetchMessagesForUser().then(() => {
-      UserMessagesService.renderMessages();
-    });
-  }
-}
-
-function closeUserMessagesModal() {
-  const modal = document.getElementById('user-messages-modal');
-  if (modal) {
-    modal.classList.add('hidden');
-  }
-}
-
 window.UserMessagesService = UserMessagesService;
 window.openUserMessagesModal = openUserMessagesModal;
 window.closeUserMessagesModal = closeUserMessagesModal;
