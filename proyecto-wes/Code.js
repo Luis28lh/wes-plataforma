@@ -137,6 +137,14 @@ function doPost(e) {
         response = markMessageReadUserHandler(payload.messageId, payload.userEmail);
         break;
 
+      case 'admin_user_access_action':
+        response = handleAdminUserAccessAction(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'get_auth_access_dashboard_admin':
+        response = handleGetAuthAccessDashboardAdmin(payload.adminToken, payload.userEmail);
+        break;
+
                   
 
       case 'request_auth_otp':
@@ -2062,6 +2070,50 @@ function listRegisteredClientsAdminHandler(adminToken, userEmail) {
   }
 }
 
+/**
+ * =========================================================================
+ * HOJA Y REGISTRO DE AUDITORÍA CENTRALIZADA (GOOGLE SHEETS)
+ * =========================================================================
+ */
+function getAuditSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Auditoria');
+  if (!sheet) {
+    sheet = ss.insertSheet('Auditoria');
+    sheet.appendRow([
+      'ID', 'Fecha_Hora', 'Usuario_Admin', 'Rol_Admin', 
+      'Modulo', 'Accion', 'Detalle_Descripcion', 'Target_Email', 
+      'Valor_Anterior', 'Valor_Nuevo', 'IP_Dispositivo'
+    ]);
+    sheet.getRange(1, 1, 1, 11).setFontWeight('bold').setBackground('#0f172a').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function recordAuditLog_(adminEmail, moduleName, action, description, targetEmail, oldValue, newValue, ip) {
+  try {
+    const sheet = getAuditSheet_();
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const id = 'AUD-' + Utilities.getUuid().substring(0, 8).toUpperCase();
+    const adminUser = String(adminEmail || 'admin@wes.com.do').toLowerCase().trim();
+    sheet.appendRow([
+      id,
+      now,
+      adminUser,
+      adminUser === 'ing.lmlh@gmail.com' ? 'propietario' : 'administrador',
+      moduleName || 'usuarios',
+      action || 'modificacion',
+      description || '',
+      targetEmail || '',
+      typeof oldValue === 'object' ? JSON.stringify(oldValue) : String(oldValue || ''),
+      typeof newValue === 'object' ? JSON.stringify(newValue) : String(newValue || ''),
+      ip || 'ADMIN_CONSOLE'
+    ]);
+  } catch (e) {
+    console.error('Error registrando auditoria en Sheets:', e);
+  }
+}
+
 function updateClientAdminHandler(data, adminToken, userEmail) {
   try {
     const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
@@ -2069,7 +2121,7 @@ function updateClientAdminHandler(data, adminToken, userEmail) {
     const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
 
     if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado.' };
+      return { success: false, message: 'Acceso denegado: permisos administrativos requeridos.' };
     }
 
     if (!data || (!data.email && !data.id)) {
@@ -2082,39 +2134,367 @@ function updateClientAdminHandler(data, adminToken, userEmail) {
     const targetId = String(data.id || '').trim();
 
     let targetRowIndex = -1;
+    let currentRow = null;
+    let totalAdminsCount = 0;
+
     for (let i = 1; i < rows.length; i++) {
+      const rRole = String(rows[i][4] || '').trim();
+      const rStatus = String(rows[i][9] || 'ACTIVO').toUpperCase().trim();
+      if ((rRole === 'administrador' || rRole === 'propietario') && rStatus === 'ACTIVO') {
+        totalAdminsCount++;
+      }
+
       if ((targetEmail && String(rows[i][2]).toLowerCase().trim() === targetEmail) ||
           (targetId && String(rows[i][0]).trim() === targetId)) {
         targetRowIndex = i + 1;
-        break;
+        currentRow = rows[i];
       }
     }
 
-    if (targetRowIndex < 0) {
+    if (targetRowIndex < 0 || !currentRow) {
       return { success: false, message: 'Usuario no encontrado en la base de datos.' };
     }
 
-    if (data.role) {
-      sheet.getRange(targetRowIndex, 5).setValue(data.role);
+    const currentEmail = String(currentRow[2]).toLowerCase().trim();
+    const currentRole = String(currentRow[4] || 'cliente').trim();
+    const currentStatus = String(currentRow[9] || 'ACTIVO').toUpperCase().trim();
+    const isTargetAdmin = (currentRole === 'administrador' || currentRole === 'propietario');
+
+    // INVARIANTE: Impedir despojar o suspender al último administrador habilitado
+    if (isTargetAdmin) {
+      if (data.status && data.status.toUpperCase() !== 'ACTIVO' && totalAdminsCount <= 1) {
+        return { success: false, message: 'Operación denegada: No es posible suspender o desactivar al único administrador activo del sistema.' };
+      }
+      if (data.role && data.role !== 'administrador' && data.role !== 'propietario' && totalAdminsCount <= 1) {
+        return { success: false, message: 'Operación denegada: No es posible quitar permisos al único administrador activo del sistema.' };
+      }
+    }
+
+    // Comprobar cambio de email: no duplicar y verificar formato
+    if (data.newEmail && String(data.newEmail).toLowerCase().trim() !== currentEmail) {
+      const newEmailClean = String(data.newEmail).toLowerCase().trim();
+      if (!newEmailClean.includes('@') || !newEmailClean.includes('.')) {
+        return { success: false, message: 'El nuevo correo electrónico no tiene un formato válido.' };
+      }
+      // Verificar si ya existe en Clientes
+      for (let i = 1; i < rows.length; i++) {
+        if (i !== (targetRowIndex - 1) && String(rows[i][2]).toLowerCase().trim() === newEmailClean) {
+          return { success: false, message: 'El correo ' + newEmailClean + ' ya está asignado a otra cuenta existente.' };
+        }
+      }
+      sheet.getRange(targetRowIndex, 3).setValue(newEmailClean);
+      recordAuditLog_(userEmail, 'usuarios', 'cambio_correo', 'Cambio de correo de usuario: ' + (data.reason || 'Actualización de perfil'), newEmailClean, currentEmail, newEmailClean);
+    }
+
+    // Actualizar nombre
+    if (data.name && String(data.name).trim()) {
+      const oldName = String(currentRow[1]);
+      const newName = String(data.name).trim();
+      if (oldName !== newName) {
+        sheet.getRange(targetRowIndex, 2).setValue(newName);
+        recordAuditLog_(userEmail, 'usuarios', 'cambio_nombre', 'Actualización de nombre', currentEmail, oldName, newName);
+      }
+    }
+
+    // Actualizar teléfono
+    if (data.phone !== undefined) {
+      const oldPhone = String(currentRow[3] || '');
+      const newPhone = String(data.phone || '').trim();
+      if (oldPhone !== newPhone) {
+        sheet.getRange(targetRowIndex, 4).setValue(newPhone);
+        recordAuditLog_(userEmail, 'usuarios', 'cambio_telefono', 'Actualización de teléfono', currentEmail, oldPhone, newPhone);
+      }
+    }
+
+    // Actualizar rol
+    if (data.role && data.role !== currentRole) {
       const roleLabels = {
         cliente: 'Vista Cliente',
         tecnico_interno: 'Técnico Interno WES',
         tecnico_externo: 'Técnico Externo',
         administrador: 'Administrador WES'
       };
+      sheet.getRange(targetRowIndex, 5).setValue(data.role);
       sheet.getRange(targetRowIndex, 6).setValue(roleLabels[data.role] || data.role);
       sheet.getRange(targetRowIndex, 7).setValue(data.role !== 'cliente');
+      recordAuditLog_(userEmail, 'usuarios', 'cambio_rol', 'Asignación de rol: ' + (data.reason || 'Gestión administrativa'), currentEmail, currentRole, data.role);
     }
 
-    if (data.status) {
-      sheet.getRange(targetRowIndex, 10).setValue(String(data.status).toUpperCase().trim());
+    // Actualizar estado (ACTIVO / INACTIVO / SUSPENDIDO)
+    if (data.status && data.status.toUpperCase() !== currentStatus) {
+      const nextStatus = data.status.toUpperCase().trim();
+      sheet.getRange(targetRowIndex, 10).setValue(nextStatus);
+      recordAuditLog_(userEmail, 'usuarios', 'cambio_estado', 'Cambio de estado: ' + (data.reason || 'Acción administrativa'), currentEmail, currentStatus, nextStatus);
     }
 
-    return { success: true, message: 'Usuario actualizado correctamente.' };
+    return { success: true, message: 'Perfil de usuario actualizado y auditado correctamente.' };
   } catch (err) {
     return { success: false, message: 'Error actualizando usuario: ' + err.toString() };
   }
 }
+
+/**
+ * =========================================================================
+ * GESTIÓN DE ACCESO Y RECUPERACIÓN SEGREGADA (OTP, SESIONES, DESBLOQUEO)
+ * =========================================================================
+ */
+function handleAdminUserAccessAction(data, adminToken, userEmail) {
+  try {
+    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+
+    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
+      return { success: false, message: 'Acceso denegado: solo administradores autorizados.' };
+    }
+
+    if (!data || !data.targetEmail || !data.actionType) {
+      return { success: false, message: 'Datos insuficientes para la acción de acceso.' };
+    }
+
+    const targetEmail = String(data.targetEmail).toLowerCase().trim();
+    const actionType = String(data.actionType).trim();
+    const reason = String(data.reason || 'Solicitud de soporte').trim();
+    const nowFormatted = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    const otpSheet = getOtpSheet_();
+    const otpRows = otpSheet.getDataRange().getValues();
+
+    if (actionType === 'resend_otp_access') {
+      // 1. Reenviar instrucciones legítimas iniciando un nuevo flujo OTP formal por correo
+      // respetando límites criptográficos sin mostrar el código al administrador
+      const otpRes = handleRequestAuthOtp({
+        email: targetEmail,
+        purpose: 'acceso',
+        ip: 'ADMIN_TRIGGERED_SUPPORT'
+      });
+
+      if (!otpRes.success) {
+        return otpRes;
+      }
+
+      recordAuditLog_(userEmail, 'seguridad', 'reenvio_otp_admin', 'Reenvío de instrucciones y código OTP iniciado por admin: ' + reason, targetEmail, null, 'OTP despachado');
+      return {
+        success: true,
+        message: 'Instrucciones y código de acceso seguro despachados directamente al correo ' + targetEmail + '.'
+      };
+
+    } else if (actionType === 'revoke_pending_otps') {
+      // 2. Revocar todos los códigos pendientes respetando los límites de seguridad
+      let revokedCount = 0;
+      for (let i = 1; i < otpRows.length; i++) {
+        if (String(otpRows[i][1]).toLowerCase().trim() === targetEmail && String(otpRows[i][9]) === 'PENDIENTE') {
+          otpSheet.getRange(i + 1, 10).setValue('REVOCADO_ADMIN');
+          revokedCount++;
+        }
+      }
+      recordAuditLog_(userEmail, 'seguridad', 'revocacion_otps', 'Revocación de códigos OTP pendientes (' + revokedCount + ' revocados): ' + reason, targetEmail, 'PENDIENTE', 'REVOCADO_ADMIN');
+      return {
+        success: true,
+        message: 'Se revocaron ' + revokedCount + ' código(s) pendiente(s) para ' + targetEmail + '. El usuario puede solicitar uno nuevo limpiamente.'
+      };
+
+    } else if (actionType === 'unlock_temporary_restriction') {
+      // 3. Desbloquear restricción temporal de intentos fallidos
+      let unlockedCount = 0;
+      for (let i = 1; i < otpRows.length; i++) {
+        if (String(otpRows[i][1]).toLowerCase().trim() === targetEmail && String(otpRows[i][9]) === 'BLOQUEADO_INTENTOS') {
+          otpSheet.getRange(i + 1, 10).setValue('DESBLOQUEADO_ADMIN');
+          unlockedCount++;
+        }
+      }
+      recordAuditLog_(userEmail, 'seguridad', 'desbloqueo_restriccion', 'Desbloqueo de restricción por intentos fallidos (' + unlockedCount + ' desbloqueados). Motivo obligatorio: ' + reason, targetEmail, 'BLOQUEADO_INTENTOS', 'DESBLOQUEADO_ADMIN');
+      return {
+        success: true,
+        message: 'Restricción de seguridad temporal levantada para ' + targetEmail + '. Motivo registrado: ' + reason
+      };
+
+    } else if (actionType === 'reactivate_account') {
+      // 4. Reactivar una cuenta suspendida
+      const clientSheet = getClientsSheet_();
+      const clientRows = clientSheet.getDataRange().getValues();
+      let updated = false;
+      for (let i = 1; i < clientRows.length; i++) {
+        if (String(clientRows[i][2]).toLowerCase().trim() === targetEmail) {
+          const oldSt = String(clientRows[i][9] || 'INACTIVO');
+          clientSheet.getRange(i + 1, 10).setValue('ACTIVO');
+          recordAuditLog_(userEmail, 'usuarios', 'reactivacion_cuenta', 'Reactivación de cuenta de usuario. Motivo: ' + reason, targetEmail, oldSt, 'ACTIVO');
+          updated = true;
+          break;
+        }
+      }
+      if (!updated) return { success: false, message: 'Usuario no encontrado en la base de datos.' };
+      return { success: true, message: 'Cuenta de ' + targetEmail + ' reactivada exitosamente.' };
+
+    } else if (actionType === 'terminate_all_sessions') {
+      // 5. Cerrar todas las sesiones activas y desvincular push
+      // Se revocan códigos pendientes
+      for (let i = 1; i < otpRows.length; i++) {
+        if (String(otpRows[i][1]).toLowerCase().trim() === targetEmail && String(otpRows[i][9]) === 'PENDIENTE') {
+          otpSheet.getRange(i + 1, 10).setValue('INVALIDADO_CIERRE_SESION');
+        }
+      }
+      // Se desactivan endpoints push en Push_Subscriptions
+      try {
+        const pushSheet = getPushSubscriptionsSheet_();
+        const pushRows = pushSheet.getDataRange().getValues();
+        for (let p = 1; p < pushRows.length; p++) {
+          if (String(pushRows[p][2]).toLowerCase().trim() === targetEmail) {
+            pushSheet.getRange(p + 1, 9).setValue('DESVINCULADO_ADMIN');
+          }
+        }
+      } catch (pErr) {}
+
+      recordAuditLog_(userEmail, 'seguridad', 'cierre_sesiones_forzado', 'Cierre de todas las sesiones activas y desvinculación push: ' + reason, targetEmail, 'SESION_ACTIVA', 'SESION_TERMINADA');
+      return {
+        success: true,
+        message: 'Todas las sesiones activas y suscripciones push de ' + targetEmail + ' fueron invalidadas.'
+      };
+    }
+
+    return { success: false, message: 'Acción no soportada: ' + actionType };
+
+  } catch (err) {
+    return { success: false, message: 'Error procesando acción de acceso: ' + err.toString() };
+  }
+}
+
+/**
+ * =========================================================================
+ * DASHBOARD DE ACCESOS REALES BASADO EN VERIFICACIÓN EN SERVIDOR
+ * =========================================================================
+ */
+function handleGetAuthAccessDashboardAdmin(adminToken, userEmail) {
+  try {
+    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+
+    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
+      return { success: false, message: 'Acceso denegado.' };
+    }
+
+    const clientSheet = getClientsSheet_();
+    const clientRows = clientSheet.getDataRange().getValues();
+    const otpSheet = getOtpSheet_();
+    const otpRows = otpSheet.getDataRange().getValues();
+
+    const now = new Date();
+    // Zona horaria oficial: America/Santo_Domingo (GMT-4)
+    const todayStr = Utilities.formatDate(now, 'GMT-4', 'yyyy-MM-dd');
+    const currentMonthStr = Utilities.formatDate(now, 'GMT-4', 'yyyy-MM');
+
+    // Inicio de semana (Lunes)
+    const dayOfWeek = (now.getDay() === 0 ? 7 : now.getDay());
+    const mondayMs = now.getTime() - ((dayOfWeek - 1) * 24 * 60 * 60 * 1000);
+    const mondayDate = new Date(mondayMs);
+    const mondayStr = Utilities.formatDate(mondayDate, 'GMT-4', 'yyyy-MM-dd');
+
+    let totalRegisteredUsers = 0;
+    let newUsersThisMonth = 0;
+    let suspendedAccountsCount = 0;
+
+    const clientsMap = new Map();
+    for (let c = 1; c < clientRows.length; c++) {
+      const email = String(clientRows[c][2] || '').toLowerCase().trim();
+      if (!email) continue;
+      totalRegisteredUsers++;
+      const regDate = clientRows[c][7] ? Utilities.formatDate(new Date(clientRows[c][7]), 'GMT-4', 'yyyy-MM-dd') : '';
+      if (regDate && regDate.startsWith(currentMonthStr)) {
+        newUsersThisMonth++;
+      }
+      const st = String(clientRows[c][9] || 'ACTIVO').toUpperCase().trim();
+      if (st === 'SUSPENDIDO' || st === 'INACTIVO') {
+        suspendedAccountsCount++;
+      }
+      clientsMap.set(email, {
+        id: String(clientRows[c][0]),
+        name: String(clientRows[c][1]),
+        role: String(clientRows[c][4] || 'cliente'),
+        roleLabel: String(clientRows[c][5] || 'Vista Cliente'),
+        lastLogin: clientRows[c][8] ? Utilities.formatDate(new Date(clientRows[c][8]), 'GMT-4', 'yyyy-MM-dd HH:mm:ss') : ''
+      });
+    }
+
+    // Contabilizar eventos de verificación OTP confirmados en servidor
+    let totalSuccessfulLogins = 0;
+    let totalFailedAccessAttempts = 0;
+
+    const uniqueUsersToday = new Set();
+    const uniqueUsersThisWeek = new Set();
+    const uniqueUsersThisMonth = new Set();
+
+    const recentAccessEvents = [];
+
+    for (let o = otpRows.length - 1; o >= 1; o--) {
+      const row = otpRows[o];
+      const email = String(row[1] || '').toLowerCase().trim();
+      const status = String(row[9] || '');
+      const consumedAt = row[8];
+      const attempts = Number(row[4] || 0);
+
+      if (status === 'BLOQUEADO_INTENTOS' || attempts >= 5) {
+        totalFailedAccessAttempts++;
+      }
+
+      if (status === 'CONSUMIDO' && consumedAt) {
+        totalSuccessfulLogins++;
+        const d = new Date(consumedAt);
+        const eventDayStr = Utilities.formatDate(d, 'GMT-4', 'yyyy-MM-dd');
+        const eventMonthStr = Utilities.formatDate(d, 'GMT-4', 'yyyy-MM');
+        const eventTimeFormatted = Utilities.formatDate(d, 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+        if (eventDayStr === todayStr) {
+          uniqueUsersToday.add(email);
+        }
+        if (eventDayStr >= mondayStr) {
+          uniqueUsersThisWeek.add(email);
+        }
+        if (eventMonthStr === currentMonthStr) {
+          uniqueUsersThisMonth.add(email);
+        }
+
+        if (recentAccessEvents.length < 50) {
+          const clientInfo = clientsMap.get(email) || {
+            name: email.split('@')[0],
+            role: 'cliente',
+            roleLabel: 'Vista Cliente'
+          };
+
+          recentAccessEvents.push({
+            email: email,
+            name: clientInfo.name,
+            role: clientInfo.role,
+            roleLabel: clientInfo.roleLabel,
+            accessDate: eventTimeFormatted,
+            ipClient: String(row[10] || 'WEB_CLIENT'),
+            purpose: String(row[3] || 'acceso')
+          });
+        }
+      }
+    }
+
+    return {
+      success: true,
+      data: {
+        totalRegisteredUsers: totalRegisteredUsers,
+        newUsersThisMonth: newUsersThisMonth,
+        uniqueUsersToday: uniqueUsersToday.size,
+        uniqueUsersThisWeek: uniqueUsersThisWeek.size,
+        uniqueUsersThisMonth: uniqueUsersThisMonth.size,
+        totalSuccessfulLogins: totalSuccessfulLogins,
+        totalFailedAccessAttempts: totalFailedAccessAttempts,
+        suspendedAccountsCount: suspendedAccountsCount,
+        recentAccessEvents: recentAccessEvents,
+        serverTime: Utilities.formatDate(now, 'GMT-4', 'yyyy-MM-dd HH:mm:ss') + ' (America/Santo_Domingo)'
+      }
+    };
+
+  } catch (err) {
+    return { success: false, message: 'Error consultando métricas de acceso: ' + err.toString() };
+  }
+}
+
 
 function markMessageReadUserHandler(messageId, userEmail) {
   try {
@@ -2447,6 +2827,14 @@ function handleRequestAuthOtp(data) {
     if (!isExisting) {
       for (var c = 1; c < clientRows.length; c++) {
         if (String(clientRows[c][2]).toLowerCase().trim() === email) {
+          const userStatus = String(clientRows[c][9] || 'ACTIVO').toUpperCase().trim();
+          if (userStatus === 'SUSPENDIDO') {
+            return {
+              success: false,
+              suspended: true,
+              message: 'Esta cuenta ha sido suspendida por administración. Por favor contacta a soporte técnico para asistencia.'
+            };
+          }
           isExisting = true;
           clientName = String(clientRows[c][1] || '');
           userRole = String(clientRows[c][4] || 'cliente');
@@ -2650,6 +3038,14 @@ function handleVerifyAuthOtp(data) {
     if (!existingUser) {
       for (var c = 1; c < clientRows.length; c++) {
         if (String(clientRows[c][2]).toLowerCase().trim() === email) {
+          const uStatus = String(clientRows[c][9] || 'ACTIVO').toUpperCase().trim();
+          if (uStatus === 'SUSPENDIDO') {
+            return {
+              success: false,
+              suspended: true,
+              message: 'Cuenta suspendida por administración. El acceso no está autorizado.'
+            };
+          }
           existingUser = {
             id: String(clientRows[c][0]),
             name: String(clientRows[c][1]),

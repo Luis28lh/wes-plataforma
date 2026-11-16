@@ -1,0 +1,141 @@
+{
+  "_metadata": {
+    "fecha_respaldo": "2026-11-16T17:25:00-04:00",
+    "zona_horaria": "America/Santo_Domingo",
+    "autor": "Sistema de Control WES (Antigravity)",
+    "motivo": "Retiro formal y recuperable de datos de demostración (DEFAULT_CLIENTS_SEED) de las estadísticas y listados de producción, según requerimiento de gestión de usuarios reales.",
+    "procedimiento_restauracion": "Para restaurar estos registros en un entorno de pruebas o desarrollo, copiar el arreglo 'usuarios_demostracion' e importarlo vía localStorage en la clave 'wes_registered_clients' o mediante la función UserAuth.restoreDemoUsers()."
+  },
+  "usuarios_demostracion": [
+    {
+      "id": "USR-REG-001",
+      "name": "Carlos Mendoza Peña",
+      "email": "carlos.mendoza@gmail.com",
+      "phone": "(809) 578-2341",
+      "password": "User2026!",
+      "role": "cliente",
+      "roleLabel": "Vista Cliente",
+      "isEmployee": false,
+      "createdAt": "2026-10-02T14:20:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-002",
+      "name": "Ing. Ramón Peralta",
+      "email": "ramon.peralta.cibao@gmail.com",
+      "phone": "(829) 450-8912",
+      "password": "User2026!",
+      "role": "tecnico_externo",
+      "roleLabel": "Técnico Externo",
+      "isEmployee": true,
+      "createdAt": "2026-10-05T09:15:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-003",
+      "name": "María Altagracia Rosario",
+      "email": "maria.rosario.moca@hotmail.com",
+      "phone": "(849) 210-3345",
+      "password": "User2026!",
+      "role": "cliente",
+      "roleLabel": "Vista Cliente",
+      "isEmployee": false,
+      "createdAt": "2026-10-10T11:40:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-004",
+      "name": "Téc. Kelvin Bautista",
+      "email": "kelvin.bautista@wes.com.do",
+      "phone": "(849) 301-4455",
+      "password": "User2026!",
+      "role": "tecnico_interno",
+      "roleLabel": "Técnico Interno WES",
+      "isEmployee": true,
+      "createdAt": "2026-10-12T16:30:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-005",
+      "name": "Finca Los Laureles (Agropecuaria)",
+      "email": "finca.laureles@gmail.com",
+      "phone": "(809) 582-7711",
+      "password": "User2026!",
+      "role": "cliente",
+      "roleLabel": "Vista Cliente",
+      "isEmployee": false,
+      "createdAt": "2026-10-18T10:00:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-006",
+      "name": "Danilo Cruz Guzmán",
+      "email": "danilo.cruz.cctv@gmail.com",
+      "phone": "(829) 712-9900",
+      "password": "User2026!",
+      "role": "tecnico_externo",
+      "roleLabel": "Técnico Externo",
+      "isEmployee": true,
+      "createdAt": "2026-10-23T15:20:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-007",
+      "name": "Dra. Carmen Paulino",
+      "email": "carmen.paulino.dr@gmail.com",
+      "phone": "(809) 578-9012",
+      "password": "User2026!",
+      "role": "cliente",
+      "roleLabel": "Vista Cliente",
+      "isEmployee": false,
+      "createdAt": "2026-10-27T08:50:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-008",
+      "name": "Residencial Don Miguel (Condominio)",
+      "email": "junta.donmiguel@gmail.com",
+      "phone": "(849) 404-5566",
+      "password": "User2026!",
+      "role": "cliente",
+      "roleLabel": "Vista Cliente",
+      "isEmployee": false,
+      "createdAt": "2026-10-30T17:10:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-009",
+      "name": "José Manuel Tejada",
+      "email": "jose.tejada.tech@gmail.com",
+      "phone": "(829) 660-1289",
+      "password": "User2026!",
+      "role": "tecnico_interno",
+      "roleLabel": "Técnico Interno WES",
+      "isEmployee": true,
+      "createdAt": "2026-11-01T09:00:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    },
+    {
+      "id": "USR-REG-010",
+      "name": "Lic. Andrés Espinal",
+      "email": "andres.espinal.moca@gmail.com",
+      "phone": "(849) 207-1122",
+      "password": "User2026!",
+      "role": "cliente",
+      "roleLabel": "Vista Cliente",
+      "isEmployee": false,
+      "createdAt": "2026-11-02T08:30:00.000Z",
+      "verified": true,
+      "status": "ACTIVO"
+    }
+  ]
+}

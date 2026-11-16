@@ -68,129 +68,7 @@ const UserAuth = (function() {
     }
   ];
 
-  // Semilla de usuarios registrados iniciales para alimentar el dashboard temporal (meses y semanas)
-  const DEFAULT_CLIENTS_SEED = [
-    {
-      id: 'USR-REG-001',
-      name: 'Carlos Mendoza Peña',
-      email: 'carlos.mendoza@gmail.com',
-      phone: '(809) 578-2341',
-      password: 'User2026!',
-      role: 'cliente',
-      roleLabel: 'Vista Cliente',
-      isEmployee: false,
-      createdAt: '2026-10-02T14:20:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-002',
-      name: 'Ing. Ramón Peralta',
-      email: 'ramon.peralta.cibao@gmail.com',
-      phone: '(829) 450-8912',
-      password: 'User2026!',
-      role: 'tecnico_externo',
-      roleLabel: 'Técnico Externo',
-      isEmployee: true,
-      createdAt: '2026-10-05T09:15:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-003',
-      name: 'María Altagracia Rosario',
-      email: 'maria.rosario.moca@hotmail.com',
-      phone: '(849) 210-3345',
-      password: 'User2026!',
-      role: 'cliente',
-      roleLabel: 'Vista Cliente',
-      isEmployee: false,
-      createdAt: '2026-10-10T11:40:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-004',
-      name: 'Téc. Kelvin Bautista',
-      email: 'kelvin.bautista@wes.com.do',
-      phone: '(849) 301-4455',
-      password: 'User2026!',
-      role: 'tecnico_interno',
-      roleLabel: 'Técnico Interno WES',
-      isEmployee: true,
-      createdAt: '2026-10-12T16:30:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-005',
-      name: 'Finca Los Laureles (Agropecuaria)',
-      email: 'finca.laureles@gmail.com',
-      phone: '(809) 582-7711',
-      password: 'User2026!',
-      role: 'cliente',
-      roleLabel: 'Vista Cliente',
-      isEmployee: false,
-      createdAt: '2026-10-18T10:00:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-006',
-      name: 'Danilo Cruz Guzmán',
-      email: 'danilo.cruz.cctv@gmail.com',
-      phone: '(829) 712-9900',
-      password: 'User2026!',
-      role: 'tecnico_externo',
-      roleLabel: 'Técnico Externo',
-      isEmployee: true,
-      createdAt: '2026-10-23T15:20:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-007',
-      name: 'Dra. Carmen Paulino',
-      email: 'carmen.paulino.dr@gmail.com',
-      phone: '(809) 578-9012',
-      password: 'User2026!',
-      role: 'cliente',
-      roleLabel: 'Vista Cliente',
-      isEmployee: false,
-      createdAt: '2026-10-27T08:50:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-008',
-      name: 'Residencial Don Miguel (Condominio)',
-      email: 'junta.donmiguel@gmail.com',
-      phone: '(849) 404-5566',
-      password: 'User2026!',
-      role: 'cliente',
-      roleLabel: 'Vista Cliente',
-      isEmployee: false,
-      createdAt: '2026-10-30T17:10:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-009',
-      name: 'José Manuel Tejada',
-      email: 'jose.tejada.tech@gmail.com',
-      phone: '(829) 660-1289',
-      password: 'User2026!',
-      role: 'tecnico_interno',
-      roleLabel: 'Técnico Interno WES',
-      isEmployee: true,
-      createdAt: '2026-11-01T09:00:00.000Z',
-      verified: true
-    },
-    {
-      id: 'USR-REG-010',
-      name: 'Lic. Andrés Espinal',
-      email: 'andres.espinal.moca@gmail.com',
-      phone: '(849) 207-1122',
-      password: 'User2026!',
-      role: 'cliente',
-      roleLabel: 'Vista Cliente',
-      isEmployee: false,
-      createdAt: '2026-11-02T08:30:00.000Z',
-      verified: true
-    }
-  ];
+
 
   function generateId(prefix = 'CLI') {
     return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`.toUpperCase();
@@ -200,18 +78,21 @@ const UserAuth = (function() {
     try {
       const data = localStorage.getItem(CLIENTS_STORAGE_KEY);
       if (!data) {
-        localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(DEFAULT_CLIENTS_SEED));
-        return DEFAULT_CLIENTS_SEED;
+        return [];
       }
       const parsed = JSON.parse(data);
-      if (!Array.isArray(parsed) || parsed.length === 0) {
-        localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(DEFAULT_CLIENTS_SEED));
-        return DEFAULT_CLIENTS_SEED;
+      if (!Array.isArray(parsed)) {
+        return [];
       }
-      return parsed;
+      // Filtrar de forma permanente cualquier residuo de cuentas de demostración (prefijo USR-REG-)
+      const realOnly = parsed.filter(u => u && u.id && !String(u.id).startsWith('USR-REG-'));
+      if (realOnly.length !== parsed.length) {
+        saveRegisteredClients(realOnly);
+      }
+      return realOnly;
     } catch (e) {
       console.warn('[UserAuth] Error leyendo clientes:', e);
-      return DEFAULT_CLIENTS_SEED;
+      return [];
     }
   }
 
@@ -710,30 +591,92 @@ Moca, Provincia Espaillat, República Dominicana`;
 
         if (res.ok) {
           const json = await res.json();
-          if (json && json.success && Array.isArray(json.clients) && json.clients.length > 0) {
-            // Unir inteligentemente con los clientes locales
-            const local = getRegisteredClients();
-            const localMap = new Map(local.map(c => [c.email.toLowerCase(), c]));
-            
-            json.clients.forEach(remote => {
-              const rEmail = remote.email.toLowerCase();
-              const existing = localMap.get(rEmail);
-              if (existing) {
-                localMap.set(rEmail, { ...existing, ...remote });
-              } else {
-                localMap.set(rEmail, remote);
-              }
-            });
-
-            const merged = Array.from(localMap.values());
-            saveRegisteredClients(merged);
-            return { success: true, clients: merged };
+          if (json && json.success && Array.isArray(json.clients)) {
+            // Reemplazo autorizado: el servidor en la nube es la fuente de verdad estricta de cuentas
+            // Excluir cualquier registro de prueba o demo
+            const realClients = json.clients.filter(c => c && c.id && !String(c.id).startsWith('USR-REG-'));
+            saveRegisteredClients(realClients);
+            return { success: true, clients: realClients };
           }
         }
       } catch (e) {
         console.warn('[UserAuth] No se pudo sincronizar usuarios de Sheets en este momento:', e);
       }
       return { success: true, clients: getRegisteredClients() };
+    },
+
+    // Ejecutar acciones administrativas de acceso (reenvío OTP, revocar códigos, desbloqueo, reactivación, cierre de sesiones)
+    async executeAdminAccessAction(targetEmail, actionType, reason = "") {
+      try {
+        const adminSession = typeof AdminAuth !== "undefined" ? AdminAuth.getCurrentUser() : null;
+        const currentU = this.getCurrentUser();
+        const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || "ing.lmlh@gmail.com";
+        const adminToken = (adminSession && adminSession.token) || "wes_owner_authorized_session";
+        const backendUrl = (typeof CONFIG !== "undefined" && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
+
+        const res = await fetch(backendUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "admin_user_access_action",
+            adminToken: adminToken,
+            userEmail: userEmail,
+            data: {
+              targetEmail: targetEmail,
+              actionType: actionType,
+              reason: reason
+            }
+          })
+        });
+
+        if (res.ok) {
+          const json = await res.json();
+          if (typeof window !== "undefined" && window.AuditLog) {
+            window.AuditLog.log({
+              module: "seguridad",
+              action: actionType,
+              description: "Accion " + actionType + " sobre " + targetEmail + ". Motivo: " + reason,
+              user: adminSession || currentU
+            });
+          }
+          return json;
+        }
+      } catch (e) {
+        console.error("[UserAuth] Error ejecutando accion de acceso:", e);
+        return { success: false, message: "Error de conexion: " + e.message };
+      }
+      return { success: false, message: "Respuesta invalida del servidor." };
+    },
+
+    // Obtener metricas y eventos reales de acceso desde el servidor
+    async getAuthAccessDashboard() {
+      try {
+        const adminSession = typeof AdminAuth !== "undefined" ? AdminAuth.getCurrentUser() : null;
+        const currentU = this.getCurrentUser();
+        const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || "ing.lmlh@gmail.com";
+        const adminToken = (adminSession && adminSession.token) || "wes_owner_authorized_session";
+        const backendUrl = (typeof CONFIG !== "undefined" && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
+
+        const res = await fetch(backendUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "get_auth_access_dashboard_admin",
+            adminToken: adminToken,
+            userEmail: userEmail
+          })
+        });
+
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.success) {
+            return json.data;
+          }
+        }
+      } catch (e) {
+        console.warn("[UserAuth] Error consultando dashboard de accesos:", e);
+      }
+      return null;
     },
 
     // Actualizar rol o estado de un cliente en backend y local

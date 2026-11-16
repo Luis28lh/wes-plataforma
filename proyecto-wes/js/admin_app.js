@@ -2126,7 +2126,7 @@ const AdminApp = {
     this.currentRegAllTimeMode = Boolean(this.currentRegAllTimeMode);
     this.currentRegPage = this.currentRegPage || 1;
     this.regPageSize = 10;
-    this.currentUsersSubtab = this.currentUsersSubtab || 'registros'; // 'registros' | 'corporativo'
+    this.currentUsersSubtab = this.currentUsersSubtab || 'registros'; // 'registros' | 'accesos' | 'corporativo'
 
     // Obtener estadísticas dinámicas
     const filterMonthArg = this.currentRegAllTimeMode ? 'all' : this.currentRegMonth;
@@ -2155,7 +2155,7 @@ const AdminApp = {
       if (parts.length < 2) return key;
       const y = parts[0];
       const mIdx = parseInt(parts[1], 10);
-      return `${monthNames[mIdx] || parts[1]} ${y}`;
+      return (monthNames[mIdx] || parts[1]) + ' ' + y;
     };
 
     // Aplicar filtros adicionales de Rol, Estado y Búsqueda
@@ -2206,16 +2206,19 @@ const AdminApp = {
               <span class="w-8 h-8 rounded-xl bg-wes-blue text-wes-gold flex items-center justify-center font-bold text-sm shadow-xs">
                 <i class="fas fa-users-cog"></i>
               </span>
-              <h2 class="text-base font-extrabold text-slate-800 font-brand">Control de Usuarios & Directorio Registrado</h2>
+              <h2 class="text-base font-extrabold text-slate-800 font-brand">Control de Usuarios, Perfiles & Accesos Reales</h2>
             </div>
-            <p class="text-xs text-slate-500 mt-1">Directorio conectado a cuentas OTP en vivo, asignación de roles, mensajes directos con previsualización y seguimiento push.</p>
+            <p class="text-xs text-slate-500 mt-1">Directorio de cuentas reales verificadas por OTP, edición de perfiles protegida, recuperación de acceso y dashboard de accesos.</p>
           </div>
           
-          <div class="flex items-center space-x-2 w-full md:w-auto">
-            <!-- Selector de Sub-pestañas -->
+          <div class="flex items-center space-x-2 w-full md:w-auto flex-wrap">
+            <!-- Selector de Sub-pestañas: Directorio | Accesos Reales | Personal Fijo -->
             <div class="bg-slate-100 p-1 rounded-2xl flex items-center space-x-1 border border-slate-200 text-xs font-bold">
               <button onclick="AdminApp.switchUsersSubtab('registros')" class="px-3.5 py-1.5 rounded-xl transition ${this.currentUsersSubtab === 'registros' ? 'bg-white text-wes-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
-                <i class="fas fa-chart-line mr-1"></i> Dashboard Registros (${stats.totalAllTime})
+                <i class="fas fa-users mr-1"></i> Directorio (${stats.totalAllTime})
+              </button>
+              <button onclick="AdminApp.switchUsersSubtab('accesos')" class="px-3.5 py-1.5 rounded-xl transition ${this.currentUsersSubtab === 'accesos' ? 'bg-white text-wes-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
+                <i class="fas fa-shield-alt mr-1"></i> Dashboard Accesos
               </button>
               <button onclick="AdminApp.switchUsersSubtab('corporativo')" class="px-3.5 py-1.5 rounded-xl transition ${this.currentUsersSubtab === 'corporativo' ? 'bg-white text-wes-blue shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
                 <i class="fas fa-user-shield mr-1"></i> Personal Fijo (${adminUsers.length})
@@ -2242,7 +2245,7 @@ const AdminApp = {
 
         ${this.currentUsersSubtab === 'registros' ? `
           <!-- ============================================================== -->
-          <!-- PESTAÑA: DASHBOARD DE REGISTROS Y ASIGNACIÓN DE VISTAS         -->
+          <!-- PESTAÑA: DIRECTORIO DE USUARIOS REALES Y ASIGNACIÓN DE VISTAS   -->
           <!-- ============================================================== -->
           
           <!-- FILTROS TEMPORALES, ESTADO, ROL Y MODO 'TODOS LOS USUARIOS' + BUSCADOR -->
@@ -2300,6 +2303,7 @@ const AdminApp = {
                     <option value="all" ${this.currentRegStatusFilter === 'all' ? 'selected' : ''}>Todos los Estados</option>
                     <option value="ACTIVO" ${this.currentRegStatusFilter === 'ACTIVO' ? 'selected' : ''}>Activo</option>
                     <option value="INACTIVO" ${this.currentRegStatusFilter === 'INACTIVO' ? 'selected' : ''}>Inactivo</option>
+                    <option value="SUSPENDIDO" ${this.currentRegStatusFilter === 'SUSPENDIDO' ? 'selected' : ''}>Suspendido</option>
                   </select>
                 </div>
 
@@ -2322,7 +2326,6 @@ const AdminApp = {
 
           <!-- TARJETAS KPI DE REGISTROS -->
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-            <!-- Total General -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Registrados</span>
@@ -2332,17 +2335,15 @@ const AdminApp = {
               <div class="text-[10px] text-slate-500 mt-1">Cuentas creadas (OTP)</div>
             </div>
 
-            <!-- En este Período -->
             <div class="bg-gradient-to-br from-amber-50 to-amber-100/60 p-4 rounded-2xl border border-amber-300/80 shadow-xs">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-[10px] font-black text-amber-900 uppercase tracking-wider">${this.currentRegAllTimeMode ? 'Listado Total' : 'En Este Período'}</span>
                 <span class="w-7 h-7 rounded-lg bg-amber-200/80 text-amber-800 flex items-center justify-center text-xs"><i class="fas fa-filter"></i></span>
               </div>
               <div class="text-2xl font-black text-amber-900">${filteredList.length}</div>
-              <div class="text-[10px] text-amber-800 mt-1 font-semibold">${this.currentRegAllTimeMode ? 'Todos los registros' : (stats.activeWeek !== 'all' ? `Semana ${stats.activeWeek}` : formatMonthKey(stats.activeMonth))}</div>
+              <div class="text-[10px] text-amber-800 mt-1 font-semibold">${this.currentRegAllTimeMode ? 'Todos los registros' : (stats.activeWeek !== 'all' ? 'Semana ' + stats.activeWeek : formatMonthKey(stats.activeMonth))}</div>
             </div>
 
-            <!-- Clientes -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Vista Cliente</span>
@@ -2352,7 +2353,6 @@ const AdminApp = {
               <div class="text-[10px] text-slate-400 mt-1">Seguimiento personal</div>
             </div>
 
-            <!-- Técnicos Internos -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Técnicos Internos</span>
@@ -2362,7 +2362,6 @@ const AdminApp = {
               <div class="text-[10px] text-slate-400 mt-1">Laboratorio & Taller WES</div>
             </div>
 
-            <!-- Técnicos Externos -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs col-span-2 sm:col-span-1">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Técnicos Externos</span>
@@ -2372,54 +2371,6 @@ const AdminApp = {
               <div class="text-[10px] text-slate-400 mt-1">Campo & Instalaciones</div>
             </div>
           </div>
-
-          <!-- GRÁFICO DE DISTRIBUCIÓN POR SEMANAS (Si no está en modo 'Todos los Usuarios') -->
-          ${!this.currentRegAllTimeMode ? `
-            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h4 class="font-bold text-xs text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
-                    <i class="fas fa-chart-bar text-wes-blue"></i>
-                    <span>Distribución de Registros por Semana &bull; ${formatMonthKey(stats.activeMonth)}</span>
-                  </h4>
-                  <p class="text-[11px] text-slate-500">Haz clic en cualquier semana para filtrar los usuarios registrados de ese período.</p>
-                </div>
-                <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-xl">
-                  ${Object.values(stats.weekCounts).reduce((a, b) => a + b, 0)} registros este mes
-                </span>
-              </div>
-
-              <div class="grid grid-cols-5 gap-3 pt-2">
-                ${[1, 2, 3, 4, 5].map(wk => {
-                  const count = stats.weekCounts[wk] || 0;
-                  const pct = Math.round((count / maxWeekCount) * 100);
-                  const isSelected = stats.activeWeek === String(wk);
-                  const weekRanges = { 1: 'Días 1 - 7', 2: 'Días 8 - 14', 3: 'Días 15 - 21', 4: 'Días 22 - 28', 5: 'Días 29 - 31' };
-                  return `
-                    <button type="button" onclick="AdminApp.handleRegFilterChange(null, '${wk}')" class="p-3 rounded-2xl border transition text-left flex flex-col justify-between h-36 group ${isSelected ? 'border-wes-blue bg-blue-50/60 ring-2 ring-wes-blue/20' : 'border-slate-200 hover:border-wes-gold hover:bg-slate-50/60'}">
-                      <div>
-                        <div class="flex items-center justify-between">
-                          <span class="text-xs font-extrabold ${isSelected ? 'text-wes-blue' : 'text-slate-700'}">Semana ${wk}</span>
-                          ${isSelected ? `<span class="w-2 h-2 rounded-full bg-wes-blue"></span>` : ''}
-                        </div>
-                        <span class="text-[10px] text-slate-400 block">${weekRanges[wk]}</span>
-                      </div>
-
-                      <div>
-                        <div class="flex items-baseline space-x-1 mb-1.5">
-                          <span class="text-xl font-black ${count > 0 ? (isSelected ? 'text-wes-blue' : 'text-slate-800') : 'text-slate-300'}">${count}</span>
-                          <span class="text-[10px] text-slate-400">usuarios</span>
-                        </div>
-                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                          <div class="h-2 rounded-full transition-all duration-500 ${isSelected ? 'bg-wes-blue' : (count > 0 ? 'bg-amber-500 group-hover:bg-wes-gold' : 'bg-transparent')}" style="width: ${Math.max(pct, count > 0 ? 12 : 0)}%;"></div>
-                        </div>
-                      </div>
-                    </button>
-                  `;
-                }).join('')}
-              </div>
-            </div>
-          ` : ''}
 
           <!-- TABLA DE USUARIOS REGISTRADOS Y ASIGNADOR DE VISTAS CON ACCIONES DIRECTAS -->
           <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
@@ -2443,7 +2394,7 @@ const AdminApp = {
                     <th class="p-3.5">Persona Registrada</th>
                     <th class="p-3.5">Contacto / Correo</th>
                     <th class="p-3.5">Fecha Registro / Último Acceso</th>
-                    <th class="p-3.5 text-center">Estado / Push</th>
+                    <th class="p-3.5 text-center">Estado / Actividad</th>
                     <th class="p-3.5">Rol / Vista Asignada</th>
                     <th class="p-3.5 text-right">Acciones</th>
                   </tr>
@@ -2453,7 +2404,7 @@ const AdminApp = {
                     <tr>
                       <td colspan="6" class="p-8 text-center text-slate-400">
                         <i class="fas fa-user-slash text-2xl mb-2 text-slate-300 block"></i>
-                        No se encontraron registros para los filtros seleccionados.
+                        No se encontraron registros de usuarios en la base de datos oficial.
                       </td>
                     </tr>
                   ` : pagedUsers.map(u => {
@@ -2472,8 +2423,17 @@ const AdminApp = {
                     const pushDevices = u.pushDevicesCount || 0;
                     const statusStr = (u.status || 'ACTIVO').toUpperCase();
 
+                    // Cálculo de "En línea" con umbral documentado de actividad real: 15 minutos (900000 ms)
+                    let isOnline = false;
+                    if (u.lastLogin && u.lastLogin !== 'Sin accesos') {
+                      const lastD = new Date(u.lastLogin);
+                      if (!isNaN(lastD.getTime()) && (Date.now() - lastD.getTime()) < 900000) {
+                        isOnline = true;
+                      }
+                    }
+
                     return `
-                      <tr class="hover:bg-slate-50/80 transition">
+                      <tr class="hover:bg-slate-50/80 transition cursor-pointer" onclick="if(event.target.closest('button,select,a')) return; AdminApp.openUserProfileViewModal('${escapeHtml(u.email)}')">
                         <!-- Persona -->
                         <td class="p-3.5">
                           <div class="flex items-center space-x-3">
@@ -2481,7 +2441,7 @@ const AdminApp = {
                               ${initials}
                             </div>
                             <div class="min-w-0">
-                              <div class="font-bold text-slate-800 truncate">${escapeHtml(u.name || 'Usuario')}</div>
+                              <div class="font-bold text-slate-800 truncate hover:text-wes-blue transition">${escapeHtml(u.name || 'Usuario')}</div>
                               <div class="text-[10px] text-slate-400 font-mono">ID: ${escapeHtml(u.id || '')}</div>
                             </div>
                           </div>
@@ -2504,21 +2464,22 @@ const AdminApp = {
                           <div class="text-[10px] text-slate-400">Últ: ${escapeHtml(u.lastLogin || 'Sin accesos')}</div>
                         </td>
 
-                        <!-- Estado / Push / Verificado -->
+                        <!-- Estado / Push / Actividad -->
                         <td class="p-3.5 text-center whitespace-nowrap">
                           <div class="flex flex-col items-center space-y-1">
                             <div class="flex items-center space-x-1">
-                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${statusStr === 'ACTIVO' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${statusStr === 'ACTIVO' ? 'bg-emerald-100 text-emerald-800' : (statusStr === 'SUSPENDIDO' ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-800')}">
                                 ${statusStr}
                               </span>
-                              <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200" title="Verificado con código OTP de 6 dígitos">
-                                <i class="fas fa-check text-[9px] mr-1 text-emerald-600"></i>OTP
-                              </span>
+                              ${isOnline ? `
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200" title="Actividad detectada en los últimos 15 min">
+                                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>En línea
+                                </span>
+                              ` : ''}
                             </div>
-                            <!-- Cantidad de dispositivos Push -->
-                            <div class="text-[10px] text-slate-500 flex items-center space-x-1" title="${pushDevices} dispositivo(s) suscrito(s) a notificaciones push">
+                            <div class="text-[10px] text-slate-500 flex items-center space-x-1" title="${pushDevices} dispositivo(s) push">
                               <i class="fas fa-mobile-alt text-slate-400"></i>
-                              <span>${pushDevices} Push Activo${pushDevices !== 1 ? 's' : ''}</span>
+                              <span>${pushDevices} Push</span>
                             </div>
                           </div>
                         </td>
@@ -2544,7 +2505,7 @@ const AdminApp = {
                         <!-- Botones de Acción: Ver Perfil & Enviar Mensaje -->
                         <td class="p-3.5 text-right whitespace-nowrap">
                           <div class="flex items-center justify-end space-x-1.5">
-                            <button onclick="AdminApp.openUserProfileViewModal('${escapeHtml(u.email)}')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center space-x-1 transition shadow-xs" title="Ver perfil completo">
+                            <button onclick="AdminApp.openUserProfileViewModal('${escapeHtml(u.email)}')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center space-x-1 transition shadow-xs" title="Ver y editar perfil completo">
                               <i class="fas fa-id-card text-slate-500"></i>
                               <span>Ver Perfil</span>
                             </button>
@@ -2584,6 +2545,16 @@ const AdminApp = {
                 </div>
               </div>
             ` : ''}
+          </div>
+        ` : (this.currentUsersSubtab === 'accesos' ? `
+          <!-- ============================================================== -->
+          <!-- PESTAÑA: DASHBOARD DE ACCESOS REALES (EVENTOS DEL SERVIDOR)     -->
+          <!-- ============================================================== -->
+          <div id="admin-access-dashboard-container" class="space-y-4">
+            <div class="p-8 text-center text-slate-500 bg-white rounded-3xl border border-slate-200">
+              <i class="fas fa-spinner fa-spin text-2xl text-wes-blue mb-2"></i>
+              <p class="text-xs font-bold">Consultando métricas y eventos de autenticación del servidor...</p>
+            </div>
           </div>
         ` : `
           <!-- ============================================================== -->
@@ -2668,8 +2639,148 @@ const AdminApp = {
               </table>
             </div>
           </div>
-        `}
+        `)}
 
+      </div>
+    `;
+
+    // Si la subpestaña es accesos, cargar datos reales en segundo plano
+    if (this.currentUsersSubtab === 'accesos') {
+      this.loadAuthAccessDashboardContent();
+    }
+  },
+
+  async loadAuthAccessDashboardContent() {
+    const container = document.getElementById('admin-access-dashboard-container');
+    if (!container) return;
+
+    if (typeof UserAuth === 'undefined' || typeof UserAuth.getAuthAccessDashboard !== 'function') {
+      container.innerHTML = '<div class="p-6 text-center text-rose-600 font-bold text-xs">Módulo de métricas de acceso no disponible.</div>';
+      return;
+    }
+
+    const data = await UserAuth.getAuthAccessDashboard();
+    if (!data) {
+      container.innerHTML = '<div class="p-6 text-center text-slate-500 text-xs">No fue posible obtener las métricas de acceso en este momento.</div>';
+      return;
+    }
+
+    container.innerHTML = `
+      <!-- TARJETAS DE MÉTRICAS REALES VALIDADAS POR SERVIDOR -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Únicos Hoy</span>
+            <span class="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs"><i class="fas fa-user-check"></i></span>
+          </div>
+          <div class="text-2xl font-black text-emerald-700">${data.uniqueUsersToday || 0}</div>
+          <div class="text-[10px] text-slate-500 mt-1">Personas autenticadas hoy</div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Únicos Semana</span>
+            <span class="w-6 h-6 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs"><i class="fas fa-calendar-week"></i></span>
+          </div>
+          <div class="text-2xl font-black text-blue-700">${data.uniqueUsersThisWeek || 0}</div>
+          <div class="text-[10px] text-slate-500 mt-1">Desde el lunes</div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Únicos Mes</span>
+            <span class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs"><i class="fas fa-calendar-alt"></i></span>
+          </div>
+          <div class="text-2xl font-black text-indigo-700">${data.uniqueUsersThisMonth || 0}</div>
+          <div class="text-[10px] text-slate-500 mt-1">En el mes corriente</div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Inicios Exitosos Totales</span>
+            <span class="w-6 h-6 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xs"><i class="fas fa-key"></i></span>
+          </div>
+          <div class="text-2xl font-black text-slate-900">${data.totalSuccessfulLogins || 0}</div>
+          <div class="text-[10px] text-slate-500 mt-1">Eventos OTP validados</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div class="bg-white p-4 rounded-2xl border border-rose-200/80 shadow-xs flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider">Cuentas Suspendidas</span>
+            <div class="text-xl font-black text-rose-700 mt-1">${data.suspendedAccountsCount || 0}</div>
+            <div class="text-[10px] text-slate-400">Acceso bloqueado administrativamente</div>
+          </div>
+          <span class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-base"><i class="fas fa-user-slash"></i></span>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-amber-200/80 shadow-xs flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Fallos de Acceso / Bloqueos</span>
+            <div class="text-xl font-black text-amber-800 mt-1">${data.totalFailedAccessAttempts || 0}</div>
+            <div class="text-[10px] text-slate-400">Intentos fallidos o códigos superados</div>
+          </div>
+          <span class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-base"><i class="fas fa-shield-virus"></i></span>
+        </div>
+      </div>
+
+      <!-- LISTADO DE EVENTOS DE ACCESO RECIENTES (America/Santo_Domingo) -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-xs text-slate-800 uppercase tracking-wider">Bitácora de Inicios de Sesión Recientes</h4>
+            <p class="text-[11px] text-slate-500">Orden cronológico descendente. Zona horaria: America/Santo_Domingo (GMT-4).</p>
+          </div>
+          <span class="text-[10px] font-mono text-slate-400 bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200">
+            Servidor: ${escapeHtml(data.serverTime || '')}
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                <th class="p-3.5">Usuario / Correo</th>
+                <th class="p-3.5">Rol al Acceder</th>
+                <th class="p-3.5">Propósito</th>
+                <th class="p-3.5">Fecha y Hora Oficial (RD)</th>
+                <th class="p-3.5">Cliente / Origen</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              ${(!data.recentAccessEvents || data.recentAccessEvents.length === 0) ? `
+                <tr>
+                  <td colspan="5" class="p-8 text-center text-slate-400">
+                    <i class="fas fa-history text-2xl mb-2 text-slate-300 block"></i>
+                    No se registran accesos recientes en este período.
+                  </td>
+                </tr>
+              ` : data.recentAccessEvents.map(e => `
+                <tr class="hover:bg-slate-50/80 transition">
+                  <td class="p-3.5">
+                    <div class="font-bold text-slate-800">${escapeHtml(e.name || 'Usuario')}</div>
+                    <div class="text-[11px] text-slate-500 font-mono">${escapeHtml(e.email)}</div>
+                  </td>
+                  <td class="p-3.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">
+                      ${escapeHtml(e.roleLabel || e.role)}
+                    </span>
+                  </td>
+                  <td class="p-3.5">
+                    <span class="text-xs uppercase font-semibold text-slate-600">${escapeHtml(e.purpose)}</span>
+                  </td>
+                  <td class="p-3.5 font-mono text-slate-800 text-xs">
+                    ${escapeHtml(e.accessDate)}
+                  </td>
+                  <td class="p-3.5 text-slate-500 text-[11px] font-mono">
+                    ${escapeHtml(e.ipClient || 'WEB_CLIENT')}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   },
@@ -2739,401 +2850,389 @@ const AdminApp = {
     }
   },
 
-  // Modal Ver Perfil de Usuario Registrado
+  // Modal Ver y Editar Perfil de Usuario con Recuperación de Acceso Segregada
   openUserProfileViewModal(email) {
     if (typeof UserAuth === 'undefined') return;
     const clients = UserAuth.getAllRegisteredUsers ? UserAuth.getAllRegisteredUsers() : [];
     const u = clients.find(c => c.email && c.email.toLowerCase() === String(email).toLowerCase().trim());
     if (!u) {
-      if (window.showToast) window.showToast('Usuario no encontrado', 'error');
+      if (window.showToast) window.showToast('Usuario no encontrado en la base de datos.', 'error');
       return;
     }
 
     const regDate = u.createdAt ? new Date(u.createdAt).toLocaleString('es-DO', { dateStyle: 'full', timeStyle: 'short' }) : 'No registrado';
     const lastLogin = u.lastLogin || 'Sin registros de acceso';
     const pushCount = u.pushDevicesCount || 0;
-    const roleLabels = {
-      cliente: 'Vista Cliente',
-      tecnico_interno: 'Técnico Interno WES',
-      tecnico_externo: 'Técnico Externo',
-      administrador: 'Administrador WES'
-    };
-    const roleLabel = roleLabels[u.role] || u.roleLabel || 'Vista Cliente';
+    const statusStr = (u.status || 'ACTIVO').toUpperCase();
+
+    // Cálculo de "En línea" con umbral documentado de actividad real: 15 minutos (900000 ms)
+    let isOnline = false;
+    if (u.lastLogin && u.lastLogin !== 'Sin accesos') {
+      const lastD = new Date(u.lastLogin);
+      if (!isNaN(lastD.getTime()) && (Date.now() - lastD.getTime()) < 900000) {
+        isOnline = true;
+      }
+    }
 
     let modal = document.getElementById('admin-user-profile-modal');
     if (!modal) {
       modal = document.createElement('div');
       modal.id = 'admin-user-profile-modal';
-      modal.className = 'fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm';
+      modal.className = 'fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto';
       document.body.appendChild(modal);
     }
 
     modal.innerHTML = `
-      <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-5">
+      <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-5 my-8">
+        
+        <!-- ENCABEZADO -->
         <div class="flex items-center justify-between border-b border-slate-100 pb-4">
           <div class="flex items-center space-x-3">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-wes-dark to-wes-blue text-wes-gold flex items-center justify-center font-black text-lg uppercase shadow-sm">
               ${(u.name || 'U').slice(0, 2).toUpperCase()}
             </div>
             <div>
-              <h3 class="font-bold text-base text-slate-800 font-brand">${escapeHtml(u.name || 'Usuario')}</h3>
+              <div class="flex items-center space-x-2">
+                <h3 class="font-bold text-base text-slate-800 font-brand" id="prof-display-name">${escapeHtml(u.name || 'Usuario')}</h3>
+                ${isOnline ? `
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>En línea
+                  </span>
+                ` : `
+                  <span class="text-[10px] text-slate-400 font-semibold">Desconectado</span>
+                `}
+              </div>
               <p class="text-xs text-slate-500 font-mono">ID Permanente: ${escapeHtml(u.id || '')}</p>
             </div>
           </div>
-          <button onclick="document.getElementById('admin-user-profile-modal').remove()" class="text-slate-400 hover:text-slate-600 p-2 rounded-xl transition">
-            <i class="fas fa-times text-base"></i>
-          </button>
+          <div class="flex items-center space-x-1">
+            <button id="btn-toggle-edit-mode" onclick="AdminApp.toggleUserProfileEditMode(true)" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center space-x-1">
+              <i class="fas fa-edit text-slate-500"></i>
+              <span>Editar Perfil</span>
+            </button>
+            <button onclick="document.getElementById('admin-user-profile-modal').remove()" class="text-slate-400 hover:text-slate-600 p-2 rounded-xl transition">
+              <i class="fas fa-times text-base"></i>
+            </button>
+          </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 text-xs">
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Correo Electrónico</span>
-            <div class="font-mono text-slate-800 break-all font-semibold flex items-center justify-between">
-              <span>${escapeHtml(u.email)}</span>
-              <button onclick="AdminApp.copyToClipboard('${escapeHtml(u.email)}', 'Correo copiado')" class="text-slate-400 hover:text-wes-blue ml-1" title="Copiar">
-                <i class="far fa-copy text-xs"></i>
+        <!-- MODO LECTURA DE DATOS -->
+        <div id="prof-view-mode" class="space-y-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Correo Electrónico</span>
+              <div class="font-mono text-slate-800 break-all font-semibold flex items-center justify-between">
+                <span>${escapeHtml(u.email)}</span>
+                <button onclick="AdminApp.copyToClipboard('${escapeHtml(u.email)}', 'Correo copiado')" class="text-slate-400 hover:text-wes-blue ml-1" title="Copiar">
+                  <i class="far fa-copy text-xs"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Teléfono Contacto</span>
+              <div class="text-slate-800 font-semibold">${escapeHtml(u.phone || 'No registrado')}</div>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Vista / Rol</span>
+              <div class="text-wes-blue font-bold flex items-center space-x-1">
+                <i class="fas fa-user-shield text-xs"></i>
+                <span>${escapeHtml(u.roleLabel || u.role || 'Vista Cliente')}</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Estado de Cuenta</span>
+              <div class="flex items-center space-x-1.5 font-bold ${statusStr === 'ACTIVO' ? 'text-emerald-600' : (statusStr === 'SUSPENDIDO' ? 'text-rose-600' : 'text-slate-600')}">
+                <span class="w-2 h-2 rounded-full ${statusStr === 'ACTIVO' ? 'bg-emerald-500' : (statusStr === 'SUSPENDIDO' ? 'bg-rose-500' : 'bg-slate-400')}"></span>
+                <span>${escapeHtml(statusStr)}</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Verificación Correo</span>
+              <div class="text-emerald-700 font-bold flex items-center space-x-1">
+                <i class="fas fa-check-circle text-xs"></i>
+                <span>Verificado mediante OTP</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Dispositivos Push</span>
+              <div class="text-indigo-700 font-bold flex items-center space-x-1">
+                <i class="fas fa-bell text-xs"></i>
+                <span>${pushCount} Dispositivo(s)</span>
+              </div>
+            </div>
+
+            <div class="col-span-2 sm:col-span-3 bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-1">
+              <div class="flex justify-between">
+                <span class="text-[10px] uppercase font-bold text-slate-400">Fecha de Registro:</span>
+                <span class="text-slate-700 font-medium">${regDate}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-[10px] uppercase font-bold text-slate-400">Último Acceso Registrado:</span>
+                <span class="text-slate-700 font-medium font-mono">${escapeHtml(lastLogin)}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN: RECUPERACIÓN DE ACCESO Y ACCIONES DE SEGURIDAD SEGREGADAS -->
+          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3">
+            <div class="flex items-center space-x-1.5 font-bold text-xs text-slate-800 uppercase tracking-wider">
+              <i class="fas fa-shield-alt text-wes-blue"></i>
+              <span>Acciones de Recuperación de Acceso y Sesión</span>
+            </div>
+            <p class="text-[11px] text-slate-500">Operaciones directas con verificación en servidor. Los códigos y tokens permanecen protegidos y auditados.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <!-- 1. Reenviar OTP -->
+              <button onclick="AdminApp.triggerAccessAction('${escapeHtml(u.email)}', 'resend_otp_access', 'Reenvío de instrucciones OTP solicitado por admin')" class="p-2.5 rounded-xl border border-blue-200 bg-white hover:bg-blue-50 text-blue-900 font-bold flex items-center space-x-2 transition text-left">
+                <i class="fas fa-envelope-open-text text-wes-blue text-sm"></i>
+                <div>
+                  <div class="text-[11px]">Reenviar Instrucciones OTP</div>
+                  <div class="text-[9px] text-slate-400 font-normal">Despacha código seguro a su correo</div>
+                </div>
+              </button>
+
+              <!-- 2. Revocar OTPs pendientes -->
+              <button onclick="AdminApp.triggerAccessAction('${escapeHtml(u.email)}', 'revoke_pending_otps', 'Revocación de códigos pendientes')" class="p-2.5 rounded-xl border border-amber-200 bg-white hover:bg-amber-50 text-amber-900 font-bold flex items-center space-x-2 transition text-left">
+                <i class="fas fa-ban text-amber-600 text-sm"></i>
+                <div>
+                  <div class="text-[11px]">Revocar Códigos Pendientes</div>
+                  <div class="text-[9px] text-slate-400 font-normal">Invalida códigos anteriores</div>
+                </div>
+              </button>
+
+              <!-- 3. Desbloquear intentos -->
+              <button onclick="AdminApp.promptUnlockAccount('${escapeHtml(u.email)}')" class="p-2.5 rounded-xl border border-indigo-200 bg-white hover:bg-indigo-50 text-indigo-900 font-bold flex items-center space-x-2 transition text-left">
+                <i class="fas fa-unlock text-indigo-600 text-sm"></i>
+                <div>
+                  <div class="text-[11px]">Desbloquear Intentos Fallidos</div>
+                  <div class="text-[9px] text-slate-400 font-normal">Levanta restricción temporal con motivo</div>
+                </div>
+              </button>
+
+              <!-- 4. Cerrar todas las sesiones -->
+              <button onclick="AdminApp.triggerAccessAction('${escapeHtml(u.email)}', 'terminate_all_sessions', 'Cierre forzado de sesiones')" class="p-2.5 rounded-xl border border-rose-200 bg-white hover:bg-rose-50 text-rose-900 font-bold flex items-center space-x-2 transition text-left">
+                <i class="fas fa-sign-out-alt text-rose-600 text-sm"></i>
+                <div>
+                  <div class="text-[11px]">Cerrar Todas las Sesiones</div>
+                  <div class="text-[9px] text-slate-400 font-normal">Invalida tokens y push del usuario</div>
+                </div>
               </button>
             </div>
           </div>
+        </div>
 
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Teléfono Contacto</span>
-            <div class="text-slate-800 font-semibold">${escapeHtml(u.phone || 'No registrado')}</div>
+        <!-- MODO EDICIÓN DE PERFIL (OCULTO POR DEFECTO) -->
+        <div id="prof-edit-mode" class="hidden space-y-4">
+          <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 flex items-center space-x-2">
+            <i class="fas fa-info-circle text-amber-600"></i>
+            <span><strong>Modo Edición:</strong> Modifica únicamente los datos autorizados. Los cambios se validarán y quedarán registrados en auditoría.</span>
           </div>
 
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Vista / Rol</span>
-            <div class="text-wes-blue font-bold flex items-center space-x-1">
-              <i class="fas fa-user-shield text-xs"></i>
-              <span>${escapeHtml(roleLabel)}</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Nombre Completo: *</label>
+              <input type="text" id="prof-edit-name" value="${escapeHtml(u.name || '')}" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition font-medium">
             </div>
-          </div>
 
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Estado de Cuenta</span>
-            <div class="flex items-center space-x-1.5 font-bold ${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'text-emerald-600' : 'text-rose-600'}">
-              <span class="w-2 h-2 rounded-full ${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
-              <span>${escapeHtml((u.status || 'ACTIVO').toUpperCase())}</span>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Correo Electrónico: *</label>
+              <input type="email" id="prof-edit-email" value="${escapeHtml(u.email || '')}" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition font-mono">
             </div>
-          </div>
 
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Verificación Correo</span>
-            <div class="text-emerald-700 font-bold flex items-center space-x-1">
-              <i class="fas fa-check-circle text-xs"></i>
-              <span>Verificado mediante OTP</span>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Teléfono Contacto:</label>
+              <input type="text" id="prof-edit-phone" value="${escapeHtml(u.phone || '')}" placeholder="(809) 000-0000" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition font-medium">
             </div>
-          </div>
 
-          <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-            <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Dispositivos Push</span>
-            <div class="text-indigo-700 font-bold flex items-center space-x-1">
-              <i class="fas fa-bell text-xs"></i>
-              <span>${pushCount} Dispositivo(s) Activo(s)</span>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Rol / Vista Asignada:</label>
+              <select id="prof-edit-role" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                <option value="cliente" ${u.role === 'cliente' ? 'selected' : ''}>👤 Cliente</option>
+                <option value="tecnico_interno" ${u.role === 'tecnico_interno' ? 'selected' : ''}>🛠️ Técnico Interno WES</option>
+                <option value="tecnico_externo" ${u.role === 'tecnico_externo' ? 'selected' : ''}>🚗 Técnico Externo</option>
+                <option value="administrador" ${(u.role === 'administrador' || u.role === 'propietario') ? 'selected' : ''}>⚡ Administrador</option>
+              </select>
             </div>
-          </div>
 
-          <div class="col-span-2 bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-1">
-            <div class="flex justify-between">
-              <span class="text-[10px] uppercase font-bold text-slate-400">Fecha de Registro:</span>
-              <span class="text-slate-700 font-medium">${regDate}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-[10px] uppercase font-bold text-slate-400">Último Acceso:</span>
-              <span class="text-slate-700 font-medium">${escapeHtml(lastLogin)}</span>
+            <div class="sm:col-span-2">
+              <label class="block font-bold text-slate-700 mb-1">Motivo obligatorio del cambio (para Auditoría): *</label>
+              <input type="text" id="prof-edit-reason" placeholder="Ej. Actualización de teléfono por solicitud del cliente..." class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
             </div>
           </div>
         </div>
 
+        <!-- BOTONES INFERIORES -->
         <div class="flex items-center justify-between pt-2 border-t border-slate-100">
-          <button onclick="AdminApp.toggleUserStatusRemote('${escapeHtml(u.email)}', '${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO'}')" class="px-4 py-2 rounded-xl text-xs font-bold ${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'} transition">
-            <i class="fas fa-power-off mr-1"></i> ${(u.status || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'Suspender Cuenta' : 'Reactivar Cuenta'}
-          </button>
-          <div class="flex items-center space-x-2">
-            <button onclick="document.getElementById('admin-user-profile-modal').remove()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+          <div id="prof-footer-actions-left">
+            <button onclick="AdminApp.toggleUserStatusRemote('${escapeHtml(u.email)}', '${statusStr === 'ACTIVO' ? 'SUSPENDIDO' : 'ACTIVO'}')" class="px-4 py-2 rounded-xl text-xs font-bold ${statusStr === 'ACTIVO' ? 'bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-200'} transition">
+              <i class="fas fa-power-off mr-1"></i> ${statusStr === 'ACTIVO' ? 'Suspender Cuenta' : 'Reactivar Cuenta'}
+            </button>
+          </div>
+
+          <div class="flex items-center space-x-2" id="prof-footer-actions-right">
+            <button id="btn-cancel-edit" onclick="AdminApp.toggleUserProfileEditMode(false)" class="hidden px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+              Cancelar Edición
+            </button>
+            <button id="btn-save-edit" onclick="AdminApp.saveUserProfileChanges('${escapeHtml(u.email)}')" class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
+              <i class="fas fa-save"></i>
+              <span>Guardar Cambios</span>
+            </button>
+
+            <button id="btn-close-view" onclick="document.getElementById('admin-user-profile-modal').remove()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
               Cerrar
             </button>
-            <button onclick="document.getElementById('admin-user-profile-modal').remove(); AdminApp.openSendUserDirectMessageModal('${escapeHtml(u.email)}')" class="px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
+            <button id="btn-msg-view" onclick="document.getElementById('admin-user-profile-modal').remove(); AdminApp.openSendUserDirectMessageModal('${escapeHtml(u.email)}')" class="px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
               <i class="fas fa-paper-plane text-wes-gold"></i>
               <span>Enviar Mensaje</span>
             </button>
           </div>
         </div>
-      </div>
-    `;
-  },
-
-  async toggleUserStatusRemote(email, nextStatus) {
-    if (!confirm(`¿Confirmas cambiar el estado de "${email}" a "${nextStatus}"?`)) return;
-    if (typeof UserAuth !== 'undefined' && typeof UserAuth.updateClientRemote === 'function') {
-      await UserAuth.updateClientRemote(email, { status: nextStatus });
-      if (window.showToast) window.showToast(`Estado de ${email} cambiado a ${nextStatus}`, 'success');
-      const modal = document.getElementById('admin-user-profile-modal');
-      if (modal) modal.remove();
-      const c = document.getElementById('admin-dynamic-content');
-      if (c) this.renderUsuarios(c);
-    }
-  },
-
-  // Modal Enviar Mensaje Directo con Previsualización y Confirmación
-  openSendUserDirectMessageModal(targetEmail) {
-    if (typeof UserAuth === 'undefined') return;
-    const clients = UserAuth.getAllRegisteredUsers ? UserAuth.getAllRegisteredUsers() : [];
-    const u = clients.find(c => c.email && c.email.toLowerCase() === String(targetEmail).toLowerCase().trim()) || {
-      name: 'Cliente',
-      email: targetEmail,
-      id: ''
-    };
-
-    let modal = document.getElementById('admin-direct-msg-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'admin-direct-msg-modal';
-      modal.className = 'fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm';
-      document.body.appendChild(modal);
-    }
-
-    modal.innerHTML = `
-      <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-4">
-        
-        <!-- Encabezado -->
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <div class="flex items-center space-x-2">
-            <span class="w-8 h-8 rounded-xl bg-wes-blue text-wes-gold flex items-center justify-center font-bold text-sm shadow-xs">
-              <i class="fas fa-paper-plane"></i>
-            </span>
-            <div>
-              <h3 class="font-bold text-base text-slate-800 font-brand">Redactar Mensaje Personalizado</h3>
-              <p class="text-xs text-slate-500">Se depositará en el buzón privado del cliente y enviará aviso push.</p>
-            </div>
-          </div>
-          <button onclick="document.getElementById('admin-direct-msg-modal').remove()" class="text-slate-400 hover:text-slate-600 p-2 rounded-xl transition">
-            <i class="fas fa-times text-base"></i>
-          </button>
-        </div>
-
-        <!-- Destinatario Fijo Identificado -->
-        <div class="bg-blue-50/70 p-3 rounded-2xl border border-blue-200 flex items-center justify-between">
-          <div class="flex items-center space-x-2.5">
-            <div class="w-8 h-8 rounded-xl bg-wes-blue text-white flex items-center justify-center font-bold text-xs uppercase">
-              ${(u.name || 'U').slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <div class="font-bold text-xs text-slate-800">${escapeHtml(u.name || 'Usuario')}</div>
-              <div class="text-[11px] text-slate-600 font-mono">${escapeHtml(u.email)}</div>
-            </div>
-          </div>
-          <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-mono">
-            ID: ${escapeHtml(u.id || 'CLI')}
-          </span>
-        </div>
-
-        <!-- Formulario de Redacción -->
-        <div id="adm-msg-form-view" class="space-y-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Título o Asunto del Mensaje: *</label>
-            <input type="text" id="adm-msg-subject" placeholder="Ej. Actualización importante sobre su servicio..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Contenido del Mensaje: *</label>
-            <textarea id="adm-msg-content" rows="4" placeholder="Escriba aquí el mensaje detallado para el cliente..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition"></textarea>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">
-              <span>Respuesta Rápida Sugerida para Sofía IA (Opcional):</span>
-              <span class="text-[10px] text-slate-400 font-normal ml-1">El usuario podrá tocarla para consultar a la asistente.</span>
-            </label>
-            <input type="text" id="adm-msg-prompt" placeholder="Ej. Deseo más detalles sobre este mensaje o cotización..." class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
-          </div>
-
-          <!-- Opción separada de enviar copia por correo (desmarcada por defecto) -->
-          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
-            <div>
-              <div class="font-bold text-xs text-slate-800">Enviar copia por correo electrónico</div>
-              <div class="text-[10px] text-slate-500">Canal separado: envía una copia transaccional al correo del usuario.</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="adm-msg-send-email" class="sr-only peer">
-              <div class="w-10 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-wes-blue"></div>
-            </label>
-          </div>
-        </div>
-
-        <!-- Vista de Previsualización (Oculta por defecto) -->
-        <div id="adm-msg-preview-view" class="hidden space-y-3">
-          <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 flex items-center space-x-2">
-            <i class="fas fa-eye text-amber-600"></i>
-            <span><strong>Previsualización:</strong> Así verá el usuario el mensaje en su bandeja privada:</span>
-          </div>
-
-          <div class="p-4 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-2">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-              <div class="flex items-center space-x-1.5">
-                <span class="w-2 h-2 rounded-full bg-wes-blue"></span>
-                <span id="prev-msg-subject" class="font-bold text-xs text-slate-800"></span>
-              </div>
-              <span class="text-[10px] text-slate-400">Ahora mismo</span>
-            </div>
-            <p id="prev-msg-content" class="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed"></p>
-            <div id="prev-msg-prompt-box" class="pt-2">
-              <div class="inline-flex items-center space-x-1 px-3 py-1 bg-amber-50 border border-amber-300 rounded-xl text-[11px] text-amber-900 font-semibold">
-                <i class="fas fa-robot text-amber-600"></i>
-                <span id="prev-msg-prompt"></span>
-              </div>
-            </div>
-            <div id="prev-msg-email-warning" class="hidden text-[10px] text-indigo-700 font-semibold pt-1">
-              <i class="fas fa-envelope mr-1"></i> Se enviará una copia a: ${escapeHtml(u.email)}
-            </div>
-          </div>
-        </div>
-
-        <!-- Botones de Acción -->
-        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-          <button id="adm-btn-back-edit" onclick="AdminApp.toggleDirectMessagePreview(false)" class="hidden px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
-            <i class="fas fa-arrow-left mr-1"></i> Modificar Redacción
-          </button>
-          
-          <button id="adm-btn-cancel-msg" onclick="document.getElementById('admin-direct-msg-modal').remove()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
-            Cancelar
-          </button>
-
-          <div class="flex items-center space-x-2">
-            <button id="adm-btn-preview-msg" onclick="AdminApp.toggleDirectMessagePreview(true)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-xl text-xs flex items-center space-x-1 transition border border-slate-300">
-              <i class="fas fa-eye text-amber-600"></i>
-              <span>Previsualizar</span>
-            </button>
-            <button id="adm-btn-send-msg" onclick="AdminApp.confirmAndSendDirectMessage('${escapeHtml(u.email)}', '${escapeHtml(u.id || '')}')" class="px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
-              <i class="fas fa-paper-plane text-wes-gold"></i>
-              <span>Confirmar y Enviar</span>
-            </button>
-          </div>
-        </div>
 
       </div>
     `;
   },
 
-  toggleDirectMessagePreview(showPreview) {
-    const formView = document.getElementById('adm-msg-form-view');
-    const prevView = document.getElementById('adm-msg-preview-view');
-    const btnPreview = document.getElementById('adm-btn-preview-msg');
-    const btnBack = document.getElementById('adm-btn-back-edit');
+  toggleUserProfileEditMode(isEdit) {
+    const viewMode = document.getElementById('prof-view-mode');
+    const editMode = document.getElementById('prof-edit-mode');
+    const btnToggle = document.getElementById('btn-toggle-edit-mode');
+    const btnCancel = document.getElementById('btn-cancel-edit');
+    const btnSave = document.getElementById('btn-save-edit');
+    const btnClose = document.getElementById('btn-close-view');
+    const btnMsg = document.getElementById('btn-msg-view');
 
-    if (!formView || !prevView) return;
+    if (!viewMode || !editMode) return;
 
-    if (showPreview) {
-      const subj = document.getElementById('adm-msg-subject').value.trim();
-      const content = document.getElementById('adm-msg-content').value.trim();
-      const promptVal = document.getElementById('adm-msg-prompt').value.trim();
-      const sendEmail = document.getElementById('adm-msg-send-email').checked;
-
-      if (!subj) {
-        if (window.showToast) window.showToast('Por favor escribe el asunto del mensaje.', 'error');
-        return;
-      }
-      if (!content) {
-        if (window.showToast) window.showToast('Por favor escribe el contenido del mensaje.', 'error');
-        return;
-      }
-
-      document.getElementById('prev-msg-subject').textContent = subj;
-      document.getElementById('prev-msg-content').textContent = content;
-      const promptBox = document.getElementById('prev-msg-prompt-box');
-      if (promptVal) {
-        document.getElementById('prev-msg-prompt').textContent = promptVal;
-        promptBox.classList.remove('hidden');
-      } else {
-        promptBox.classList.add('hidden');
-      }
-
-      const emailWarn = document.getElementById('prev-msg-email-warning');
-      if (sendEmail) {
-        emailWarn.classList.remove('hidden');
-      } else {
-        emailWarn.classList.add('hidden');
-      }
-
-      formView.classList.add('hidden');
-      prevView.classList.remove('hidden');
-      btnPreview.classList.add('hidden');
-      btnBack.classList.remove('hidden');
+    if (isEdit) {
+      viewMode.classList.add('hidden');
+      editMode.classList.remove('hidden');
+      if (btnToggle) btnToggle.classList.add('hidden');
+      if (btnCancel) btnCancel.classList.remove('hidden');
+      if (btnSave) btnSave.classList.remove('hidden');
+      if (btnClose) btnClose.classList.add('hidden');
+      if (btnMsg) btnMsg.classList.add('hidden');
     } else {
-      formView.classList.remove('hidden');
-      prevView.classList.add('hidden');
-      btnPreview.classList.remove('hidden');
-      btnBack.classList.add('hidden');
+      viewMode.classList.remove('hidden');
+      editMode.classList.add('hidden');
+      if (btnToggle) btnToggle.classList.remove('hidden');
+      if (btnCancel) btnCancel.classList.add('hidden');
+      if (btnSave) btnSave.classList.add('hidden');
+      if (btnClose) btnClose.classList.remove('hidden');
+      if (btnMsg) btnMsg.classList.remove('hidden');
     }
   },
 
-  async confirmAndSendDirectMessage(targetEmail, targetUserId) {
-    const subj = (document.getElementById('adm-msg-subject')?.value || '').trim();
-    const content = (document.getElementById('adm-msg-content')?.value || '').trim();
-    const promptVal = (document.getElementById('adm-msg-prompt')?.value || '').trim();
-    const sendEmail = Boolean(document.getElementById('adm-msg-send-email')?.checked);
+  async saveUserProfileChanges(originalEmail) {
+    const newName = (document.getElementById('prof-edit-name')?.value || '').trim();
+    const newEmail = (document.getElementById('prof-edit-email')?.value || '').trim().toLowerCase();
+    const newPhone = (document.getElementById('prof-edit-phone')?.value || '').trim();
+    const newRole = document.getElementById('prof-edit-role')?.value;
+    const reason = (document.getElementById('prof-edit-reason')?.value || '').trim();
 
-    if (!subj || !content) {
-      if (window.showToast) window.showToast('Por favor completa el asunto y contenido antes de enviar.', 'error');
+    if (!newName) {
+      if (window.showToast) window.showToast('El nombre completo es obligatorio.', 'error');
+      return;
+    }
+    if (!newEmail || !newEmail.includes('@') || !newEmail.includes('.')) {
+      if (window.showToast) window.showToast('Por favor introduce un correo electrónico válido.', 'error');
+      return;
+    }
+    if (!reason) {
+      if (window.showToast) window.showToast('Por favor introduce el motivo obligatorio para la auditoría.', 'error');
       return;
     }
 
-    const btnSend = document.getElementById('adm-btn-send-msg');
-    if (btnSend) {
-      btnSend.disabled = true;
-      btnSend.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando...';
+    const btnSave = document.getElementById('btn-save-edit');
+    if (btnSave) {
+      btnSave.disabled = true;
+      btnSave.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Guardando...';
     }
 
     try {
-      const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
-      const currentU = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
-      const sender = (adminSession && adminSession.name) || (currentU && currentU.name) || 'WES Administración';
-      const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || 'ing.lmlh@gmail.com';
-      const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
+      const updatePayload = {
+        name: newName,
+        newEmail: (newEmail !== originalEmail.toLowerCase() ? newEmail : undefined),
+        phone: newPhone,
+        role: newRole,
+        reason: reason
+      };
 
-      const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
-
-      const res = await fetch(backendUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'send_user_direct_message',
-          adminToken: adminToken,
-          userEmail: userEmail,
-          data: {
-            targetEmail: targetEmail,
-            targetUserId: targetUserId,
-            sender: sender,
-            subject: subj,
-            content: content,
-            suggestedPrompt: promptVal,
-            sendEmailNotification: sendEmail
-          }
-        })
-      });
-
-      const json = await res.json();
-      if (json && json.success) {
-        if (window.showToast) window.showToast(`✅ Mensaje enviado exitosamente a ${targetEmail}`, 'success');
-        const modal = document.getElementById('admin-direct-msg-modal');
+      const res = await UserAuth.updateClientRemote(originalEmail, updatePayload);
+      if (res && res.success) {
+        if (window.showToast) window.showToast('✅ Perfil actualizado y registrado en auditoría.', 'success');
+        const modal = document.getElementById('admin-user-profile-modal');
         if (modal) modal.remove();
+        const c = document.getElementById('admin-dynamic-content');
+        if (c) this.renderUsuarios(c);
       } else {
-        throw new Error(json?.message || 'Error en el servidor al enviar el mensaje');
+        throw new Error(res?.message || 'Error guardando datos en el servidor.');
       }
     } catch (e) {
-      console.error('[AdminApp] Error enviando mensaje directo:', e);
-      if (window.showToast) window.showToast('Error al enviar mensaje: ' + e.message, 'error');
-      if (btnSend) {
-        btnSend.disabled = false;
-        btnSend.innerHTML = '<i class="fas fa-paper-plane text-wes-gold"></i><span>Confirmar y Enviar</span>';
+      if (window.showToast) window.showToast(e.message, 'error');
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.innerHTML = '<i class="fas fa-save mr-1"></i> Guardar Cambios';
       }
     }
   },
 
-  // ========================================================================
-  // NOTIFICACIONES Y GESTIÓN DE ROLES / VISTAS (USERAUTH)
-  // ========================================================================
-  switchUsersSubtab(subtab) {
+  async triggerAccessAction(targetEmail, actionType, defaultReason) {
+    if (!confirm(`¿Confirmas ejecutar la acción "${actionType}" para el usuario ${targetEmail}?`)) return;
+
+    try {
+      if (window.showToast) window.showToast('Procesando acción de acceso en el servidor...', 'info');
+      const res = await UserAuth.executeAdminAccessAction(targetEmail, actionType, defaultReason);
+      if (res && res.success) {
+        if (window.showToast) window.showToast('✅ ' + (res.message || 'Operación completada.'), 'success');
+        const modal = document.getElementById('admin-user-profile-modal');
+        if (modal) modal.remove();
+        const c = document.getElementById('admin-dynamic-content');
+        if (c) this.renderUsuarios(c);
+      } else {
+        throw new Error(res?.message || 'Error en el servidor.');
+      }
+    } catch (e) {
+      if (window.showToast) window.showToast('Error: ' + e.message, 'error');
+    }
+  },
+
+  async promptUnlockAccount(targetEmail) {
+    const reason = prompt(`Desbloquear restricción temporal de intentos para ${targetEmail}. Indica el motivo obligatorio:`, 'Verificación de identidad telefónica completada');
+    if (!reason || !reason.trim()) {
+      alert('El motivo es obligatorio para auditar el desbloqueo.');
+      return;
+    }
+    await this.triggerAccessAction(targetEmail, 'unlock_temporary_restriction', reason.trim());
+  },
+
+  async toggleUserStatusRemote(email, nextStatus) {
+    const reason = prompt(`¿Confirmas cambiar el estado de "${email}" a "${nextStatus}"? Indica el motivo para la auditoría:`, nextStatus === 'SUSPENDIDO' ? 'Suspensión administrativa preventiva' : 'Reactivación de cuenta tras validación');
+    if (reason === null) return;
+    if (!reason.trim()) {
+      alert('Debes indicar un motivo para auditar el cambio de estado.');
+      return;
+    }
+
+    if (typeof UserAuth !== 'undefined' && typeof UserAuth.updateClientRemote === 'function') {
+      const res = await UserAuth.updateClientRemote(email, { status: nextStatus, reason: reason.trim() });
+      if (res && res.success) {
+        if (window.showToast) window.showToast(`Estado de ${email} cambiado a ${nextStatus}`, 'success');
+        const modal = document.getElementById('admin-user-profile-modal');
+        if (modal) modal.remove();
+        const c = document.getElementById('admin-dynamic-content');
+        if (c) this.renderUsuarios(c);
+      } else {
+        if (window.showToast) window.showToast(res?.message || 'Error actualizando estado', 'error');
+      }
+    }
+  },
+
+    switchUsersSubtab(subtab) {
     this.currentUsersSubtab = subtab;
     const container = document.getElementById('admin-dynamic-content');
     if (container) this.renderUsuarios(container);
