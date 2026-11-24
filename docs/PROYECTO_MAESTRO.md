@@ -14,11 +14,11 @@
 | **Propietario / organización** | Ing. Luis Miguel Lizardo / Warn Electrical Services, SRL (WES) |
 | **Sede física** | Autopista Ramón Cáceres, Moca, Provincia Espaillat, República Dominicana |
 | **Fecha de inicio** | 2017 (operaciones WES) / Septiembre 2026 (fase plataforma digital) |
-| **Última actualización** | 2026-11-16 17:30 (GMT-4) |
+| **Última actualización** | 2026-11-24 16:30 (GMT-4) |
 | **Repositorio GitHub (privado)** | `https://github.com/Luis28lh/wes-plataforma.git` (remoto `origin`) y `https://github.com/Luis28lh/wes-plataforma-v1.git` (remoto `v1`) |
 | **Rama principal / política de cambios** | `main` (despliegue continuo a producción). Commits atómicos con verificación previa obligatoria. |
 | **Estado general** | **OPERATIVO EN PRODUCCIÓN** |
-| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #91) |
+| **Entorno actual** | Producción en dominio personalizado CDN + Backend Google Apps Script (Versión #92) |
 
 ---
 
@@ -147,6 +147,7 @@ Digitalizar integralmente los canales de atención comercial y técnica de WES e
 
 | Fecha | Decisión | Motivo | Impacto |
 |---|---|---|---|
+| **2026-11-24** | Formulario modal integrado WES para registro de usuarios, erradicación de prompts nativos y persistencia en servidor (v92) | El usuario solicitó: 1) Sustituir cuadros nativos (`prompt()`, `alert()`, `confirm()`) por modales integrados con diseño Tailwind WES; 2) Modal responsivo al pulsar "Registrar usuario" con nombre, correo (detección en vivo de duplicados), teléfono, rol (con categoría técnico interno/externo), estado, previsualizador dinámico de permisos RBAC, protección anti-doble envío y conservación de campos ante errores; 3) Persistencia en backend (`Clientes` en Google Sheets), cuentas manuales creadas como `verified: false` hasta completar OTP, y opción de despacho de invitación oficial; 4) Confirmaciones dentro del panel con motivo obligatorio para auditoría. | 1) Creado modal `#admin-create-user-modal` y modal de confirmación `#admin-action-confirm-modal` eliminando 100% de `prompt()`, `alert()` y `confirm()`; 2) Nuevo endpoint `create_user_admin` en Apps Script con validación estricta de autorización, detección de duplicados atómica, inserción en Google Sheets y registro en `Auditoria`; 3) Comprobación en vivo de duplicados en formulario con botón para abrir perfil existente; 4) Modificado `handleVerifyAuthOtp` para marcar `verified: true` al completar el primer acceso OTP; 5) Despliegue de producción Versión #92 (Build 92) y verificación en vivo con pruebas automatizadas exitosas. |
 | **2026-11-16** | Gestión avanzada de usuarios, limpieza de ficticios, perfil editable y dashboard de accesos reales (v91) | El usuario solicitó: 1) Retiro y respaldo de usuarios ficticios sin sustitución artificial; 2) Modal de perfil editable con validación estricta y protección del último admin; 3) Acciones segregadas de recuperación de acceso (reenviar instrucciones, revocar códigos, desbloquear intentos, reactivar y cerrar sesiones) con bitácora de auditoría; 4) Dashboard de accesos reales con métricas calculadas en servidor (únicos hoy, semana, mes, fallos, suspendidos) e indicador "En línea" con umbral de 15 min. | 1) Creado respaldo formal en `docs/respaldos/respaldo_usuarios_demostracion.json` y purgada toda auto-semilla en `user_auth.js`; 2) Nuevo endpoint `admin_user_access_action` en Apps Script con acciones auditadas en la hoja `Auditoria`; 3) Endpoint `get_auth_access_dashboard_admin` calculando métricas reales desde `Auth_OTP_Tokens` y `Clientes`; 4) Protección de integridad: el servidor prohíbe degradar o suspender al último administrador activo; 5) Despliegue en Google Apps Script Versión #91 (Build 91) y verificación de endpoints en vivo con respuestas exitosas. |
 | **2026-11-05** | Backend central para Gemini en Apps Script | Proteger API key y centralizar auditoría | Tráfico de IA 100% seguro sin exponer tokens |
 | **2026-11-08** | Rediseño premium de Sofía y avatar oficial | Sustituir icono de robot por retrato corporativo aprobado | Identidad visual humana y coherente |

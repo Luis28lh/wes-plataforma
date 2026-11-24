@@ -679,15 +679,14 @@ Moca, Provincia Espaillat, República Dominicana`;
       return null;
     },
 
-    // Actualizar rol o estado de un cliente en backend y local
-    async updateClientRemote(email, updateData) {
-      const clean = (email || '').trim().toLowerCase();
-      const clients = getRegisteredClients();
-      const idx = clients.findIndex(c => c.email && c.email.toLowerCase() === clean);
-      if (idx !== -1) {
-        clients[idx] = { ...clients[idx], ...updateData };
-        saveRegisteredClients(clients);
+    // Crear usuario administrativamente conectado al backend oficial de Google Sheets
+    async createUserAdmin(userData) {
+      if (!userData || !userData.name || !userData.email) {
+        return { success: false, message: 'Nombre y correo electrónico son obligatorios.' };
       }
+
+      const cleanEmail = String(userData.email).trim().toLowerCase();
+      const cleanName = String(userData.name).trim();
 
       try {
         const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
@@ -696,7 +695,73 @@ Moca, Provincia Espaillat, República Dominicana`;
         const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
         const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
 
-        await fetch(backendUrl, {
+        const res = await fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'create_user_admin',
+            adminToken: adminToken,
+            userEmail: userEmail,
+            data: {
+              name: cleanName,
+              email: cleanEmail,
+              phone: (userData.phone || '').trim(),
+              role: userData.role || 'cliente',
+              status: userData.status || 'ACTIVO',
+              sendInvitation: Boolean(userData.sendInvitation)
+            }
+          })
+        });
+
+        if (res.ok) {
+          const json = await res.json().catch(() => null);
+          if (json && json.success && json.user) {
+            // Guardar en clientes locales
+            const clients = getRegisteredClients();
+            const existingIdx = clients.findIndex(c => c.email && c.email.toLowerCase() === cleanEmail);
+            if (existingIdx !== -1) {
+              clients[existingIdx] = json.user;
+            } else {
+              clients.unshift(json.user);
+            }
+            saveRegisteredClients(clients);
+
+            if (typeof window !== 'undefined' && window.AuditLog) {
+              window.AuditLog.log({
+                module: 'usuarios',
+                action: 'crear_usuario_manual',
+                description: `Creación administrativa de usuario: ${cleanEmail} (${cleanName}) con rol ${userData.role || 'cliente'}.`,
+                user: adminSession || currentU
+              });
+            }
+
+            return json;
+          } else if (json) {
+            return json;
+          }
+        }
+      } catch (err) {
+        console.error('[UserAuth] Error conectando con backend en createUserAdmin:', err);
+        return { success: false, message: 'Fallo de conexión al registrar usuario en el servidor: ' + err.message };
+      }
+
+      return { success: false, message: 'No se pudo crear el usuario en el servidor.' };
+    },
+
+    // Actualizar rol o estado de un cliente en backend y local
+    async updateClientRemote(email, updateData) {
+      const clean = (email || '').trim().toLowerCase();
+      const clients = getRegisteredClients();
+      const idx = clients.findIndex(c => c.email && c.email.toLowerCase() === clean);
+
+      try {
+        const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
+        const currentU = this.getCurrentUser();
+        const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || 'ing.lmlh@gmail.com';
+        const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
+        const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
+
+        const res = await fetch(backendUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
@@ -706,10 +771,29 @@ Moca, Provincia Espaillat, República Dominicana`;
             data: { email: clean, ...updateData }
           })
         });
+
+        if (res.ok) {
+          const json = await res.json().catch(() => null);
+          if (json && json.success) {
+            if (idx !== -1) {
+              clients[idx] = { ...clients[idx], ...updateData };
+              if (updateData.newEmail) clients[idx].email = updateData.newEmail;
+              saveRegisteredClients(clients);
+            }
+            return json;
+          } else if (json) {
+            return json;
+          }
+        }
       } catch (e) {
-        console.warn('[UserAuth] Actualización guardada localmente, fallo en backend:', e);
+        console.warn('[UserAuth] Error actualizando en backend:', e);
+        return { success: false, message: 'Error de conexión: ' + e.message };
       }
 
+      if (idx !== -1) {
+        clients[idx] = { ...clients[idx], ...updateData };
+        saveRegisteredClients(clients);
+      }
       return { success: true, user: clients[idx] };
     },
 

@@ -2477,9 +2477,21 @@ const AdminApp = {
                                 </span>
                               ` : ''}
                             </div>
-                            <div class="text-[10px] text-slate-500 flex items-center space-x-1" title="${pushDevices} dispositivo(s) push">
-                              <i class="fas fa-mobile-alt text-slate-400"></i>
-                              <span>${pushDevices} Push</span>
+                            <div class="flex items-center space-x-1.5 text-[10px]">
+                              ${u.verified ? `
+                                <span class="text-emerald-600 font-semibold flex items-center space-x-0.5" title="Correo verificado mediante OTP">
+                                  <i class="fas fa-check-circle text-[10px]"></i><span>Verificado</span>
+                                </span>
+                              ` : `
+                                <span class="text-amber-600 font-semibold flex items-center space-x-0.5" title="Pendiente de verificación OTP">
+                                  <i class="fas fa-clock text-[10px]"></i><span>Pendiente OTP</span>
+                                </span>
+                              `}
+                              <span class="text-slate-300">•</span>
+                              <div class="text-slate-500 flex items-center space-x-0.5" title="${pushDevices} dispositivo(s) push">
+                                <i class="fas fa-mobile-alt text-slate-400 text-[10px]"></i>
+                                <span>${pushDevices} Push</span>
+                              </div>
                             </div>
                           </div>
                         </td>
@@ -2952,10 +2964,17 @@ const AdminApp = {
 
             <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
               <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Verificación Correo</span>
-              <div class="text-emerald-700 font-bold flex items-center space-x-1">
-                <i class="fas fa-check-circle text-xs"></i>
-                <span>Verificado mediante OTP</span>
-              </div>
+              ${u.verified ? `
+                <div class="text-emerald-700 font-bold flex items-center space-x-1">
+                  <i class="fas fa-check-circle text-xs"></i>
+                  <span>Verificado mediante OTP</span>
+                </div>
+              ` : `
+                <div class="text-amber-700 font-bold flex items-center space-x-1">
+                  <i class="fas fa-clock text-xs"></i>
+                  <span>Pendiente de Verificación OTP</span>
+                </div>
+              `}
             </div>
 
             <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
@@ -3181,58 +3200,165 @@ const AdminApp = {
     }
   },
 
-  async triggerAccessAction(targetEmail, actionType, defaultReason) {
-    if (!confirm(`¿Confirmas ejecutar la acción "${actionType}" para el usuario ${targetEmail}?`)) return;
-
-    try {
-      if (window.showToast) window.showToast('Procesando acción de acceso en el servidor...', 'info');
-      const res = await UserAuth.executeAdminAccessAction(targetEmail, actionType, defaultReason);
-      if (res && res.success) {
-        if (window.showToast) window.showToast('✅ ' + (res.message || 'Operación completada.'), 'success');
-        const modal = document.getElementById('admin-user-profile-modal');
-        if (modal) modal.remove();
-        const c = document.getElementById('admin-dynamic-content');
-        if (c) this.renderUsuarios(c);
-      } else {
-        throw new Error(res?.message || 'Error en el servidor.');
-      }
-    } catch (e) {
-      if (window.showToast) window.showToast('Error: ' + e.message, 'error');
+  // Modal estilizado de confirmación con motivo para acciones de seguridad y auditoría
+  openActionConfirmModal({ title, subtitle, icon = 'fa-shield-alt', iconColor = 'text-wes-blue', requireReason = false, reasonPlaceholder = 'Motivo obligatorio para la auditoría...', confirmText = 'Confirmar Operación', confirmColor = 'bg-wes-blue hover:bg-wes-dark', onConfirm }) {
+    let modal = document.getElementById('admin-action-confirm-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'admin-action-confirm-modal';
+      modal.className = 'fixed inset-0 bg-slate-950/70 z-[60] flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto';
+      document.body.appendChild(modal);
     }
+
+    modal.innerHTML = `
+      <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-4 my-8">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-lg ${iconColor} shrink-0">
+              <i class="fas ${icon}"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-sm text-slate-800 font-brand">${escapeHtml(title)}</h3>
+              <p class="text-xs text-slate-500">${escapeHtml(subtitle || '')}</p>
+            </div>
+          </div>
+          <button type="button" onclick="document.getElementById('admin-action-confirm-modal').remove()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl transition">
+            <i class="fas fa-times text-sm"></i>
+          </button>
+        </div>
+
+        ${requireReason ? `
+          <div>
+            <label class="block font-bold text-xs text-slate-700 mb-1">Motivo obligatorio (Registro de Auditoría): *</label>
+            <input type="text" id="action-confirm-reason-input" placeholder="${escapeHtml(reasonPlaceholder)}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+            <p id="action-confirm-reason-error" class="hidden text-[11px] text-rose-600 font-semibold mt-1">El motivo es obligatorio para continuar.</p>
+          </div>
+        ` : ''}
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="document.getElementById('admin-action-confirm-modal').remove()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+            Cancelar
+          </button>
+          <button type="button" id="btn-action-confirm-execute" class="px-4 py-2 ${confirmColor} text-white font-bold rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
+            <span>${escapeHtml(confirmText)}</span>
+          </button>
+        </div>
+      </div>
+    `;
+
+    const btnExec = document.getElementById('btn-action-confirm-execute');
+    btnExec.onclick = async () => {
+      let reasonVal = '';
+      if (requireReason) {
+        const inputR = document.getElementById('action-confirm-reason-input');
+        const errR = document.getElementById('action-confirm-reason-error');
+        reasonVal = (inputR?.value || '').trim();
+        if (!reasonVal) {
+          if (errR) errR.classList.remove('hidden');
+          if (inputR) inputR.focus();
+          return;
+        }
+      }
+
+      btnExec.disabled = true;
+      btnExec.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Procesando...';
+      try {
+        await onConfirm(reasonVal);
+        const m = document.getElementById('admin-action-confirm-modal');
+        if (m) m.remove();
+      } catch (err) {
+        btnExec.disabled = false;
+        btnExec.innerHTML = `<span>${escapeHtml(confirmText)}</span>`;
+        if (window.showToast) window.showToast(err.message || 'Error al ejecutar la acción', 'error');
+      }
+    };
+  },
+
+  async triggerAccessAction(targetEmail, actionType, defaultReason) {
+    const actionLabels = {
+      resend_otp_access: { title: 'Reenviar Instrucciones OTP', subtitle: `Se enviará un código de acceso seguro al correo ${targetEmail}.`, icon: 'fa-envelope-open-text', color: 'text-wes-blue' },
+      revoke_pending_otps: { title: 'Revocar Códigos Pendientes', subtitle: `Se invalidarán todos los códigos de acceso activos para ${targetEmail}.`, icon: 'fa-ban', color: 'text-amber-600' },
+      terminate_all_sessions: { title: 'Cerrar Todas las Sesiones', subtitle: `Se cerrarán las sesiones y desconectarán las notificaciones de ${targetEmail}.`, icon: 'fa-sign-out-alt', color: 'text-rose-600', btnColor: 'bg-rose-600 hover:bg-rose-700' }
+    };
+
+    const info = actionLabels[actionType] || { title: 'Confirmar Acción', subtitle: `Usuario afectado: ${targetEmail}`, icon: 'fa-shield-alt', color: 'text-wes-blue' };
+
+    this.openActionConfirmModal({
+      title: info.title,
+      subtitle: info.subtitle,
+      icon: info.icon,
+      iconColor: info.color,
+      confirmColor: info.btnColor || 'bg-wes-blue hover:bg-wes-dark',
+      confirmText: 'Ejecutar Acción',
+      requireReason: false,
+      onConfirm: async () => {
+        if (window.showToast) window.showToast('Procesando acción en el servidor...', 'info');
+        const res = await UserAuth.executeAdminAccessAction(targetEmail, actionType, defaultReason);
+        if (res && res.success) {
+          if (window.showToast) window.showToast('✅ ' + (res.message || 'Operación completada.'), 'success');
+          const modal = document.getElementById('admin-user-profile-modal');
+          if (modal) modal.remove();
+          const c = document.getElementById('admin-dynamic-content');
+          if (c) AdminApp.renderUsuarios(c);
+        } else {
+          throw new Error(res?.message || 'Error en el servidor.');
+        }
+      }
+    });
   },
 
   async promptUnlockAccount(targetEmail) {
-    const reason = prompt(`Desbloquear restricción temporal de intentos para ${targetEmail}. Indica el motivo obligatorio:`, 'Verificación de identidad telefónica completada');
-    if (!reason || !reason.trim()) {
-      alert('El motivo es obligatorio para auditar el desbloqueo.');
-      return;
-    }
-    await this.triggerAccessAction(targetEmail, 'unlock_temporary_restriction', reason.trim());
+    this.openActionConfirmModal({
+      title: 'Desbloquear Intentos Fallidos',
+      subtitle: `Se restablecerá la restricción de seguridad temporal para ${targetEmail}.`,
+      icon: 'fa-unlock',
+      iconColor: 'text-indigo-600',
+      confirmColor: 'bg-indigo-600 hover:bg-indigo-700',
+      confirmText: 'Desbloquear Cuenta',
+      requireReason: true,
+      reasonPlaceholder: 'Ej. Identidad validada telefónicamente con el titular...',
+      onConfirm: async (reason) => {
+        const res = await UserAuth.executeAdminAccessAction(targetEmail, 'unlock_temporary_restriction', reason);
+        if (res && res.success) {
+          if (window.showToast) window.showToast('✅ ' + (res.message || 'Cuenta desbloqueada.'), 'success');
+          const modal = document.getElementById('admin-user-profile-modal');
+          if (modal) modal.remove();
+          const c = document.getElementById('admin-dynamic-content');
+          if (c) AdminApp.renderUsuarios(c);
+        } else {
+          throw new Error(res?.message || 'Error al desbloquear en servidor.');
+        }
+      }
+    });
   },
 
   async toggleUserStatusRemote(email, nextStatus) {
-    const reason = prompt(`¿Confirmas cambiar el estado de "${email}" a "${nextStatus}"? Indica el motivo para la auditoría:`, nextStatus === 'SUSPENDIDO' ? 'Suspensión administrativa preventiva' : 'Reactivación de cuenta tras validación');
-    if (reason === null) return;
-    if (!reason.trim()) {
-      alert('Debes indicar un motivo para auditar el cambio de estado.');
-      return;
-    }
-
-    if (typeof UserAuth !== 'undefined' && typeof UserAuth.updateClientRemote === 'function') {
-      const res = await UserAuth.updateClientRemote(email, { status: nextStatus, reason: reason.trim() });
-      if (res && res.success) {
-        if (window.showToast) window.showToast(`Estado de ${email} cambiado a ${nextStatus}`, 'success');
-        const modal = document.getElementById('admin-user-profile-modal');
-        if (modal) modal.remove();
-        const c = document.getElementById('admin-dynamic-content');
-        if (c) this.renderUsuarios(c);
-      } else {
-        if (window.showToast) window.showToast(res?.message || 'Error actualizando estado', 'error');
+    const isSusp = nextStatus === 'SUSPENDIDO';
+    this.openActionConfirmModal({
+      title: isSusp ? 'Suspender Acceso de Usuario' : 'Reactivar Acceso de Usuario',
+      subtitle: isSusp ? `El usuario ${email} no podrá acceder ni recibir códigos OTP mientras esté suspendido.` : `El usuario ${email} volverá a tener acceso activo en la plataforma.`,
+      icon: isSusp ? 'fa-ban' : 'fa-check-circle',
+      iconColor: isSusp ? 'text-rose-600' : 'text-emerald-600',
+      confirmColor: isSusp ? 'bg-rose-600 hover:bg-rose-700' : 'bg-emerald-600 hover:bg-emerald-700',
+      confirmText: isSusp ? 'Suspender Cuenta' : 'Reactivar Cuenta',
+      requireReason: true,
+      reasonPlaceholder: isSusp ? 'Ej. Suspensión administrativa por inactividad o solicitud...' : 'Ej. Reactivación autorizada tras verificación...',
+      onConfirm: async (reason) => {
+        const res = await UserAuth.updateClientRemote(email, { status: nextStatus, reason: reason });
+        if (res && res.success) {
+          if (window.showToast) window.showToast(`✅ Estado de ${email} cambiado a ${nextStatus}.`, 'success');
+          const modal = document.getElementById('admin-user-profile-modal');
+          if (modal) modal.remove();
+          const c = document.getElementById('admin-dynamic-content');
+          if (c) AdminApp.renderUsuarios(c);
+        } else {
+          throw new Error(res?.message || 'Error actualizando estado en el servidor.');
+        }
       }
-    }
+    });
   },
 
-    switchUsersSubtab(subtab) {
+  switchUsersSubtab(subtab) {
     this.currentUsersSubtab = subtab;
     const container = document.getElementById('admin-dynamic-content');
     if (container) this.renderUsuarios(container);
@@ -3259,41 +3385,361 @@ const AdminApp = {
     if (container) this.renderUsuarios(container);
   },
 
-  handleUserRoleChange(email, newRole) {
-    if (typeof UserAuth === 'undefined' || typeof UserAuth.updateUserRole !== 'function') {
+  async handleUserRoleChange(email, newRole) {
+    if (typeof UserAuth === 'undefined' || typeof UserAuth.updateClientRemote !== 'function') {
       if (window.showToast) window.showToast('Error: Servicio de usuarios no disponible', 'error');
       return;
     }
-    const res = UserAuth.updateUserRole(email, newRole);
-    if (res.success) {
-      if (window.showToast) window.showToast(`✅ Vista de "${email}" actualizada a: ${res.roleLabel}`, 'success');
-      const container = document.getElementById('admin-dynamic-content');
-      if (container) this.renderUsuarios(container);
+
+    const roleNames = {
+      cliente: 'Cliente',
+      tecnico_interno: 'Técnico Interno WES',
+      tecnico_externo: 'Técnico Externo',
+      administrador: 'Administrador WES'
+    };
+
+    this.openActionConfirmModal({
+      title: 'Cambio de Rol y Permisos',
+      subtitle: `¿Confirmas asignar el rol "${roleNames[newRole] || newRole}" a ${email}?`,
+      icon: 'fa-user-tag',
+      iconColor: 'text-amber-500',
+      confirmColor: 'bg-wes-blue hover:bg-wes-dark',
+      confirmText: 'Confirmar y Actualizar Rol',
+      requireReason: true,
+      reasonPlaceholder: 'Ej. Asignación técnica autorizada...',
+      onConfirm: async (reason) => {
+        const res = await UserAuth.updateClientRemote(email, { role: newRole, reason: reason });
+        if (res && res.success) {
+          if (window.showToast) window.showToast(`✅ Vista de "${email}" actualizada a: ${roleNames[newRole] || newRole}`, 'success');
+          const container = document.getElementById('admin-dynamic-content');
+          if (container) AdminApp.renderUsuarios(container);
+        } else {
+          throw new Error(res?.message || 'Error al actualizar rol en el servidor.');
+        }
+      }
+    });
+  },
+
+  // Modal Adaptable Integrado para Creación de Usuario (Sin alert/prompt nativos)
+  openNewClientManualModal() {
+    let modal = document.getElementById('admin-create-user-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'admin-create-user-modal';
+      modal.className = 'fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-3 sm:p-5 backdrop-blur-sm overflow-y-auto';
+      document.body.appendChild(modal);
+    }
+
+    const permissionsPreviewMap = {
+      cliente: {
+        badge: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        title: 'Rol: Cliente WES',
+        desc: 'Acceso a catálogo de productos, carrito y solicitudes de cotización formal, consulta de sus tickets de servicio técnico y recepción de comunicados o mensajes personalizados de gerencia.'
+      },
+      tecnico_interno: {
+        badge: 'bg-blue-100 text-blue-800 border-blue-300',
+        title: 'Rol: Técnico Interno WES',
+        desc: 'Acceso completo al Tablero KDS de Taller y Laboratorio, diagnóstico electrónico, pruebas en banco, cambio de componentes, asignación y cambio de estado de órdenes técnicas.'
+      },
+      tecnico_externo: {
+        badge: 'bg-amber-100 text-amber-800 border-amber-300',
+        title: 'Rol: Técnico Externo (Campo e Instalaciones)',
+        desc: 'Acceso a órdenes de servicio asignadas en calle, levantamiento de evidencias fotográficas, visitas domiciliarias de portones y sistemas solares, sin acceso a finanzas ni prompts.'
+      },
+      administrador: {
+        badge: 'bg-purple-100 text-purple-800 border-purple-300',
+        title: 'Rol: Administrador WES',
+        desc: 'Control integral de la plataforma: gestión de catálogo, precios, usuarios, soporte técnico, configuración del asistente Sofía, auditoría centralizada y despacho de mensajes.'
+      }
+    };
+
+    modal.innerHTML = `
+      <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-5 my-6">
+        
+        <!-- ENCABEZADO -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-wes-gold to-amber-500 text-slate-950 flex items-center justify-center text-lg shadow-sm">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-base text-slate-800 font-brand">Registrar Nuevo Usuario</h3>
+              <p class="text-xs text-slate-500">Formulario oficial conectado a la base de datos de WES.</p>
+            </div>
+          </div>
+          <button type="button" onclick="document.getElementById('admin-create-user-modal').remove()" class="text-slate-400 hover:text-slate-600 p-2 rounded-xl transition">
+            <i class="fas fa-times text-base"></i>
+          </button>
+        </div>
+
+        <!-- FORMULARIO INTEGRADO -->
+        <form id="admin-create-user-form" onsubmit="event.preventDefault(); AdminApp.submitNewUserManual();" class="space-y-4 text-xs">
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Nombre Completo -->
+            <div class="sm:col-span-2">
+              <label class="block font-bold text-slate-700 mb-1">Nombre Completo: <span class="text-rose-500">*</span></label>
+              <input type="text" id="new-user-name" placeholder="Ej. Carlos Mendoza Peña" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition font-medium">
+              <p id="err-new-user-name" class="hidden text-[11px] text-rose-600 font-semibold mt-1">El nombre completo es obligatorio.</p>
+            </div>
+
+            <!-- Correo Electrónico -->
+            <div class="sm:col-span-2">
+              <label class="block font-bold text-slate-700 mb-1">Correo Electrónico: <span class="text-rose-500">*</span></label>
+              <input type="email" id="new-user-email" oninput="AdminApp.checkNewUserEmailDuplicate(this.value)" placeholder="usuario@gmail.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition font-mono">
+              <p id="err-new-user-email" class="hidden text-[11px] text-rose-600 font-semibold mt-1">Introduce un correo electrónico válido.</p>
+              <div id="notice-new-user-duplicate" class="hidden mt-2 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 flex items-center justify-between">
+                <span class="text-[11px]"><i class="fas fa-exclamation-triangle text-amber-600 mr-1"></i> Esta cuenta ya existe en el sistema.</span>
+                <button type="button" id="btn-open-existing-profile" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-lg text-[10px] transition">
+                  Ver Perfil
+                </button>
+              </div>
+            </div>
+
+            <!-- Teléfono Opcional -->
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Teléfono Contacto: <span class="text-slate-400 font-normal">(Opcional)</span></label>
+              <input type="text" id="new-user-phone" placeholder="(809) 000-0000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition font-medium">
+            </div>
+
+            <!-- Estado Inicial -->
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Estado de Acceso: <span class="text-rose-500">*</span></label>
+              <select id="new-user-status" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                <option value="ACTIVO" selected>✅ Activo</option>
+                <option value="INACTIVO">⏸️ Inactivo</option>
+                <option value="SUSPENDIDO">🚫 Suspendido</option>
+              </select>
+            </div>
+
+            <!-- Tipo de Usuario Principal -->
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Tipo de Usuario: <span class="text-rose-500">*</span></label>
+              <select id="new-user-type" onchange="AdminApp.handleNewUserTypeChange(this.value)" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                <option value="cliente" selected>👤 Cliente</option>
+                <option value="tecnico">🛠️ Técnico</option>
+                <option value="administrador">⚡ Administrador</option>
+              </select>
+            </div>
+
+            <!-- Subclasificación Técnica (Solo si es Técnico) -->
+            <div id="wrapper-tecnico-subtype" class="hidden">
+              <label class="block font-bold text-slate-700 mb-1">Clasificación Técnica: <span class="text-rose-500">*</span></label>
+              <select id="new-user-tecnico-subtype" onchange="AdminApp.updateNewUserPermissionsPreview()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-wes-blue focus:bg-white transition cursor-pointer">
+                <option value="tecnico_interno" selected>🛠️ Técnico Interno WES (Taller & Laboratorio)</option>
+                <option value="tecnico_externo">🚗 Técnico Externo (Campo & Instalaciones)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- RESUMEN INTERACTIVO DE PERMISOS SEGÚN MATRIZ RBAC -->
+          <div id="new-user-permissions-preview-box" class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Resumen de Autorizaciones:</span>
+              <span id="preview-role-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${permissionsPreviewMap.cliente.badge}">
+                ${permissionsPreviewMap.cliente.title}
+              </span>
+            </div>
+            <p id="preview-role-desc" class="text-xs text-slate-600 leading-relaxed">
+              ${permissionsPreviewMap.cliente.desc}
+            </p>
+          </div>
+
+          <!-- CHECKBOX DE INVITACIÓN POR CORREO -->
+          <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-2xl flex items-start space-x-2.5">
+            <input type="checkbox" id="new-user-send-invite" checked class="mt-0.5 w-4 h-4 text-wes-blue rounded border-slate-300 focus:ring-wes-blue cursor-pointer">
+            <label for="new-user-send-invite" class="text-xs text-amber-950 font-medium cursor-pointer leading-snug">
+              <strong>Enviar invitación de acceso por correo ahora:</strong><br>
+              <span class="text-slate-600 text-[11px]">Se despacharán instrucciones oficiales para que el usuario valide su código OTP de 6 dígitos. La cuenta quedará pendiente de verificar hasta que complete este paso.</span>
+            </label>
+          </div>
+
+          <!-- BOTONES -->
+          <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
+            <button type="button" onclick="document.getElementById('admin-create-user-modal').remove()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+              Cancelar
+            </button>
+            <button type="submit" id="btn-save-new-user" class="px-5 py-2.5 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs flex items-center space-x-1.5 transition shadow">
+              <i class="fas fa-user-check"></i>
+              <span>Guardar Usuario</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    `;
+
+    // Vincular previsualizador de rol inicial
+    this.updateNewUserPermissionsPreview();
+  },
+
+  handleNewUserTypeChange(typeVal) {
+    const wrapSub = document.getElementById('wrapper-tecnico-subtype');
+    if (typeVal === 'tecnico') {
+      if (wrapSub) wrapSub.classList.remove('hidden');
     } else {
-      if (window.showToast) window.showToast(res.message || 'Error al actualizar vista', 'error');
+      if (wrapSub) wrapSub.classList.add('hidden');
+    }
+    this.updateNewUserPermissionsPreview();
+  },
+
+  updateNewUserPermissionsPreview() {
+    const typeVal = document.getElementById('new-user-type')?.value || 'cliente';
+    let effectiveRole = typeVal;
+    if (typeVal === 'tecnico') {
+      effectiveRole = document.getElementById('new-user-tecnico-subtype')?.value || 'tecnico_interno';
+    }
+
+    const permissionsPreviewMap = {
+      cliente: {
+        badge: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        title: 'Rol: Cliente WES',
+        desc: 'Acceso a catálogo de productos, carrito y solicitudes de cotización formal, consulta de sus tickets de servicio técnico y recepción de comunicados o mensajes personalizados de gerencia.'
+      },
+      tecnico_interno: {
+        badge: 'bg-blue-100 text-blue-800 border-blue-300',
+        title: 'Rol: Técnico Interno WES',
+        desc: 'Acceso completo al Tablero KDS de Taller y Laboratorio, diagnóstico electrónico, pruebas en banco, cambio de componentes, asignación y cambio de estado de órdenes técnicas.'
+      },
+      tecnico_externo: {
+        badge: 'bg-amber-100 text-amber-800 border-amber-300',
+        title: 'Rol: Técnico Externo (Campo & Instalaciones)',
+        desc: 'Acceso a órdenes de servicio asignadas en calle, levantamiento de evidencias fotográficas, visitas domiciliarias de portones y sistemas solares, sin acceso a finanzas ni prompts.'
+      },
+      administrador: {
+        badge: 'bg-purple-100 text-purple-800 border-purple-300',
+        title: 'Rol: Administrador WES',
+        desc: 'Control integral de la plataforma: gestión de catálogo, precios, usuarios, soporte técnico, configuración del asistente Sofía, auditoría centralizada y despacho de mensajes.'
+      }
+    };
+
+    const info = permissionsPreviewMap[effectiveRole] || permissionsPreviewMap.cliente;
+    const badgeEl = document.getElementById('preview-role-badge');
+    const descEl = document.getElementById('preview-role-desc');
+
+    if (badgeEl) {
+      badgeEl.className = `px-2 py-0.5 rounded-full text-[10px] font-bold border ${info.badge}`;
+      badgeEl.textContent = info.title;
+    }
+    if (descEl) {
+      descEl.textContent = info.desc;
     }
   },
 
-  openNewClientManualModal() {
-    const name = prompt('Nombre completo del nuevo usuario:');
-    if (!name || !name.trim()) return;
-    const email = prompt('Correo electrónico:');
-    if (!email || !email.trim() || !email.includes('@')) {
-      alert('Correo no válido.');
+  checkNewUserEmailDuplicate(emailVal) {
+    const clean = (emailVal || '').trim().toLowerCase();
+    const notice = document.getElementById('notice-new-user-duplicate');
+    const btnProfile = document.getElementById('btn-open-existing-profile');
+    if (!notice || !clean || !clean.includes('@')) {
+      if (notice) notice.classList.add('hidden');
       return;
     }
-    const pass = prompt('Contraseña inicial (mínimo 6 caracteres):', 'User2026!');
-    if (!pass || pass.length < 6) {
-      alert('La contraseña debe tener mínimo 6 caracteres.');
-      return;
-    }
-    const res = UserAuth.registerClient({ name, email, phone: '', password: pass, confirmPassword: pass });
-    if (res.success) {
-      if (window.showToast) window.showToast(`Usuario ${name} registrado con éxito.`, 'success');
-      const container = document.getElementById('admin-dynamic-content');
-      if (container) this.renderUsuarios(container);
+
+    const clients = (typeof UserAuth !== 'undefined') ? UserAuth.getRegisteredClients() : [];
+    const match = clients.find(c => c.email && c.email.toLowerCase() === clean);
+    if (match) {
+      notice.classList.remove('hidden');
+      if (btnProfile) {
+        btnProfile.onclick = () => {
+          document.getElementById('admin-create-user-modal')?.remove();
+          AdminApp.openUserProfileViewModal(match.email);
+        };
+      }
     } else {
-      if (window.showToast) window.showToast(res.message, 'error');
+      notice.classList.add('hidden');
+    }
+  },
+
+  async submitNewUserManual() {
+    const nameInput = document.getElementById('new-user-name');
+    const emailInput = document.getElementById('new-user-email');
+    const phoneInput = document.getElementById('new-user-phone');
+    const statusSelect = document.getElementById('new-user-status');
+    const typeSelect = document.getElementById('new-user-type');
+    const subtypeSelect = document.getElementById('new-user-tecnico-subtype');
+    const sendInviteCheck = document.getElementById('new-user-send-invite');
+
+    const errName = document.getElementById('err-new-user-name');
+    const errEmail = document.getElementById('err-new-user-email');
+    const btnSave = document.getElementById('btn-save-new-user');
+
+    if (errName) errName.classList.add('hidden');
+    if (errEmail) errEmail.classList.add('hidden');
+
+    const name = (nameInput?.value || '').trim();
+    const email = (emailInput?.value || '').trim().toLowerCase();
+    const phone = (phoneInput?.value || '').trim();
+    const status = statusSelect?.value || 'ACTIVO';
+    const sendInvitation = Boolean(sendInviteCheck?.checked);
+
+    let hasError = false;
+    if (!name) {
+      if (errName) errName.classList.remove('hidden');
+      if (nameInput) nameInput.focus();
+      hasError = true;
+    }
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      if (errEmail) errEmail.classList.remove('hidden');
+      if (!hasError && emailInput) emailInput.focus();
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    let finalRole = typeSelect?.value || 'cliente';
+    if (finalRole === 'tecnico') {
+      finalRole = subtypeSelect?.value || 'tecnico_interno';
+    }
+
+    // Prevención de envíos dobles y estado de carga
+    if (btnSave) {
+      btnSave.disabled = true;
+      btnSave.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Guardando en servidor...';
+    }
+
+    try {
+      const res = await UserAuth.createUserAdmin({
+        name: name,
+        email: email,
+        phone: phone,
+        role: finalRole,
+        status: status,
+        sendInvitation: sendInvitation
+      });
+
+      if (res && res.success) {
+        if (window.showToast) window.showToast('✅ ' + (res.message || 'Usuario creado exitosamente.'), 'success');
+        const modal = document.getElementById('admin-create-user-modal');
+        if (modal) modal.remove();
+
+        const container = document.getElementById('admin-dynamic-content');
+        if (container) this.renderUsuarios(container);
+      } else if (res && res.duplicate) {
+        if (window.showToast) window.showToast('Aviso: ' + res.message, 'warning');
+        // Mantener datos y ofrecer botón para abrir perfil
+        const notice = document.getElementById('notice-new-user-duplicate');
+        const btnProfile = document.getElementById('btn-open-existing-profile');
+        if (notice) notice.classList.remove('hidden');
+        if (btnProfile && res.existingUser) {
+          btnProfile.onclick = () => {
+            document.getElementById('admin-create-user-modal')?.remove();
+            AdminApp.openUserProfileViewModal(res.existingUser.email);
+          };
+        }
+        if (btnSave) {
+          btnSave.disabled = false;
+          btnSave.innerHTML = '<i class="fas fa-user-check mr-1"></i> Guardar Usuario';
+        }
+      } else {
+        throw new Error(res?.message || 'Error guardando usuario en la base de datos.');
+      }
+    } catch (e) {
+      if (window.showToast) window.showToast('Error: ' + e.message, 'error');
+      // Conservar datos introducidos y rehabilitar botón
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.innerHTML = '<i class="fas fa-user-check mr-1"></i> Guardar Usuario';
+      }
     }
   },
 

@@ -125,6 +125,10 @@ function doPost(e) {
         response = updateClientAdminHandler(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+      case 'create_user_admin':
+        response = createUserAdminHandler(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
       case 'save_push_subscription':
         response = savePushSubscriptionHandler(payload.data);
         break;
@@ -2044,6 +2048,16 @@ function listRegisteredClientsAdminHandler(adminToken, userEmail) {
       const status = String(r[9] || 'ACTIVO').toUpperCase().trim();
       const pushCount = countActivePushDevicesForUser_(id, email);
 
+      // Estado de verificación: si la columna 11 tiene valor explícito, respetarlo; de lo contrario verificar si tiene lastLogin
+      let isVerified = true;
+      if (r.length > 10 && r[10] !== undefined && r[10] !== '') {
+        const vRaw = String(r[10]).toLowerCase().trim();
+        isVerified = (vRaw === 'true' || vRaw === 'verificado' || vRaw === 'si' || vRaw === '1');
+      } else if (lastLogin === 'Sin accesos') {
+        // Creado administrativamente sin accesos previos
+        isVerified = false;
+      }
+
       clients.push({
         id: id || ('CLI-' + i),
         name: name || 'Usuario',
@@ -2055,7 +2069,7 @@ function listRegisteredClientsAdminHandler(adminToken, userEmail) {
         createdAt: createdAt,
         lastLogin: lastLogin,
         status: status,
-        verified: true, // Todas las cuentas en Clientes provienen de verificación OTP
+        verified: isVerified,
         pushDevicesCount: pushCount
       });
     }
@@ -2067,6 +2081,136 @@ function listRegisteredClientsAdminHandler(adminToken, userEmail) {
     };
   } catch (err) {
     return { success: false, message: 'Error consultando usuarios: ' + err.toString() };
+  }
+}
+
+/**
+ * CREACIÓN DE USUARIO ADMINISTRATIVO CON DETECCIÓN DE DUPLICADOS Y ACCESO OTP
+ */
+function createUserAdminHandler(data, adminToken, userEmail) {
+  try {
+    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
+    const props = PropertiesService.getScriptProperties();
+    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+
+    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
+      return { success: false, message: 'Acceso denegado: solo administradores autorizados.' };
+    }
+
+    if (!data || !data.name || !data.email) {
+      return { success: false, message: 'El nombre completo y correo electrónico son obligatorios.' };
+    }
+
+    const name = String(data.name).trim();
+    const email = String(data.email).toLowerCase().trim();
+    const phone = String(data.phone || '').trim();
+    const role = String(data.role || 'cliente').trim();
+    const status = String(data.status || 'ACTIVO').toUpperCase().trim();
+    const sendInvitation = Boolean(data.sendInvitation);
+
+    if (!email.includes('@') || !email.includes('.')) {
+      return { success: false, message: 'El correo electrónico no tiene un formato válido.' };
+    }
+
+    const sheet = getClientsSheet_();
+    const rows = sheet.getDataRange().getValues();
+
+    // Comprobar si ya existe
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][2]).toLowerCase().trim() === email) {
+        return {
+          success: false,
+          duplicate: true,
+          existingUser: {
+            id: String(rows[i][0]),
+            name: String(rows[i][1]),
+            email: email,
+            phone: String(rows[i][3] || ''),
+            role: String(rows[i][4] || 'cliente'),
+            status: String(rows[i][9] || 'ACTIVO')
+          },
+          message: 'Ya existe una cuenta registrada con el correo ' + email + '.'
+        };
+      }
+    }
+
+    // Role labels oficiales según matriz RBAC
+    const roleLabels = {
+      cliente: 'Vista Cliente',
+      tecnico_interno: 'Técnico Interno WES',
+      tecnico_externo: 'Técnico Externo',
+      administrador: 'Administrador WES',
+      gestor_tienda: 'Gestor de Tienda',
+      gestor_cotizaciones: 'Gestor de Cotizaciones',
+      gestor_soporte: 'Gestor de Soporte',
+      editor_contenido: 'Editor de Contenido',
+      usuario_consulta: 'Usuario de Consulta'
+    };
+
+    const roleLabel = roleLabels[role] || role;
+    const isEmployee = (role !== 'cliente');
+    const nowFormatted = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const newId = 'USR-' + Utilities.getUuid().substring(0, 8).toUpperCase();
+
+    // Nueva cuenta creada administrativamente: verified = false hasta que complete OTP
+    sheet.appendRow([
+      newId,
+      name,
+      email,
+      phone,
+      role,
+      roleLabel,
+      isEmployee,
+      nowFormatted,
+      'Sin accesos',
+      status,
+      'false' // Columna 11: Verified_OTP
+    ]);
+
+    // Registrar en auditoría
+    recordAuditLog_(userEmail, 'usuarios', 'crear_usuario_admin', 
+      'Creación manual de usuario: ' + name + ' (' + roleLabel + '). Estado: ' + status + '. Invitación: ' + (sendInvitation ? 'Sí' : 'No'), 
+      email, null, { id: newId, name: name, role: role, status: status, verified: false });
+
+    // Si se solicitó enviar invitación de acceso por correo
+    let inviteSent = false;
+    let inviteError = '';
+    if (sendInvitation) {
+      try {
+        const otpRes = handleRequestAuthOtp({
+          email: email,
+          purpose: 'acceso',
+          ip: 'ADMIN_MANUAL_INVITE'
+        });
+        inviteSent = otpRes.success;
+        if (!otpRes.success) inviteError = otpRes.message || 'Fallo de despacho';
+      } catch (errInv) {
+        inviteError = errInv.toString();
+      }
+    }
+
+    return {
+      success: true,
+      user: {
+        id: newId,
+        name: name,
+        email: email,
+        phone: phone,
+        role: role,
+        roleLabel: roleLabel,
+        isEmployee: isEmployee,
+        createdAt: nowFormatted,
+        lastLogin: 'Sin accesos',
+        status: status,
+        verified: false,
+        pushDevicesCount: 0
+      },
+      inviteSent: inviteSent,
+      inviteError: inviteError,
+      message: 'Usuario ' + name + ' creado exitosamente en la base de datos oficial.' + (sendInvitation ? (inviteSent ? ' Invitación de acceso enviada a su correo.' : ' (Aviso: no se pudo enviar correo: ' + inviteError + ')') : '')
+    };
+  } catch (err) {
+    return { success: false, message: 'Error creando usuario: ' + err.toString() };
   }
 }
 
@@ -3055,8 +3199,12 @@ function handleVerifyAuthOtp(data) {
             roleLabel: String(clientRows[c][5] || 'Vista Cliente'),
             isEmployee: Boolean(clientRows[c][6])
           };
-          // Actualizar último acceso
+          // Actualizar último acceso y marcar verificado
           clientSheet.getRange(c + 1, 9).setValue(nowFormatted);
+          clientSheet.getRange(c + 1, 10).setValue('ACTIVO');
+          if (clientSheet.getLastColumn() >= 11) {
+            clientSheet.getRange(c + 1, 11).setValue('true');
+          }
           break;
         }
       }
