@@ -19,8 +19,7 @@ const UserAuth = (function() {
       id: 'EMP-001',
       name: 'Luis Miguel Lizardo',
       email: 'ing.lmlh@gmail.com',
-      secondaryEmail: 'wes.inform@gmail.com',
-      username: 'propietario',
+            username: 'propietario',
       password: '255133',
       role: 'propietario',
       roleLabel: 'Propietario / Superadmin',
@@ -113,8 +112,7 @@ const UserAuth = (function() {
             id: u.id,
             name: u.name,
             email: u.email,
-            secondaryEmail: u.secondaryEmail,
-            username: u.username,
+                        username: u.username,
             password: u.passwordHash,
             role: u.role,
             roleLabel: u.role.replace('_', ' ').toUpperCase(),
@@ -136,7 +134,6 @@ const UserAuth = (function() {
     const employees = getAllEmployees();
     const emp = employees.find(e => 
       (e.email && e.email.toLowerCase() === clean) ||
-      (e.secondaryEmail && e.secondaryEmail.toLowerCase() === clean) ||
       (e.username && e.username.toLowerCase() === clean)
     );
     if (emp) return { ...emp, isEmployee: true };
@@ -470,6 +467,22 @@ Moca, Provincia Espaillat, República Dominicana`;
       const current = this.getCurrentUser();
       localStorage.removeItem(SESSION_STORAGE_KEY);
       sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      try {
+        sessionStorage.removeItem('wes_admin_session');
+      } catch (e) {}
+      if (current && current.email) {
+        try {
+          const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
+          fetch(backendUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'logout_user_session',
+              userEmail: current.email
+            })
+          }).catch(function() {});
+        } catch(e) {}
+      }
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('wes_user_logout', { detail: current }));
       }
@@ -576,7 +589,7 @@ Moca, Provincia Espaillat, República Dominicana`;
         const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
         const currentU = this.getCurrentUser();
         const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || 'ing.lmlh@gmail.com';
-        const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
+        const adminToken = (adminSession && adminSession.token) || (adminSession && adminSession.sessionToken) || '';
 
         const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
         const res = await fetch(backendUrl, {
@@ -611,7 +624,7 @@ Moca, Provincia Espaillat, República Dominicana`;
         const adminSession = typeof AdminAuth !== "undefined" ? AdminAuth.getCurrentUser() : null;
         const currentU = this.getCurrentUser();
         const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || "ing.lmlh@gmail.com";
-        const adminToken = (adminSession && adminSession.token) || "wes_owner_authorized_session";
+        const adminToken = (adminSession && adminSession.token) || (adminSession && adminSession.sessionToken) || '';
         const backendUrl = (typeof CONFIG !== "undefined" && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
 
         const res = await fetch(backendUrl, {
@@ -654,7 +667,7 @@ Moca, Provincia Espaillat, República Dominicana`;
         const adminSession = typeof AdminAuth !== "undefined" ? AdminAuth.getCurrentUser() : null;
         const currentU = this.getCurrentUser();
         const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || "ing.lmlh@gmail.com";
-        const adminToken = (adminSession && adminSession.token) || "wes_owner_authorized_session";
+        const adminToken = (adminSession && adminSession.token) || (adminSession && adminSession.sessionToken) || '';
         const backendUrl = (typeof CONFIG !== "undefined" && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
 
         const res = await fetch(backendUrl, {
@@ -692,7 +705,7 @@ Moca, Provincia Espaillat, República Dominicana`;
         const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
         const currentU = this.getCurrentUser();
         const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || 'ing.lmlh@gmail.com';
-        const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
+        const adminToken = (adminSession && adminSession.token) || (adminSession && adminSession.sessionToken) || '';
         const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
 
         const res = await fetch(backendUrl, {
@@ -758,7 +771,7 @@ Moca, Provincia Espaillat, República Dominicana`;
         const adminSession = typeof AdminAuth !== 'undefined' ? AdminAuth.getCurrentUser() : null;
         const currentU = this.getCurrentUser();
         const userEmail = (adminSession && adminSession.email) || (currentU && currentU.email) || 'ing.lmlh@gmail.com';
-        const adminToken = (adminSession && adminSession.token) || 'wes_owner_authorized_session';
+        const adminToken = (adminSession && adminSession.token) || (adminSession && adminSession.sessionToken) || '';
         const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
 
         const res = await fetch(backendUrl, {
@@ -1291,7 +1304,7 @@ Moca, Provincia Espaillat, República Dominicana`;
         const adminUsers = JSON.parse(localStorage.getItem('wes_admin_users') || '[]');
         let adminUpdated = false;
         adminUsers.forEach(u => {
-          if ((u.email && u.email.toLowerCase() === cleanEmail) || (u.secondaryEmail && u.secondaryEmail.toLowerCase() === cleanEmail)) {
+          if ((u.email && u.email.toLowerCase() === cleanEmail)) {
             u.passwordHash = newPassword;
             adminUpdated = true;
           }
@@ -1301,7 +1314,7 @@ Moca, Provincia Espaillat, República Dominicana`;
         }
         // Actualizar en empleados de sesión si es empleado del sistema
         SYSTEM_EMPLOYEES.forEach(emp => {
-          if ((emp.email && emp.email.toLowerCase() === cleanEmail) || (emp.secondaryEmail && emp.secondaryEmail.toLowerCase() === cleanEmail)) {
+          if ((emp.email && emp.email.toLowerCase() === cleanEmail)) {
             emp.password = newPassword;
           }
         });
@@ -1465,9 +1478,17 @@ Moca, Provincia Espaillat, República Dominicana`;
         }
 
         if (userObj) {
-          if (userObj.isEmployee && typeof AdminAuth !== "undefined") {
+          const isPrivileged = Boolean(userObj.isEmployee && (userObj.role === "administrador" || userObj.role === "propietario" || userObj.role === "gestor_soporte"));
+          if (isPrivileged && typeof AdminAuth !== "undefined") {
             try {
               sessionStorage.setItem(AdminAuth.SESSION_KEY, JSON.stringify(userObj));
+            } catch (e) {}
+          } else {
+            try {
+              sessionStorage.removeItem("wes_admin_session");
+              if (typeof AdminAuth !== "undefined" && AdminAuth.SESSION_KEY) {
+                sessionStorage.removeItem(AdminAuth.SESSION_KEY);
+              }
             } catch (e) {}
           }
           const session = this.setSession(userObj, remember);
@@ -1480,6 +1501,12 @@ Moca, Provincia Espaillat, República Dominicana`;
         }
 
         // Fallback genérico
+        try {
+          sessionStorage.removeItem("wes_admin_session");
+          if (typeof AdminAuth !== "undefined" && AdminAuth.SESSION_KEY) {
+            sessionStorage.removeItem(AdminAuth.SESSION_KEY);
+          }
+        } catch(e) {}
         const fallbackSession = this.setSession({
           id: "CLI-" + Date.now(),
           name: cleanEmail.split("@")[0],
@@ -1589,7 +1616,7 @@ const SofiaInstructorPopup = (function() {
       const user = UserAuth.getCurrentUser();
       const payload = {
         action: 'get_pending_sofia_questions',
-        adminToken: 'wes_owner_authorized_session',
+        adminToken: ((typeof AdminAuth !== 'undefined' && AdminAuth.getCurrentUser()?.token) || ''),
         userEmail: user.email
       };
 
@@ -1702,7 +1729,7 @@ const SofiaInstructorPopup = (function() {
       const user = UserAuth.getCurrentUser();
       const payload = {
         action: 'answer_and_train_sofia',
-        adminToken: 'wes_owner_authorized_session',
+        adminToken: ((typeof AdminAuth !== 'undefined' && AdminAuth.getCurrentUser()?.token) || ''),
         userEmail: user ? user.email : 'ing.lmlh@gmail.com',
         data: {
           id: qId,

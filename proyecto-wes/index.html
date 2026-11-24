@@ -1,54 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
-  <!-- Acceso Directo Administrador (Bypass Inmediato para Propietario) -->
-  <script>
-  (function() {
-    var params = new URLSearchParams(window.location.search);
-    if (params.get('admin') === 'directo' || params.get('auth') === 'propietario' || params.get('propietario') === 'wes') {
-      var owner = {
-        id: 'USR-001',
-        name: 'Luis Miguel Lizardo (Propietario WES)',
-        email: 'ing.lmlh@gmail.com',
-        secondaryEmail: 'wes.inform@gmail.com',
-        username: 'propietario',
-        role: 'propietario',
-        roleLabel: 'PROPIETARIO WES',
-        status: 'activo',
-        phone: '(849) 207-5474',
-        isEmployee: true,
-        loginTime: new Date().toISOString()
-      };
-      try {
-        sessionStorage.setItem('wes_admin_session', JSON.stringify(owner));
-        localStorage.setItem('wes_user_session', JSON.stringify(owner));
-        localStorage.removeItem('wes_admin_lockout_until');
-        localStorage.removeItem('wes_admin_failed_attempts');
-      } catch(e) {}
-      window.location.href = 'admin.html';
-    }
-  })();
-  </script>
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  <title>Warn Electrical Services (WES) | Seguridad Electrónica, Automatización e Instalaciones</title>
-  <meta name="description" content="Warn Electrical Services, SRL (WES) — Venta, instalación y soporte técnico de cámaras de seguridad, controles de acceso, cerraduras inteligentes y automatización en Moca, República Dominicana.">
   
-  <!-- Configuración PWA Móvil -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#071836">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="WES">
-  <link rel="apple-touch-icon" href="assets/icon-192.png">
-
-  <!-- Favicon con logo WES Búho Guardián -->
-  <link rel="icon" type="image/jpeg" href="assets/logo-buho.jpg">
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -1840,7 +1793,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.94 (Build 94)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.95 (Build 95)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">

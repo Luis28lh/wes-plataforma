@@ -5098,7 +5098,7 @@ const effectivePrompt = (parsed.systemPrompt && parsed.systemPrompt.trim().lengt
       const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
       const payload = {
         action: 'save_ai_config_admin',
-        adminToken: 'wes_owner_authorized_session',
+        adminToken: ((typeof AdminAuth !== 'undefined' && AdminAuth.getCurrentUser()?.token) || ''),
         data: {
           apiKey: cfg.apiKey || '',
           systemPrompt: cfg.systemPrompt || '',
@@ -5891,7 +5891,7 @@ AdminApp.refreshSofiaKnowledge = async function() {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         action: 'list_sofia_knowledge',
-        adminToken: 'wes_owner_authorized_session'
+        adminToken: (AdminAuth.getCurrentUser()?.token || '')
       })
     });
 
@@ -6185,7 +6185,7 @@ AdminApp.handleSaveSofiaKnowledge = async function(e) {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         action: 'save_sofia_knowledge_entry',
-        adminToken: 'wes_owner_authorized_session',
+        adminToken: ((typeof AdminAuth !== 'undefined' && AdminAuth.getCurrentUser()?.token) || ''),
         data: payloadData
       })
     });
@@ -6224,7 +6224,7 @@ AdminApp.toggleSofiaKnowledgeStatus = async function(id, newStatus) {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         action: 'set_sofia_knowledge_status',
-        adminToken: 'wes_owner_authorized_session',
+        adminToken: ((typeof AdminAuth !== 'undefined' && AdminAuth.getCurrentUser()?.token) || ''),
         id: id,
         status: newStatus
       })
@@ -6398,7 +6398,7 @@ AdminApp.restoreSofiaKnowledgeVersion = async function(id, historyIdx) {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         action: 'save_sofia_knowledge_entry',
-        adminToken: 'wes_owner_authorized_session',
+        adminToken: ((typeof AdminAuth !== 'undefined' && AdminAuth.getCurrentUser()?.token) || ''),
         data: restoredData
       })
     });

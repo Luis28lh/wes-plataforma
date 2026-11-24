@@ -8,7 +8,7 @@ const DEFAULT_ADMIN_USERS = [
     id: 'USR-001',
     name: 'Luis Miguel Lizardo (Propietario WES)',
     email: 'ing.lmlh@gmail.com',
-    secondaryEmail: 'wes.inform@gmail.com',
+    
     username: 'propietario',
     passwordHash: '255133',
     role: 'propietario',
@@ -180,7 +180,8 @@ const AdminAuth = {
 
   isAuthenticated() {
     const user = this.getCurrentUser();
-    return Boolean(user && user.email);
+    const allowedRoles = ['administrador', 'propietario', 'gestor_soporte'];
+    return Boolean(user && user.email && allowedRoles.includes(String(user.role || '').toLowerCase()));
   },
 
   getLockoutRemainingSeconds() {
@@ -252,14 +253,12 @@ const AdminAuth = {
     let user = users.find(u => 
       u.status === 'activo' && 
       (u.email.toLowerCase() === cleanId || 
-       (u.secondaryEmail && u.secondaryEmail.toLowerCase() === cleanId) || 
        u.username.toLowerCase() === cleanId)
     );
     // Respaldo de seguridad con los usuarios maestros
     if (!user) {
       user = DEFAULT_ADMIN_USERS.find(u => 
         u.email.toLowerCase() === cleanId || 
-        (u.secondaryEmail && u.secondaryEmail.toLowerCase() === cleanId) || 
         u.username.toLowerCase() === cleanId
       );
     }
@@ -364,7 +363,23 @@ const AdminAuth = {
     }
 
     sessionStorage.removeItem(this.SESSION_KEY);
+    localStorage.removeItem('wes_user_session');
+    sessionStorage.removeItem('wes_user_session');
     this.clearInactivityTimers();
+
+    if (user && user.email) {
+      try {
+        const backendUrl = localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+        fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'logout_user_session',
+            userEmail: user.email
+          })
+        }).catch(function() {});
+      } catch (e) {}
+    }
 
     window.dispatchEvent(new CustomEvent('wes_admin_logout', { detail: { reason } }));
   },

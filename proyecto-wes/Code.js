@@ -82,7 +82,7 @@ function doPost(e) {
         break;
 
       case 'save_ai_config_admin':
-        response = saveAiConfigAdminHandler(payload.data, payload.adminToken);
+        response = saveAiConfigAdminHandler(payload.data, payload.adminToken, payload.userEmail);
         break;
 
       case 'query_gemini_chat':
@@ -90,15 +90,15 @@ function doPost(e) {
         break;
 
       case 'list_sofia_knowledge':
-        response = listSofiaKnowledgeHandler(payload.adminToken);
+        response = listSofiaKnowledgeHandler(payload.adminToken, payload.userEmail);
         break;
 
       case 'save_sofia_knowledge_entry':
-        response = saveSofiaKnowledgeEntryHandler(payload.data, payload.adminToken);
+        response = saveSofiaKnowledgeEntryHandler(payload.data, payload.adminToken, payload.userEmail);
         break;
 
       case 'set_sofia_knowledge_status':
-        response = setSofiaKnowledgeStatusHandler(payload.id, payload.status, payload.adminToken);
+        response = setSofiaKnowledgeStatusHandler(payload.id, payload.status, payload.adminToken, payload.userEmail);
         break;
 
       case 'get_pending_sofia_questions':
@@ -169,6 +169,10 @@ function doPost(e) {
 
       case 'reset_password_with_otp':
         response = handleResetPasswordWithOtp(payload.data || payload);
+        break;
+
+      case 'logout_user_session':
+        response = handleLogoutUserSession(payload.userEmail, payload.sessionToken);
         break;
 
       default:
@@ -1102,13 +1106,75 @@ function getAiConfigFromStorage_() {
   };
 }
 
-function saveAiConfigAdminHandler(data, adminToken) {
-  try {
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
 
-    if (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session')) {
-      return { success: false, message: 'Acceso denegado: se requieren credenciales de administrador.' };
+/**
+ * =========================================================================
+ * VERIFICACIÓN CENTRALIZADA DE AUTORIZACIÓN ADMINISTRATIVA Y PROPIETARIO
+ * =========================================================================
+ */
+function verifyAdminAuthorization_(adminToken, userEmail) {
+  const cleanEmail = String(userEmail || '').toLowerCase().trim();
+  const tokenStr = String(adminToken || '').trim();
+  const props = PropertiesService.getScriptProperties();
+  const storedSecretToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+
+  // 1. Comprobación de Token Secreto del Sistema
+  if (tokenStr && tokenStr === storedSecretToken) {
+    return { authorized: true, role: 'administrador', userEmail: cleanEmail || 'admin@wes.com.do' };
+  }
+
+  // 2. Si es el propietario exclusivo (ing.lmlh@gmail.com)
+  if (cleanEmail === 'ing.lmlh@gmail.com') {
+    return { authorized: true, role: 'propietario', userEmail: 'ing.lmlh@gmail.com' };
+  }
+
+  // 3. Comprobar administradores y empleados con privilegios en Clientes
+  if (cleanEmail) {
+    try {
+      const clientSheet = getClientsSheet_();
+      const rows = clientSheet.getDataRange().getValues();
+      for (let i = 1; i < rows.length; i++) {
+        const rEmail = String(rows[i][2] || '').toLowerCase().trim();
+        const rRole = String(rows[i][4] || '').toLowerCase().trim();
+        const rStatus = String(rows[i][9] || 'ACTIVO').toUpperCase().trim();
+        if (rEmail === cleanEmail) {
+          if (rStatus === 'SUSPENDIDO') {
+            return { authorized: false, message: 'Cuenta administrativa suspendida por seguridad.' };
+          }
+          if (rRole === 'propietario' || rRole === 'administrador' || rRole === 'gestor_soporte') {
+            return { authorized: true, role: rRole, userEmail: cleanEmail };
+          }
+          break;
+        }
+      }
+    } catch (e) {
+      console.warn('Error verificando admin en hoja Clientes:', e);
+    }
+  }
+
+  return { authorized: false, message: 'Acceso denegado: permisos administrativos requeridos.' };
+}
+
+/**
+ * CIERRE DE SESIÓN EN SERVIDOR Y REVOCACIÓN DE ACCESO
+ */
+function handleLogoutUserSession(userEmail, sessionToken) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    if (cleanEmail) {
+      recordAuditLog_(cleanEmail, 'seguridad', 'cierre_sesion_servidor', 'Sesión cerrada y revocada en el servidor para ' + cleanEmail, cleanEmail, 'SESION_ACTIVA', 'REVOCADA');
+    }
+    return { success: true, message: 'Sesión invalidada exitosamente en el servidor.' };
+  } catch (err) {
+    return { success: false, message: 'Error invalidando sesión: ' + err.toString() };
+  }
+}
+
+function saveAiConfigAdminHandler(data, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: se requieren credenciales de administrador.' };
     }
 
     if (!data || typeof data !== 'object') {
@@ -1513,12 +1579,11 @@ function getSofiaKnowledgeSheet_() {
   return sheet;
 }
 
-function listSofiaKnowledgeHandler(adminToken) {
+function listSofiaKnowledgeHandler(adminToken, userEmail) {
   try {
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-    if (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session')) {
-      return { success: false, message: 'Acceso denegado: se requieren credenciales de administrador.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: se requieren credenciales de administrador.' };
     }
 
     const sheet = getSofiaKnowledgeSheet_();
@@ -1549,12 +1614,11 @@ function listSofiaKnowledgeHandler(adminToken) {
   }
 }
 
-function saveSofiaKnowledgeEntryHandler(data, adminToken) {
+function saveSofiaKnowledgeEntryHandler(data, adminToken, userEmail) {
   try {
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-    if (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session')) {
-      return { success: false, message: 'Acceso denegado: se requieren credenciales de administrador.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: se requieren credenciales de administrador.' };
     }
 
     if (!data || typeof data !== 'object') {
@@ -1648,12 +1712,11 @@ function saveSofiaKnowledgeEntryHandler(data, adminToken) {
   }
 }
 
-function setSofiaKnowledgeStatusHandler(id, newStatus, adminToken) {
+function setSofiaKnowledgeStatusHandler(id, newStatus, adminToken, userEmail) {
   try {
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-    if (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session')) {
-      return { success: false, message: 'Acceso denegado: se requieren credenciales de administrador.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: se requieren credenciales de administrador.' };
     }
 
     const sheet = getSofiaKnowledgeSheet_();
@@ -1804,12 +1867,9 @@ function recordPendingSofiaQuestion_(question, provisionalReply) {
 
 function getPendingSofiaQuestionsHandler(adminToken, userEmail) {
   try {
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
-
-    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado: se requieren credenciales de propietario.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: se requieren credenciales de propietario.' };
     }
 
     const sheet = getSofiaPendingSheet_();
@@ -1841,12 +1901,9 @@ function getPendingSofiaQuestionsHandler(adminToken, userEmail) {
 
 function answerAndTrainSofiaHandler(data, adminToken, userEmail) {
   try {
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
-
-    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
     }
 
     if (!data || !data.question || !data.officialAnswer) {
@@ -1866,7 +1923,7 @@ function answerAndTrainSofiaHandler(data, adminToken, userEmail) {
       category: category,
       conditions: 'Instruido directamente por Propietario (Luis Lizardo)',
       status: 'activo'
-    }, 'wes_owner_authorized_session');
+    }, adminToken, userEmail);
 
     // 2. Marcar la pregunta como instruida en Preguntas_Pendientes_Sofia
     const pendingSheet = getSofiaPendingSheet_();
@@ -2020,12 +2077,9 @@ function countActivePushDevicesForUser_(userId, userEmail) {
  */
 function listRegisteredClientsAdminHandler(adminToken, userEmail) {
   try {
-    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-
-    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado: solo administradores autorizados.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: solo administradores autorizados.' };
     }
 
     const sheet = getClientsSheet_();
@@ -2089,12 +2143,9 @@ function listRegisteredClientsAdminHandler(adminToken, userEmail) {
  */
 function createUserAdminHandler(data, adminToken, userEmail) {
   try {
-    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-
-    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado: solo administradores autorizados.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: solo administradores autorizados.' };
     }
 
     if (!data || !data.name || !data.email) {
@@ -2260,12 +2311,9 @@ function recordAuditLog_(adminEmail, moduleName, action, description, targetEmai
 
 function updateClientAdminHandler(data, adminToken, userEmail) {
   try {
-    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-
-    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado: permisos administrativos requeridos.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: permisos administrativos requeridos.' };
     }
 
     if (!data || (!data.email && !data.id)) {
@@ -2384,12 +2432,9 @@ function updateClientAdminHandler(data, adminToken, userEmail) {
  */
 function handleAdminUserAccessAction(data, adminToken, userEmail) {
   try {
-    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-
-    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado: solo administradores autorizados.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: solo administradores autorizados.' };
     }
 
     if (!data || !data.targetEmail || !data.actionType) {
@@ -2510,12 +2555,9 @@ function handleAdminUserAccessAction(data, adminToken, userEmail) {
  */
 function handleGetAuthAccessDashboardAdmin(adminToken, userEmail) {
   try {
-    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-
-    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
     }
 
     const clientSheet = getClientsSheet_();
@@ -2718,12 +2760,9 @@ function getUserDirectMessagesHandler(userEmail) {
 
 function sendUserDirectMessageHandler(data, adminToken, userEmail) {
   try {
-    const props = PropertiesService.getScriptProperties();
-    const storedToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
-    const isOwner = (userEmail && String(userEmail).toLowerCase().trim() === 'ing.lmlh@gmail.com');
-
-    if (!isOwner && (!adminToken || (adminToken !== storedToken && adminToken !== 'wes_owner_authorized_session'))) {
-      return { success: false, message: 'Acceso denegado: solo personal autorizado puede enviar mensajes directos.' };
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: solo personal autorizado puede enviar mensajes directos.' };
     }
 
     if (!data || !data.targetEmail || !data.content) {
