@@ -137,25 +137,83 @@
 
         <!-- Botones de Acción Rápida (Móvil / Desktop) -->
         <div class="flex items-center space-x-2">
-          <!-- Botón de Usuario (Icono de la Persona) -->
-          <button id="auth-person-btn" onclick="handleUserPersonClick()" class="w-10 h-10 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center justify-center transition shadow-sm relative group shrink-0" title="Mi Cuenta / Iniciar Sesión" aria-label="Usuario">
-            <!-- Icono cuando NO está iniciada la sesión -->
-            <span id="auth-person-icon-loggedout" class="flex items-center justify-center pointer-events-none">
-              <i class="fas fa-user text-sm text-slate-600 group-hover:text-wes-blue transition"></i>
-            </span>
+          <!-- Menú Compacto "Mi Cuenta" -->
+          <div id="header-my-account-container" class="relative">
+            <!-- Botón Mi Cuenta (Estado dinámico: Login o Avatar+Nombre+⋮) -->
+            <button id="auth-person-btn" onclick="handleUserPersonClick()" aria-haspopup="true" aria-expanded="false" class="h-10 px-2 sm:px-3 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center space-x-1.5 transition shadow-sm relative group shrink-0" title="Mi Cuenta / Iniciar Sesión" aria-label="Mi Cuenta">
+              <!-- Estado NO autenticado -->
+              <span id="auth-person-icon-loggedout" class="flex items-center space-x-1.5 pointer-events-none">
+                <i class="fas fa-user text-sm text-slate-600 group-hover:text-wes-blue transition"></i>
+                <span class="hidden sm:inline text-xs font-bold text-slate-700 group-hover:text-wes-blue transition">Entrar</span>
+              </span>
 
-            <!-- Avatar con iniciales cuando SÍ está iniciada la sesión -->
-            <span id="auth-person-icon-loggedin" class="hidden w-full h-full rounded-full bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shadow-inner pointer-events-none">
-              <span id="auth-person-initials">U</span>
-              <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white"></span>
-            </span>
-          </button>
+              <!-- Estado SÍ autenticado (Avatar circular + Nombre corto + ⋮) -->
+              <span id="auth-person-icon-loggedin" class="hidden flex items-center space-x-2 pointer-events-none">
+                <span class="w-7 h-7 rounded-full bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shadow-inner relative shrink-0">
+                  <span id="auth-person-initials">U</span>
+                  <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-white"></span>
+                </span>
+                <span id="auth-person-shortname" class="hidden md:inline text-xs font-bold text-slate-800 max-w-[100px] truncate">Cliente</span>
+                <i class="fas fa-ellipsis-v text-slate-400 group-hover:text-slate-600 text-xs pl-0.5"></i>
+              </span>
 
-          <!-- Botón de Mensajes y Notificaciones Directas del Cliente -->
-          <button id="header-user-messages-btn" onclick="openUserMessagesModal()" class="w-10 h-10 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center justify-center transition shadow-sm relative group shrink-0" title="Mensajes y Notificaciones" aria-label="Mensajes">
-            <i class="fas fa-envelope text-sm text-slate-600 group-hover:text-wes-blue transition"></i>
-            <span id="header-user-messages-badge" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-600 border-2 border-white text-white font-black text-[10px] flex items-center justify-center shadow-xs animate-pulse">0</span>
-          </button>
+              <!-- Badge discreto de Mensajes no leídos en el botón -->
+              <span id="header-user-messages-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-600 border-2 border-white text-white font-black text-[9px] flex items-center justify-center shadow-xs">0</span>
+            </button>
+
+            <!-- Dropdown Menú Compacto "Mi Cuenta" -->
+            <div id="header-my-account-dropdown" role="menu" aria-label="Opciones de cuenta" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 transition-all transform origin-top-right">
+              <!-- Encabezado del Dropdown con saludo al usuario -->
+              <div class="px-4 py-2.5 border-b border-slate-100 bg-slate-50/70">
+                <p id="dropdown-user-fullname" class="text-xs font-bold text-slate-900 truncate">Mi Cuenta</p>
+                <p id="dropdown-user-role" class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Cliente WES</p>
+              </div>
+
+              <!-- Enlace a Panel Administrativo (Visible solo para empleados autorizados) -->
+              <a id="dropdown-admin-link" href="admin.html" role="menuitem" class="hidden px-4 py-2.5 text-xs font-bold text-amber-700 bg-amber-50/70 hover:bg-amber-100/70 flex items-center space-x-2.5 border-b border-amber-100 transition">
+                <i class="fas fa-shield-alt text-wes-gold text-sm w-4 text-center"></i>
+                <span>Panel Administrativo</span>
+              </a>
+
+              <!-- 1. Mi Perfil -->
+              <button type="button" role="menuitem" onclick="openUserProfileCleanModal(); closeMyAccountDropdown();" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-wes-blue flex items-center space-x-2.5 transition">
+                <i class="fas fa-id-card text-slate-400 w-4 text-center"></i>
+                <div class="flex-1">
+                  <span class="block">Mi perfil</span>
+                  <span class="text-[10px] text-slate-400 font-normal">Datos personales y contacto</span>
+                </div>
+              </button>
+
+              <!-- 2. Mis Servicios -->
+              <button type="button" role="menuitem" onclick="openClientServicesModal(); closeMyAccountDropdown();" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-wes-blue flex items-center space-x-2.5 transition">
+                <i class="fas fa-th-large text-slate-400 w-4 text-center"></i>
+                <div class="flex-1">
+                  <span class="block">Mis servicios</span>
+                  <span class="text-[10px] text-slate-400 font-normal">Cotizaciones, soporte y taller</span>
+                </div>
+              </button>
+
+              <!-- 3. Mensajes -->
+              <button type="button" role="menuitem" onclick="openUserMessagesModal(); closeMyAccountDropdown();" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-wes-blue flex items-center justify-between transition">
+                <div class="flex items-center space-x-2.5">
+                  <i class="fas fa-envelope text-slate-400 w-4 text-center"></i>
+                  <div>
+                    <span class="block">Mensajes</span>
+                    <span class="text-[10px] text-slate-400 font-normal">Avisos y respuestas</span>
+                  </div>
+                </div>
+                <span id="dropdown-messages-badge" class="hidden px-1.5 py-0.5 rounded-full text-[9px] font-black bg-rose-500 text-white">0</span>
+              </button>
+
+              <div class="border-t border-slate-100 my-1"></div>
+
+              <!-- 4. Cerrar Sesión -->
+              <button type="button" role="menuitem" onclick="handleLogout(); closeMyAccountDropdown();" class="w-full text-left px-4 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 flex items-center space-x-2.5 transition">
+                <i class="fas fa-sign-out-alt text-rose-500 w-4 text-center"></i>
+                <span>Cerrar sesión</span>
+              </button>
+            </div>
+          </div>
 
           <!-- Chip Móvil Servicio Técnico -->
           <a href="servicio-tecnico.html" id="header-service-kds-chip" style="display: none !important;" class="hidden md:hidden px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs items-center space-x-1.5 shadow-sm border border-slate-800 shrink-0" title="Entrar a Servicio Técnico (Tablero KDS)">
@@ -222,19 +280,33 @@
 
         <!-- Si está logueado -->
         <div id="mobile-logged-container" class="hidden space-y-2">
-          <div onclick="openUserProfileModal(); closeMobileMenu();" class="flex items-center space-x-2.5 p-2.5 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 cursor-pointer transition" title="Ver mi información y perfil">
+          <div class="flex items-center space-x-2.5 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
             <span id="mobile-user-avatar" class="w-9 h-9 rounded-lg bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shrink-0 shadow-sm">U</span>
             <div class="min-w-0 flex-1">
               <p id="mobile-user-name" class="font-bold text-slate-900 text-xs truncate">Nombre</p>
               <p id="mobile-user-role" class="text-[10px] text-slate-500 font-semibold uppercase">Cliente WES</p>
             </div>
-            <i class="fas fa-chevron-right text-xs text-slate-400"></i>
           </div>
 
           <a id="mobile-admin-link" href="admin.html" class="hidden w-full py-2 px-3 rounded-lg bg-amber-50 text-wes-blue font-bold text-xs flex items-center space-x-2 border border-amber-200">
             <i class="fas fa-shield-alt text-wes-gold"></i>
             <span>Acceder al Panel Admin</span>
           </a>
+
+          <button onclick="openUserProfileCleanModal(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-between border border-slate-200 transition">
+            <span class="flex items-center space-x-2"><i class="fas fa-id-card text-slate-400"></i><span>Mi perfil</span></span>
+            <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+          </button>
+
+          <button onclick="openClientServicesModal(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-between border border-slate-200 transition">
+            <span class="flex items-center space-x-2"><i class="fas fa-th-large text-slate-400"></i><span>Mis servicios</span></span>
+            <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
+          </button>
+
+          <button onclick="openUserMessagesModal(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-between border border-slate-200 transition">
+            <span class="flex items-center space-x-2"><i class="fas fa-envelope text-slate-400"></i><span>Mensajes</span></span>
+            <span id="mobile-messages-badge" class="hidden px-1.5 py-0.2 rounded-full text-[9px] font-black bg-rose-500 text-white">0</span>
+          </button>
 
           <button onclick="handleLogout(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg text-rose-600 hover:bg-rose-50 font-bold text-xs flex items-center justify-center space-x-1.5 transition">
             <i class="fas fa-sign-out-alt"></i>
@@ -1807,7 +1879,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.97 (Build 97)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.98 (Build 98)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -2519,11 +2591,14 @@
   <!-- ========================================================= -->
   <!-- MODAL DE DATOS DEL USUARIO / PERFIL (SESIÓN INICIADA)     -->
   <!-- ========================================================= -->
+  <!-- ========================================================= -->
+  <!-- MODAL: MI PERFIL (LIMPIO, ACCESIBLE Y EDITABLE)            -->
+  <!-- ========================================================= -->
   <div id="user-profile-modal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-sm w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all transform duration-200">
       
       <!-- Botón de Cerrar (X) -->
-      <button onclick="closeUserProfileModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition z-10" title="Cerrar ventana">
+      <button onclick="closeUserProfileModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition z-10" title="Cerrar ventana" aria-label="Cerrar">
         <i class="fas fa-times text-xs"></i>
       </button>
 
@@ -2545,143 +2620,91 @@
         </div>
       </div>
 
-      <!-- Cuerpo con Datos de la Persona -->
-      <div class="p-5 space-y-3.5">
-        <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-200/80 space-y-2.5 text-xs">
-          
-          <!-- Correo -->
-          <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 rounded-xl bg-blue-100 text-wes-blue flex items-center justify-center shrink-0">
-              <i class="fas fa-envelope text-xs"></i>
+      <!-- Cuerpo de Mi Perfil -->
+      <div class="p-5 space-y-4">
+
+        <!-- Vista de Datos Personales (Lectura) -->
+        <div id="profile-view-mode" class="space-y-3">
+          <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-200/80 space-y-2.5 text-xs">
+            <!-- Correo -->
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-xl bg-blue-100 text-wes-blue flex items-center justify-center shrink-0">
+                <i class="fas fa-envelope text-xs"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Correo Electrónico</span>
+                <p id="profile-modal-email" class="font-semibold text-slate-800 truncate text-xs">correo@ejemplo.com</p>
+              </div>
             </div>
-            <div class="min-w-0 flex-1">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Correo Electrónico</span>
-              <p id="profile-modal-email" class="font-semibold text-slate-800 truncate text-xs">correo@ejemplo.com</p>
+
+            <!-- Teléfono -->
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                <i class="fas fa-phone text-xs"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Teléfono / WhatsApp</span>
+                <p id="profile-modal-phone" class="font-semibold text-slate-800 truncate text-xs">No registrado</p>
+              </div>
             </div>
           </div>
 
-          <!-- Teléfono -->
-          <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-              <i class="fas fa-phone text-xs"></i>
-            </div>
-            <div class="min-w-0 flex-1">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Teléfono / WhatsApp</span>
-              <p id="profile-modal-phone" class="font-semibold text-slate-800 truncate text-xs">No registrado</p>
-            </div>
-          </div>
-
-          <!-- Estado de Sesión -->
-          <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-              <i class="fas fa-shield-alt text-xs"></i>
-            </div>
-            <div class="min-w-0 flex-1">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Estado de Cuenta</span>
-              <p class="font-bold text-emerald-600 text-xs flex items-center space-x-1">
-                <i class="fas fa-check-circle text-[11px]"></i>
-                <span>Sesión Iniciada y Verificada</span>
-              </p>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- ============================================== -->
-        <!-- VISTAS TAILORED SEGÚN ROL ASIGNADO POR ADMIN     -->
-        <!-- ============================================== -->
-
-        <!-- 1. VISTA CLIENTE -->
-        <div id="profile-view-cliente" class="space-y-2.5">
-          <div class="p-3 bg-blue-50/90 border border-blue-200 rounded-2xl flex items-center space-x-2.5 text-xs text-blue-950">
-            <i class="fas fa-user-circle text-wes-blue text-base shrink-0"></i>
-            <div>
-              <span class="font-extrabold block">Vista Cliente WES</span>
-              <span class="text-[11px] text-blue-800">Espacio limpio y personal para tus cotizaciones y solicitudes de soporte.</span>
-            </div>
-          </div>
-          <button id="profile-modal-quotes-btn" onclick="closeUserProfileModal(); openQuoteModal();" class="w-full py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
-            <i class="fas fa-file-invoice text-wes-gold"></i>
-            <span>Mis Cotizaciones y Solicitudes</span>
-          </button>
-          <button onclick="closeUserProfileModal(); openOngoingSupportModal();" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200/80 text-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-slate-200">
-            <i class="fas fa-wrench text-amber-600"></i>
-            <span>Rastrear mis Reparaciones de Taller</span>
+          <!-- Botón para Editar Datos -->
+          <button type="button" onclick="toggleEditProfileMode(true)" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-slate-200">
+            <i class="fas fa-user-edit text-wes-blue text-xs"></i>
+            <span>Editar mis datos</span>
           </button>
         </div>
 
-        <!-- 2. VISTA TÉCNICO INTERNO WES (Taller & Laboratorio) -->
-        <div id="profile-view-tecnico-interno" class="hidden space-y-2.5">
-          <div class="p-3 bg-amber-50/90 border border-amber-300 rounded-2xl flex items-center space-x-2.5 text-xs text-amber-950">
-            <i class="fas fa-flask text-amber-700 text-base shrink-0"></i>
-            <div>
-              <span class="font-extrabold block">Vista Técnico Interno WES</span>
-              <span class="text-[11px] text-amber-800">Laboratorio de tarjetas, banco de pruebas de inversores y tablero de taller.</span>
-            </div>
+        <!-- Formulario de Edición de Datos (Oculto por defecto) -->
+        <form id="profile-edit-form" onsubmit="handleSaveUserProfile(event)" class="hidden space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <span class="font-bold text-slate-800 text-xs">Modificar datos</span>
+            <button type="button" onclick="toggleEditProfileMode(false)" class="text-[11px] text-slate-400 hover:text-slate-600 font-medium">Cancelar</button>
           </div>
-          <a href="servicio-tecnico.html" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-wes-blue text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/40 shadow-xs">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Nombre completo *</label>
+            <input type="text" id="profile-edit-name-input" required class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Teléfono / WhatsApp</label>
+            <input type="tel" id="profile-edit-phone-input" placeholder="(809) 000-0000" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-wes-blue">
+          </div>
+          <button type="submit" id="btn-save-profile" class="w-full py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-xs">
+            <i class="fas fa-check"></i>
+            <span>Guardar cambios</span>
+          </button>
+        </form>
+
+        <!-- VISTAS ESPECIALES SOLO PARA PERSONAL AUTORIZADO (Mantenidas por compatibilidad RBAC) -->
+        <div id="profile-view-tecnico-interno" class="hidden space-y-2">
+          <a href="servicio-tecnico.html" target="_blank" class="w-full py-2 bg-slate-900 hover:bg-wes-blue text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/40 shadow-xs">
             <i class="fas fa-tv text-wes-gold"></i>
-            <span>Abrir Tablero KDS de Taller</span>
+            <span>Abrir Tablero KDS</span>
           </a>
-          <button onclick="closeUserProfileModal(); openOngoingSupportModal();" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
-            <i class="fas fa-traffic-light"></i>
-            <span>Control Semafórico en Vivo (Inversores)</span>
-          </button>
         </div>
 
-        <!-- 3. VISTA TÉCNICO EXTERNO (Operaciones de Campo) -->
-        <div id="profile-view-tecnico-externo" class="hidden space-y-2.5">
-          <div class="p-3 bg-emerald-50/90 border border-emerald-300 rounded-2xl flex items-center space-x-2.5 text-xs text-emerald-950">
-            <i class="fas fa-truck-pickup text-emerald-700 text-base shrink-0"></i>
-            <div>
-              <span class="font-extrabold block">Vista Técnico Externo WES</span>
-              <span class="text-[11px] text-emerald-800">Operaciones en terreno, motores CAME, CCTV e instalaciones en sitio.</span>
-            </div>
-          </div>
-          <button onclick="closeUserProfileModal(); openTecnicoExternoPortal();" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
+        <div id="profile-view-tecnico-externo" class="hidden space-y-2">
+          <button onclick="closeUserProfileModal(); openTecnicoExternoPortal();" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
             <i class="fas fa-clipboard-check"></i>
-            <span>Portal de Operaciones en Terreno</span>
+            <span>Portal de Campo</span>
           </button>
         </div>
 
-        <!-- 4. VISTA ADMINISTRADOR / PROPIETARIO -->
-        <div id="profile-view-admin" class="hidden space-y-2.5">
-          <div class="p-3 bg-indigo-50/90 border border-indigo-200 rounded-2xl flex items-center space-x-2.5 text-xs text-indigo-950">
-            <i class="fas fa-shield-alt text-indigo-600 text-base shrink-0"></i>
-            <div>
-              <span class="font-extrabold block">Vista Administrador General</span>
-              <span class="text-[11px] text-indigo-800">Acceso integral a dashboard de registros, métricas y control de permisos.</span>
-            </div>
-          </div>
-          <a id="profile-modal-admin-btn" href="admin.html" class="w-full py-3 bg-gradient-to-r from-wes-blue to-slate-900 hover:from-slate-900 hover:to-wes-blue text-white rounded-xl text-xs font-black shadow-md transition flex items-center justify-center space-x-2 border border-wes-gold/40">
-            <i class="fas fa-tachometer-alt text-wes-gold text-sm"></i>
-            <span>Acceder al Panel de Control Admin</span>
+        <div id="profile-view-admin" class="hidden space-y-2">
+          <a id="profile-modal-admin-btn" href="admin.html" class="w-full py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/40 shadow-xs">
+            <i class="fas fa-shield-alt text-wes-gold text-xs"></i>
+            <span>Panel Administrativo</span>
           </a>
-          <a href="servicio-tecnico.html" target="_blank" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
-            <i class="fas fa-tv text-wes-gold"></i>
-            <span>Tablero KDS de Taller</span>
-          </a>
-          <button onclick="closeUserProfileModal(); openTecnicoExternoPortal();" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
-            <i class="fas fa-truck-pickup text-emerald-600"></i>
-            <span>Ver Portal de Campo</span>
-          </button>
         </div>
 
-
-        <!-- Botón de Notificaciones Web Push Oficial WES -->
-        <div id="profile-push-container" class="pt-1">
-          <button type="button" id="profile-push-toggle-btn" onclick="UserMessagesService.togglePushSubscriptionFromProfile()" class="w-full py-2.5 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 text-blue-900 border border-blue-200 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-xs">
-            <i class="fas fa-bell text-amber-500"></i>
-            <span id="profile-push-btn-text">Activar Notificaciones Push</span>
+        <!-- Sección Secundaria Discreta: Notificaciones Push -->
+        <div id="profile-push-container" class="pt-2 border-t border-slate-100">
+          <button type="button" id="profile-push-toggle-btn" onclick="UserMessagesService.togglePushSubscriptionFromProfile()" class="w-full py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-2">
+            <i class="fas fa-bell text-amber-500 text-xs"></i>
+            <span id="profile-push-btn-text">Configurar avisos en este dispositivo</span>
           </button>
-          <p id="profile-push-status-hint" class="text-[10px] text-slate-400 text-center mt-1">Recibe avisos discretos de mensajes directos y cotizaciones en tu teléfono.</p>
         </div>
-
-        <!-- Botón de Sincronización para Teléfono Móvil -->
-        <button type="button" onclick="forceRefreshApp()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center justify-center space-x-2 border border-slate-200">
-          <i class="fas fa-sync-alt text-wes-blue text-xs"></i>
-          <span>Sincronizar y Actualizar App Móvil</span>
-        </button>
 
         <!-- Cerrar Sesión -->
         <button onclick="closeUserProfileModal(); handleLogout();" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-rose-200/60">
@@ -2689,6 +2712,89 @@
           <span>Cerrar Sesión</span>
         </button>
 
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: MIS SERVICIOS (SUB-PANEL COMPACTO DEL CLIENTE)      -->
+  <!-- ========================================================= -->
+  <div id="client-services-modal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden my-6 relative transition-all">
+      
+      <!-- Cabecera del Panel -->
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-6 py-5 text-white flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-wes-gold text-lg shadow-inner">
+            <i class="fas fa-th-large"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-white font-brand">Mis Servicios</h3>
+            <p class="text-[11px] text-slate-300">Gestión de tus operaciones comerciales y técnicas</p>
+          </div>
+        </div>
+        <button onclick="closeClientServicesModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 flex items-center justify-center transition" aria-label="Cerrar ventana">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Tarjetas Directas de Servicios -->
+      <div class="p-6 space-y-3.5 bg-slate-50/50">
+
+        <!-- 1. Mis Cotizaciones -->
+        <button type="button" onclick="closeClientServicesModal(); openQuoteModal();" class="w-full p-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-wes-blue rounded-2xl transition shadow-xs text-left flex items-center space-x-3.5 group">
+          <div class="w-11 h-11 rounded-xl bg-blue-50 text-wes-blue group-hover:bg-wes-blue group-hover:text-white flex items-center justify-center shrink-0 transition shadow-xs">
+            <i class="fas fa-file-invoice text-lg"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-900 text-sm group-hover:text-wes-blue transition">Mis cotizaciones</span>
+              <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-50 text-wes-blue">Comercial</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Revisar tu lista de presupuesto, productos seleccionados y formalizar solicitudes.</p>
+          </div>
+          <i class="fas fa-chevron-right text-slate-400 group-hover:text-wes-blue text-xs transition"></i>
+        </button>
+
+        <!-- 2. Mis Solicitudes de Soporte -->
+        <a href="#soporte" onclick="closeClientServicesModal();" class="w-full p-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-500 rounded-2xl transition shadow-xs text-left flex items-center space-x-3.5 group">
+          <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white flex items-center justify-center shrink-0 transition shadow-xs">
+            <i class="fas fa-tools text-lg"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-900 text-sm group-hover:text-amber-700 transition">Mis solicitudes de soporte</span>
+              <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-50 text-amber-800">Técnico</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Solicitar visita técnica, configuración de motores, CCTV o soporte en sitio.</p>
+          </div>
+          <i class="fas fa-chevron-right text-slate-400 group-hover:text-amber-600 text-xs transition"></i>
+        </a>
+
+        <!-- 3. Mis Reparaciones de Taller -->
+        <button type="button" onclick="closeClientServicesModal(); openOngoingSupportModal();" class="w-full p-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-500 rounded-2xl transition shadow-xs text-left flex items-center space-x-3.5 group">
+          <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center shrink-0 transition shadow-xs">
+            <i class="fas fa-wrench text-lg"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-900 text-sm group-hover:text-emerald-700 transition">Mis reparaciones de taller</span>
+              <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800">Taller & KDS</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Rastrear el estado en tiempo real de inversores, tarjetas y equipos en diagnóstico.</p>
+          </div>
+          <i class="fas fa-chevron-right text-slate-400 group-hover:text-emerald-600 text-xs transition"></i>
+        </button>
+
+      </div>
+
+      <!-- Pie del Panel -->
+      <div class="p-4 bg-white border-t border-slate-100 flex items-center justify-between">
+        <span class="text-[11px] text-slate-400">Atención WES · Moca, R.D.</span>
+        <button type="button" onclick="closeClientServicesModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+          Cerrar
+        </button>
       </div>
 
     </div>

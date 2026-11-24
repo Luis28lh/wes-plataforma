@@ -1761,6 +1761,8 @@ function setupEventListeners() {
     { id: 'pwa-ios-modal', closeFn: () => typeof closePwaIosModal === 'function' && closePwaIosModal() },
     { id: 'pwa-guide-modal', closeFn: () => typeof closePwaGuideModal === 'function' && closePwaGuideModal() },
     { id: 'user-profile-modal', closeFn: () => typeof closeUserProfileModal === 'function' && closeUserProfileModal() },
+    { id: 'client-services-modal', closeFn: () => typeof closeClientServicesModal === 'function' && closeClientServicesModal() },
+    { id: 'user-messages-modal', closeFn: () => typeof closeUserMessagesModal === 'function' && closeUserMessagesModal() },
     { id: 'ongoing-support-modal', closeFn: () => typeof closeOngoingSupportModal === 'function' && closeOngoingSupportModal() },
     { id: 'auth-modal', closeFn: () => typeof closeAuthModal === 'function' && closeAuthModal() },
     { id: 'modal-tecnico-externo', closeFn: () => typeof closeTecnicoExternoPortal === 'function' && closeTecnicoExternoPortal() }
@@ -3344,23 +3346,96 @@ async function handleResendMagicCode() {
 }
 
 // ----------------------------------------------------------------------------
-// CONTROLADOR DEL ICONO DE LA PERSONA Y MODAL DE PERFIL
+// CONTROLADOR DEL MENÚ COMPACTO "MI CUENTA" Y ACCESOS
 // ----------------------------------------------------------------------------
 function handleUserPersonClick() {
   if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
 
   if (typeof UserAuth !== 'undefined' && UserAuth.isAuthenticated()) {
-    // Si la sesión YA ESTÁ INICIADA -> Mostrar modal con todos los datos de esa persona
-    openUserProfileModal();
+    // Si la sesión YA ESTÁ INICIADA -> Desplegar / Alternar menú compacto "Mi cuenta"
+    toggleMyAccountDropdown();
   } else {
-    // Si NO está iniciada la sesión -> Mandar la inicialización (abrir modal de login)
+    // Si NO está iniciada la sesión -> Abrir modal de login OTP
     openAuthModal('login');
   }
+}
+
+function toggleMyAccountDropdown() {
+  const dropdown = document.getElementById('header-my-account-dropdown');
+  const btn = document.getElementById('auth-person-btn');
+  if (!dropdown) return;
+
+  const isOpen = !dropdown.classList.contains('hidden');
+  if (isOpen) {
+    closeMyAccountDropdown();
+  } else {
+    dropdown.classList.remove('hidden');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function closeMyAccountDropdown() {
+  const dropdown = document.getElementById('header-my-account-dropdown');
+  const btn = document.getElementById('auth-person-btn');
+  if (dropdown) dropdown.classList.add('hidden');
+  if (btn) {
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+// Cierre al hacer clic fuera del dropdown
+document.addEventListener('click', (e) => {
+  const container = document.getElementById('header-my-account-container');
+  if (container && !container.contains(e.target)) {
+    closeMyAccountDropdown();
+  }
+});
+
+// Cierre del dropdown al presionar Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const dropdown = document.getElementById('header-my-account-dropdown');
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+      closeMyAccountDropdown();
+      const btn = document.getElementById('auth-person-btn');
+      if (btn) btn.focus();
+    }
+  }
+});
+
+// ----------------------------------------------------------------------------
+// SUB-PANEL: MIS SERVICIOS (COTIZACIONES, SOPORTE, TALLER)
+// ----------------------------------------------------------------------------
+function openClientServicesModal() {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+  closeMyAccountDropdown();
+
+  const modal = document.getElementById('client-services-modal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeClientServicesModal() {
+  const modal = document.getElementById('client-services-modal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
+  document.body.classList.remove('overflow-hidden');
+}
+
+// ----------------------------------------------------------------------------
+// MODAL: MI PERFIL (LIMPIO Y EDITABLE)
+// ----------------------------------------------------------------------------
+function openUserProfileCleanModal() {
+  openUserProfileModal();
 }
 
 function openUserProfileModal() {
   if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
   if (typeof closeAuthModal === 'function') closeAuthModal();
+  closeMyAccountDropdown();
 
   const modal = document.getElementById('user-profile-modal');
   if (!modal) return;
@@ -3383,6 +3458,14 @@ function openUserProfileModal() {
   if (emailEl) emailEl.textContent = user.email || '';
   if (phoneEl) phoneEl.textContent = user.phone || 'No registrado';
 
+  // Precargar formulario de edición
+  const editName = document.getElementById('profile-edit-name-input');
+  const editPhone = document.getElementById('profile-edit-phone-input');
+  if (editName) editName.value = user.name || '';
+  if (editPhone) editPhone.value = user.phone || '';
+
+  toggleEditProfileMode(false);
+
   // Determinar rol activo: cliente | tecnico_interno | tecnico_externo | administrador
   const userRole = (user.role || (user.isEmployee ? 'administrador' : 'cliente')).toLowerCase();
 
@@ -3402,13 +3485,11 @@ function openUserProfileModal() {
     }
   }
 
-  // Activar contenedor de vista correspondiente para evitar abrumar al usuario
-  const viewCliente = document.getElementById('profile-view-cliente');
+  // Activar contenedor de vista para personal autorizado si aplica
   const viewTecInterno = document.getElementById('profile-view-tecnico-interno');
   const viewTecExterno = document.getElementById('profile-view-tecnico-externo');
   const viewAdmin = document.getElementById('profile-view-admin');
 
-  if (viewCliente) viewCliente.classList.add('hidden');
   if (viewTecInterno) viewTecInterno.classList.add('hidden');
   if (viewTecExterno) viewTecExterno.classList.add('hidden');
   if (viewAdmin) viewAdmin.classList.add('hidden');
@@ -3419,9 +3500,6 @@ function openUserProfileModal() {
     if (viewTecExterno) viewTecExterno.classList.remove('hidden');
   } else if (userRole === 'administrador' || userRole === 'propietario' || user.isEmployee) {
     if (viewAdmin) viewAdmin.classList.remove('hidden');
-  } else {
-    // Vista Cliente por defecto
-    if (viewCliente) viewCliente.classList.remove('hidden');
   }
 
   // Actualizar nombre en el portal externo si aplica
@@ -3439,6 +3517,76 @@ function closeUserProfileModal() {
   modal.classList.add('hidden');
   modal.style.display = 'none';
   document.body.classList.remove('overflow-hidden');
+  toggleEditProfileMode(false);
+}
+
+function toggleEditProfileMode(enable) {
+  const viewMode = document.getElementById('profile-view-mode');
+  const editForm = document.getElementById('profile-edit-form');
+  if (viewMode && editForm) {
+    if (enable) {
+      viewMode.classList.add('hidden');
+      editForm.classList.remove('hidden');
+      const editName = document.getElementById('profile-edit-name-input');
+      if (editName) editName.focus();
+    } else {
+      viewMode.classList.remove('hidden');
+      editForm.classList.add('hidden');
+    }
+  }
+}
+
+async function handleSaveUserProfile(e) {
+  if (e) e.preventDefault();
+  const nameInput = document.getElementById('profile-edit-name-input');
+  const phoneInput = document.getElementById('profile-edit-phone-input');
+  const btn = document.getElementById('btn-save-profile');
+
+  const newName = nameInput ? nameInput.value.trim() : '';
+  const newPhone = phoneInput ? phoneInput.value.trim() : '';
+
+  if (!newName) {
+    showToast('El nombre no puede estar vacío.', 'warning');
+    return;
+  }
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user || !user.email) return;
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Guardando...';
+  }
+
+  try {
+    // Actualizar en el estado de sesión local
+    const updatedUser = { ...user, name: newName, phone: newPhone };
+    if (typeof UserAuth !== 'undefined' && typeof UserAuth.setSession === 'function') {
+      UserAuth.setSession(updatedUser, true);
+    }
+
+    // Actualizar campos visuales de perfil
+    const nameEl = document.getElementById('profile-modal-name');
+    const phoneEl = document.getElementById('profile-modal-phone');
+    const avatarEl = document.getElementById('profile-modal-avatar');
+    const initials = (newName || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+
+    if (nameEl) nameEl.textContent = newName;
+    if (phoneEl) phoneEl.textContent = newPhone || 'No registrado';
+    if (avatarEl) avatarEl.textContent = initials;
+
+    updateAuthHeaderUI();
+    toggleEditProfileMode(false);
+    showToast('Tus datos se actualizaron correctamente.', 'success');
+  } catch (err) {
+    console.error('[Profile] Error al guardar datos:', err);
+    showToast('Error al actualizar datos de perfil.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-check mr-1"></i> Guardar cambios';
+    }
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -3471,7 +3619,7 @@ function closeTecnicoExternoPortal() {
 }
 
 // ----------------------------------------------------------------------------
-// SINCRONIZACIÓN DE INTERFAZ DEL HEADER (ICONO DE PERSONA LIMPIO)
+// SINCRONIZACIÓN DE INTERFAZ DEL HEADER (MENÚ COMPACTO MI CUENTA)
 // ----------------------------------------------------------------------------
 function updateAuthHeaderUI() {
   const isAuth = typeof UserAuth !== 'undefined' && UserAuth.isAuthenticated();
@@ -3481,6 +3629,11 @@ function updateAuthHeaderUI() {
   const iconLoggedOut = document.getElementById('auth-person-icon-loggedout');
   const iconLoggedIn = document.getElementById('auth-person-icon-loggedin');
   const initialsEl = document.getElementById('auth-person-initials');
+  const shortnameEl = document.getElementById('auth-person-shortname');
+
+  const dropdownFullName = document.getElementById('dropdown-user-fullname');
+  const dropdownRole = document.getElementById('dropdown-user-role');
+  const dropdownAdminLink = document.getElementById('dropdown-admin-link');
 
   const mobLoginBtn = document.getElementById('mobile-login-btn');
   const mobLoggedContainer = document.getElementById('mobile-logged-container');
@@ -3491,7 +3644,6 @@ function updateAuthHeaderUI() {
 
   // Control estricto de visibilidad del botón 'Servicio Técnico' (KDS) y Tablero Interno
   // Oculto para visitantes y clientes; visible solo para técnicos y administradores autorizados
-  // Regla estricta: Servicio Técnico / KDS SOLO visible para personal interno / empleados autorizados
   const allowedTechRoles = ['tecnico_interno', 'tecnico_externo', 'administrador', 'propietario', 'gestor_soporte'];
   const userRole = user && user.role ? String(user.role).toLowerCase() : '';
   const isClientRole = userRole === 'cliente';
@@ -3517,13 +3669,24 @@ function updateAuthHeaderUI() {
   });
 
   if (isAuth && user) {
-    const initials = (user.name || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+    const rawName = user.name || 'Cliente';
+    const shortName = rawName.split(' ')[0] || 'Cliente';
+    const initials = rawName.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
 
-    // Actualizar icono en la barra principal
+    // Actualizar botón "Mi Cuenta" en la barra principal
     if (iconLoggedOut) iconLoggedOut.classList.add('hidden');
     if (iconLoggedIn) iconLoggedIn.classList.remove('hidden');
     if (initialsEl) initialsEl.textContent = initials;
+    if (shortnameEl) shortnameEl.textContent = shortName;
     if (personBtn) personBtn.title = `Mi Cuenta: ${user.name} (${user.roleLabel || 'Activa'})`;
+
+    // Dropdown Header
+    if (dropdownFullName) dropdownFullName.textContent = user.name;
+    if (dropdownRole) dropdownRole.textContent = user.roleLabel || 'Cliente WES';
+    if (dropdownAdminLink) {
+      if (user.isEmployee) dropdownAdminLink.classList.remove('hidden');
+      else dropdownAdminLink.classList.add('hidden');
+    }
 
     // Drawer Móvil
     if (mobLoginBtn) mobLoginBtn.classList.add('hidden');
@@ -3539,7 +3702,11 @@ function updateAuthHeaderUI() {
     // No autenticado
     if (iconLoggedOut) iconLoggedOut.classList.remove('hidden');
     if (iconLoggedIn) iconLoggedIn.classList.add('hidden');
-    if (personBtn) personBtn.title = 'Iniciar Sesión / Mi Cuenta';
+    if (personBtn) {
+      personBtn.title = 'Iniciar Sesión / Mi Cuenta';
+      personBtn.setAttribute('aria-expanded', 'false');
+    }
+    closeMyAccountDropdown();
 
     if (mobLoginBtn) mobLoginBtn.classList.remove('hidden');
     if (mobLoggedContainer) mobLoggedContainer.classList.add('hidden');
@@ -3547,6 +3714,7 @@ function updateAuthHeaderUI() {
 }
 
 function handleLogout() {
+  closeMyAccountDropdown();
   if (typeof UserAuth !== 'undefined') {
     UserAuth.logout();
     showToast('Sesión cerrada correctamente.', 'info');
@@ -3581,6 +3749,13 @@ window.updateAuthHeaderUI = updateAuthHeaderUI;
 window.handleUserPersonClick = handleUserPersonClick;
 window.openUserProfileModal = openUserProfileModal;
 window.closeUserProfileModal = closeUserProfileModal;
+window.openUserProfileCleanModal = openUserProfileCleanModal;
+window.toggleEditProfileMode = toggleEditProfileMode;
+window.handleSaveUserProfile = handleSaveUserProfile;
+window.toggleMyAccountDropdown = toggleMyAccountDropdown;
+window.closeMyAccountDropdown = closeMyAccountDropdown;
+window.openClientServicesModal = openClientServicesModal;
+window.closeClientServicesModal = closeClientServicesModal;
 window.openMobileMenu = window.openMobileMenu || function() {
   const d = document.getElementById('mobile-menu-drawer');
   if (d) { d.classList.remove('translate-x-full'); document.body.classList.add('overflow-hidden'); }
@@ -3665,22 +3840,30 @@ const UserMessagesService = (function() {
 
   function updateBadge() {
     const badge = document.getElementById('header-user-messages-badge');
-    if (!badge) return;
+    const dropdownBadge = document.getElementById('dropdown-messages-badge');
+    const mobileBadge = document.getElementById('mobile-messages-badge');
 
     if (typeof UserAuth === 'undefined' || !UserAuth.getCurrentUser()) {
-      badge.classList.add('hidden');
+      if (badge) badge.classList.add('hidden');
+      if (dropdownBadge) dropdownBadge.classList.add('hidden');
+      if (mobileBadge) mobileBadge.classList.add('hidden');
       return;
     }
 
     const readIds = getReadIds();
     const unreadCount = cachedMessages.filter(m => !readIds.includes(m.id)).length;
+    const countText = unreadCount > 9 ? '9+' : String(unreadCount);
 
-    if (unreadCount > 0) {
-      badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
-      badge.classList.remove('hidden');
-    } else {
-      badge.classList.add('hidden');
-    }
+    [badge, dropdownBadge, mobileBadge].forEach(b => {
+      if (b) {
+        if (unreadCount > 0) {
+          b.textContent = countText;
+          b.classList.remove('hidden');
+        } else {
+          b.classList.add('hidden');
+        }
+      }
+    });
   }
 
   // Comprobar estado de notificaciones Push del navegador

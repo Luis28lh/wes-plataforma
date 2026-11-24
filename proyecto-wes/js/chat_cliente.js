@@ -12,8 +12,8 @@
     empresa: {
       nombre: "Warn Electrical Services, SRL (WES)",
       ubicacion: "Moca, Provincia Espaillat, República Dominicana",
-      horario: "Lunes a Viernes de 7:30 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM",
-      telefono: "(849) 207-5474",
+      horario: "Lunes a Viernes de 8:00 AM a 6:00 PM | Sábados de 8:00 AM a 1:00 PM",
+      telefono: "(809) 578-0000",
       whatsapp: "18492075474",
       whatsappUrl: "https://wa.me/18492075474"
     },
@@ -713,7 +713,7 @@ function setupChatEvents() {
     const draft = chatSession.ticketDraft;
     const res = KDSService.createService({
       clientName: draft.name || 'Cliente WES',
-      phone: draft.phone && draft.phone.length > 5 ? draft.phone : '(849) 207-5474',
+      phone: draft.phone && draft.phone.length > 5 ? draft.phone : '(809) 578-0000',
       productSystem: draft.equipment || 'Servicio Técnico Solicitado',
       address: draft.address || 'Moca, Rep. Dominicana',
       description: draft.description || 'Solicitud generada desde el Asistente Virtual Web.',
@@ -793,7 +793,7 @@ function setupChatEvents() {
       const lower = query.toLowerCase().trim();
 
       // 3. Detección automática si el usuario escribió un código de ticket directamente
-      if (/^\s*(SRV|TKT)[-\s]?[A-Z0-9-]{3,}\s*$/i.test(query) || /^\s*\d{4}\s*$/.test(query) || /srv-\d{4}-\d{4}/i.test(lower)) {
+      if (/^(SRV|TKT|\d{4})/i.test(query) || (lower.includes('srv-') && lower.match(/srv-\d{4}-\d{4}/i))) {
         removeTypingIndicator();
         executeTicketSearch(query);
         return;
