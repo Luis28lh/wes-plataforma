@@ -20,28 +20,22 @@
   <!-- Favicon con logo WES Búho Guardián -->
   <link rel="icon" type="image/jpeg" href="assets/logo-buho.jpg">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS Compilado Oficial de Producción (Independiente de CDN) -->
+  <link rel="stylesheet" href="css/tailwind.min.css?v=20261124">
+  <!-- Fallback Resiliente a CDN si no estuviera disponible el archivo local -->
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          screens: {
-            'xs': '420px'
-          },
-          colors: {
-            'wes-blue': '#0D2A5C',
-            'wes-dark': '#071836',
-            'wes-gold': '#F5B300',
-            'wes-gold-light': '#FDD835',
-            'wes-amber': '#D97706'
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif']
-          }
-        }
+    window.addEventListener('DOMContentLoaded', function() {
+      var testElem = document.createElement('div');
+      testElem.className = 'hidden';
+      document.body.appendChild(testElem);
+      var isLoaded = window.getComputedStyle(testElem).display === 'none';
+      document.body.removeChild(testElem);
+      if (!isLoaded) {
+        var s = document.createElement('script');
+        s.src = 'https://cdn.tailwindcss.com';
+        document.head.appendChild(s);
       }
-    }
+    });
   </script>
 
   <!-- Google Fonts: Inter -->

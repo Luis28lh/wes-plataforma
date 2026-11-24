@@ -1,0 +1,9 @@
+{
+  "version": "v1.96",
+  "build": 96,
+  "date": "2026-11-24T22:01:17.543Z",
+  "gitCommit": "5ff3ffa",
+  "gitTag": "v1.96-stable",
+  "description": "Versión estable de producción tras corrección de cruce de sesiones y restauración de interfaz",
+  "status": "ESTABLE_VERIFICADA"
+}

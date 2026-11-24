@@ -28,6 +28,25 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Sincronizar fuentes maestras
+        run: |
+          node proyecto-wes/scripts/sync_sources.js
+
+      - name: Compilar Tailwind CSS de Producción
+        run: |
+          npx tailwindcss@3.4.17 -i src/input.css -o css/tailwind.min.css --minify
+          mkdir -p proyecto-wes/css
+          cp css/tailwind.min.css proyecto-wes/css/tailwind.min.css
+
+      - name: Ejecutar Suite de Bloqueos Automáticos (Preflight)
+        run: |
+          node scripts/verify_preflight.js
+
       - name: Prepare WES site
         run: |
           mkdir -p _site

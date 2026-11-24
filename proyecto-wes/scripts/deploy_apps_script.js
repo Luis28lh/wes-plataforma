@@ -2,8 +2,20 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
+const { execSync } = require('child_process');
+
 async function deployToAppsScript() {
   console.log('=== DESPLIEGUE A GOOGLE APPS SCRIPT (ESTÁNDAR AIDET v2.0) ===\n');
+
+  // 0. BLOQUEO AUTOMÁTICO PRE-DESPLIEGUE
+  console.log('0. Ejecutando suite de verificaciones pre-despliegue (Preflight)...');
+  try {
+    execSync('node scripts/verify_preflight.js', { stdio: 'inherit' });
+    console.log('✓ Preflight superado exitosamente.\n');
+  } catch (err) {
+    console.error('\n❌ DESPLIEGUE ABORTADO: La suite de preflight detectó errores críticos.');
+    process.exit(1);
+  }
 
   // 1. Cargar credenciales y renovar token
   const claspRc = JSON.parse(fs.readFileSync(path.join(os.homedir(), '.clasprc.json'), 'utf8'));
@@ -53,6 +65,17 @@ async function deployToAppsScript() {
 
   // Leer HTML base y reemplazar las rutas relativas de assets y scripts por versiones autocontenidas
   let htmlContent = fs.readFileSync(path.join(ROOT_DIR, 'index.html'), 'utf8');
+  
+  // Inyectar CSS de Tailwind compilado directamente en el HTML de Apps Script (100% autocontenido)
+  const tailwindCssPath = path.join(ROOT_DIR, 'css', 'tailwind.min.css');
+  if (fs.existsSync(tailwindCssPath)) {
+    const rawCss = fs.readFileSync(tailwindCssPath, 'utf8');
+    htmlContent = htmlContent.replace(
+      /<link rel="stylesheet" href="css\/tailwind\.min\.css[^"]*">/,
+      '<style id="wes-embedded-tailwind-css">\n' + rawCss + '\n</style>'
+    );
+    console.log('✓ CSS compilado de Tailwind incrustado directamente en el bundle de Apps Script.');
+  }
   
   // Reemplazar rutas de logo
   htmlContent = htmlContent.split('assets/logo-wes.png').join(logoDataUri);
