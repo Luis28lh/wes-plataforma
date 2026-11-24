@@ -10257,18 +10257,116 @@ const INITIAL_PRODUCTS = [
       "Montaje": "Base horizontal o soporte angular lateral para pared",
       "Garantía WES": "2 años oficial CAME"
     }
+  },
+  {
+    "id": "odoo-1646",
+    "codigo": "1646",
+    "nombre": "SONOFF POW ELITE 20A WIFI / MEDIDOR DE CONSUMO INTELIGENTE LCD (POWR320D)",
+    "marca": "Sonoff",
+    "categoria_id": "energia",
+    "descripcion": "Módulo de interruptor inteligente WiFi y medidor de energía de alta capacidad (20A / 4400W) con pantalla LCD incorporada para monitoreo de consumo eléctrico en tiempo real (potencia W, corriente A, voltaje V y consumo acumulado kWh). Equipado con procesador de alto rendimiento ESP32, protección avanzada contra sobrecargas (potencia, voltaje y corriente con auto-apagado programable), historial de consumo de 6 meses exportable, control por voz compatible con Alexa y Google Home, y conectividad WiFi 2.4GHz + Bluetooth para emparejamiento rápido. Ideal para aires acondicionados, bombas de agua, calentadores de agua (geysers), inversores y circuitos eléctricos de alto consumo.",
+    "caracteristicas": [
+      "SKU: 1646",
+      "Modelo: POWR320D (SONOFF POW Elite 20A)",
+      "Pantalla LCD: Visualización directa de Voltaje (V), Corriente (A), Potencia activa (W) y Consumo (kWh)",
+      "Capacidad de Carga Máxima: 20 Amperios (hasta 4,400 Watts a 220V / 2,400 Watts a 120V)",
+      "Rango de Voltaje de Entrada/Salida: 100-240V AC, 50/60 Hz",
+      "Procesador Central: Chip ESP32 mejorado de ultra alta velocidad y estabilidad",
+      "Conectividad Inalámbrica: Wi-Fi IEEE 802.11 b/g/n 2.4 GHz + Bluetooth eWeLink pairing",
+      "Protección contra Sobrecarga (OPS): Umbrales de seguridad ajustables de potencia, voltaje y corriente",
+      "Historial de Energía: Almacenamiento histórico de consumo eléctrico de hasta 6 meses con exportación a Excel",
+      "Carcasa Ignífuga: Material PC V0 retardante de llama de máxima seguridad eléctrica",
+      "Dimensiones Físicas: 98 mm x 54 mm x 31 mm (montaje en carril DIN incluido)",
+      "Compatibilidad Inteligente: eWeLink App, Amazon Alexa, Google Assistant, Home Assistant e IFTTT",
+      "Garantía Oficial WES: 1 año con soporte técnico y asesoría de instalación"
+    ],
+    "precio": 2450,
+    "moneda": "DOP",
+    "disponibilidad": "Disponible",
+    "stock": 12,
+    "imagen_url": "assets/products/sonoff-pow-elite-20a-front.webp",
+    "destacado": true,
+    "activo": true,
+    "manual_url": "https://smartxbd.com/product/sonoff-pow-elite-20a-wifi-power-meter-smart-switch-module-powr320d/",
+    "gallery_images": [
+      {
+        "url": "assets/products/sonoff-pow-elite-20a-front.webp",
+        "title": "Vista Frontal con Pantalla LCD",
+        "badge": "Principal",
+        "caption": "SONOFF POW Elite 20A (POWR320D) con pantalla LCD de lectura en tiempo real"
+      },
+      {
+        "url": "assets/products/sonoff-pow-elite-20a-lcd.webp",
+        "title": "Pantalla LCD y Lectura de Consumo",
+        "badge": "Medición Digital",
+        "caption": "Monitoreo de Potencia (W), Corriente (A), Voltaje (V) y kWh acumulados"
+      },
+      {
+        "url": "assets/products/sonoff-pow-elite-20a-wiring.webp",
+        "title": "Diagrama y Conexión de Terminales Heavy Duty",
+        "badge": "Instalación 20A",
+        "caption": "Terminales reforzados para cargas de hasta 20A (4400W) y carril DIN"
+      },
+      {
+        "url": "assets/products/sonoff-pow-elite-20a-dimensions.webp",
+        "title": "Dimensiones y Montaje en Riel",
+        "badge": "98x54x31 mm",
+        "caption": "Carcasa ignífuga PC V0 compacta para paneles eléctricos o montaje directo"
+      }
+    ],
+    "key_attributes": {
+      "Modelo": "POWR320D (POW Elite 20A)",
+      "Voltaje de Operación": "100-240V AC (50/60Hz)",
+      "Corriente Máxima": "20 Amperios",
+      "Potencia Máxima": "4,400 Watts",
+      "Procesador": "Espressif ESP32 dual-core",
+      "Pantalla": "LCD Digital Integrada",
+      "Conectividad": "WiFi 2.4GHz + Bluetooth",
+      "Protección": "Auto-apagado por sobrecarga (OPS)",
+      "Historial": "6 meses de consumo exportable",
+      "Dimensiones": "98 x 54 x 31 mm",
+      "Carcasa": "PC V0 Ignífugo retardante de llama",
+      "Garantía WES": "1 año oficial WES"
+    },
+    "code": "1646",
+    "name": "SONOFF POW ELITE 20A WIFI / MEDIDOR DE CONSUMO INTELIGENTE LCD (POWR320D)",
+    "brand": "Sonoff",
+    "category": "Energía y Respaldo",
+    "price": 2450,
+    "currency": "DOP",
+    "availability": "Disponible",
+    "image": "assets/products/sonoff-pow-elite-20a-front.webp",
+    "description": "Módulo de interruptor inteligente WiFi y medidor de energía de alta capacidad (20A / 4400W) con pantalla LCD incorporada para monitoreo de consumo eléctrico en tiempo real (potencia W, corriente A, voltaje V y consumo acumulado kWh). Equipado con procesador de alto rendimiento ESP32, protección avanzada contra sobrecargas (potencia, voltaje y corriente con auto-apagado programable), historial de consumo de 6 meses exportable, control por voz compatible con Alexa y Google Home, y conectividad WiFi 2.4GHz + Bluetooth para emparejamiento rápido. Ideal para aires acondicionados, bombas de agua, calentadores de agua (geysers), inversores y circuitos eléctricos de alto consumo.",
+    "features": [
+      "SKU: 1646",
+      "Modelo: POWR320D (SONOFF POW Elite 20A)",
+      "Pantalla LCD: Visualización directa de Voltaje (V), Corriente (A), Potencia activa (W) y Consumo (kWh)",
+      "Capacidad de Carga Máxima: 20 Amperios (hasta 4,400 Watts a 220V / 2,400 Watts a 120V)",
+      "Rango de Voltaje de Entrada/Salida: 100-240V AC, 50/60 Hz",
+      "Procesador Central: Chip ESP32 mejorado de ultra alta velocidad y estabilidad",
+      "Conectividad Inalámbrica: Wi-Fi IEEE 802.11 b/g/n 2.4 GHz + Bluetooth eWeLink pairing",
+      "Protección contra Sobrecarga (OPS): Umbrales de seguridad ajustables de potencia, voltaje y corriente",
+      "Historial de Energía: Almacenamiento histórico de consumo eléctrico de hasta 6 meses con exportación a Excel",
+      "Carcasa Ignífuga: Material PC V0 retardante de llama de máxima seguridad eléctrica",
+      "Dimensiones Físicas: 98 mm x 54 mm x 31 mm (montaje en carril DIN incluido)",
+      "Compatibilidad Inteligente: eWeLink App, Amazon Alexa, Google Assistant, Home Assistant e IFTTT",
+      "Garantía Oficial WES: 1 año con soporte técnico y asesoría de instalación"
+    ],
+    "manualUrl": "https://smartxbd.com/product/sonoff-pow-elite-20a-wifi-power-meter-smart-switch-module-powr320d/",
+    "featured": true,
+    "active": true
   }
 ];
 
 // Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v29_catalog';
+    const versionKey = 'wes_products_v30_catalog';
     let products = null;
     try {
       if (typeof localStorage !== 'undefined') {
         // Purgar versiones antiguas para garantizar actualización instantánea en el navegador
-        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog', 'wes_products_v27_catalog', 'wes_products_v28_catalog'].forEach(k => {
+        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog', 'wes_products_v27_catalog', 'wes_products_v28_catalog', 'wes_products_v29_catalog'].forEach(k => {
           try { localStorage.removeItem(k); } catch(e) {}
         });
       }

@@ -42,7 +42,7 @@ async function deployToAppsScript() {
   const logoDataUri = `data:image/png;base64,${logoB64}`;
 
   // Leer scripts frontend esenciales para la plataforma completa
-  const productsJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'products.js'), 'utf8');
+  let productsJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'products.js'), 'utf8');
   const featureFlagsJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'feature_flags.js'), 'utf8');
   const adminAuthJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'admin_auth.js'), 'utf8');
   const userAuthJs = fs.readFileSync(path.join(ROOT_DIR, 'js', 'user_auth.js'), 'utf8');
@@ -64,6 +64,23 @@ async function deployToAppsScript() {
     const projectImgDataUri = `data:image/jpeg;base64,${projectImgB64}`;
     htmlContent = htmlContent.split('assets/projects/sistema-respaldo-inversor-interstate-3600w.jpg').join(projectImgDataUri);
   }
+
+  // Base64 de fotos de Sonoff POW Elite 20A (POWR320D) para garantizar visualización en Apps Script
+  const sonoffImgs = [
+    'assets/products/sonoff-pow-elite-20a-front.webp',
+    'assets/products/sonoff-pow-elite-20a-lcd.webp',
+    'assets/products/sonoff-pow-elite-20a-wiring.webp',
+    'assets/products/sonoff-pow-elite-20a-dimensions.webp'
+  ];
+  sonoffImgs.forEach(relPath => {
+    const fullP = path.join(ROOT_DIR, relPath);
+    if (fs.existsSync(fullP)) {
+      const b64 = fs.readFileSync(fullP).toString('base64');
+      const dataUri = `data:image/webp;base64,${b64}`;
+      htmlContent = htmlContent.split(relPath).join(dataUri);
+      productsJs = productsJs.split(relPath).join(dataUri);
+    }
+  });
 
   // Inyectar scripts directamente antes del cierre del body (bundle total)
   const scriptsBundle = `
