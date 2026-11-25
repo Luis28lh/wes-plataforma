@@ -187,6 +187,38 @@ function doPost(e) {
         response = handleUpdateUserProfileSelf(payload.userEmail, payload.name, payload.phone);
         break;
 
+      case 'get_client_documents':
+        response = handleGetClientDocuments(payload.userEmail, payload.clientId, payload.sessionToken);
+        break;
+
+      case 'upload_client_document_admin':
+        response = handleUploadClientDocumentAdmin(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'get_client_payments':
+        response = handleGetClientPayments(payload.userEmail, payload.clientId, payload.sessionToken);
+        break;
+
+      case 'register_client_payment_admin':
+        response = handleRegisterClientPaymentAdmin(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'request_email_change_otp':
+        response = handleRequestEmailChangeOtp(payload.userEmail, payload.newEmail);
+        break;
+
+      case 'verify_email_change_otp':
+        response = handleVerifyEmailChangeOtp(payload.userEmail, payload.newEmail, payload.otpCode);
+        break;
+
+      case 'send_client_private_message':
+        response = handleSendClientPrivateMessage(payload.userEmail, payload.clientId, payload.message, payload.isAdmin, payload.adminToken);
+        break;
+
+      case 'get_client_private_messages':
+        response = handleGetClientPrivateMessages(payload.userEmail, payload.clientId, payload.sessionToken);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -3671,3 +3703,545 @@ function handleUpdateUserProfileSelf(userEmail, newName, newPhone) {
     return { success: false, message: 'Error actualizando perfil en el servidor: ' + err.toString() };
   }
 }
+
+/**
+ * =========================================================================
+ * 9. GESTIÓN INTEGRAL DE DOCUMENTOS DEL CLIENTE (DRIVE + GOOGLE SHEETS)
+ * =========================================================================
+ */
+function getClientDocsSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Documentos_Clientes');
+  if (!sheet) {
+    sheet = ss.insertSheet('Documentos_Clientes');
+    sheet.appendRow([
+      'ID Documento', 'Client ID', 'Correo', 'Tipo Documento', 'Nº Referencia',
+      'Fecha Emisión', 'Descripción', 'Moneda', 'Importe', 'Estado',
+      'Drive File ID', 'Nombre Archivo', 'MIME Type', 'Tamaño (Bytes)', 'Versión',
+      'Autor Carga', 'Creado En', 'Actualizado En'
+    ]);
+    sheet.getRange(1, 1, 1, 18).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function getClientPaymentsSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Pagos_Clientes');
+  if (!sheet) {
+    sheet = ss.insertSheet('Pagos_Clientes');
+    sheet.appendRow([
+      'ID Pago', 'Client ID', 'Correo', 'Fecha Pago', 'Importe',
+      'Moneda', 'Método Pago', 'Referencia / Comprobante', 'Estado Validación',
+      'Facturas Asignadas', 'Recibo Doc ID', 'Registrado Por', 'Creado En'
+    ]);
+    sheet.getRange(1, 1, 1, 13).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function getClientPrivateMessagesSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Mensajes_Privados_Clientes');
+  if (!sheet) {
+    sheet = ss.insertSheet('Mensajes_Privados_Clientes');
+    sheet.appendRow([
+      'ID Mensaje', 'Client ID', 'Correo Cliente', 'Remitente', 'Tipo Remitente',
+      'Mensaje', 'Fecha y Hora', 'Leído', 'Adjuntos'
+    ]);
+    sheet.getRange(1, 1, 1, 9).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function getClientDocsDriveFolder_() {
+  const folderName = 'WES_Documentos_Clientes';
+  const folders = DriveApp.getFoldersByName(folderName);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+  const folder = DriveApp.createFolder(folderName);
+  // Mantener la carpeta privada (sin compartir públicamente)
+  try {
+    folder.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
+  } catch(e) {}
+  return folder;
+}
+
+/**
+ * Consulta de documentos autorizados para el cliente autenticado
+ */
+function handleGetClientDocuments(userEmail, clientId, sessionToken) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const cleanClientId = String(clientId || '').trim();
+
+    if (!cleanEmail && !cleanClientId) {
+      return { success: false, message: 'Identidad no especificada.' };
+    }
+
+    const sheet = getClientDocsSheet_();
+    const lastRow = sheet.getLastRow();
+    const docs = [];
+
+    if (lastRow > 1) {
+      const data = sheet.getRange(2, 1, lastRow - 1, 18).getValues();
+      for (let i = 0; i < data.length; i++) {
+        const rowDocId = String(data[i][0] || '');
+        const rowClientId = String(data[i][1] || '').trim();
+        const rowEmail = String(data[i][2] || '').toLowerCase().trim();
+        const rowState = String(data[i][9] || 'publicado').toLowerCase();
+
+        // Validar propiedad estricta por Client ID o Correo
+        const matchesIdentity = (cleanClientId && rowClientId === cleanClientId) || (cleanEmail && rowEmail === cleanEmail);
+        if (matchesIdentity && rowState !== 'eliminado') {
+          docs.push({
+            id: rowDocId,
+            clientId: rowClientId,
+            email: rowEmail,
+            tipo: String(data[i][3] || 'documento'),
+            numeroRef: String(data[i][4] || ''),
+            fechaEmision: String(data[i][5] || ''),
+            descripcion: String(data[i][6] || ''),
+            moneda: String(data[i][7] || 'DOP'),
+            importe: Number(data[i][8] || 0),
+            estado: String(data[i][9] || 'publicado'),
+            driveFileId: String(data[i][10] || ''),
+            filename: String(data[i][11] || ''),
+            mimeType: String(data[i][12] || 'application/pdf'),
+            sizeBytes: Number(data[i][13] || 0),
+            version: Number(data[i][14] || 1),
+            autor: String(data[i][15] || ''),
+            createdAt: String(data[i][16] || '')
+          });
+        }
+      }
+    }
+
+    // Ordenar de más reciente a más antiguo
+    docs.sort((a, b) => new Date(b.createdAt || b.fechaEmision) - new Date(a.createdAt || a.fechaEmision));
+
+    return {
+      success: true,
+      count: docs.length,
+      documents: docs
+    };
+  } catch (err) {
+    console.error('Error en handleGetClientDocuments:', err);
+    return { success: false, message: 'Error consultando documentos: ' + err.toString() };
+  }
+}
+
+/**
+ * Carga administrativa de documentos hacia Google Drive y registro en base de datos
+ */
+function handleUploadClientDocumentAdmin(docData, adminToken, adminEmail) {
+  try {
+    const authCheck = verifyAdminAuthorization_(adminToken, adminEmail);
+    if (!authCheck.authorized) {
+      return { success: false, message: 'Acceso no autorizado para cargar documentos.' };
+    }
+
+    if (!docData) return { success: false, message: 'Datos de documento vacíos.' };
+
+    const targetClientId = String(docData.clientId || '').trim();
+    const targetEmail = String(docData.email || '').toLowerCase().trim();
+    const docType = String(docData.tipo || 'factura').toLowerCase();
+    const refNum = String(docData.numeroRef || '').trim();
+    const description = String(docData.descripcion || '').trim();
+    const currency = String(docData.moneda || 'DOP').toUpperCase();
+    const amount = Number(docData.importe || 0);
+    const publishState = String(docData.estado || 'publicado').toLowerCase();
+    const base64Content = docData.base64File;
+    const originalFilename = String(docData.filename || 'documento.pdf').trim();
+
+    if (!targetEmail && !targetClientId) {
+      return { success: false, message: 'Debe especificar el cliente o correo destino.' };
+    }
+    if (!base64Content) {
+      return { success: false, message: 'No se recibió el contenido del archivo PDF.' };
+    }
+
+    // Guardar archivo en Google Drive privado
+    const folder = getClientDocsDriveFolder_();
+    const cleanFilename = (originalFilename.toLowerCase().endsWith('.pdf') ? originalFilename : (originalFilename + '.pdf')).replace(/[^a-zA-Z0-9_\-\.]/g, '_');
+    const bytes = Utilities.base64Decode(base64Content);
+    const blob = Utilities.newBlob(bytes, 'application/pdf', cleanFilename);
+    const file = folder.createFile(blob);
+    file.setDescription(`Documento WES para ${targetEmail || targetClientId} - Ref: ${refNum}`);
+
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const docId = 'DOC-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss') + '-' + Math.floor(Math.random()*1000);
+
+    const sheet = getClientDocsSheet_();
+    sheet.appendRow([
+      docId,
+      targetClientId,
+      targetEmail,
+      docType,
+      refNum,
+      docData.fechaEmision || now.split(' ')[0],
+      description,
+      currency,
+      amount,
+      publishState,
+      file.getId(),
+      cleanFilename,
+      'application/pdf',
+      bytes.length,
+      1,
+      adminEmail || 'admin',
+      now,
+      now
+    ]);
+
+    // Si está publicado, generar aviso automático en el buzón del cliente
+    if (publishState === 'publicado') {
+      const msgSheet = getClientPrivateMessagesSheet_();
+      const msgId = 'MSG-DOC-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+      const tipoLabel = docType === 'factura' ? 'Factura Oficial' : (docType === 'recibo' ? 'Recibo de Pago' : 'Estado de Cuenta');
+      msgSheet.appendRow([
+        msgId,
+        targetClientId,
+        targetEmail,
+        'Administración WES',
+        'empresa',
+        `Se ha publicado un nuevo documento en tu portal: ${tipoLabel} Nº ${refNum || docId} (${currency} ${amount.toLocaleString()}). Puedes consultarlo en tu perfil.`,
+        now,
+        false,
+        docId
+      ]);
+    }
+
+    recordAuditLog_(adminEmail, 'admin', 'cargar_documento', `Carga de ${docType} ${refNum} para ${targetEmail || targetClientId}`, targetEmail, '', docId);
+
+    return {
+      success: true,
+      message: 'Documento cargado y registrado exitosamente.',
+      documentId: docId,
+      driveFileId: file.getId(),
+      filename: cleanFilename
+    };
+  } catch (err) {
+    console.error('Error en handleUploadClientDocumentAdmin:', err);
+    return { success: false, message: 'Error procesando documento: ' + err.toString() };
+  }
+}
+
+/**
+ * Consulta de pagos registrados del cliente
+ */
+function handleGetClientPayments(userEmail, clientId, sessionToken) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const cleanClientId = String(clientId || '').trim();
+
+    const sheet = getClientPaymentsSheet_();
+    const lastRow = sheet.getLastRow();
+    const payments = [];
+
+    if (lastRow > 1) {
+      const data = sheet.getRange(2, 1, lastRow - 1, 13).getValues();
+      for (let i = 0; i < data.length; i++) {
+        const rowClientId = String(data[i][1] || '').trim();
+        const rowEmail = String(data[i][2] || '').toLowerCase().trim();
+        const matches = (cleanClientId && rowClientId === cleanClientId) || (cleanEmail && rowEmail === cleanEmail);
+        if (matches) {
+          payments.push({
+            id: String(data[i][0] || ''),
+            clientId: rowClientId,
+            email: rowEmail,
+            fechaPago: String(data[i][3] || ''),
+            importe: Number(data[i][4] || 0),
+            moneda: String(data[i][5] || 'DOP'),
+            metodo: String(data[i][6] || 'Transferencia'),
+            referencia: String(data[i][7] || ''),
+            estado: String(data[i][8] || 'Validado'),
+            facturasAsignadas: String(data[i][9] || ''),
+            reciboDocId: String(data[i][10] || ''),
+            createdAt: String(data[i][12] || '')
+          });
+        }
+      }
+    }
+
+    payments.sort((a, b) => new Date(b.fechaPago || b.createdAt) - new Date(a.fechaPago || a.createdAt));
+
+    return {
+      success: true,
+      count: payments.length,
+      payments: payments
+    };
+  } catch (err) {
+    console.error('Error en handleGetClientPayments:', err);
+    return { success: false, message: 'Error consultando pagos: ' + err.toString() };
+  }
+}
+
+/**
+ * Registro administrativo de pagos recibidos
+ */
+function handleRegisterClientPaymentAdmin(payData, adminToken, adminEmail) {
+  try {
+    const authCheck = verifyAdminAuthorization_(adminToken, adminEmail);
+    if (!authCheck.authorized) {
+      return { success: false, message: 'No autorizado para registrar pagos.' };
+    }
+
+    if (!payData) return { success: false, message: 'Datos de pago vacíos.' };
+
+    const targetClientId = String(payData.clientId || '').trim();
+    const targetEmail = String(payData.email || '').toLowerCase().trim();
+    const amount = Number(payData.importe || 0);
+    const currency = String(payData.moneda || 'DOP').toUpperCase();
+    const method = String(payData.metodo || 'Transferencia').trim();
+    const reference = String(payData.referencia || '').trim();
+    const assignedInvoices = String(payData.facturasAsignadas || '').trim();
+
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const payId = 'PAY-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+
+    const sheet = getClientPaymentsSheet_();
+    sheet.appendRow([
+      payId,
+      targetClientId,
+      targetEmail,
+      payData.fechaPago || now.split(' ')[0],
+      amount,
+      currency,
+      method,
+      reference,
+      'Validado',
+      assignedInvoices,
+      payData.reciboDocId || '',
+      adminEmail || 'admin',
+      now
+    ]);
+
+    recordAuditLog_(adminEmail, 'admin', 'registrar_pago', `Registro de pago ${currency} ${amount} (${reference}) para ${targetEmail || targetClientId}`, targetEmail, '', payId);
+
+    return {
+      success: true,
+      message: 'Pago registrado exitosamente.',
+      paymentId: payId
+    };
+  } catch (err) {
+    console.error('Error en handleRegisterClientPaymentAdmin:', err);
+    return { success: false, message: 'Error registrando pago: ' + err.toString() };
+  }
+}
+
+/**
+ * Solicitud de cambio de correo con código OTP enviado al nuevo correo
+ */
+function handleRequestEmailChangeOtp(currentEmail, newEmail) {
+  try {
+    const cleanCurrent = String(currentEmail || '').toLowerCase().trim();
+    const cleanNew = String(newEmail || '').toLowerCase().trim();
+
+    if (!cleanCurrent || !cleanNew) {
+      return { success: false, message: 'Correos no válidos.' };
+    }
+    if (cleanCurrent === cleanNew) {
+      return { success: false, message: 'El nuevo correo debe ser distinto al actual.' };
+    }
+
+    // Verificar que el nuevo correo no esté registrado por otra persona
+    const sheet = getClientsSheet_();
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      const data = sheet.getRange(2, 1, lastRow - 1, 3).getValues();
+      for (let i = 0; i < data.length; i++) {
+        if (String(data[i][2] || '').toLowerCase().trim() === cleanNew) {
+          return { success: false, message: 'El correo electrónico ingresado ya pertenece a otra cuenta.' };
+        }
+      }
+    }
+
+    // Generar código OTP criptográfico de 6 dígitos
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const tokenProps = PropertiesService.getScriptProperties();
+    const tokenKey = 'EMAIL_CHG_OTP_' + cleanCurrent;
+    const tokenData = {
+      newEmail: cleanNew,
+      otp: otp,
+      expiresAt: Date.now() + 10 * 60 * 1000 // 10 minutos
+    };
+    tokenProps.setProperty(tokenKey, JSON.stringify(tokenData));
+
+    // Enviar código por Gmail al NUEVO correo
+    const subject = `WES · Código de Confirmación de Correo [${otp}]`;
+    const htmlBody = `
+      <div style="font-family:sans-serif; max-width:500px; margin:auto; padding:20px; border:1px solid #e2e8f0; border-radius:16px;">
+        <h2 style="color:#0D2A5C; margin-top:0;">Confirmación de Cambio de Correo</h2>
+        <p>Has solicitado actualizar tu correo en la plataforma de <strong>Warn Electrical Services (WES)</strong>.</p>
+        <p>Tu código de seguridad para verificar este correo es:</p>
+        <div style="font-size:28px; font-weight:900; letter-spacing:6px; color:#0D2A5C; background:#fffbeb; padding:15px; text-align:center; border:2px dashed #f5b300; border-radius:12px; margin:20px 0;">
+          ${otp}
+        </div>
+        <p style="font-size:12px; color:#64748b;">Este código es válido por 10 minutos. Si no realizaste esta solicitud, ignora este mensaje.</p>
+      </div>
+    `;
+
+    try {
+      GmailApp.sendEmail(cleanNew, subject, `Tu código de confirmación es: ${otp}`, {
+        htmlBody: htmlBody,
+        name: 'WES · Seguridad de Cuenta'
+      });
+    } catch(e) {
+      MailApp.sendEmail(cleanNew, subject, `Tu código de confirmación es: ${otp}`);
+    }
+
+    return {
+      success: true,
+      message: `Código de verificación enviado a ${cleanNew}. Ingrésalo para confirmar.`
+    };
+  } catch (err) {
+    console.error('Error en handleRequestEmailChangeOtp:', err);
+    return { success: false, message: 'Error solicitando código OTP: ' + err.toString() };
+  }
+}
+
+/**
+ * Verificación y persistencia del nuevo correo en la base de datos (conservando Client ID)
+ */
+function handleVerifyEmailChangeOtp(currentEmail, newEmail, otpCode) {
+  try {
+    const cleanCurrent = String(currentEmail || '').toLowerCase().trim();
+    const cleanNew = String(newEmail || '').toLowerCase().trim();
+    const cleanOtp = String(otpCode || '').trim();
+
+    const tokenProps = PropertiesService.getScriptProperties();
+    const tokenKey = 'EMAIL_CHG_OTP_' + cleanCurrent;
+    const stored = tokenProps.getProperty(tokenKey);
+
+    if (!stored) {
+      return { success: false, message: 'No hay una solicitud de cambio de correo activa o ha expirado.' };
+    }
+
+    const tokenData = JSON.parse(stored);
+    if (Date.now() > tokenData.expiresAt) {
+      tokenProps.deleteProperty(tokenKey);
+      return { success: false, message: 'El código OTP ha expirado. Solicita uno nuevo.' };
+    }
+    if (tokenData.newEmail !== cleanNew || tokenData.otp !== cleanOtp) {
+      return { success: false, message: 'Código de confirmación incorrecto.' };
+    }
+
+    // Actualizar correo en la hoja Clientes preservando el Client ID intacto
+    const sheet = getClientsSheet_();
+    const lastRow = sheet.getLastRow();
+    let updated = false;
+    let clientId = '';
+
+    if (lastRow > 1) {
+      const data = sheet.getRange(2, 1, lastRow - 1, 10).getValues();
+      for (let i = 0; i < data.length; i++) {
+        if (String(data[i][2] || '').toLowerCase().trim() === cleanCurrent) {
+          const rowNum = i + 2;
+          clientId = String(data[i][0] || '');
+          sheet.getRange(rowNum, 3).setValue(cleanNew); // Actualizar col Correo
+          const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+          sheet.getRange(rowNum, 9).setValue(now);
+          updated = true;
+          break;
+        }
+      }
+    }
+
+    tokenProps.deleteProperty(tokenKey);
+    recordAuditLog_(cleanCurrent, 'usuario', 'cambio_correo', `Actualización de correo de ${cleanCurrent} hacia ${cleanNew}`, cleanNew, cleanCurrent, cleanNew);
+
+    return {
+      success: true,
+      message: 'Correo electrónico actualizado correctamente.',
+      clientId: clientId,
+      newEmail: cleanNew
+    };
+  } catch (err) {
+    console.error('Error en handleVerifyEmailChangeOtp:', err);
+    return { success: false, message: 'Error verificando cambio de correo: ' + err.toString() };
+  }
+}
+
+/**
+ * Mensajería privada bidireccional cliente-WES
+ */
+function handleSendClientPrivateMessage(userEmail, clientId, messageText, isAdmin, adminToken) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const cleanClientId = String(clientId || '').trim();
+    const text = String(messageText || '').trim();
+
+    if (!text) return { success: false, message: 'El mensaje no puede estar vacío.' };
+
+    const senderRole = isAdmin ? 'empresa' : 'cliente';
+    const senderName = isAdmin ? 'Atención al Cliente WES' : cleanEmail;
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const msgId = 'MSG-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss') + '-' + Math.floor(Math.random()*1000);
+
+    const sheet = getClientPrivateMessagesSheet_();
+    sheet.appendRow([
+      msgId,
+      cleanClientId,
+      cleanEmail,
+      senderName,
+      senderRole,
+      text,
+      now,
+      false,
+      ''
+    ]);
+
+    return {
+      success: true,
+      messageId: msgId,
+      createdAt: now
+    };
+  } catch (err) {
+    console.error('Error en handleSendClientPrivateMessage:', err);
+    return { success: false, message: 'Error enviando mensaje: ' + err.toString() };
+  }
+}
+
+function handleGetClientPrivateMessages(userEmail, clientId, sessionToken) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const cleanClientId = String(clientId || '').trim();
+
+    const sheet = getClientPrivateMessagesSheet_();
+    const lastRow = sheet.getLastRow();
+    const messages = [];
+
+    if (lastRow > 1) {
+      const data = sheet.getRange(2, 1, lastRow - 1, 9).getValues();
+      for (let i = 0; i < data.length; i++) {
+        const rowClientId = String(data[i][1] || '').trim();
+        const rowEmail = String(data[i][2] || '').toLowerCase().trim();
+        const matches = (cleanClientId && rowClientId === cleanClientId) || (cleanEmail && rowEmail === cleanEmail);
+        if (matches) {
+          messages.push({
+            id: String(data[i][0] || ''),
+            clientId: rowClientId,
+            email: rowEmail,
+            sender: String(data[i][3] || ''),
+            senderRole: String(data[i][4] || ''),
+            text: String(data[i][5] || ''),
+            timestamp: String(data[i][6] || ''),
+            read: Boolean(data[i][7])
+          });
+        }
+      }
+    }
+
+    return {
+      success: true,
+      count: messages.length,
+      messages: messages
+    };
+  } catch (err) {
+    console.error('Error en handleGetClientPrivateMessages:', err);
+    return { success: false, message: 'Error cargando mensajes: ' + err.toString() };
+  }
+}
+

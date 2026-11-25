@@ -3798,26 +3798,30 @@ function openUserProfileModal() {
     }
   }
 
+  const clientIdEl = document.getElementById('profile-modal-client-id');
+  if (clientIdEl) {
+    clientIdEl.textContent = 'ID: ' + (user.id || user.clientId || ('USR-' + (user.email ? user.email.split('@')[0] : '001')));
+  }
+
   // Activar contenedor de vista para personal autorizado si aplica
   const viewTecInterno = document.getElementById('profile-view-tecnico-interno');
-  const viewTecExterno = document.getElementById('profile-view-tecnico-externo');
   const viewAdmin = document.getElementById('profile-view-admin');
 
   if (viewTecInterno) viewTecInterno.classList.add('hidden');
-  if (viewTecExterno) viewTecExterno.classList.add('hidden');
   if (viewAdmin) viewAdmin.classList.add('hidden');
 
-  if (userRole === 'tecnico_interno') {
+  if (userRole === 'tecnico_interno' || userRole === 'tecnico_externo') {
     if (viewTecInterno) viewTecInterno.classList.remove('hidden');
-  } else if (userRole === 'tecnico_externo') {
-    if (viewTecExterno) viewTecExterno.classList.remove('hidden');
   } else if (userRole === 'administrador' || userRole === 'propietario' || user.isEmployee) {
     if (viewAdmin) viewAdmin.classList.remove('hidden');
   }
 
   // Actualizar nombre en el portal externo si aplica
   const extName = document.getElementById('ext-tech-name');
-  if (extName) extName.textContent = user.name || 'Técnico Externo WES';
+  if (extName) extName.textContent = user.name || 'Técnico WES';
+
+  // Mostrar por defecto la pestaña de cotizaciones y cargar sus datos
+  switchProfileTab('cotizaciones');
 
   modal.classList.remove('hidden');
   modal.style.display = 'flex';
@@ -3834,14 +3838,25 @@ function closeUserProfileModal() {
 }
 
 function toggleEditProfileMode(enable) {
+  const editContainer = document.getElementById('profile-edit-container');
   const viewMode = document.getElementById('profile-view-mode');
   const editForm = document.getElementById('profile-edit-form');
+  
+  if (editContainer) {
+    if (enable) {
+      editContainer.classList.remove('hidden');
+      const editName = document.getElementById('profile-edit-name-input');
+      if (editName) editName.focus();
+    } else {
+      editContainer.classList.add('hidden');
+      closeEmailChangeFlow();
+    }
+  }
+
   if (viewMode && editForm) {
     if (enable) {
       viewMode.classList.add('hidden');
       editForm.classList.remove('hidden');
-      const editName = document.getElementById('profile-edit-name-input');
-      if (editName) editName.focus();
     } else {
       viewMode.classList.remove('hidden');
       editForm.classList.add('hidden');
@@ -3920,6 +3935,436 @@ async function handleSaveUserProfile(e) {
     }
   }
 }
+
+// ----------------------------------------------------------------------------
+// NAVEGACIÓN Y GESTIÓN DE PESTAÑAS EN "MI PERFIL"
+// ----------------------------------------------------------------------------
+function switchProfileTab(tabName) {
+  // 1. Botones de pestaña
+  const buttons = document.querySelectorAll('.profile-tab-btn');
+  buttons.forEach(b => {
+    b.classList.remove('text-wes-blue', 'border-b-2', 'border-wes-blue', 'bg-white');
+    b.classList.add('text-slate-600');
+  });
+
+  const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+  if (activeBtn) {
+    activeBtn.classList.add('text-wes-blue', 'border-b-2', 'border-wes-blue', 'bg-white');
+    activeBtn.classList.remove('text-slate-600');
+  }
+
+  // 2. Contenidos de pestaña
+  const contents = document.querySelectorAll('.profile-tab-content');
+  contents.forEach(c => c.classList.add('hidden'));
+
+  const activeContent = document.getElementById(`tab-content-${tabName}`);
+  if (activeContent) {
+    activeContent.classList.remove('hidden');
+  }
+
+  // 3. Cargar datos específicos de la pestaña
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user) return;
+
+  switch (tabName) {
+    case 'cotizaciones':
+      loadProfileQuotes(user);
+      break;
+    case 'facturas':
+      loadProfileDocuments(user, 'factura');
+      break;
+    case 'estado-cuenta':
+      loadProfileDocuments(user, 'estado_cuenta');
+      break;
+    case 'soporte':
+      loadProfileSupport(user);
+      break;
+    case 'pagos':
+      loadProfilePayments(user);
+      break;
+    case 'mensajes':
+      loadProfilePrivateMessages(user);
+      break;
+  }
+}
+
+// Carga de Cotizaciones del Perfil
+async function loadProfileQuotes(user) {
+  const container = document.getElementById('profile-quotes-container');
+  if (!container || !user.email) return;
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'get_user_quotes', userEmail: user.email })
+    });
+    const data = await res.json();
+    const quotes = (data && data.success && Array.isArray(data.quotes)) ? data.quotes : [];
+
+    if (!quotes.length) {
+      container.innerHTML = `
+        <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
+          <i class="fas fa-file-invoice text-slate-300 text-xl mb-1 block"></i>
+          <span>No tienes cotizaciones registradas actualmente.</span>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = quotes.map(q => `
+      <div class="p-3.5 bg-white rounded-2xl border border-slate-200 hover:border-wes-blue transition space-y-1.5 text-xs shadow-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-extrabold text-wes-blue text-xs">${escapeHtml(q.quoteNumber || 'COT')}</span>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${q.status === 'Completada' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-wes-blue'}">${escapeHtml(q.status || 'Pendiente')}</span>
+        </div>
+        <p class="text-[11px] text-slate-500">Fecha: ${escapeHtml(q.date || 'Reciente')}</p>
+        <p class="font-bold text-slate-800">Total Est.: RD$ ${Number(q.totalEstimated || 0).toLocaleString()}</p>
+      </div>
+    `).join('');
+  } catch (e) {
+    container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">No se pudieron cargar las cotizaciones.</p>';
+  }
+}
+
+// Carga de Facturas o Estados de Cuenta Oficiales en PDF
+async function loadProfileDocuments(user, filterType) {
+  const containerId = filterType === 'factura' ? 'profile-invoices-container' : 'profile-statements-container';
+  const container = document.getElementById(containerId);
+  if (!container || !user.email) return;
+
+  container.innerHTML = `
+    <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
+      <i class="fas fa-spinner fa-spin text-wes-blue mb-1 text-sm block"></i>
+      <span>Consultando documentos oficiales...</span>
+    </div>
+  `;
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'get_client_documents',
+        userEmail: user.email,
+        clientId: user.id || user.clientId || ''
+      })
+    });
+    const data = await res.json();
+    const docs = (data && data.success && Array.isArray(data.documents)) ? data.documents : [];
+    const filtered = docs.filter(d => filterType === 'all' || d.tipo === filterType || (filterType === 'estado_cuenta' && d.tipo.includes('estado')));
+
+    if (!filtered.length) {
+      container.innerHTML = `
+        <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
+          <i class="fas ${filterType === 'factura' ? 'fa-receipt' : 'fa-file-invoice-dollar'} text-slate-300 text-xl mb-1 block"></i>
+          <span>No hay ${filterType === 'factura' ? 'facturas oficiales' : 'estados de cuenta'} registrados en tu cuenta.</span>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = filtered.map(d => `
+      <div class="p-3.5 bg-white rounded-2xl border border-slate-200 hover:border-wes-blue transition flex items-center justify-between text-xs shadow-xs">
+        <div class="min-w-0 flex-1 pr-3">
+          <div class="flex items-center space-x-2">
+            <span class="font-extrabold text-slate-900 truncate">${escapeHtml(d.numeroRef || d.id)}</span>
+            <span class="px-2 py-0.2 rounded-full text-[9px] font-black uppercase ${d.moneda === 'USD' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-wes-blue'}">${escapeHtml(d.moneda || 'DOP')}</span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-0.5 truncate">${escapeHtml(d.descripcion || 'Documento oficial WES')}</p>
+          <p class="text-[10px] text-slate-400">Emisión: ${escapeHtml(d.fechaEmision || 'N/D')} · Importe: <strong>${d.moneda || 'DOP'}$ ${Number(d.importe || 0).toLocaleString()}</strong></p>
+        </div>
+        ${d.driveFileId ? `
+          <a href="https://drive.google.com/file/d/${escapeHtml(d.driveFileId)}/view" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center space-x-1 shrink-0">
+            <i class="fas fa-file-pdf text-wes-gold"></i>
+            <span>Ver PDF</span>
+          </a>
+        ` : '<span class="text-[10px] text-slate-400">Sin archivo</span>'}
+      </div>
+    `).join('');
+  } catch(e) {
+    container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">Error consultando documentos del servidor.</p>';
+  }
+}
+
+// Carga de Pagos Registrados
+async function loadProfilePayments(user) {
+  const container = document.getElementById('profile-payments-container');
+  if (!container || !user.email) return;
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'get_client_payments', userEmail: user.email, clientId: user.id || '' })
+    });
+    const data = await res.json();
+    const payments = (data && data.success && Array.isArray(data.payments)) ? data.payments : [];
+
+    if (!payments.length) {
+      container.innerHTML = `
+        <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
+          <i class="fas fa-credit-card text-slate-300 text-xl mb-1 block"></i>
+          <span>No tienes comprobantes de pago registrados aún.</span>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = payments.map(p => `
+      <div class="p-3.5 bg-white rounded-2xl border border-slate-200 space-y-1 text-xs shadow-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-extrabold text-slate-900">${escapeHtml(p.moneda || 'DOP')} ${Number(p.importe || 0).toLocaleString()}</span>
+          <span class="px-2 py-0.2 rounded-full text-[9px] font-black uppercase bg-emerald-100 text-emerald-800">${escapeHtml(p.estado || 'Validado')}</span>
+        </div>
+        <p class="text-[11px] text-slate-600">Método: ${escapeHtml(p.metodo || 'Transferencia')} · Ref: ${escapeHtml(p.referencia || 'N/D')}</p>
+        <p class="text-[10px] text-slate-400">Fecha: ${escapeHtml(p.fechaPago || 'Reciente')}</p>
+      </div>
+    `).join('');
+  } catch(e) {
+    container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">No se pudieron cargar los pagos.</p>';
+  }
+}
+
+// Carga de Soporte Técnico en Perfil
+async function loadProfileSupport(user) {
+  const container = document.getElementById('profile-support-container');
+  if (!container || !user.email) return;
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'get_user_support_tickets', userEmail: user.email, userPhone: user.phone || '' })
+    });
+    const data = await res.json();
+    const tickets = (data && data.success && Array.isArray(data.tickets)) ? data.tickets : [];
+
+    if (!tickets.length) {
+      container.innerHTML = `
+        <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
+          <i class="fas fa-tools text-slate-300 text-xl mb-1 block"></i>
+          <span>No tienes reportes de soporte activos o pasados.</span>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = tickets.map(t => `
+      <div class="p-3.5 bg-white rounded-2xl border border-slate-200 hover:border-amber-400 transition space-y-1 text-xs shadow-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-extrabold text-slate-900">${escapeHtml(t.ticketNumber || 'TKT')}</span>
+          <span class="px-2 py-0.2 rounded-full text-[9px] font-black uppercase ${t.status === 'Cerrado' ? 'bg-slate-100 text-slate-700' : 'bg-amber-100 text-amber-800'}">${escapeHtml(t.status || 'En Proceso')}</span>
+        </div>
+        <p class="text-[11px] text-slate-600 truncate">${escapeHtml(t.subject || t.issue || 'Servicio técnico')}</p>
+        <p class="text-[10px] text-slate-400">Fecha: ${escapeHtml(t.date || 'Reciente')}</p>
+      </div>
+    `).join('');
+  } catch(e) {
+    container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">No se pudo cargar el historial de soporte.</p>';
+  }
+}
+
+// Carga de Mensajes Privados con la Empresa
+async function loadProfilePrivateMessages(user) {
+  const thread = document.getElementById('profile-private-messages-thread');
+  if (!thread || !user.email) return;
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'get_client_private_messages', userEmail: user.email, clientId: user.id || '' })
+    });
+    const data = await res.json();
+    const msgs = (data && data.success && Array.isArray(data.messages)) ? data.messages : [];
+
+    if (!msgs.length) {
+      thread.innerHTML = '<p class="text-slate-400 text-center py-4">Inicia una conversación privada con la administración de WES.</p>';
+      return;
+    }
+
+    thread.innerHTML = msgs.map(m => `
+      <div class="flex flex-col ${m.senderRole === 'empresa' ? 'items-start' : 'items-end'} text-xs">
+        <span class="text-[9px] text-slate-400 font-bold mb-0.5">${escapeHtml(m.sender || (m.senderRole === 'empresa' ? 'WES' : 'Tú'))} · ${escapeHtml(m.timestamp || '')}</span>
+        <div class="max-w-[85%] px-3 py-2 rounded-2xl ${m.senderRole === 'empresa' ? 'bg-blue-50 text-wes-blue border border-blue-100 rounded-bl-none' : 'bg-wes-blue text-white rounded-br-none'} shadow-xs">
+          ${escapeHtml(m.text || '')}
+        </div>
+      </div>
+    `).join('');
+    thread.scrollTop = thread.scrollHeight;
+  } catch(e) {}
+}
+
+async function submitSendProfilePrivateMessage() {
+  const input = document.getElementById('profile-private-msg-input');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user || !user.email) return;
+
+  input.value = '';
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'send_client_private_message',
+        userEmail: user.email,
+        clientId: user.id || '',
+        message: text,
+        isAdmin: false
+      })
+    });
+    loadProfilePrivateMessages(user);
+  } catch(e) {
+    showToast('No se pudo enviar el mensaje privado.', 'error');
+  }
+}
+
+// ----------------------------------------------------------------------------
+// FLUJO SEGURO DE ACTUALIZACIÓN DE CORREO MEDIANTE OTP
+// ----------------------------------------------------------------------------
+function openEmailChangeFlow() {
+  const flow = document.getElementById('profile-email-change-flow');
+  if (flow) {
+    flow.classList.remove('hidden');
+    const step1 = document.getElementById('email-change-step-1');
+    const step2 = document.getElementById('email-change-step-2');
+    if (step1) step1.classList.remove('hidden');
+    if (step2) step2.classList.add('hidden');
+  }
+}
+
+function closeEmailChangeFlow() {
+  const flow = document.getElementById('profile-email-change-flow');
+  if (flow) flow.classList.add('hidden');
+}
+
+async function submitRequestEmailChangeOtp() {
+  const input = document.getElementById('email-change-new-input');
+  const btn = document.getElementById('btn-request-email-otp');
+  const newEmail = input ? input.value.trim() : '';
+
+  if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+    showToast('Ingresa un correo electrónico válido.', 'warning');
+    return;
+  }
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user || !user.email) return;
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando código...';
+  }
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'request_email_change_otp',
+        userEmail: user.email,
+        newEmail: newEmail
+      })
+    });
+    const data = await res.json();
+    if (!data || !data.success) {
+      throw new Error((data && data.message) || 'Error solicitando código OTP');
+    }
+
+    showToast(data.message || 'Código OTP enviado al nuevo correo.', 'success');
+    const step1 = document.getElementById('email-change-step-1');
+    const step2 = document.getElementById('email-change-step-2');
+    if (step1) step1.classList.add('hidden');
+    if (step2) step2.classList.remove('hidden');
+    const otpInput = document.getElementById('email-change-otp-input');
+    if (otpInput) otpInput.focus();
+  } catch (err) {
+    showToast(err.message || 'No se pudo enviar el código OTP.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Enviar código de confirmación';
+    }
+  }
+}
+
+async function submitVerifyEmailChangeOtp() {
+  const newEmailInput = document.getElementById('email-change-new-input');
+  const otpInput = document.getElementById('email-change-otp-input');
+  const btn = document.getElementById('btn-verify-email-otp');
+
+  const newEmail = newEmailInput ? newEmailInput.value.trim() : '';
+  const otp = otpInput ? otpInput.value.trim() : '';
+
+  if (!otp || otp.length !== 6) {
+    showToast('Ingresa el código OTP de 6 dígitos recibido.', 'warning');
+    return;
+  }
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user || !user.email) return;
+
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Verificando...';
+  }
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'verify_email_change_otp',
+        userEmail: user.email,
+        newEmail: newEmail,
+        otpCode: otp
+      })
+    });
+    const data = await res.json();
+    if (!data || !data.success) {
+      throw new Error((data && data.message) || 'Código incorrecto o expirado');
+    }
+
+    // Actualizar sesión del usuario en frontend con el nuevo correo manteniendo ID intacto
+    const updatedUser = { ...user, email: newEmail };
+    if (typeof UserAuth !== 'undefined' && typeof UserAuth.setSession === 'function') {
+      UserAuth.setSession(updatedUser, true);
+    }
+
+    const emailEl = document.getElementById('profile-modal-email');
+    if (emailEl) emailEl.textContent = newEmail;
+
+    closeEmailChangeFlow();
+    showToast('Correo electrónico actualizado correctamente.', 'success');
+  } catch(err) {
+    showToast(err.message || 'Error verificando código OTP.', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Confirmar y actualizar correo';
+    }
+  }
+}
+
+window.switchProfileTab = switchProfileTab;
+window.openEmailChangeFlow = openEmailChangeFlow;
+window.closeEmailChangeFlow = closeEmailChangeFlow;
+window.submitRequestEmailChangeOtp = submitRequestEmailChangeOtp;
+window.submitVerifyEmailChangeOtp = submitVerifyEmailChangeOtp;
+window.submitSendProfilePrivateMessage = submitSendProfilePrivateMessage;
 
 // ----------------------------------------------------------------------------
 // PORTAL DE TÉCNICO EXTERNO (VISTA DE CAMPO)
@@ -4136,6 +4581,97 @@ window.closeMobileMenu = window.closeMobileMenu || function() {
   if (d) { d.classList.add('translate-x-full'); document.body.classList.remove('overflow-hidden'); }
 };
 
+// ============================================================================
+// NAVEGACIÓN MÓVIL INFERIOR (BOTTOM NAVIGATION BAR - 5 ACCIONES ESTÁNDAR)
+// ============================================================================
+function handleMobileNavAction(action) {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+  if (typeof window.closeMyAccountDropdown === 'function') window.closeMyAccountDropdown();
+
+  // Actualizar indicador visual de pestaña activa en los botones de la barra
+  const navBtns = document.querySelectorAll('.mobile-bottom-nav-btn');
+  navBtns.forEach(btn => {
+    const isTarget = btn.getAttribute('data-nav') === action;
+    if (isTarget) {
+      btn.classList.add('text-wes-blue');
+      btn.classList.remove('text-slate-500');
+    } else {
+      btn.classList.remove('text-wes-blue');
+      btn.classList.add('text-slate-500');
+    }
+  });
+
+  switch (action) {
+    case 'inicio': {
+      // Desplazamiento suave al tope / sección inicial
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      break;
+    }
+
+    case 'perfil': {
+      // Área privada del cliente
+      const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+      if (user) {
+        if (typeof window.openUserProfileCleanModal === 'function') {
+          window.openUserProfileCleanModal();
+        } else if (typeof window.openUserProfileModal === 'function') {
+          window.openUserProfileModal();
+        }
+      } else {
+        if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal('login');
+        }
+      }
+      break;
+    }
+
+    case 'buscar': {
+      // Desplazar a la tienda y enfocar automáticamente el campo de búsqueda
+      const storeSection = document.getElementById('tienda');
+      const searchInput = document.getElementById('search-input');
+      if (storeSection) {
+        storeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      setTimeout(() => {
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+      }, 350);
+      break;
+    }
+
+    case 'notificaciones': {
+      // Buzón de mensajes y avisos privados del cliente
+      const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+      if (user) {
+        if (typeof window.openUserMessagesModal === 'function') {
+          window.openUserMessagesModal();
+        }
+      } else {
+        if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal('login');
+        }
+      }
+      break;
+    }
+
+    case 'ventas': {
+      // Abrir catálogo comercial de productos y cotizaciones
+      const storeSection = document.getElementById('tienda');
+      if (storeSection) {
+        storeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      break;
+    }
+
+    default:
+      console.warn('Acción de navegación móvil no reconocida:', action);
+  }
+}
+
+window.handleMobileNavAction = handleMobileNavAction;
+
 
 
 
@@ -4213,11 +4749,13 @@ const UserMessagesService = (function() {
     const badge = document.getElementById('header-user-messages-badge');
     const dropdownBadge = document.getElementById('dropdown-messages-badge');
     const mobileBadge = document.getElementById('mobile-messages-badge');
+    const bottomNavBadge = document.getElementById('mobile-bottom-notifications-badge');
 
     if (typeof UserAuth === 'undefined' || !UserAuth.getCurrentUser()) {
       if (badge) badge.classList.add('hidden');
       if (dropdownBadge) dropdownBadge.classList.add('hidden');
       if (mobileBadge) mobileBadge.classList.add('hidden');
+      if (bottomNavBadge) bottomNavBadge.classList.add('hidden');
       return;
     }
 
@@ -4225,7 +4763,7 @@ const UserMessagesService = (function() {
     const unreadCount = cachedMessages.filter(m => !readIds.includes(m.id)).length;
     const countText = unreadCount > 9 ? '9+' : String(unreadCount);
 
-    [badge, dropdownBadge, mobileBadge].forEach(b => {
+    [badge, dropdownBadge, mobileBadge, bottomNavBadge].forEach(b => {
       if (b) {
         if (unreadCount > 0) {
           b.textContent = countText;

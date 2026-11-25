@@ -3043,6 +3043,70 @@ const AdminApp = {
               </button>
             </div>
           </div>
+
+          <!-- SECCIÓN: DOCUMENTOS Y PAGOS DEL CLIENTE (CARGA ADMINISTRATIVA DRIVE) -->
+          <div class="p-4 rounded-2xl border border-slate-200 bg-white space-y-3.5 shadow-xs">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div class="flex items-center space-x-2 font-bold text-xs text-slate-800 uppercase tracking-wider">
+                <i class="fas fa-file-invoice text-wes-blue"></i>
+                <span>Documentos Oficiales y Pagos</span>
+              </div>
+              <button type="button" onclick="AdminApp.toggleUploadDocForm()" class="px-2.5 py-1 bg-wes-blue text-white rounded-lg text-xs font-bold hover:bg-wes-dark transition flex items-center space-x-1">
+                <i class="fas fa-cloud-upload-alt text-wes-gold"></i>
+                <span>Subir Documento PDF</span>
+              </button>
+            </div>
+
+            <!-- Formulario de Subida de Documento a Drive (Oculto por defecto) -->
+            <form id="admin-doc-upload-form" onsubmit="AdminApp.handleAdminDocUpload(event, '${escapeHtml(u.email)}', '${escapeHtml(u.id || '')}')" class="hidden p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">Cargar Documento Oficial en PDF</span>
+                <button type="button" onclick="AdminApp.toggleUploadDocForm()" class="text-slate-400 hover:text-slate-600 text-[11px]">Cancelar</button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block font-bold text-slate-600 text-[10px] uppercase mb-1">Tipo de Documento *</label>
+                  <select id="doc-upload-type" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-xl text-xs font-medium">
+                    <option value="factura">📄 Factura Oficial</option>
+                    <option value="recibo">🧾 Recibo de Pago</option>
+                    <option value="estado_cuenta">📊 Estado de Cuenta</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-600 text-[10px] uppercase mb-1">Nº Referencia / Folio *</label>
+                  <input type="text" id="doc-upload-ref" placeholder="Ej. B0100004523" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-xl text-xs font-mono">
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-600 text-[10px] uppercase mb-1">Moneda *</label>
+                  <select id="doc-upload-currency" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-xl text-xs font-bold">
+                    <option value="DOP">DOP (Pesos Dominicanos)</option>
+                    <option value="USD">USD (Dólares Americanos)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-600 text-[10px] uppercase mb-1">Importe *</label>
+                  <input type="number" id="doc-upload-amount" step="0.01" min="0" placeholder="0.00" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-xl text-xs font-bold">
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block font-bold text-slate-600 text-[10px] uppercase mb-1">Descripción / Concepto</label>
+                  <input type="text" id="doc-upload-desc" placeholder="Ej. Instalación de sistema de CCTV y motor corredera..." class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-xl text-xs">
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block font-bold text-slate-600 text-[10px] uppercase mb-1">Archivo PDF (Máx. 10MB) *</label>
+                  <input type="file" id="doc-upload-file" accept="application/pdf" required class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-xl text-xs file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-wes-blue file:text-white hover:file:bg-wes-dark">
+                </div>
+              </div>
+              <button type="submit" id="btn-submit-upload-doc" class="w-full py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold transition flex items-center justify-center space-x-1.5 shadow-xs">
+                <i class="fas fa-check"></i>
+                <span>Subir a Google Drive y Publicar</span>
+              </button>
+            </form>
+
+            <!-- Lista de Documentos del Cliente -->
+            <div id="admin-client-docs-list" class="space-y-2">
+              <p class="text-slate-400 text-center py-2 text-xs">Cargando documentos...</p>
+            </div>
+          </div>
         </div>
 
         <!-- MODO EDICIÓN DE PERFIL (OCULTO POR DEFECTO) -->
@@ -3114,6 +3178,9 @@ const AdminApp = {
 
       </div>
     `;
+
+    // Cargar documentos del cliente de inmediato
+    this.loadAdminClientDocs(u.email, u.id);
   },
 
   toggleUserProfileEditMode(isEdit) {
@@ -3196,6 +3263,147 @@ const AdminApp = {
       if (btnSave) {
         btnSave.disabled = false;
         btnSave.innerHTML = '<i class="fas fa-save mr-1"></i> Guardar Cambios';
+      }
+    }
+  },
+
+  toggleUploadDocForm() {
+    const form = document.getElementById('admin-doc-upload-form');
+    if (form) form.classList.toggle('hidden');
+  },
+
+  async loadAdminClientDocs(email, clientId) {
+    const list = document.getElementById('admin-client-docs-list');
+    if (!list) return;
+
+    try {
+      const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+      const res = await fetch(backendUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'get_client_documents',
+          userEmail: email,
+          clientId: clientId || ''
+        })
+      });
+      const data = await res.json();
+      const docs = (data && data.success && Array.isArray(data.documents)) ? data.documents : [];
+
+      if (!docs.length) {
+        list.innerHTML = '<p class="text-slate-400 text-center py-2 text-xs">No hay documentos registrados para este cliente.</p>';
+        return;
+      }
+
+      list.innerHTML = docs.map(d => `
+        <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+          <div class="min-w-0 flex-1 pr-2">
+            <div class="flex items-center space-x-1.5">
+              <span class="font-bold text-slate-800 text-[11px]">${escapeHtml(d.numeroRef || d.id)}</span>
+              <span class="px-1.5 py-0.2 rounded text-[9px] font-black uppercase ${d.tipo === 'factura' ? 'bg-blue-100 text-wes-blue' : 'bg-emerald-100 text-emerald-800'}">${escapeHtml(d.tipo)}</span>
+            </div>
+            <div class="text-[10px] text-slate-500">${escapeHtml(d.descripcion || 'Sin descripción')}</div>
+            <div class="text-[9px] text-slate-400">${escapeHtml(d.fechaEmision || '')} · <strong>${d.moneda || 'DOP'}$ ${Number(d.importe || 0).toLocaleString()}</strong></div>
+          </div>
+          ${d.driveFileId ? `
+            <a href="https://drive.google.com/file/d/${escapeHtml(d.driveFileId)}/view" target="_blank" rel="noopener noreferrer" class="px-2 py-1 bg-wes-blue text-white rounded-lg text-[10px] font-bold hover:bg-wes-dark transition shrink-0 flex items-center space-x-1">
+              <i class="fas fa-external-link-alt text-wes-gold"></i>
+              <span>Ver PDF</span>
+            </a>
+          ` : '<span class="text-[10px] text-slate-400">Sin archivo</span>'}
+        </div>
+      `).join('');
+    } catch (e) {
+      list.innerHTML = '<p class="text-rose-500 text-center py-2 text-xs">Error cargando documentos.</p>';
+    }
+  },
+
+  async handleAdminDocUpload(e, clientEmail, clientId) {
+    if (e) e.preventDefault();
+    const typeSelect = document.getElementById('doc-upload-type');
+    const refInput = document.getElementById('doc-upload-ref');
+    const currencySelect = document.getElementById('doc-upload-currency');
+    const amountInput = document.getElementById('doc-upload-amount');
+    const descInput = document.getElementById('doc-upload-desc');
+    const fileInput = document.getElementById('doc-upload-file');
+    const btn = document.getElementById('btn-submit-upload-doc');
+
+    const file = fileInput?.files?.[0];
+    if (!file) {
+      if (window.showToast) window.showToast('Selecciona un archivo PDF.', 'error');
+      return;
+    }
+    if (file.type !== 'application/pdf') {
+      if (window.showToast) window.showToast('Solo se permiten archivos en formato PDF.', 'error');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      if (window.showToast) window.showToast('El archivo supera el límite de 10 MB.', 'error');
+      return;
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Subiendo a Drive...';
+    }
+
+    try {
+      // Convertir archivo a Base64
+      const reader = new FileReader();
+      const base64Promise = new Promise((resolve, reject) => {
+        reader.onload = () => {
+          const res = reader.result;
+          const base64 = res.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+      });
+      reader.readAsDataURL(file);
+      const base64Content = await base64Promise;
+
+      const adminUser = AdminAuth.getCurrentUser();
+      const adminToken = adminUser ? (adminUser.token || 'admin_token_wes') : 'admin_token_wes';
+      const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+
+      const payload = {
+        action: 'upload_client_document_admin',
+        adminToken: adminToken,
+        userEmail: adminUser?.email || 'admin@warnelectricalservices.com',
+        data: {
+          clientId: clientId,
+          email: clientEmail,
+          tipo: typeSelect?.value || 'factura',
+          numeroRef: refInput?.value || '',
+          moneda: currencySelect?.value || 'DOP',
+          importe: Number(amountInput?.value || 0),
+          descripcion: descInput?.value || '',
+          filename: file.name,
+          base64File: base64Content,
+          estado: 'publicado'
+        }
+      };
+
+      const res = await fetch(backendUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+
+      if (!result || !result.success) {
+        throw new Error((result && result.message) || 'Error al subir el documento.');
+      }
+
+      if (window.showToast) window.showToast('✅ Documento publicado y notificado al cliente.', 'success');
+      this.toggleUploadDocForm();
+      this.loadAdminClientDocs(clientEmail, clientId);
+    } catch(err) {
+      console.error('Error cargando documento:', err);
+      if (window.showToast) window.showToast(err.message || 'Error en la subida.', 'error');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check"></i><span>Subir a Google Drive y Publicar</span>';
       }
     }
   },
