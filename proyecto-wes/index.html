@@ -95,65 +95,58 @@
   <!-- ========================================================= -->
   <!-- NAVEGACIÓN PRINCIPAL (STICKY NAVBAR)                      -->
   <!-- ========================================================= -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all duration-300">
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
+      <div class="flex items-center justify-between h-16 sm:h-20">
         
         <!-- Logotipo Oficial WES -->
-        <a href="#inicio" class="flex items-center space-x-3 group">
-          <img src="assets/logo-wes.png" alt="Warn Electrical Services Logo" class="h-12 w-auto object-contain group-hover:scale-105 transition-transform">
-          <div class="hidden lg:block leading-tight">
-            <span class="text-sm font-bold tracking-tight text-wes-blue block uppercase font-brand">Warn Electrical Services</span>
-            <span class="text-[11px] font-medium text-slate-500 tracking-wide">Tecnología & Seguridad Electrónica</span>
+        <a href="#inicio" class="flex items-center space-x-2.5 sm:space-x-3 group shrink-0 mr-3 lg:mr-6">
+          <img src="assets/logo-wes.png" alt="Warn Electrical Services Logo" class="h-9 sm:h-11 w-auto object-contain group-hover:scale-105 transition-transform">
+          <div class="hidden xl:block leading-tight">
+            <span class="text-sm font-bold tracking-tight text-wes-blue block uppercase font-brand whitespace-nowrap">Warn Electrical Services</span>
+            <span class="text-[10px] font-medium text-slate-500 tracking-wide whitespace-nowrap">Tecnología & Seguridad Electrónica</span>
           </div>
         </a>
 
-        <!-- Menú Desktop -->
-        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-semibold text-slate-700">
-          <a href="#inicio" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Inicio</a>
-          <a href="#nosotros" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Nosotros</a>
-          <a href="#fundadores" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Fundadores</a>
-          <a href="#tienda" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Tienda</a>
+        <!-- Menú Desktop (Compacto antes de amontonarse: hidden por debajo de xl) -->
+        <nav class="hidden xl:flex items-center space-x-1 lg:space-x-1.5 text-sm font-semibold text-slate-700 shrink-0">
+          <a href="#inicio" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Inicio</a>
+          <a href="#nosotros" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Nosotros</a>
+          <a href="#fundadores" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Fundadores</a>
+          <a href="#tienda" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Tienda</a>
           <a href="#tienda" onclick="filterByCategory('ofertas')" class="px-2.5 py-1.5 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 font-bold transition flex items-center space-x-1" title="Ver ofertas y promociones">
             <i class="fas fa-fire-alt text-rose-500 animate-pulse"></i>
             <span>Ofertas</span>
             <span class="text-[9px] bg-rose-600 text-white px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider">Hot</span>
           </a>
-          <a href="#proyectos" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Proyectos</a>
-          <a href="#servicios" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Servicios</a>
-          
-          <!-- Acceso Directo: Servicio Técnico (Tablero KDS en Tiempo Real) -->
-          <a href="servicio-tecnico.html" id="nav-service-kds-link" style="display: none !important;" class="hidden px-3 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs transition items-center space-x-1.5 shadow-sm border border-slate-700/80 group shrink-0" title="Entrar al Tablero de Servicio Técnico (Estilo McDonald's)">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="tracking-tight">Servicio Técnico</span>
-            <span id="nav-ongoing-badge" class="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs">0</span>
-          </a>
-          
-          <a href="#soporte" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition text-amber-600 font-bold">
+          <a href="#proyectos" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Proyectos</a>
+          <a href="#servicios" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Servicios</a>
+          <a href="#soporte" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition text-amber-600 font-bold">
             <i class="fas fa-tools mr-1"></i>Soporte
           </a>
-          <a href="#contacto" class="px-2.5 py-2 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Contacto</a>
+          <a href="#contacto" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Contacto</a>
         </nav>
 
-        <!-- Botones de Acción Rápida (Móvil / Desktop) -->
-        <div class="flex items-center space-x-2">
+        <!-- Bloque Derecho: Cuenta + Menú Hamburguesa -->
+        <div class="flex items-center space-x-2 shrink-0">
+          
           <!-- Menú Compacto "Mi Cuenta" -->
           <div id="header-my-account-container" class="relative">
-            <!-- Botón Mi Cuenta (Estado dinámico: Login o Avatar+Nombre+⋮) -->
-            <button id="auth-person-btn" onclick="handleUserPersonClick()" aria-haspopup="true" aria-expanded="false" class="h-10 px-2 sm:px-3 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center space-x-1.5 transition shadow-sm relative group shrink-0" title="Mi Cuenta / Iniciar Sesión" aria-label="Mi Cuenta">
-              <!-- Estado NO autenticado -->
+            <!-- Botón Mi Cuenta (Estado dinámico: Login compacto o Avatar+Nombre+⋮) -->
+            <button id="auth-person-btn" onclick="handleUserPersonClick()" aria-haspopup="true" aria-expanded="false" class="h-9 sm:h-10 px-2 sm:px-3 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center space-x-1.5 transition shadow-xs relative group shrink-0" title="Mi Cuenta / Iniciar Sesión" aria-label="Mi Cuenta">
+              <!-- Estado NO autenticado (Visitante) -->
               <span id="auth-person-icon-loggedout" class="flex items-center space-x-1.5 pointer-events-none">
-                <i class="fas fa-user text-sm text-slate-600 group-hover:text-wes-blue transition"></i>
-                <span class="hidden sm:inline text-xs font-bold text-slate-700 group-hover:text-wes-blue transition">Entrar</span>
+                <i class="fas fa-user text-xs sm:text-sm text-slate-600 group-hover:text-wes-blue transition"></i>
+                <span class="text-xs font-bold text-slate-700 group-hover:text-wes-blue transition">Entrar</span>
               </span>
 
               <!-- Estado SÍ autenticado (Avatar circular + Nombre corto + ⋮) -->
-              <span id="auth-person-icon-loggedin" class="hidden flex items-center space-x-2 pointer-events-none">
-                <span class="w-7 h-7 rounded-full bg-wes-blue text-wes-gold font-black text-xs flex items-center justify-center shadow-inner relative shrink-0">
+              <span id="auth-person-icon-loggedin" class="hidden flex items-center space-x-1.5 sm:space-x-2 pointer-events-none">
+                <span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-wes-blue text-wes-gold font-black text-[11px] sm:text-xs flex items-center justify-center shadow-inner relative shrink-0">
                   <span id="auth-person-initials">U</span>
                   <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 border border-white"></span>
                 </span>
-                <span id="auth-person-shortname" class="hidden md:inline text-xs font-bold text-slate-800 max-w-[100px] truncate">Cliente</span>
+                <span id="auth-person-shortname" class="hidden md:inline text-xs font-bold text-slate-800 max-w-[90px] truncate">Cliente</span>
                 <i class="fas fa-ellipsis-v text-slate-400 group-hover:text-slate-600 text-xs pl-0.5"></i>
               </span>
 
@@ -162,17 +155,32 @@
             </button>
 
             <!-- Dropdown Menú Compacto "Mi Cuenta" -->
-            <div id="header-my-account-dropdown" role="menu" aria-label="Opciones de cuenta" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 transition-all transform origin-top-right">
+            <div id="header-my-account-dropdown" role="menu" aria-label="Opciones de cuenta" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 transition-all transform origin-top-right">
               <!-- Encabezado del Dropdown con saludo al usuario -->
               <div class="px-4 py-2.5 border-b border-slate-100 bg-slate-50/70">
                 <p id="dropdown-user-fullname" class="text-xs font-bold text-slate-900 truncate">Mi Cuenta</p>
                 <p id="dropdown-user-role" class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Cliente WES</p>
               </div>
 
-              <!-- Enlace a Panel Administrativo (Visible solo para empleados autorizados) -->
+              <!-- Enlace a Panel Administrativo (Visible solo para administradores autorizados) -->
               <a id="dropdown-admin-link" href="admin.html" role="menuitem" class="hidden px-4 py-2.5 text-xs font-bold text-amber-700 bg-amber-50/70 hover:bg-amber-100/70 flex items-center space-x-2.5 border-b border-amber-100 transition">
                 <i class="fas fa-shield-alt text-wes-gold text-sm w-4 text-center"></i>
-                <span>Panel Administrativo</span>
+                <div class="flex-1">
+                  <span class="block">Panel Administrativo</span>
+                  <span class="text-[10px] text-amber-600/80 font-normal">Control total y auditoría</span>
+                </div>
+              </a>
+
+              <!-- Enlace a Servicio Técnico / Tablero KDS (Visible solo para técnicos y administradores autorizados) -->
+              <a id="dropdown-tech-kds-link" href="servicio-tecnico.html" role="menuitem" class="hidden px-4 py-2.5 text-xs font-bold text-slate-900 bg-slate-100/70 hover:bg-slate-200/70 flex items-center justify-between border-b border-slate-200/70 transition">
+                <div class="flex items-center space-x-2.5">
+                  <i class="fas fa-wrench text-emerald-600 text-sm w-4 text-center"></i>
+                  <div>
+                    <span class="block">Servicio Técnico</span>
+                    <span class="text-[10px] text-slate-500 font-normal">Herramientas y KDS taller</span>
+                  </div>
+                </div>
+                <span id="dropdown-kds-badge" class="hidden px-1.5 py-0.5 rounded-full text-[9px] font-black bg-rose-600 text-white font-mono shadow-xs">0</span>
               </a>
 
               <!-- 1. Mi Perfil -->
@@ -184,8 +192,8 @@
                 </div>
               </button>
 
-              <!-- 2. Mis Servicios -->
-              <button type="button" role="menuitem" onclick="openClientServicesModal(); closeMyAccountDropdown();" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-wes-blue flex items-center space-x-2.5 transition">
+              <!-- 2. Mis Servicios (Visible para Clientes) -->
+              <button id="dropdown-client-services-btn" type="button" role="menuitem" onclick="openClientServicesModal(); closeMyAccountDropdown();" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-wes-blue flex items-center space-x-2.5 transition">
                 <i class="fas fa-th-large text-slate-400 w-4 text-center"></i>
                 <div class="flex-1">
                   <span class="block">Mis servicios</span>
@@ -215,17 +223,9 @@
             </div>
           </div>
 
-          <!-- Chip Móvil Servicio Técnico -->
-          <a href="servicio-tecnico.html" id="header-service-kds-chip" style="display: none !important;" class="hidden md:hidden px-2.5 py-1.5 rounded-full bg-slate-900 hover:bg-wes-blue text-white font-bold text-xs items-center space-x-1.5 shadow-sm border border-slate-800 shrink-0" title="Entrar a Servicio Técnico (Tablero KDS)">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="hidden sm:inline">Servicio Técnico</span>
-            <span class="sm:hidden">Servicio</span>
-            <span id="nav-ongoing-badge-mobile" class="px-1.5 py-0.2 rounded-full text-[9px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs">0</span>
-          </a>
-
-          <!-- Botón Menú Móvil (Hamburger) -->
-          <button id="mobile-menu-btn" class="md:hidden p-2.5 text-slate-700 hover:text-wes-blue hover:bg-slate-100 rounded-xl transition" aria-label="Abrir menú">
-            <i class="fas fa-bars text-xl"></i>
+          <!-- Botón Menú Móvil / Compacto (Hamburger: visible hasta xl) -->
+          <button id="mobile-menu-btn" class="xl:hidden p-2 sm:p-2.5 text-slate-700 hover:text-wes-blue hover:bg-slate-100 rounded-xl transition" aria-label="Abrir menú de navegación">
+            <i class="fas fa-bars text-lg sm:text-xl"></i>
           </button>
         </div>
 
@@ -259,12 +259,6 @@
       <a href="#proyectos" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Proyectos Realizados</a>
       <a href="#servicios" onclick="closeMobileMenu()" class="mobile-nav-link block p-2.5 rounded-lg hover:bg-slate-100">Servicios Comerciales</a>
       
-      <!-- Servicio Técnico KDS (Móvil) -->
-      <a href="servicio-tecnico.html" id="drawer-service-kds-link" style="display: none !important;" class="hidden mobile-nav-link w-full p-2.5 rounded-xl bg-slate-900 hover:bg-wes-blue text-white font-bold items-center justify-between shadow-sm my-1 text-xs transition">
-        <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>Tablero Servicio Técnico (KDS)</span>
-        <span id="drawer-ongoing-badge" class="text-[9px] bg-wes-gold text-slate-950 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">0 Activos</span>
-      </a>
-      
       <a href="#soporte" class="mobile-nav-link block p-2.5 rounded-lg bg-amber-50 text-amber-700">
         <i class="fas fa-tools mr-2"></i>Solicitar Soporte Técnico
       </a>
@@ -293,12 +287,19 @@
             <span>Acceder al Panel Admin</span>
           </a>
 
+          <!-- Enlace a Servicio Técnico en Móvil (Visible solo para técnicos y administradores autorizados) -->
+          <a id="mobile-tech-kds-link" href="servicio-tecnico.html" class="hidden w-full py-2 px-3 rounded-lg bg-slate-100 text-slate-800 font-bold text-xs flex items-center justify-between border border-slate-200">
+            <span class="flex items-center space-x-2"><i class="fas fa-wrench text-emerald-600"></i><span>Servicio Técnico (KDS)</span></span>
+            <span id="mobile-tech-kds-badge" class="hidden px-1.5 py-0.2 rounded-full text-[9px] font-black bg-rose-600 text-white font-mono">0</span>
+          </a>
+
           <button onclick="openUserProfileCleanModal(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-between border border-slate-200 transition">
             <span class="flex items-center space-x-2"><i class="fas fa-id-card text-slate-400"></i><span>Mi perfil</span></span>
             <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
           </button>
 
-          <button onclick="openClientServicesModal(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-between border border-slate-200 transition">
+          <!-- Mis Servicios (Solo Clientes) -->
+          <button id="mobile-client-services-btn" onclick="openClientServicesModal(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-between border border-slate-200 transition">
             <span class="flex items-center space-x-2"><i class="fas fa-th-large text-slate-400"></i><span>Mis servicios</span></span>
             <i class="fas fa-chevron-right text-[10px] text-slate-400"></i>
           </button>
@@ -1879,7 +1880,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.99 (Build 99)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.100 (Build 100)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">

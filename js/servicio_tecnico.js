@@ -544,6 +544,13 @@ let ongoingSearch = '';
 function updateNavOngoingBadge() {
   if (typeof document === 'undefined' || typeof document.getElementById !== 'function') return;
   try {
+    // Retirar del DOM cualquier botón independiente de servicio técnico que haya quedado
+    const independentElements = ['nav-service-kds-link', 'header-service-kds-chip', 'drawer-service-kds-link'];
+    independentElements.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    });
+
     const services = KDSService.getServices();
     let activeCount = 0;
     let redCount = 0;
@@ -558,24 +565,25 @@ function updateNavOngoingBadge() {
       }
     });
 
-    const badgeIds = ['nav-ongoing-badge', 'nav-ongoing-badge-mobile', 'drawer-ongoing-badge'];
-    badgeIds.forEach(id => {
+    // Actualizar badges internos en el Menú ⋮ de Cuenta y Drawer Móvil
+    const internalBadgeIds = ['dropdown-kds-badge', 'mobile-tech-kds-badge'];
+    internalBadgeIds.forEach(id => {
       const el = document.getElementById(id);
       if (el) {
-        el.textContent = id === 'drawer-ongoing-badge' ? `${activeCount} Activos` : activeCount;
-        // Si hay proyectos atrasados (+4 días en rojo), alertar con pulso rojo
-        if (redCount > 0) {
-          el.className = id === 'drawer-ongoing-badge'
-            ? 'text-[9px] bg-rose-600 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-wider animate-pulse'
-            : 'px-1.5 py-0.2 rounded-full text-[10px] font-black bg-rose-600 text-white font-mono animate-pulse shadow-xs';
-        } else if (yellowCount > 0) {
-          el.className = id === 'drawer-ongoing-badge'
-            ? 'text-[9px] bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full font-black uppercase tracking-wider'
-            : 'px-1.5 py-0.2 rounded-full text-[10px] font-black bg-amber-400 text-slate-950 font-mono shadow-xs';
+        if (activeCount > 0) {
+          el.textContent = activeCount;
+          el.classList.remove('hidden');
+          if (redCount > 0) {
+            el.className = 'px-1.5 py-0.5 rounded-full text-[9px] font-black bg-rose-600 text-white font-mono animate-pulse shadow-xs';
+          } else if (yellowCount > 0) {
+            el.className = 'px-1.5 py-0.5 rounded-full text-[9px] font-black bg-amber-400 text-slate-950 font-mono shadow-xs';
+          } else {
+            el.className = 'px-1.5 py-0.5 rounded-full text-[9px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs';
+          }
         } else {
-          el.className = id === 'drawer-ongoing-badge'
-            ? 'text-[9px] bg-wes-gold text-slate-950 px-2 py-0.5 rounded-full font-black uppercase tracking-wider'
-            : 'px-1.5 py-0.2 rounded-full text-[10px] font-black bg-wes-gold text-slate-950 font-mono shadow-xs';
+          // Si no hay pendientes reales, ocultar (no mostrar "0")
+          el.textContent = '';
+          el.classList.add('hidden');
         }
       }
     });

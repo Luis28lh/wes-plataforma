@@ -61,6 +61,202 @@
       .replace(/'/g, '&#039;');
   }
 
+  /**
+   * Valida si una URL es estrictamente segura (protocolos HTTP / HTTPS o ruta relativa interna)
+   * y rechaza terminantemente javascript:, data:, vbscript: o cualquier esquema ejecutable.
+   */
+  function isSafeUrl(rawUrl) {
+    if (!rawUrl || typeof rawUrl !== 'string') return false;
+    const trimmed = rawUrl.trim();
+    if (trimmed.startsWith('#') || trimmed.startsWith('/?') || trimmed.startsWith('?')) {
+      return true;
+    }
+    try {
+      // Validar esquemas absolutos o relativos
+      if (trimmed.startsWith('//')) return false; // Evitar protocol-relative ambiguo
+      const parsed = new URL(trimmed, window.location.origin);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   * Intenta extraer el identificador de producto (SKU o ID) si la URL apunta a un producto de la plataforma WES.
+   */
+  function extractProductFromUrl(urlStr) {
+    if (!urlStr || typeof urlStr !== 'string') return null;
+    try {
+      const parsed = new URL(urlStr, window.location.origin);
+      // Comprobar parámetros ?p=SKU, ?sku=SKU, ?producto=SKU, ?id=ID
+      let skuOrId = parsed.searchParams.get('p') || parsed.searchParams.get('sku') || parsed.searchParams.get('producto') || parsed.searchParams.get('prod');
+      if (!skuOrId && parsed.hash) {
+        const h = parsed.hash.replace('#', '');
+        if (h.startsWith('p=')) skuOrId = h.split('=')[1];
+        else if (h.startsWith('sku=')) skuOrId = h.split('=')[1];
+      }
+      if (!skuOrId) return null;
+      skuOrId = decodeURIComponent(skuOrId).trim().toLowerCase();
+
+      // Buscar si existe en el catálogo real
+      let products = [];
+      if (typeof StorageService !== 'undefined' && typeof StorageService.getProducts === 'function') {
+        products = StorageService.getProducts();
+      }
+      if ((!products || products.length === 0) && typeof INITIAL_PRODUCTS !== 'undefined') {
+        products = INITIAL_PRODUCTS;
+      }
+
+      const match = products.find(p => {
+        const c = String(p.code || p.codigo || '').toLowerCase();
+        const id = String(p.id || '').toLowerCase();
+        return c === skuOrId || id === skuOrId || id === `odoo-${skuOrId}`;
+      });
+
+      return match || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /**
+   * Genera el HTML seguro para un enlace de producto WES ("Ver producto")
+   */
+  function renderProductLinkHtml(product) {
+    const pId = escapeHtml(product.id || product.code || product.codigo);
+    const pName = escapeHtml(product.name || product.nombre || 'Producto WES');
+    const pSku = escapeHtml(product.code || product.codigo || '');
+    const priceVal = (product.price || product.precio || 0).toLocaleString('es-DO', { minimumFractionDigits: 2 });
+    const directUrl = (typeof getProductDirectUrl === 'function') 
+      ? getProductDirectUrl(product) 
+      : `${window.location.origin}${window.location.pathname}?p=${encodeURIComponent(product.code || product.codigo || product.id)}`;
+
+    return `
+      <div class="my-2 p-2.5 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-200/90 transition shadow-2xs space-y-1.5 not-prose">
+        <div class="flex items-center justify-between text-[11px] gap-2">
+          <span class="font-bold text-slate-900 truncate" title="${pName}">📦 ${pName}</span>
+          ${pSku ? `<span class="px-1.5 py-0.5 rounded text-[9px] font-mono bg-slate-200/70 text-slate-700 shrink-0">SKU: ${pSku}</span>` : ''}
+        </div>
+        <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-200/60">
+          <span class="font-extrabold text-[#0D2A5C] text-[11px]">RD$ ${priceVal}</span>
+          <button type="button" onclick="viewProductFromChat('${pId}')" class="inline-flex items-center space-x-1 px-2.5 py-1 bg-[#0D2A5C] hover:bg-[#071836] text-[#F5B300] font-bold text-[11px] rounded-lg transition active:scale-95 shadow-xs focus:outline-none focus:ring-2 focus:ring-[#F5B300]">
+            <i class="fas fa-eye text-[10px]"></i>
+            <span>Ver producto</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Procesa de forma 100% segura el texto generado por Sofía:
+   * 1. Escapa tags HTML para neutralizar inyecciones de código.
+   * 2. Reconoce formato Markdown [Texto](URL) y URLs sueltas HTTP/HTTPS.
+   * 3. Separa signos de puntuación final de la frase (., ;, ?, !).
+   * 4. Si la URL pertenece a un producto del catálogo oficial, presenta ficha accesible con botón "Ver producto".
+   * 5. Si es enlace externo seguro, lo abre en nueva pestaña con rel="noopener noreferrer" y distinción visual.
+   * 6. Rechaza esquemas maliciosos o ejecutables.
+   */
+  function formatSofiaMessageSafely(rawText) {
+    if (!rawText) return '';
+    let text = String(rawText);
+
+    // Tokens temporales para sustitución sin colisiones
+    const tokens = [];
+    function saveToken(html) {
+      const token = `___WES_TOKEN_${tokens.length}___`;
+      tokens.push({ token, html });
+      return token;
+    }
+
+    // 1. Procesar Enlaces Markdown [Texto](URL)
+    // Ejemplo: [Ver cámara](https://web.warnelectricalservices.com/?p=122)
+    const mdLinkRegex = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+    text = text.replace(mdLinkRegex, (match, linkLabel, targetUrl) => {
+      let cleanUrl = targetUrl.trim();
+      // Remover posible puntuación final accidental fuera del link
+      let trailing = '';
+      const puncMatch = cleanUrl.match(/[.,;:!?]+$/);
+      if (puncMatch) {
+        trailing = puncMatch[0];
+        cleanUrl = cleanUrl.slice(0, -trailing.length);
+      }
+
+      if (!isSafeUrl(cleanUrl)) {
+        // Enlace inseguro rechazado: mostrar solo texto plano escapado
+        return escapeHtml(linkLabel) + trailing;
+      }
+
+      const product = extractProductFromUrl(cleanUrl);
+      if (product) {
+        return saveToken(renderProductLinkHtml(product)) + trailing;
+      }
+
+      // Enlace web regular seguro
+      const safeHref = escapeHtml(cleanUrl);
+      const safeLabel = escapeHtml(linkLabel);
+      const isExternal = cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://');
+      const html = `<a href="${safeHref}" ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''} class="text-[#0D2A5C] font-semibold underline hover:text-amber-600 focus:outline-none focus:ring-1 focus:ring-amber-500 rounded px-0.5 break-all inline-flex items-center gap-1">${safeLabel}${isExternal ? '<i class="fas fa-external-link-alt text-[9px] text-slate-400"></i>' : ''}</a>`;
+      return saveToken(html) + trailing;
+    });
+
+    // 2. Procesar URLs automáticas HTTP / HTTPS en texto plano
+    // Cuidar que no esté dentro de un token y no tragar puntuación final
+    const rawUrlRegex = /(https?:\/\/[^\s<>"'{}|\\^`]+)/g;
+    text = text.replace(rawUrlRegex, (url) => {
+      let cleanUrl = url;
+      let trailing = '';
+      // Separar puntuación de cierre habitual al final de una oración
+      const puncMatch = cleanUrl.match(/[.,;:!?)]+$/);
+      if (puncMatch) {
+        trailing = puncMatch[0];
+        cleanUrl = cleanUrl.slice(0, -trailing.length);
+      }
+
+      if (!isSafeUrl(cleanUrl)) {
+        return escapeHtml(url);
+      }
+
+      const product = extractProductFromUrl(cleanUrl);
+      if (product) {
+        return saveToken(renderProductLinkHtml(product)) + trailing;
+      }
+
+      const safeHref = escapeHtml(cleanUrl);
+      const isExternal = cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://');
+      const html = `<a href="${safeHref}" ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''} class="text-[#0D2A5C] font-semibold underline hover:text-amber-600 focus:outline-none focus:ring-1 focus:ring-amber-500 rounded px-0.5 break-all inline-flex items-center gap-1">${safeHref}${isExternal ? '<i class="fas fa-external-link-alt text-[9px] text-slate-400"></i>' : ''}</a>`;
+      return saveToken(html) + trailing;
+    });
+
+    // 3. Escapar el resto del texto para neutralizar cualquier tag HTML
+    let escaped = escapeHtml(text).replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+
+    // 4. Reinsertar los tokens con el HTML seguro procesado
+    for (let i = 0; i < tokens.length; i++) {
+      escaped = escaped.replace(tokens[i].token, tokens[i].html);
+    }
+
+    return escaped;
+  }
+
+  /**
+   * Abre la ficha de un producto desde el chat, asegurando que en móviles
+   * el chat se repliegue adecuadamente para no obstruir la vista ni perder el historial.
+   */
+  function viewProductFromChat(productId) {
+    if (typeof openProductDetailModal === 'function') {
+      // Si estamos en pantalla móvil (< 640px), cerramos visualmente la ventana del chat
+      // para que el cliente pueda examinar la ficha completa del producto sin interferencias.
+      if (window.innerWidth < 640 && chatSession.isOpen) {
+        toggleClientChat();
+      }
+      openProductDetailModal(productId);
+    } else {
+      // Fallback si no está cargada la función modal: redirección o hash
+      window.location.href = `?p=${encodeURIComponent(productId)}`;
+    }
+  }
+
   // Inicializar el widget de chat en la página
   function initClientChat() {
     renderChatLauncherAndModal();
@@ -943,9 +1139,9 @@ function setupChatEvents() {
             .replace(/\b(agendad[oa]s?)\b/gi, 'registrado');
         }
 
-        // Respuesta puramente conversacional en burbuja limpia, SIN botones externos (MÁXIMO 2 LÍNEAS)
+        // Respuesta puramente conversacional en burbuja limpia con enlaces seguros y fichas interactivas
         appendBotMessage(`
-          <div class="leading-relaxed text-slate-800 text-xs">${escapeHtml(sanitizedReply).replace(/\n\n/g, '<br>').replace(/\n/g, '<br>')}</div>
+          <div class="leading-relaxed text-slate-800 text-xs">${formatSofiaMessageSafely(sanitizedReply)}</div>
         `);
         
         // Actualizar memoria conversacional con rol user y model
@@ -1044,6 +1240,8 @@ if (typeof window !== 'undefined') {
     window.startServiceRequestFlow = startServiceRequestFlow;
     window.confirmTicketDraft = confirmTicketDraft;
     window.cancelTicketDraft = cancelTicketDraft;
+    window.viewProductFromChat = viewProductFromChat;
+    window.formatSofiaMessageSafely = formatSofiaMessageSafely;
     window.openChatWithMessageContext = function(topicText, promptQuestion) {
       if (!chatSession.isOpen) {
         toggleClientChat();
@@ -1076,7 +1274,7 @@ if (typeof window !== 'undefined') {
   }
 
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { WES_KB, findTicketPublicStatus };
+    module.exports = { WES_KB, findTicketPublicStatus, formatSofiaMessageSafely, isSafeUrl, extractProductFromUrl };
   }
 
 })();

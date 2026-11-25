@@ -2866,11 +2866,61 @@ function checkUrlForProduct() {
       return true;
     } else {
       window.pendingDeepLinkQuery = targetQuery;
+      // Mostrar aviso claro y opción para ir al catálogo si no se encuentra tras comprobar productos
+      showProductNotFoundNotice(targetQuery);
       return false;
     }
   } catch (err) {
     console.warn('[WesApp] Error procesando enlace directo de producto:', err);
     return false;
+  }
+}
+
+/**
+ * Notificación accesible cuando un producto solicitado por enlace directo ya no existe en el catálogo.
+ */
+function showProductNotFoundNotice(targetQuery) {
+  // Evitar duplicar aviso si ya está en pantalla
+  if (document.getElementById('wes-product-not-found-toast')) return;
+
+  const toast = document.createElement('div');
+  toast.id = 'wes-product-not-found-toast';
+  toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 z-50 max-w-md w-[92%] bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-amber-400/60 flex items-center justify-between gap-3 animate-fadeIn';
+  toast.setAttribute('role', 'alert');
+  toast.setAttribute('aria-live', 'assertive');
+  toast.innerHTML = `
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+        <i class="fas fa-box-open text-base"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-white">El producto no está disponible</p>
+        <p class="text-[11px] text-slate-300">El producto solicitado ya no existe o cambió de código.</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-2 shrink-0">
+      <button type="button" onclick="goToCatalogFromNotice()" class="px-3 py-1.5 bg-[#F5B300] hover:bg-amber-500 text-slate-950 font-extrabold text-[11px] rounded-xl transition shadow-xs">
+        Volver al catálogo
+      </button>
+      <button type="button" onclick="document.getElementById('wes-product-not-found-toast')?.remove()" class="w-7 h-7 text-slate-400 hover:text-white flex items-center justify-center rounded-lg transition" aria-label="Cerrar aviso">
+        <i class="fas fa-times text-xs"></i>
+      </button>
+    </div>
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    if (toast && toast.parentNode) toast.remove();
+  }, 10000);
+}
+
+function goToCatalogFromNotice() {
+  const toast = document.getElementById('wes-product-not-found-toast');
+  if (toast) toast.remove();
+  const catalogEl = document.getElementById('store-section') || document.getElementById('catalog-section');
+  if (catalogEl) {
+    catalogEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    window.location.hash = '#store-section';
   }
 }
 
@@ -3924,31 +3974,36 @@ function updateAuthHeaderUI() {
   const mobRole = document.getElementById('mobile-user-role');
   const mobAdminLink = document.getElementById('mobile-admin-link');
 
-  // Control estricto de visibilidad del botón 'Servicio Técnico' (KDS) y Tablero Interno
-  // Oculto para visitantes y clientes; visible solo para técnicos y administradores autorizados
+  // Control estricto de visibilidad según rol para el menú ⋮ de "Mi cuenta"
   const allowedTechRoles = ['tecnico_interno', 'tecnico_externo', 'administrador', 'propietario', 'gestor_soporte'];
   const userRole = user && user.role ? String(user.role).toLowerCase() : '';
-  const isClientRole = userRole === 'cliente';
+  const isClientRole = !user || userRole === 'cliente';
   const hasKdsAccess = Boolean(user && !isClientRole && (allowedTechRoles.includes(userRole) || user.isEmployee === true));
+  const hasAdminAccess = Boolean(user && (userRole === 'administrador' || userRole === 'propietario'));
 
-  const navKdsLink = document.getElementById('nav-service-kds-link');
-  const headerKdsChip = document.getElementById('header-service-kds-chip');
-  const drawerKdsLink = document.getElementById('drawer-service-kds-link');
-  const sectionKdsBanner = document.getElementById('section-services-kds-banner');
-
-  [navKdsLink, headerKdsChip, drawerKdsLink, sectionKdsBanner].forEach(el => {
-    if (el) {
-      if (hasKdsAccess) {
-        el.classList.remove('hidden');
-        if (el === navKdsLink || el === headerKdsChip) el.style.setProperty('display', 'inline-flex', 'important');
-        else if (el === drawerKdsLink) el.style.setProperty('display', 'flex', 'important');
-        else if (el === sectionKdsBanner) el.style.setProperty('display', 'flex', 'important');
-      } else {
-        el.classList.add('hidden');
-        el.style.setProperty('display', 'none', 'important');
-      }
-    }
+  // Retirar cualquier botón independiente en header o drawer si todavía existiera en DOM
+  const legacyIndependentElements = ['nav-service-kds-link', 'header-service-kds-chip', 'drawer-service-kds-link'];
+  legacyIndependentElements.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
   });
+
+  const sectionKdsBanner = document.getElementById('section-services-kds-banner');
+  if (sectionKdsBanner) {
+    if (hasKdsAccess) {
+      sectionKdsBanner.classList.remove('hidden');
+      sectionKdsBanner.style.setProperty('display', 'flex', 'important');
+    } else {
+      sectionKdsBanner.classList.add('hidden');
+      sectionKdsBanner.style.setProperty('display', 'none', 'important');
+    }
+  }
+
+  // Elementos dentro del Menú ⋮ y Drawer Móvil
+  const dropdownTechKdsLink = document.getElementById('dropdown-tech-kds-link');
+  const dropdownClientServicesBtn = document.getElementById('dropdown-client-services-btn');
+  const mobileTechKdsLink = document.getElementById('mobile-tech-kds-link');
+  const mobileClientServicesBtn = document.getElementById('mobile-client-services-btn');
 
   if (isAuth && user) {
     const rawName = user.name || 'Cliente';
@@ -3962,12 +4017,26 @@ function updateAuthHeaderUI() {
     if (shortnameEl) shortnameEl.textContent = shortName;
     if (personBtn) personBtn.title = `Mi Cuenta: ${user.name} (${user.roleLabel || 'Activa'})`;
 
-    // Dropdown Header
+    // Dropdown Header: Opciones según permisos
     if (dropdownFullName) dropdownFullName.textContent = user.name;
-    if (dropdownRole) dropdownRole.textContent = user.roleLabel || 'Cliente WES';
+    if (dropdownRole) dropdownRole.textContent = user.roleLabel || (hasAdminAccess ? 'Administrador WES' : hasKdsAccess ? 'Técnico WES' : 'Cliente WES');
+    
+    // Panel Administrativo: Solo administradores
     if (dropdownAdminLink) {
-      if (user.isEmployee) dropdownAdminLink.classList.remove('hidden');
+      if (hasAdminAccess) dropdownAdminLink.classList.remove('hidden');
       else dropdownAdminLink.classList.add('hidden');
+    }
+
+    // Servicio Técnico: Solo técnicos y administradores autorizados
+    if (dropdownTechKdsLink) {
+      if (hasKdsAccess) dropdownTechKdsLink.classList.remove('hidden');
+      else dropdownTechKdsLink.classList.add('hidden');
+    }
+
+    // Mis Servicios: Visible para Clientes (o rol cliente)
+    if (dropdownClientServicesBtn) {
+      if (isClientRole) dropdownClientServicesBtn.classList.remove('hidden');
+      else dropdownClientServicesBtn.classList.add('hidden');
     }
 
     // Drawer Móvil
@@ -3975,12 +4044,28 @@ function updateAuthHeaderUI() {
     if (mobLoggedContainer) mobLoggedContainer.classList.remove('hidden');
     if (mobAvatar) mobAvatar.textContent = initials;
     if (mobName) mobName.textContent = user.name;
-    if (mobRole) mobRole.textContent = user.roleLabel || 'Cliente WES';
+    if (mobRole) mobRole.textContent = user.roleLabel || (hasAdminAccess ? 'Administrador WES' : hasKdsAccess ? 'Técnico WES' : 'Cliente WES');
+    
     if (mobAdminLink) {
-      if (user.isEmployee) mobAdminLink.classList.remove('hidden');
+      if (hasAdminAccess) mobAdminLink.classList.remove('hidden');
       else mobAdminLink.classList.add('hidden');
     }
+
+    if (mobileTechKdsLink) {
+      if (hasKdsAccess) mobileTechKdsLink.classList.remove('hidden');
+      else mobileTechKdsLink.classList.add('hidden');
+    }
+
+    if (mobileClientServicesBtn) {
+      if (isClientRole) mobileClientServicesBtn.classList.remove('hidden');
+      else mobileClientServicesBtn.classList.add('hidden');
+    }
   } else {
+    // Visitante (No autenticado)
+    if (dropdownAdminLink) dropdownAdminLink.classList.add('hidden');
+    if (dropdownTechKdsLink) dropdownTechKdsLink.classList.add('hidden');
+    if (dropdownClientServicesBtn) dropdownClientServicesBtn.classList.remove('hidden');
+    if (mobileTechKdsLink) mobileTechKdsLink.classList.add('hidden');
     // No autenticado
     if (iconLoggedOut) iconLoggedOut.classList.remove('hidden');
     if (iconLoggedIn) iconLoggedIn.classList.add('hidden');
@@ -4583,3 +4668,8 @@ async function handlePasswordRecoverySubmit(e) {
 }
 window.handleRequestRecoveryCode = handleRequestRecoveryCode;
 window.handlePasswordRecoverySubmit = handlePasswordRecoverySubmit;
+window.getProductDirectUrl = getProductDirectUrl;
+window.openProductDetailModal = openProductDetailModal;
+window.closeProductDetailModal = closeProductDetailModal;
+window.showProductNotFoundNotice = showProductNotFoundNotice;
+window.goToCatalogFromNotice = goToCatalogFromNotice;
