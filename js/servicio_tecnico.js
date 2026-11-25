@@ -793,7 +793,32 @@ function renderOngoingSupportModal(filterKey) {
   const container = document.getElementById('ongoing-tickets-list');
   if (!container) return;
 
-  const services = KDSService.getServices();
+  const allServices = KDSService.getServices();
+  
+  // Determinar usuario autenticado
+  const currentUser = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  const isEmployee = currentUser && (currentUser.isEmployee || currentUser.role === 'administrador' || currentUser.role === 'tecnico' || currentUser.role === 'tecnico_interno' || currentUser.role === 'tecnico_externo');
+
+  // Si es un cliente regular (no empleado), SOLO puede ver los equipos en reparación asociados a su cuenta (email o teléfono coincidente)
+  const services = allServices.filter(s => {
+    if (isEmployee) return true; // El personal técnico ve todas las órdenes de taller
+    if (!currentUser) return false; // Usuario no autenticado no ve órdenes privadas
+    
+    const userEmail = (currentUser.email || '').toLowerCase().trim();
+    const userPhone = (currentUser.phone || '').replace(/\D/g, '');
+    const sEmail = (s.email || '').toLowerCase().trim();
+    const sPhone = (s.phone || '').replace(/\D/g, '');
+    const sWa = (s.whatsapp || '').replace(/\D/g, '');
+
+    const emailMatch = userEmail && sEmail && userEmail === sEmail;
+    const phoneMatch = userPhone && (
+      (sPhone && (sPhone.includes(userPhone) || (userPhone.length >= 7 && sPhone.endsWith(userPhone.slice(-7))))) ||
+      (sWa && (sWa.includes(userPhone) || (userPhone.length >= 7 && sWa.endsWith(userPhone.slice(-7)))))
+    );
+
+    return emailMatch || phoneMatch;
+  });
+
   let countActive = 0;
   let countGreen = 0;
   let countYellow = 0;

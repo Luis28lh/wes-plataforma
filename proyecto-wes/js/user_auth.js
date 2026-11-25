@@ -463,17 +463,18 @@ Moca, Provincia Espaillat, República Dominicana`;
       return sessionData;
     },
 
-    logout() {
+    async logout() {
       const current = this.getCurrentUser();
       localStorage.removeItem(SESSION_STORAGE_KEY);
       sessionStorage.removeItem(SESSION_STORAGE_KEY);
       try {
         sessionStorage.removeItem('wes_admin_session');
       } catch (e) {}
+
       if (current && current.email) {
         try {
           const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || BACKEND_URL_DEFAULT;
-          fetch(backendUrl, {
+          await fetch(backendUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({

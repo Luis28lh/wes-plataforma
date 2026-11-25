@@ -175,6 +175,18 @@ function doPost(e) {
         response = handleLogoutUserSession(payload.userEmail, payload.sessionToken);
         break;
 
+      case 'get_user_quotes':
+        response = handleGetUserQuotes(payload.userEmail);
+        break;
+
+      case 'get_user_support_tickets':
+        response = handleGetUserSupportTickets(payload.userEmail, payload.userPhone);
+        break;
+
+      case 'update_user_profile_self':
+        response = handleUpdateUserProfileSelf(payload.userEmail, payload.name, payload.phone);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -3444,4 +3456,218 @@ function handleResetPasswordWithOtp(data) {
     success: true,
     message: 'Contraseña actualizada con éxito. Por favor inicia sesión con tu nueva contraseña.'
   };
+}
+
+/**
+ * 6. OBTENER COTIZACIONES REALES DEL USUARIO AUTENTICADO
+ */
+function handleGetUserQuotes(userEmail) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    if (!cleanEmail) {
+      return { success: false, message: 'Correo no especificado.' };
+    }
+
+    const ss = getOrCreateDatabase();
+    const sheet = ss.getSheetByName('Cotizaciones');
+    if (!sheet) {
+      return { success: true, quotes: [] };
+    }
+
+    const lastRow = sheet.getLastRow();
+    if (lastRow <= 1) {
+      return { success: true, quotes: [] };
+    }
+
+    // Columnas Cotizaciones:
+    // 1: Nº Cotización, 2: Fecha y Hora, 3: Cliente, 4: Empresa, 5: RNC/Cédula,
+    // 6: Teléfono, 7: WhatsApp, 8: Correo, 9: Ciudad, 10: Tipo Cliente,
+    // 11: Método Contacto, 12: Productos, 13: Total Estimado RD$, 14: Comentarios, 15: Estado, 16: Notas Internas
+    const data = sheet.getRange(2, 1, lastRow - 1, 16).getValues();
+    const userQuotes = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
+      const rowEmail = String(row[7] || '').toLowerCase().trim();
+      if (rowEmail === cleanEmail) {
+        userQuotes.push({
+          id: String(row[0] || ''),
+          date: String(row[1] || ''),
+          clientName: String(row[2] || ''),
+          company: String(row[3] || ''),
+          phone: String(row[5] || ''),
+          email: rowEmail,
+          products: String(row[11] || ''),
+          totalEstimated: Number(row[12]) || 0,
+          comments: String(row[13] || ''),
+          status: String(row[14] || 'Recibida')
+        });
+      }
+    }
+
+    // Ordenar de más reciente a más antigua
+    userQuotes.reverse();
+
+    return {
+      success: true,
+      quotes: userQuotes
+    };
+  } catch (err) {
+    console.error('Error en handleGetUserQuotes:', err);
+    return { success: false, message: 'Error consultando cotizaciones: ' + err.toString() };
+  }
+}
+
+/**
+ * 7. OBTENER TICKETS DE SOPORTE REALES DEL USUARIO AUTENTICADO
+ */
+function handleGetUserSupportTickets(userEmail, userPhone) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const cleanPhone = String(userPhone || '').replace(/\D/g, '');
+
+    if (!cleanEmail && !cleanPhone) {
+      return { success: false, message: 'Identificador de usuario no provisto.' };
+    }
+
+    const ss = getOrCreateDatabase();
+    const sheet = ss.getSheetByName('Soporte');
+    if (!sheet) {
+      return { success: true, tickets: [] };
+    }
+
+    const lastRow = sheet.getLastRow();
+    if (lastRow <= 1) {
+      return { success: true, tickets: [] };
+    }
+
+    // Columnas Soporte:
+    // 1: Nº Ticket, 2: Fecha y Hora, 3: Cliente, 4: Empresa, 5: Teléfono,
+    // 6: WhatsApp, 7: Correo, 8: Ubicación, 9: Nº Factura, 10: Producto o Sistema,
+    // 11: Categoría, 12: Prioridad, 13: Descripción, 14: Horario, 15: Método Contacto,
+    // 16: Fotos Drive, 17: Estado, 18: Notas Internas
+    const data = sheet.getRange(2, 1, lastRow - 1, 18).getValues();
+    const userTickets = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const row = data[i];
+      const rowEmail = String(row[6] || '').toLowerCase().trim();
+      const rowPhone = String(row[4] || '').replace(/\D/g, '');
+      const rowWa = String(row[5] || '').replace(/\D/g, '');
+
+      let matches = false;
+      if (cleanEmail && rowEmail === cleanEmail) {
+        matches = true;
+      } else if (cleanPhone && (rowPhone.includes(cleanPhone) || (cleanPhone.length >= 7 && rowPhone.endsWith(cleanPhone.slice(-7))))) {
+        matches = true;
+      } else if (cleanPhone && (rowWa.includes(cleanPhone) || (cleanPhone.length >= 7 && rowWa.endsWith(cleanPhone.slice(-7))))) {
+        matches = true;
+      }
+
+      if (matches) {
+        userTickets.push({
+          id: String(row[0] || ''),
+          date: String(row[1] || ''),
+          clientName: String(row[2] || ''),
+          company: String(row[3] || ''),
+          phone: String(row[4] || ''),
+          email: rowEmail,
+          address: String(row[7] || ''),
+          productSystem: String(row[9] || ''),
+          category: String(row[10] || ''),
+          priority: String(row[11] || 'Media'),
+          description: String(row[12] || ''),
+          preferredTime: String(row[13] || ''),
+          photos: String(row[15] || ''),
+          status: String(row[16] || 'Recibido')
+        });
+      }
+    }
+
+    userTickets.reverse();
+
+    return {
+      success: true,
+      tickets: userTickets
+    };
+  } catch (err) {
+    console.error('Error en handleGetUserSupportTickets:', err);
+    return { success: false, message: 'Error consultando tickets: ' + err.toString() };
+  }
+}
+
+/**
+ * 8. ACTUALIZAR PERFIL DEL CLIENTE EN EL SERVIDOR (NOMBRE Y TELÉFONO)
+ */
+function handleUpdateUserProfileSelf(userEmail, newName, newPhone) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const cleanName = String(newName || '').trim();
+    const cleanPhone = String(newPhone || '').trim();
+
+    if (!cleanEmail) {
+      return { success: false, message: 'Correo no especificado.' };
+    }
+    if (!cleanName) {
+      return { success: false, message: 'El nombre no puede estar vacío.' };
+    }
+
+    const sheet = getClientsSheet_();
+    const lastRow = sheet.getLastRow();
+    let foundRow = -1;
+    let oldName = '';
+    let oldPhone = '';
+
+    if (lastRow > 1) {
+      const data = sheet.getRange(2, 1, lastRow - 1, 10).getValues();
+      for (let i = 0; i < data.length; i++) {
+        const rowEmail = String(data[i][2] || '').toLowerCase().trim();
+        if (rowEmail === cleanEmail) {
+          foundRow = i + 2;
+          oldName = String(data[i][1] || '');
+          oldPhone = String(data[i][3] || '');
+          break;
+        }
+      }
+    }
+
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    if (foundRow !== -1) {
+      // Actualizar col 2 (Nombre) y col 4 (Telefono)
+      sheet.getRange(foundRow, 2).setValue(cleanName);
+      sheet.getRange(foundRow, 4).setValue(cleanPhone);
+      sheet.getRange(foundRow, 9).setValue(now); // Ultimo acceso / actualización
+    } else {
+      // Registrar si no existía fila
+      const newClientId = 'WES-CLI-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+      sheet.appendRow([
+        newClientId,
+        cleanName,
+        cleanEmail,
+        cleanPhone,
+        'cliente',
+        'Cliente Registrado',
+        false,
+        now,
+        now,
+        'Activo'
+      ]);
+    }
+
+    recordAuditLog_(cleanEmail, 'usuario', 'actualizar_perfil', 'Actualización de datos personales: ' + cleanName + ' (' + cleanPhone + ')', cleanEmail, oldName + ' / ' + oldPhone, cleanName + ' / ' + cleanPhone);
+
+    return {
+      success: true,
+      message: 'Datos de perfil actualizados exitosamente en el servidor.',
+      user: {
+        name: cleanName,
+        phone: cleanPhone,
+        email: cleanEmail
+      }
+    };
+  } catch (err) {
+    console.error('Error en handleUpdateUserProfileSelf:', err);
+    return { success: false, message: 'Error actualizando perfil en el servidor: ' + err.toString() };
+  }
 }

@@ -1879,7 +1879,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.98 (Build 98)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.99 (Build 99)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -2743,7 +2743,7 @@
       <div class="p-6 space-y-3.5 bg-slate-50/50">
 
         <!-- 1. Mis Cotizaciones -->
-        <button type="button" onclick="closeClientServicesModal(); openQuoteModal();" class="w-full p-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-wes-blue rounded-2xl transition shadow-xs text-left flex items-center space-x-3.5 group">
+        <button type="button" onclick="closeClientServicesModal(); openClientQuotesModal();" class="w-full p-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-wes-blue rounded-2xl transition shadow-xs text-left flex items-center space-x-3.5 group">
           <div class="w-11 h-11 rounded-xl bg-blue-50 text-wes-blue group-hover:bg-wes-blue group-hover:text-white flex items-center justify-center shrink-0 transition shadow-xs">
             <i class="fas fa-file-invoice text-lg"></i>
           </div>
@@ -2752,13 +2752,13 @@
               <span class="font-bold text-slate-900 text-sm group-hover:text-wes-blue transition">Mis cotizaciones</span>
               <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-50 text-wes-blue">Comercial</span>
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">Revisar tu lista de presupuesto, productos seleccionados y formalizar solicitudes.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Historial de cotizaciones vinculadas a tu cuenta, fechas, detalle y estado.</p>
           </div>
           <i class="fas fa-chevron-right text-slate-400 group-hover:text-wes-blue text-xs transition"></i>
         </button>
 
         <!-- 2. Mis Solicitudes de Soporte -->
-        <a href="#soporte" onclick="closeClientServicesModal();" class="w-full p-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-500 rounded-2xl transition shadow-xs text-left flex items-center space-x-3.5 group">
+        <button type="button" onclick="closeClientServicesModal(); openClientSupportModal();" class="w-full p-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-amber-500 rounded-2xl transition shadow-xs text-left flex items-center space-x-3.5 group">
           <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 group-hover:bg-amber-600 group-hover:text-white flex items-center justify-center shrink-0 transition shadow-xs">
             <i class="fas fa-tools text-lg"></i>
           </div>
@@ -2767,10 +2767,10 @@
               <span class="font-bold text-slate-900 text-sm group-hover:text-amber-700 transition">Mis solicitudes de soporte</span>
               <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-50 text-amber-800">Técnico</span>
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">Solicitar visita técnica, configuración de motores, CCTV o soporte en sitio.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Historial de solicitudes de soporte técnico reportadas y seguimiento de visitas.</p>
           </div>
           <i class="fas fa-chevron-right text-slate-400 group-hover:text-amber-600 text-xs transition"></i>
-        </a>
+        </button>
 
         <!-- 3. Mis Reparaciones de Taller -->
         <button type="button" onclick="closeClientServicesModal(); openOngoingSupportModal();" class="w-full p-4 bg-white hover:bg-slate-50 border border-slate-200 hover:border-emerald-500 rounded-2xl transition shadow-xs text-left flex items-center space-x-3.5 group">
@@ -2793,6 +2793,112 @@
       <div class="p-4 bg-white border-t border-slate-100 flex items-center justify-between">
         <span class="text-[11px] text-slate-400">Atención WES · Moca, R.D.</span>
         <button type="button" onclick="closeClientServicesModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: MIS COTIZACIONES (HISTORIAL REAL DE COTIZACIONES VINCULADAS)  -->
+  <!-- ==================================================================== -->
+  <div id="client-quotes-modal" class="fixed inset-0 z-[75] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full shadow-2xl overflow-hidden my-4 relative text-slate-800 max-h-[92vh] flex flex-col">
+      
+      <!-- Cabecera -->
+      <div class="bg-gradient-to-r from-wes-blue via-[#0d2a5c] to-wes-dark p-5 sm:p-6 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-11 h-11 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center text-wes-gold text-lg">
+            <i class="fas fa-file-invoice"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 class="font-black text-lg font-brand text-white">Mis Cotizaciones</h3>
+              <span id="client-quotes-count-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-wes-gold text-slate-950">0 registradas</span>
+            </div>
+            <p class="text-xs text-slate-200">Cotizaciones formales asociadas a tu cuenta en Warn Electrical Services.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeClientQuotesModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 flex items-center justify-center transition" aria-label="Cerrar">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Barra de Acción: Solicitar Nueva Cotización -->
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-slate-600">¿Deseas agregar más productos del catálogo o cotizar un nuevo proyecto?</p>
+        <button type="button" onclick="closeClientQuotesModal(); openQuoteModal();" class="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-wes-gold to-amber-500 hover:from-amber-400 hover:to-wes-gold text-slate-950 font-black rounded-xl text-xs shadow-xs transition flex items-center justify-center space-x-2 shrink-0">
+          <i class="fas fa-plus-circle text-xs"></i>
+          <span>Solicitar nueva cotización</span>
+        </button>
+      </div>
+
+      <!-- Cuerpo / Lista de Cotizaciones -->
+      <div id="client-quotes-container" class="p-5 overflow-y-auto space-y-4 max-h-[60vh]">
+        <!-- Inserción dinámica de cotizaciones -->
+      </div>
+
+      <!-- Pie -->
+      <div class="p-4 bg-white border-t border-slate-100 flex items-center justify-between">
+        <button type="button" onclick="closeClientQuotesModal(); openClientServicesModal();" class="text-xs text-wes-blue font-bold hover:underline flex items-center space-x-1">
+          <i class="fas fa-arrow-left text-[10px]"></i>
+          <span>Volver a Mis servicios</span>
+        </button>
+        <button type="button" onclick="closeClientQuotesModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: MIS SOLICITUDES DE SOPORTE (HISTORIAL REAL Y SEGUIMIENTO)     -->
+  <!-- ==================================================================== -->
+  <div id="client-support-history-modal" class="fixed inset-0 z-[75] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full shadow-2xl overflow-hidden my-4 relative text-slate-800 max-h-[92vh] flex flex-col">
+      
+      <!-- Cabecera -->
+      <div class="bg-gradient-to-r from-amber-600 via-amber-700 to-amber-900 p-5 sm:p-6 text-white flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-11 h-11 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center text-amber-200 text-lg">
+            <i class="fas fa-tools"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 class="font-black text-lg font-brand text-white">Mis Solicitudes de Soporte</h3>
+              <span id="client-support-count-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-400 text-slate-950">0 registradas</span>
+            </div>
+            <p class="text-xs text-amber-100">Seguimiento de visitas técnicas, reparaciones en sitio y asistencias reportadas.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeClientSupportModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 flex items-center justify-center transition" aria-label="Cerrar">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Barra de Acción: Crear Nueva Solicitud -->
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-slate-600">¿Tienes un nuevo problema o requieres visita técnica en tu empresa o residencia?</p>
+        <a href="#soporte" onclick="closeClientSupportModal();" class="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black rounded-xl text-xs shadow-xs transition flex items-center justify-center space-x-2 shrink-0">
+          <i class="fas fa-plus-circle text-xs"></i>
+          <span>Crear nueva solicitud</span>
+        </a>
+      </div>
+
+      <!-- Cuerpo / Lista de Solicitudes -->
+      <div id="client-support-container" class="p-5 overflow-y-auto space-y-4 max-h-[60vh]">
+        <!-- Inserción dinámica de tickets -->
+      </div>
+
+      <!-- Pie -->
+      <div class="p-4 bg-white border-t border-slate-100 flex items-center justify-between">
+        <button type="button" onclick="closeClientSupportModal(); openClientServicesModal();" class="text-xs text-amber-700 font-bold hover:underline flex items-center space-x-1">
+          <i class="fas fa-arrow-left text-[10px]"></i>
+          <span>Volver a Mis servicios</span>
+        </button>
+        <button type="button" onclick="closeClientSupportModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
           Cerrar
         </button>
       </div>

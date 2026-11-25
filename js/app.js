@@ -1762,6 +1762,8 @@ function setupEventListeners() {
     { id: 'pwa-guide-modal', closeFn: () => typeof closePwaGuideModal === 'function' && closePwaGuideModal() },
     { id: 'user-profile-modal', closeFn: () => typeof closeUserProfileModal === 'function' && closeUserProfileModal() },
     { id: 'client-services-modal', closeFn: () => typeof closeClientServicesModal === 'function' && closeClientServicesModal() },
+    { id: 'client-quotes-modal', closeFn: () => typeof closeClientQuotesModal === 'function' && closeClientQuotesModal() },
+    { id: 'client-support-history-modal', closeFn: () => typeof closeClientSupportModal === 'function' && closeClientSupportModal() },
     { id: 'user-messages-modal', closeFn: () => typeof closeUserMessagesModal === 'function' && closeUserMessagesModal() },
     { id: 'ongoing-support-modal', closeFn: () => typeof closeOngoingSupportModal === 'function' && closeOngoingSupportModal() },
     { id: 'auth-modal', closeFn: () => typeof closeAuthModal === 'function' && closeAuthModal() },
@@ -3426,6 +3428,267 @@ function closeClientServicesModal() {
 }
 
 // ----------------------------------------------------------------------------
+// MODAL: MIS COTIZACIONES (CLIENTE)
+// ----------------------------------------------------------------------------
+async function openClientQuotesModal() {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+  closeMyAccountDropdown();
+  closeClientServicesModal();
+
+  const modal = document.getElementById('client-quotes-modal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  document.body.classList.add('overflow-hidden');
+
+  await loadClientQuotes();
+}
+
+function closeClientQuotesModal() {
+  const modal = document.getElementById('client-quotes-modal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
+  document.body.classList.remove('overflow-hidden');
+}
+
+async function loadClientQuotes() {
+  const container = document.getElementById('client-quotes-container');
+  const countBadge = document.getElementById('client-quotes-count-badge');
+  if (!container) return;
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user || !user.email) {
+    container.innerHTML = `
+      <div class="py-12 text-center text-slate-500">
+        <i class="fas fa-lock text-3xl text-slate-400 mb-3"></i>
+        <p class="font-bold text-sm text-slate-800">Debes iniciar sesión</p>
+        <p class="text-xs text-slate-500 mt-1">Inicia sesión para ver tu historial de cotizaciones.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="py-12 text-center text-slate-500">
+      <i class="fas fa-spinner fa-spin text-2xl text-wes-blue mb-3"></i>
+      <p class="font-bold text-sm text-slate-800">Cargando tus cotizaciones...</p>
+      <p class="text-xs text-slate-500 mt-1">Consultando servidor WES.</p>
+    </div>
+  `;
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'get_user_quotes',
+        userEmail: user.email
+      })
+    });
+
+    const data = await res.json();
+    const quotes = (data && data.success && Array.isArray(data.quotes)) ? data.quotes : [];
+
+    if (countBadge) {
+      countBadge.textContent = `${quotes.length} registrada${quotes.length === 1 ? '' : 's'}`;
+    }
+
+    if (quotes.length === 0) {
+      container.innerHTML = `
+        <div class="py-12 text-center text-slate-500">
+          <div class="w-14 h-14 rounded-2xl bg-blue-50 text-wes-blue border border-blue-100 flex items-center justify-center mx-auto mb-3 text-2xl shadow-xs">
+            <i class="fas fa-folder-open"></i>
+          </div>
+          <p class="font-bold text-sm text-slate-800">No tienes cotizaciones registradas</p>
+          <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Selecciona productos de nuestro catálogo y solicita una cotización para verla reflejada aquí.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = quotes.map(q => {
+      const itemsText = (q.products || '').replace(/\n/g, '<br>');
+      const totalText = q.totalEstimated ? `RD$ ${Number(q.totalEstimated).toLocaleString('es-DO', { minimumFractionDigits: 2 })}` : 'Por confirmar';
+      const statusBadge = q.status.toLowerCase().includes('aprobada') 
+        ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-50 text-emerald-800 border border-emerald-200">Aprobada</span>'
+        : q.status.toLowerCase().includes('enviada')
+        ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-blue-50 text-wes-blue border border-blue-200">Enviada</span>'
+        : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-50 text-amber-800 border border-amber-200">' + (q.status || 'Recibida') + '</span>';
+
+      return `
+        <div class="bg-white border border-slate-200 hover:border-wes-blue/40 rounded-2xl p-4 sm:p-5 shadow-xs transition space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div class="flex items-center space-x-2.5">
+              <span class="w-8 h-8 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center text-xs font-black shrink-0">
+                <i class="fas fa-hashtag"></i>
+              </span>
+              <div>
+                <span class="font-bold text-sm text-slate-900">${q.id}</span>
+                <span class="text-xs text-slate-400 ml-2">${q.date || ''}</span>
+              </div>
+            </div>
+            <div>${statusBadge}</div>
+          </div>
+
+          <div class="text-xs text-slate-600 bg-slate-50 rounded-xl p-3 border border-slate-100 font-mono leading-relaxed overflow-x-auto">
+            ${itemsText || 'Sin detalle de productos registrado.'}
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-xs text-slate-500">Total Estimado:</span>
+            <span class="font-black text-sm text-wes-blue font-brand">${totalText}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+  } catch (err) {
+    console.error('[Quotes] Error al cargar cotizaciones:', err);
+    container.innerHTML = `
+      <div class="py-10 text-center text-slate-500">
+        <i class="fas fa-exclamation-triangle text-2xl text-amber-500 mb-2"></i>
+        <p class="font-bold text-sm text-slate-800">No se pudieron cargar las cotizaciones</p>
+        <p class="text-xs text-slate-500 mt-1">Por favor verifica tu conexión a internet o intenta nuevamente.</p>
+        <button type="button" onclick="loadClientQuotes()" class="mt-3 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+          Reintentar
+        </button>
+      </div>
+    `;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// MODAL: MIS SOLICITUDES DE SOPORTE (CLIENTE)
+// ----------------------------------------------------------------------------
+async function openClientSupportModal() {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+  closeMyAccountDropdown();
+  closeClientServicesModal();
+
+  const modal = document.getElementById('client-support-history-modal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  document.body.classList.add('overflow-hidden');
+
+  await loadClientSupportTickets();
+}
+
+function closeClientSupportModal() {
+  const modal = document.getElementById('client-support-history-modal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
+  document.body.classList.remove('overflow-hidden');
+}
+
+async function loadClientSupportTickets() {
+  const container = document.getElementById('client-support-container');
+  const countBadge = document.getElementById('client-support-count-badge');
+  if (!container) return;
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user || (!user.email && !user.phone)) {
+    container.innerHTML = `
+      <div class="py-12 text-center text-slate-500">
+        <i class="fas fa-lock text-3xl text-slate-400 mb-3"></i>
+        <p class="font-bold text-sm text-slate-800">Debes iniciar sesión</p>
+        <p class="text-xs text-slate-500 mt-1">Inicia sesión para ver tu historial de solicitudes de soporte.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="py-12 text-center text-slate-500">
+      <i class="fas fa-spinner fa-spin text-2xl text-amber-600 mb-3"></i>
+      <p class="font-bold text-sm text-slate-800">Cargando tus solicitudes...</p>
+      <p class="text-xs text-slate-500 mt-1">Consultando servidor WES.</p>
+    </div>
+  `;
+
+  try {
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'get_user_support_tickets',
+        userEmail: user.email || '',
+        userPhone: user.phone || ''
+      })
+    });
+
+    const data = await res.json();
+    const tickets = (data && data.success && Array.isArray(data.tickets)) ? data.tickets : [];
+
+    if (countBadge) {
+      countBadge.textContent = `${tickets.length} registrada${tickets.length === 1 ? '' : 's'}`;
+    }
+
+    if (tickets.length === 0) {
+      container.innerHTML = `
+        <div class="py-12 text-center text-slate-500">
+          <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 border border-amber-100 flex items-center justify-center mx-auto mb-3 text-2xl shadow-xs">
+            <i class="fas fa-check-double"></i>
+          </div>
+          <p class="font-bold text-sm text-slate-800">No tienes solicitudes de soporte activas</p>
+          <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Cuando reportes una avería o solicites soporte en sitio, podrás darle seguimiento aquí.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = tickets.map(t => {
+      const isCompleted = (t.status || '').toLowerCase().includes('completad') || (t.status || '').toLowerCase().includes('resuelt');
+      const statusBadge = isCompleted
+        ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-50 text-emerald-800 border border-emerald-200">Resuelto</span>'
+        : '<span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-50 text-amber-800 border border-amber-200">' + (t.status || 'En Proceso') + '</span>';
+
+      return `
+        <div class="bg-white border border-slate-200 hover:border-amber-500/40 rounded-2xl p-4 sm:p-5 shadow-xs transition space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div class="flex items-center space-x-2.5">
+              <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-xs font-black shrink-0">
+                <i class="fas fa-ticket-alt"></i>
+              </span>
+              <div>
+                <span class="font-bold text-sm text-slate-900">${t.id}</span>
+                <span class="text-xs text-slate-400 ml-2">${t.date || ''}</span>
+              </div>
+            </div>
+            <div>${statusBadge}</div>
+          </div>
+
+          <div class="space-y-1.5 text-xs text-slate-600">
+            <div><strong class="text-slate-800">Sistema / Equipo:</strong> ${t.productSystem || 'No especificado'}</div>
+            <div><strong class="text-slate-800">Categoría:</strong> ${t.category || 'Soporte General'} &bull; <strong class="text-slate-800">Prioridad:</strong> ${t.priority || 'Normal'}</div>
+            <div class="bg-slate-50 rounded-xl p-3 border border-slate-100 text-slate-700 leading-relaxed mt-2">
+              ${t.description || 'Sin descripción detallada.'}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+  } catch (err) {
+    console.error('[Support] Error al cargar tickets:', err);
+    container.innerHTML = `
+      <div class="py-10 text-center text-slate-500">
+        <i class="fas fa-exclamation-triangle text-2xl text-amber-500 mb-2"></i>
+        <p class="font-bold text-sm text-slate-800">No se pudieron cargar las solicitudes</p>
+        <p class="text-xs text-slate-500 mt-1">Por favor verifica tu conexión o intenta más tarde.</p>
+        <button type="button" onclick="loadClientSupportTickets()" class="mt-3 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+          Reintentar
+        </button>
+      </div>
+    `;
+  }
+}
+
+// ----------------------------------------------------------------------------
 // MODAL: MI PERFIL (LIMPIO Y EDITABLE)
 // ----------------------------------------------------------------------------
 function openUserProfileCleanModal() {
@@ -3559,7 +3822,26 @@ async function handleSaveUserProfile(e) {
   }
 
   try {
-    // Actualizar en el estado de sesión local
+    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    
+    // 1. Persistir primero en el servidor
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'update_user_profile_self',
+        userEmail: user.email,
+        name: newName,
+        phone: newPhone
+      })
+    });
+
+    const data = await res.json();
+    if (!data || !data.success) {
+      throw new Error((data && data.message) || 'Error al persistir en el servidor');
+    }
+
+    // 2. Solo tras confirmación del servidor, actualizar sesión y UI
     const updatedUser = { ...user, name: newName, phone: newPhone };
     if (typeof UserAuth !== 'undefined' && typeof UserAuth.setSession === 'function') {
       UserAuth.setSession(updatedUser, true);
@@ -3577,10 +3859,10 @@ async function handleSaveUserProfile(e) {
 
     updateAuthHeaderUI();
     toggleEditProfileMode(false);
-    showToast('Tus datos se actualizaron correctamente.', 'success');
+    showToast('Tus datos se actualizaron correctamente en el servidor.', 'success');
   } catch (err) {
     console.error('[Profile] Error al guardar datos:', err);
-    showToast('Error al actualizar datos de perfil.', 'error');
+    showToast('No se pudieron guardar los cambios en el servidor: ' + (err.message || 'Error de red'), 'error');
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -3713,10 +3995,10 @@ function updateAuthHeaderUI() {
   }
 }
 
-function handleLogout() {
+async function handleLogout() {
   closeMyAccountDropdown();
   if (typeof UserAuth !== 'undefined') {
-    UserAuth.logout();
+    await UserAuth.logout();
     showToast('Sesión cerrada correctamente.', 'info');
   }
 }
@@ -3756,6 +4038,10 @@ window.toggleMyAccountDropdown = toggleMyAccountDropdown;
 window.closeMyAccountDropdown = closeMyAccountDropdown;
 window.openClientServicesModal = openClientServicesModal;
 window.closeClientServicesModal = closeClientServicesModal;
+window.openClientQuotesModal = openClientQuotesModal;
+window.closeClientQuotesModal = closeClientQuotesModal;
+window.openClientSupportModal = openClientSupportModal;
+window.closeClientSupportModal = closeClientSupportModal;
 window.openMobileMenu = window.openMobileMenu || function() {
   const d = document.getElementById('mobile-menu-drawer');
   if (d) { d.classList.remove('translate-x-full'); document.body.classList.add('overflow-hidden'); }
