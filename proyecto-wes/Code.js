@@ -3130,35 +3130,59 @@ function handleRequestAuthOtp(data) {
         ? ('Tu código de 6 dígitos para recuperar el acceso a tu cuenta es:\n\n')
         : ('Tu código de acceso de 6 dígitos para entrar o crear tu cuenta es:\n\n')) +
       '       ' + rawCode + '\n\n' +
-      '• Vigencia: 10 minutos.\n' +
-      '• Es de un solo uso y de consumo atómico.\n' +
-      '• Nunca compartas este código con nadie.\n' +
-      '• Si no lo solicitaste, ignora este mensaje.\n\n' +
+      'Copia el código y pégalo en la página de WES.\n\n' +
+      '- Vencimiento: 10 minutos.\n' +
+      '- Es de un solo uso y de consumo atómico.\n' +
+      '- Seguridad: Nunca compartas este código con nadie.\n' +
+      '- Si no lo solicitaste, ignora este mensaje.\n\n' +
       'Warn Electrical Services, SRL';
 
-    const htmlEmail = '<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:18px;background:#ffffff;box-shadow:0 4px 16px rgba(0,0,0,0.06);">' +
-      '<div style="text-align:center;background:linear-gradient(135deg,#071836,#0D2A5C);color:#ffffff;padding:26px 20px;border-radius:14px;">' +
-      '<div style="display:inline-block;padding:4px 14px;background:rgba(255,255,255,0.12);border-radius:20px;margin-bottom:8px;font-size:11px;font-weight:bold;letter-spacing:1px;color:#F5B300;">WARN ELECTRICAL SERVICES (WES)</div>' +
-      '<h2 style="color:#ffffff;margin:4px 0 0 0;font-size:22px;letter-spacing:0.5px;font-weight:800;">' + (isRecovery ? 'Recuperación de cuenta' : 'Código de verificación') + '</h2>' +
-      '<p style="margin:6px 0 0 0;font-size:12px;color:#cbd5e1;">Moca, República Dominicana · ' + (isRecovery ? 'Recuperación Segura' : 'Acceso Seguro') + '</p>' +
+    const htmlEmail = '<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:#f1f5f9;margin:0;padding:16px 0;width:100%!important;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">' +
+      '<tr>' +
+      '<td align="center" style="padding:0 10px;">' +
+      '<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,0.05);">' +
+      '<tr>' +
+      '<td align="center" style="background:#0D2A5C;padding:18px 16px;text-align:center;">' +
+      '<div style="display:inline-block;padding:3px 12px;background:rgba(255,255,255,0.12);border-radius:14px;font-size:11px;font-weight:bold;letter-spacing:1px;color:#F5B300;text-transform:uppercase;">WARN ELECTRICAL SERVICES (WES)</div>' +
+      '<h2 style="color:#ffffff;margin:6px 0 0 0;font-size:19px;font-weight:800;letter-spacing:0.3px;">' + (isRecovery ? 'Recuperación de cuenta' : 'Código de verificación') + '</h2>' +
+      '<p style="margin:4px 0 0 0;font-size:12px;color:#cbd5e1;">Moca, República Dominicana &middot; ' + (isRecovery ? 'Recuperación Segura' : 'Acceso Seguro') + '</p>' +
+      '</td>' +
+      '</tr>' +
+      '<tr>' +
+      '<td style="padding:18px 18px 14px 18px;color:#334155;font-size:13px;line-height:1.5;">' +
+      '<p style="margin:0 0 10px 0;font-size:14px;">Hola, <strong>' + displayName + '</strong>:</p>' +
+      '<p style="margin:0 0 14px 0;color:#475569;font-size:13px;line-height:1.45;">' +
+      (isRecovery 
+        ? 'Usa este código de 6 dígitos para recuperar el acceso a tu cuenta en Warn Electrical Services:' 
+        : 'Usa este código de 6 dígitos para identificarte de forma segura en Warn Electrical Services:') +
+      '</p>' +
+      '<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 14px 0;">' +
+      '<tr>' +
+      '<td align="center" style="background:#f8fafc;border:2px dashed #0D2A5C;border-radius:12px;padding:14px 10px;text-align:center;">' +
+      '<p style="margin:0 0 8px 0;font-size:11px;font-weight:700;letter-spacing:0.5px;color:#475569;text-transform:uppercase;">Mantén presionado el código para copiarlo</p>' +
+      '<div style="display:inline-block;padding:8px 16px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;text-align:center;margin:0 auto;">' +
+      '<span style="font-family:Consolas,Monaco,\'Courier New\',Courier,monospace;font-size:30px;font-weight:900;letter-spacing:4px;color:#0D2A5C;line-height:1.1;display:inline-block;vertical-align:middle;text-align:center;user-select:all;-webkit-user-select:all;-moz-user-select:all;">' + rawCode + '</span>' +
       '</div>' +
-      '<div style="padding:28px 16px;color:#334155;line-height:1.6;font-size:14px;">' +
-      '<p style="margin:0 0 16px 0;">Hola, <strong>' + displayName + '</strong>:</p>' +
-      '<p style="margin:0 0 20px 0;color:#475569;">' + (isRecovery ? 'Usa este código de 6 dígitos para recuperar el acceso a tu cuenta en Warn Electrical Services. Puedes copiarlo tocando sobre él:' : 'Usa este código de 6 dígitos para identificarte de forma segura en Warn Electrical Services. Puedes copiarlo tocando sobre él:') + '</p>' +
-      '<div style="text-align:center;margin:24px 0;padding:22px;background:#f8fafc;border:2px dashed #0D2A5C;border-radius:14px;">' +
-      '<span style="display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:8px;">Toca para seleccionar y copiar</span>' +
-      '<div style="font-family:Consolas,Monaco,Lucida Console,Courier New,monospace;font-size:42px;font-weight:900;letter-spacing:10px;color:#0D2A5C;padding:8px 12px;display:inline-block;background:#ffffff;border:1px solid #cbd5e1;border-radius:10px;user-select:all;-webkit-user-select:all;-moz-user-select:all;cursor:pointer;" title="Toca o haz clic para copiar">' + rawCode + '</div>' +
-      '<div style="margin-top:10px;font-size:12px;color:#0284c7;font-weight:bold;">📋 En la web, presiona el botón «Pegar código» para validar de inmediato.</div>' +
+      '<p style="margin:10px 0 0 0;font-size:12px;color:#0284c7;font-weight:700;">Copia el código y pégalo en la página de WES</p>' +
+      '</td>' +
+      '</tr>' +
+      '</table>' +
+      '<div style="background:#fffbeb;border:1px solid #fef3c7;border-left:4px solid #f59e0b;padding:9px 12px;border-radius:8px;font-size:12px;color:#92400e;line-height:1.4;margin-bottom:12px;">' +
+      '<p style="margin:0 0 3px 0;"><strong>Vencimiento:</strong> Válido durante <strong>10 minutos</strong> (uso único).</p>' +
+      '<p style="margin:0;"><strong>Seguridad:</strong> Nunca compartas este código con nadie. WES nunca te pedirá este código por llamada o mensaje.</p>' +
       '</div>' +
-      '<div style="background:#fffbeb;border:1px solid #fef3c7;border-left:4px solid #f59e0b;padding:12px 14px;border-radius:10px;font-size:12px;color:#92400e;margin-bottom:20px;">' +
-      '⏱️ <strong>Vencimiento:</strong> Este código es válido durante <strong>10 minutos</strong> y es de un solo uso.<br>' +
-      '🔒 <strong>Seguridad:</strong> Nunca compartas este código con ninguna persona. WES nunca te llamará a pedirte este serial.' +
-      '</div>' +
-      '<p style="font-size:12px;color:#64748b;margin:0;">Si no solicitaste este código, puedes ignorar este correo; tu cuenta permanece protegida.</p>' +
-      '</div>' +
-      '<hr style="border:0;border-top:1px solid #f1f5f9;margin:16px 0;">' +
-      '<p style="font-size:11px;color:#94a3b8;text-align:center;margin:0;">Warn Electrical Services, SRL · Autopista Ramón Cáceres, Moca · web.warnelectricalservices.com</p>' +
-      '</div>';
+      '<p style="font-size:11px;color:#64748b;margin:0;line-height:1.4;">Si no solicitaste este código, puedes ignorar este correo; tu cuenta permanece protegida.</p>' +
+      '</td>' +
+      '</tr>' +
+      '<tr>' +
+      '<td align="center" style="padding:10px 16px 14px 16px;border-top:1px solid #f1f5f9;font-size:11px;color:#94a3b8;text-align:center;">' +
+      'Warn Electrical Services, SRL &middot; Autopista Ramón Cáceres, Moca &middot; web.warnelectricalservices.com' +
+      '</td>' +
+      '</tr>' +
+      '</table>' +
+      '</td>' +
+      '</tr>' +
+      '</table>';
 
     const mailRes = sendTransactionalEmail_(email, subjectEmail, plainMsg, htmlEmail);
     if (!mailRes.success) {
