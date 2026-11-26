@@ -1906,7 +1906,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.111 (Build 111)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.112 (Build 112)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -3825,9 +3825,18 @@
         <span class="text-[10px] font-bold mt-0.5 tracking-tight">Inicio</span>
       </button>
 
-      <!-- 2. Categorías (cuadrícula) -->
+      <!-- 2. Categorías (cuadrícula estilo Alibaba: 3 cuadrados redondeados + 1 círculo superior derecho) -->
       <button type="button" onclick="handleMobileNavAction('categorias')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition" data-nav="categorias" aria-label="Ver Categorías de WES">
-        <i class="fas fa-th-large text-base group-hover:text-wes-blue transition"></i>
+        <svg class="w-5 h-5 group-hover:text-wes-blue transition shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <!-- Superior izquierdo: cuadrado redondeado -->
+          <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.5" />
+          <!-- Superior derecho: círculo -->
+          <circle cx="17.25" cy="6.75" r="3.25" />
+          <!-- Inferior izquierdo: cuadrado redondeado -->
+          <rect x="3.5" y="14" width="6.5" height="6.5" rx="1.5" />
+          <!-- Inferior derecho: cuadrado redondeado -->
+          <rect x="14" y="14" width="6.5" height="6.5" rx="1.5" />
+        </svg>
         <span class="text-[10px] font-bold mt-0.5 tracking-tight">Categorías</span>
       </button>
 
