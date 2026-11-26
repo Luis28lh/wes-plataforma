@@ -4708,6 +4708,60 @@ window.closeMobileMenu = window.closeMobileMenu || function() {
 // ============================================================================
 // NAVEGACIÓN MÓVIL INFERIOR (BOTTOM NAVIGATION BAR - 5 ACCIONES ESTÁNDAR)
 // ============================================================================
+// MODAL DE CATEGORÍAS MÓVILES WES
+// ============================================================================
+function openMobileCategoriesModal() {
+  const modal = document.getElementById('wes-categories-modal');
+  const sheet = document.getElementById('wes-categories-sheet');
+  if (!modal || !sheet) return;
+
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  // Animar entrada del drawer
+  requestAnimationFrame(() => {
+    modal.classList.remove('opacity-0');
+    sheet.classList.remove('translate-y-full');
+  });
+}
+
+function closeMobileCategoriesModal() {
+  const modal = document.getElementById('wes-categories-modal');
+  const sheet = document.getElementById('wes-categories-sheet');
+  if (!modal || !sheet) return;
+
+  sheet.classList.add('translate-y-full');
+  setTimeout(() => {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }, 250);
+}
+
+function selectMobileCategory(categoryName) {
+  closeMobileCategoriesModal();
+  setTimeout(() => {
+    if (typeof window.filterByCategory === 'function') {
+      window.filterByCategory(categoryName);
+    } else {
+      const catSelect = document.getElementById('category-filter');
+      if (catSelect) {
+        catSelect.value = categoryName;
+        catSelect.dispatchEvent(new Event('change'));
+      }
+      const storeSection = document.getElementById('tienda');
+      if (storeSection) {
+        storeSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, 150);
+}
+
+window.openMobileCategoriesModal = openMobileCategoriesModal;
+window.closeMobileCategoriesModal = closeMobileCategoriesModal;
+window.selectMobileCategory = selectMobileCategory;
+
+// ============================================================================
+// MANEJADOR PRINCIPAL DE NAVEGACIÓN MÓVIL (BARRA INFERIOR)
+// ============================================================================
 function handleMobileNavAction(action) {
   if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
   if (typeof window.closeMyAccountDropdown === 'function') window.closeMyAccountDropdown();
@@ -4727,41 +4781,16 @@ function handleMobileNavAction(action) {
 
   switch (action) {
     case 'inicio': {
-      // Desplazamiento suave al tope / sección inicial
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Desplazamiento al tope / sección inicial
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
       break;
     }
 
-    case 'perfil': {
-      // Área privada del cliente
-      const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
-      if (user) {
-        if (typeof window.openUserProfileCleanModal === 'function') {
-          window.openUserProfileCleanModal();
-        } else if (typeof window.openUserProfileModal === 'function') {
-          window.openUserProfileModal();
-        }
-      } else {
-        if (typeof window.openAuthModal === 'function') {
-          window.openAuthModal('login');
-        }
-      }
-      break;
-    }
-
-    case 'buscar': {
-      // Desplazar a la tienda y enfocar automáticamente el campo de búsqueda
-      const storeSection = document.getElementById('tienda');
-      const searchInput = document.getElementById('search-input');
-      if (storeSection) {
-        storeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      setTimeout(() => {
-        if (searchInput) {
-          searchInput.focus();
-          searchInput.select();
-        }
-      }, 350);
+    case 'categorias': {
+      // Abrir selector de categorías reales WES
+      openMobileCategoriesModal();
       break;
     }
 
@@ -4785,6 +4814,23 @@ function handleMobileNavAction(action) {
       const storeSection = document.getElementById('tienda');
       if (storeSection) {
         storeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      break;
+    }
+
+    case 'perfil': {
+      // Área privada del cliente (extremo derecho)
+      const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+      if (user) {
+        if (typeof window.openUserProfileCleanModal === 'function') {
+          window.openUserProfileCleanModal();
+        } else if (typeof window.openUserProfileModal === 'function') {
+          window.openUserProfileModal();
+        }
+      } else {
+        if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal('login');
+        }
       }
       break;
     }

@@ -1880,7 +1880,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.106 (Build 106)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.107 (Build 107)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -3800,20 +3800,14 @@
         <span class="text-[10px] font-bold mt-0.5 tracking-tight">Inicio</span>
       </button>
 
-      <!-- 2. Mi perfil -->
-      <button type="button" onclick="handleMobileNavAction('perfil')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition" data-nav="perfil" aria-label="Abrir Mi perfil">
-        <i class="fas fa-user-circle text-base group-hover:text-wes-blue transition"></i>
-        <span class="text-[10px] font-bold mt-0.5 tracking-tight">Mi perfil</span>
+      <!-- 2. Categorías (cuadrícula) -->
+      <button type="button" onclick="handleMobileNavAction('categorias')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition" data-nav="categorias" aria-label="Ver Categorías de WES">
+        <i class="fas fa-th-large text-base group-hover:text-wes-blue transition"></i>
+        <span class="text-[10px] font-bold mt-0.5 tracking-tight">Categorías</span>
       </button>
 
-      <!-- 3. Buscar -->
-      <button type="button" onclick="handleMobileNavAction('buscar')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition" data-nav="buscar" aria-label="Buscar en catálogo">
-        <i class="fas fa-search text-base group-hover:text-wes-blue transition"></i>
-        <span class="text-[10px] font-bold mt-0.5 tracking-tight">Buscar</span>
-      </button>
-
-      <!-- 4. Notificaciones -->
-      <button type="button" onclick="handleMobileNavAction('notificaciones')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition relative" data-nav="notificaciones" aria-label="Buzón de notificaciones">
+      <!-- 3. Avisos (con campana y contador) -->
+      <button type="button" onclick="handleMobileNavAction('notificaciones')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition relative" data-nav="notificaciones" aria-label="Buzón de avisos">
         <div class="relative inline-flex items-center justify-center">
           <i class="fas fa-bell text-base group-hover:text-wes-blue transition"></i>
           <span id="mobile-bottom-notifications-badge" class="hidden absolute -top-1.5 -right-2 px-1 py-0.2 rounded-full text-[9px] font-black bg-rose-500 text-white leading-none">0</span>
@@ -3821,14 +3815,150 @@
         <span class="text-[10px] font-bold mt-0.5 tracking-tight">Avisos</span>
       </button>
 
-      <!-- 5. Ventas -->
+      <!-- 4. Ventas (abre catálogo) -->
       <button type="button" onclick="handleMobileNavAction('ventas')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition" data-nav="ventas" aria-label="Explorar Catálogo de Ventas">
         <i class="fas fa-store text-base group-hover:text-wes-blue transition"></i>
         <span class="text-[10px] font-bold mt-0.5 tracking-tight">Ventas</span>
       </button>
 
+      <!-- 5. Mi perfil (extremo derecho) -->
+      <button type="button" onclick="handleMobileNavAction('perfil')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition" data-nav="perfil" aria-label="Abrir Mi perfil">
+        <i class="fas fa-user-circle text-base group-hover:text-wes-blue transition"></i>
+        <span class="text-[10px] font-bold mt-0.5 tracking-tight">Mi perfil</span>
+      </button>
+
     </div>
   </nav>
+
+  <!-- ========================================================= -->
+  <!-- MODAL / DRAWER DESLIZABLE DE CATEGORÍAS REALES WES (MÓVIL) -->
+  <!-- ========================================================= -->
+  <div id="wes-categories-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs hidden transition-opacity duration-300" onclick="if(event.target===this) closeMobileCategoriesModal()">
+    <div class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col overflow-hidden transform transition-transform duration-300 translate-y-full border-t-2 border-wes-gold" id="wes-categories-sheet">
+      <!-- Tirador y Cabecera -->
+      <div class="px-5 pt-3 pb-3 border-b border-slate-100 flex items-center justify-between bg-slate-50/80">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-xl bg-wes-blue/10 text-wes-blue flex items-center justify-center">
+            <i class="fas fa-th-large text-sm"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-sm">Categorías de Productos</h3>
+            <p class="text-[11px] text-slate-500">Selecciona para filtrar el catálogo oficial WES</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeMobileCategoriesModal()" class="w-8 h-8 rounded-full bg-slate-200/70 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition active:scale-95" aria-label="Cerrar selector de categorías">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Cuadrícula de Categorías Reales -->
+      <div class="p-4 overflow-y-auto space-y-2.5 max-h-[calc(85vh-70px)] pb-24">
+        <!-- 1. Energía y Respaldo -->
+        <button type="button" onclick="selectMobileCategory('Energía y Respaldo')" class="w-full flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-wes-blue hover:bg-blue-50/30 transition text-left active:scale-[0.99] group shadow-xs">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-bolt text-lg"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-800 text-xs">Energía y Respaldo</div>
+              <div class="text-[11px] text-slate-500">Baterías AGM, inversores, controladores y protectores</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs text-slate-400 group-hover:text-wes-blue group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- 2. Cámaras de Seguridad -->
+        <button type="button" onclick="selectMobileCategory('Cámaras de Seguridad')" class="w-full flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-wes-blue hover:bg-blue-50/30 transition text-left active:scale-[0.99] group shadow-xs">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-video text-lg"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-800 text-xs">Cámaras de Seguridad</div>
+              <div class="text-[11px] text-slate-500">CCTV IP, HDCVI, grabadores XVR/NVR y domos</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs text-slate-400 group-hover:text-wes-blue group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- 3. Redes y Conectividad -->
+        <button type="button" onclick="selectMobileCategory('Redes y Conectividad')" class="w-full flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-wes-blue hover:bg-blue-50/30 transition text-left active:scale-[0.99] group shadow-xs">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-network-wired text-lg"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-800 text-xs">Redes y Conectividad</div>
+              <div class="text-[11px] text-slate-500">Switches PoE, routers, fibra óptica y antenas</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs text-slate-400 group-hover:text-wes-blue group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- 4. Controles de Acceso -->
+        <button type="button" onclick="selectMobileCategory('Controles de Acceso')" class="w-full flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-wes-blue hover:bg-blue-50/30 transition text-left active:scale-[0.99] group shadow-xs">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-id-card text-lg"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-800 text-xs">Controles de Acceso</div>
+              <div class="text-[11px] text-slate-500">Biométricos, cerraduras magnéticas, tarjetas y botones</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs text-slate-400 group-hover:text-wes-blue group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- 5. Cables & Conectividad -->
+        <button type="button" onclick="selectMobileCategory('Cables & Conectividad')" class="w-full flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-wes-blue hover:bg-blue-50/30 transition text-left active:scale-[0.99] group shadow-xs">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-ethernet text-lg"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-800 text-xs">Cables & Conectividad</div>
+              <div class="text-[11px] text-slate-500">Bobinas Cat6 100% cobre, patch cords y conectores</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs text-slate-400 group-hover:text-wes-blue group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- 6. Accesorios de Instalación -->
+        <button type="button" onclick="selectMobileCategory('Accesorios de Instalación')" class="w-full flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-wes-blue hover:bg-blue-50/30 transition text-left active:scale-[0.99] group shadow-xs">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-slate-500/10 text-slate-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-tools text-lg"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-slate-800 text-xs">Accesorios de Instalación</div>
+              <div class="text-[11px] text-slate-500">Fuentes de poder, cajas de paso, baluns y tuberías</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs text-slate-400 group-hover:text-wes-blue group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- 7. Ofertas y Promociones -->
+        <button type="button" onclick="selectMobileCategory('ofertas')" class="w-full flex items-center justify-between p-3.5 rounded-2xl border border-rose-200 bg-rose-50/40 hover:bg-rose-50 hover:border-rose-300 transition text-left active:scale-[0.99] group shadow-xs">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 flex items-center justify-center group-hover:scale-105 transition">
+              <i class="fas fa-fire text-lg text-rose-500"></i>
+            </div>
+            <div>
+              <div class="font-extrabold text-rose-700 text-xs">Ofertas y Promociones</div>
+              <div class="text-[11px] text-rose-500">Precios especiales y combos por tiempo limitado</div>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-xs text-rose-400 group-hover:text-rose-600 group-hover:translate-x-0.5 transition"></i>
+        </button>
+
+        <!-- 8. Ver Todo el Catálogo -->
+        <button type="button" onclick="selectMobileCategory('all')" class="w-full flex items-center justify-center p-3.5 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-wes-blue transition active:scale-[0.99] shadow-md space-x-2">
+          <i class="fas fa-border-all text-xs text-wes-gold"></i>
+          <span>Ver todos los productos (Catálogo completo)</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

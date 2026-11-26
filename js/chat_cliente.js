@@ -287,15 +287,35 @@
     const wrapper = document.createElement('div');
     wrapper.id = 'wes-client-chat-wrapper';
     wrapper.innerHTML = `
-      <!-- Botón Flotante Lanzador (Esquina Inferior Derecha, elevado en móvil por encima de la barra inferior) -->
-      <div id="wes-chat-launcher" class="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 flex items-center group cursor-pointer" onclick="toggleClientChat()" title="Chatear con el Asistente WES">
-        <span class="hidden sm:inline-flex mr-2.5 px-3 py-1 bg-slate-900/90 text-wes-gold text-xs font-bold rounded-xl shadow-lg border border-wes-gold/40 backdrop-blur-xs transition group-hover:scale-105 pointer-events-none items-center space-x-1.5">
-          <i class="fas fa-sparkles text-amber-400 text-[10px]"></i>
-          <span>Sofía - Asistente WES</span>
-        </span>
-        <button type="button" aria-label="Abrir Asistente Virtual WES" class="w-14 h-14 bg-gradient-to-tr from-slate-950 via-wes-blue to-slate-900 border-2 border-wes-gold text-wes-gold rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 relative focus:outline-none focus:ring-4 focus:ring-wes-gold/30">
-          <i id="wes-chat-launcher-icon" class="fas fa-headset text-2xl transition-transform duration-300"></i>
-          <span class="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow-xs animate-pulse" title="Asistente en línea"></span>
+      <!-- Botón Flotante Lanzador Sofía Compacto (44-48px, discreto, sobre la barra inferior) -->
+      <style>
+        @keyframes wesSofiaPulseEffect {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(245, 179, 0, 0.45), 0 4px 12px rgba(13, 42, 92, 0.25);
+          }
+          50% {
+            box-shadow: 0 0 0 6px rgba(245, 179, 0, 0), 0 4px 14px rgba(13, 42, 92, 0.35);
+          }
+        }
+        .wes-sofia-gentle-pulse {
+          animation: wesSofiaPulseEffect 3.5s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .wes-sofia-gentle-pulse {
+            animation: none !important;
+          }
+        }
+      </style>
+      <div id="wes-chat-launcher" class="fixed z-40 flex items-center group cursor-pointer select-none" style="bottom: 4.25rem; right: 0.875rem;" onclick="toggleClientChat()" title="Chatear con Sofía WES">
+        <button type="button" id="wes-chat-launcher-btn" aria-label="Abrir Asistente Virtual Sofía" class="w-12 h-12 bg-white rounded-full flex items-center justify-center p-0.5 border-2 border-[#F5B300] shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 relative focus:outline-none wes-sofia-gentle-pulse">
+          <!-- Imagen de Sofía dentro del círculo -->
+          <img id="wes-chat-launcher-avatar" src="assets/sofia-avatar.jpg" alt="Sofía" class="w-full h-full rounded-full object-cover">
+          <!-- Icono de cierre / repliegue alternable cuando está abierto -->
+          <span id="wes-chat-launcher-close-icon" class="hidden absolute inset-0 items-center justify-center bg-slate-900/90 text-white rounded-full text-sm">
+            <i class="fas fa-times"></i>
+          </span>
+          <!-- Indicador de En Línea -->
+          <span id="wes-chat-launcher-status" class="absolute top-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white shadow-xs" title="Sofía en línea"></span>
         </button>
       </div>
 
@@ -325,7 +345,7 @@
             <button onclick="confirmResetClientChat()" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white flex items-center justify-center transition active:scale-95 focus:outline-none" title="Reiniciar conversación">
               <i class="fas fa-redo-alt text-xs"></i>
             </button>
-            <button onclick="toggleClientChat()" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white flex items-center justify-center transition active:scale-95 focus:outline-none" title="Cerrar chat">
+            <button id="wes-chat-modal-close-btn" onclick="toggleClientChat()" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white flex items-center justify-center transition active:scale-95 focus:outline-none" title="Cerrar chat">
               <i class="fas fa-times text-xs"></i>
             </button>
           </div>
@@ -403,6 +423,9 @@ function setupChatEvents() {
   // Abrir o cerrar la ventana de chat
   function toggleClientChat() {
     const modal = document.getElementById('wes-chat-modal');
+    const launcherBtn = document.getElementById('wes-chat-launcher-btn');
+    const closeIcon = document.getElementById('wes-chat-launcher-close-icon');
+    const statusDot = document.getElementById('wes-chat-launcher-status');
     const icon = document.getElementById('wes-chat-launcher-icon');
     if (!modal) return;
 
@@ -411,6 +434,17 @@ function setupChatEvents() {
     if (chatSession.isOpen) {
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+      // Detener pulso suave mientras el chat esté abierto
+      if (launcherBtn) {
+        launcherBtn.classList.remove('wes-sofia-gentle-pulse');
+      }
+      if (closeIcon) {
+        closeIcon.classList.remove('hidden');
+        closeIcon.classList.add('flex');
+      }
+      if (statusDot) {
+        statusDot.classList.add('hidden');
+      }
       if (icon) {
         icon.className = 'fas fa-chevron-down text-xl';
       }
@@ -422,6 +456,17 @@ function setupChatEvents() {
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       removeTypingIndicator();
+      // Reanudar pulso suave al cerrar el chat
+      if (launcherBtn) {
+        launcherBtn.classList.add('wes-sofia-gentle-pulse');
+      }
+      if (closeIcon) {
+        closeIcon.classList.add('hidden');
+        closeIcon.classList.remove('flex');
+      }
+      if (statusDot) {
+        statusDot.classList.remove('hidden');
+      }
       if (icon) {
         icon.className = 'fas fa-headset text-2xl';
       }
