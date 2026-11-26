@@ -3978,8 +3978,10 @@ async function openUserProfileModal() {
   // Precargar formulario de edición
   const editName = document.getElementById('profile-edit-name-input');
   const editPhone = document.getElementById('profile-edit-phone-input');
+  const editId = document.getElementById('profile-edit-id-input');
   if (editName) editName.value = user.name || '';
   if (editPhone) editPhone.value = user.phone || '';
+  if (editId) editId.value = user.id || user.clientId || ('USR-' + (user.email ? user.email.split('@')[0] : '001'));
 
   toggleEditProfileMode(false);
   backToProfileMenu();
@@ -4017,6 +4019,7 @@ async function openUserProfileModal() {
       renderUserProfileHeader(refreshedUser);
       if (editName && (!editName.value || editName.value === user.name)) editName.value = refreshedUser.name;
       if (editPhone && (!editPhone.value || editPhone.value === user.phone)) editPhone.value = refreshedUser.phone;
+      if (editId) editId.value = refreshedUser.id || refreshedUser.clientId || ('USR-' + (refreshedUser.email ? refreshedUser.email.split('@')[0] : '001'));
     }
   } catch (err) {
     console.warn('[Profile] Sincronización en segundo plano no disponible:', err);
@@ -4039,25 +4042,42 @@ function renderUserProfileHeader(user) {
 
   const userRole = (user.role || (user.isEmployee ? 'administrador' : 'cliente')).toLowerCase();
 
+  // Rol como texto pequeño y discreto dentro del área azul, sin fondo, borde ni apariencia de botón
   if (roleEl) {
-    if (userRole === 'tecnico_interno') {
-      roleEl.textContent = '🔬 Técnico Interno WES';
-      roleEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 shadow-sm';
+    let displayRole = 'Cliente Registrado';
+    if (userRole === 'propietario') {
+      displayRole = 'Propietario / Superadmin';
+    } else if (userRole === 'administrador' || user.isEmployee) {
+      displayRole = 'Administrador General';
+    } else if (userRole === 'tecnico_interno') {
+      displayRole = 'Técnico Interno WES';
     } else if (userRole === 'tecnico_externo') {
-      roleEl.textContent = '🚗 Técnico Externo';
-      roleEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-slate-950 shadow-sm';
-    } else if (userRole === 'administrador' || userRole === 'propietario' || user.isEmployee) {
-      roleEl.textContent = '🛡️ Administrador General';
-      roleEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-blue text-wes-gold border border-wes-gold/50 shadow-sm';
+      displayRole = 'Técnico Externo';
+    } else if (userRole === 'gestor_soporte') {
+      displayRole = 'Soporte Técnico';
+    } else if (userRole === 'gestor_cotizaciones') {
+      displayRole = 'Ventas y Cotizaciones';
+    } else if (userRole === 'gestor_tienda') {
+      displayRole = 'Gestor de Inventario';
+    } else if (user.roleLabel && user.roleLabel !== 'Cliente' && user.roleLabel !== 'cliente') {
+      displayRole = user.roleLabel.replace(/^[^\w\s]+/, '').trim();
     } else {
-      roleEl.textContent = '👤 Cliente Registrado';
-      roleEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm';
+      displayRole = 'Cliente Registrado';
     }
+
+    roleEl.textContent = displayRole;
+    roleEl.className = 'text-[11px] text-slate-300 font-medium tracking-wide mt-1 block';
   }
 
+  // ID únicamente visible en el formulario de edición (solo lectura), oculto de la vista principal
   const clientIdEl = document.getElementById('profile-modal-client-id');
   if (clientIdEl) {
-    clientIdEl.textContent = 'ID: ' + (user.id || user.clientId || ('USR-' + (user.email ? user.email.split('@')[0] : '001')));
+    clientIdEl.remove();
+  }
+
+  const editIdInput = document.getElementById('profile-edit-id-input');
+  if (editIdInput) {
+    editIdInput.value = user.id || user.clientId || ('USR-' + (user.email ? user.email.split('@')[0] : '001'));
   }
 
   const viewTecInterno = document.getElementById('profile-view-tecnico-interno');

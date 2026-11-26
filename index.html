@@ -1906,7 +1906,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.110 (Build 110)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.111 (Build 111)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -2630,27 +2630,20 @@
       </button>
 
       <!-- Cabecera de Perfil Azul WES con Avatar, Nombre, Correo y Botón Lápiz -->
-      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-6 pt-6 pb-5 text-white relative shrink-0">
-        <div class="flex items-center space-x-4">
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-5 sm:px-6 pt-6 pb-5 text-white relative shrink-0">
+        <div class="flex items-center space-x-3.5 sm:space-x-4">
           <div class="relative inline-block shrink-0">
-            <div id="profile-modal-avatar" class="w-16 h-16 rounded-2xl bg-wes-gold text-wes-dark font-black text-2xl flex items-center justify-center shadow-lg border-2 border-white/20">
+            <div id="profile-modal-avatar" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-wes-gold text-wes-dark font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg border-2 border-white/20">
               U
             </div>
             <button type="button" onclick="toggleEditProfileMode(true)" class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-white text-wes-blue shadow-md flex items-center justify-center hover:scale-110 transition border border-slate-200" title="Editar mis datos" aria-label="Editar mis datos">
               <i class="fas fa-pen text-[10px]"></i>
             </button>
           </div>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center space-x-2">
-              <h3 id="profile-modal-name" class="text-lg font-black text-white font-brand truncate">Nombre Usuario</h3>
-            </div>
-            <p id="profile-modal-email" class="text-xs text-slate-200 truncate mt-0.5">correo@ejemplo.com</p>
-            <div class="mt-1.5 flex items-center space-x-2">
-              <span id="profile-modal-role" class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm">
-                Cliente WES
-              </span>
-              <span id="profile-modal-client-id" class="text-[10px] text-slate-300 font-mono">ID: CLI-000</span>
-            </div>
+          <div class="min-w-0 flex-1 pr-6">
+            <h3 id="profile-modal-name" class="text-base sm:text-lg font-black text-white font-brand truncate leading-snug">Nombre Usuario</h3>
+            <p id="profile-modal-email" class="text-xs text-slate-200 truncate mt-0.5 font-normal">correo@ejemplo.com</p>
+            <p id="profile-modal-role" class="text-[11px] text-slate-300 font-medium tracking-wide mt-1">Cliente Registrado</p>
           </div>
         </div>
       </div>
@@ -2666,6 +2659,11 @@
               <span>Editar Información de Perfil</span>
             </span>
             <button type="button" onclick="toggleEditProfileMode(false)" class="text-[11px] text-slate-400 hover:text-slate-600 font-medium">Cancelar</button>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">ID de Usuario</label>
+            <input type="text" id="profile-edit-id-input" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-mono text-slate-600 cursor-not-allowed select-all" value="">
+            <span class="text-[9px] text-slate-400 mt-0.5 block">Identificador de cuenta (solo lectura).</span>
           </div>
           <div>
             <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Nombre completo *</label>
