@@ -3528,7 +3528,7 @@ async function loadClientQuotes() {
   `;
 
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -3660,7 +3660,7 @@ async function loadClientSupportTickets() {
   `;
 
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -3741,11 +3741,20 @@ async function loadClientSupportTickets() {
 // ----------------------------------------------------------------------------
 // MODAL: MI PERFIL (LIMPIO Y EDITABLE)
 // ----------------------------------------------------------------------------
+// Función centralizada para obtener la URL de backend de WES (Google Apps Script)
+function getWesBackendUrl() {
+  if (typeof WES_CONFIG !== 'undefined' && WES_CONFIG.API_URL) return WES_CONFIG.API_URL;
+  if (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL && !CONFIG.BACKEND_URL.includes('example')) return CONFIG.BACKEND_URL;
+  const stored = localStorage.getItem('wes_backend_url');
+  if (stored && !stored.includes('example')) return stored;
+  return 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
+}
+
 function openUserProfileCleanModal() {
   openUserProfileModal();
 }
 
-function openUserProfileModal() {
+async function openUserProfileModal() {
   if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
   if (typeof closeAuthModal === 'function') closeAuthModal();
   closeMyAccountDropdown();
@@ -3759,6 +3768,59 @@ function openUserProfileModal() {
     return;
   }
 
+  // Render inicial con datos locales mientras se sincroniza
+  renderUserProfileHeader(user);
+
+  // Precargar formulario de edición
+  const editName = document.getElementById('profile-edit-name-input');
+  const editPhone = document.getElementById('profile-edit-phone-input');
+  if (editName) editName.value = user.name || '';
+  if (editPhone) editPhone.value = user.phone || '';
+
+  toggleEditProfileMode(false);
+  backToProfileMenu();
+
+  // Mostrar modal de inmediato
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  document.body.classList.add('overflow-hidden');
+
+  // Sincronizar datos reales desde la base de datos del backend
+  try {
+    const backendUrl = getWesBackendUrl();
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'get_user_profile',
+        userEmail: user.email,
+        clientId: user.id || user.clientId || ''
+      })
+    });
+    const data = await res.json();
+    if (data && data.success && data.profile) {
+      const p = data.profile;
+      const refreshedUser = {
+        ...user,
+        name: p.name || user.name,
+        phone: p.phone || user.phone,
+        role: p.role || user.role,
+        id: p.id || user.id
+      };
+      if (typeof UserAuth !== 'undefined' && typeof UserAuth.setSession === 'function') {
+        UserAuth.setSession(refreshedUser, true);
+      }
+      renderUserProfileHeader(refreshedUser);
+      if (editName && (!editName.value || editName.value === user.name)) editName.value = refreshedUser.name;
+      if (editPhone && (!editPhone.value || editPhone.value === user.phone)) editPhone.value = refreshedUser.phone;
+    }
+  } catch (err) {
+    console.warn('[Profile] Sincronización en segundo plano no disponible:', err);
+  }
+}
+
+function renderUserProfileHeader(user) {
+  if (!user) return;
   const initials = (user.name || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
   const avatarEl = document.getElementById('profile-modal-avatar');
   const nameEl = document.getElementById('profile-modal-name');
@@ -3771,30 +3833,21 @@ function openUserProfileModal() {
   if (emailEl) emailEl.textContent = user.email || '';
   if (phoneEl) phoneEl.textContent = user.phone || 'No registrado';
 
-  // Precargar formulario de edición
-  const editName = document.getElementById('profile-edit-name-input');
-  const editPhone = document.getElementById('profile-edit-phone-input');
-  if (editName) editName.value = user.name || '';
-  if (editPhone) editPhone.value = user.phone || '';
-
-  toggleEditProfileMode(false);
-
-  // Determinar rol activo: cliente | tecnico_interno | tecnico_externo | administrador
   const userRole = (user.role || (user.isEmployee ? 'administrador' : 'cliente')).toLowerCase();
 
   if (roleEl) {
     if (userRole === 'tecnico_interno') {
       roleEl.textContent = '🔬 Técnico Interno WES';
-      roleEl.className = 'inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 shadow-sm';
+      roleEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 shadow-sm';
     } else if (userRole === 'tecnico_externo') {
       roleEl.textContent = '🚗 Técnico Externo';
-      roleEl.className = 'inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-slate-950 shadow-sm';
+      roleEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-slate-950 shadow-sm';
     } else if (userRole === 'administrador' || userRole === 'propietario' || user.isEmployee) {
       roleEl.textContent = '🛡️ Administrador General';
-      roleEl.className = 'inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-blue text-wes-gold border border-wes-gold/50 shadow-sm';
+      roleEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-blue text-wes-gold border border-wes-gold/50 shadow-sm';
     } else {
       roleEl.textContent = '👤 Cliente Registrado';
-      roleEl.className = 'inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm';
+      roleEl.className = 'inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-wes-gold text-wes-dark shadow-sm';
     }
   }
 
@@ -3803,7 +3856,6 @@ function openUserProfileModal() {
     clientIdEl.textContent = 'ID: ' + (user.id || user.clientId || ('USR-' + (user.email ? user.email.split('@')[0] : '001')));
   }
 
-  // Activar contenedor de vista para personal autorizado si aplica
   const viewTecInterno = document.getElementById('profile-view-tecnico-interno');
   const viewAdmin = document.getElementById('profile-view-admin');
 
@@ -3815,17 +3867,6 @@ function openUserProfileModal() {
   } else if (userRole === 'administrador' || userRole === 'propietario' || user.isEmployee) {
     if (viewAdmin) viewAdmin.classList.remove('hidden');
   }
-
-  // Actualizar nombre en el portal externo si aplica
-  const extName = document.getElementById('ext-tech-name');
-  if (extName) extName.textContent = user.name || 'Técnico WES';
-
-  // Mostrar por defecto la pestaña de cotizaciones y cargar sus datos
-  switchProfileTab('cotizaciones');
-
-  modal.classList.remove('hidden');
-  modal.style.display = 'flex';
-  document.body.classList.add('overflow-hidden');
 }
 
 function closeUserProfileModal() {
@@ -3835,13 +3876,11 @@ function closeUserProfileModal() {
   modal.style.display = 'none';
   document.body.classList.remove('overflow-hidden');
   toggleEditProfileMode(false);
+  backToProfileMenu();
 }
 
 function toggleEditProfileMode(enable) {
   const editContainer = document.getElementById('profile-edit-container');
-  const viewMode = document.getElementById('profile-view-mode');
-  const editForm = document.getElementById('profile-edit-form');
-  
   if (editContainer) {
     if (enable) {
       editContainer.classList.remove('hidden');
@@ -3852,16 +3891,56 @@ function toggleEditProfileMode(enable) {
       closeEmailChangeFlow();
     }
   }
+}
 
-  if (viewMode && editForm) {
-    if (enable) {
-      viewMode.classList.add('hidden');
-      editForm.classList.remove('hidden');
-    } else {
-      viewMode.classList.remove('hidden');
-      editForm.classList.add('hidden');
-    }
+// Navegación vertical: Abrir una sección y ocultar menú principal
+function openProfileSection(sectionId) {
+  const menu = document.getElementById('profile-menu-container');
+  if (menu) menu.classList.add('hidden');
+
+  const contents = document.querySelectorAll('.profile-tab-content');
+  contents.forEach(c => c.classList.add('hidden'));
+
+  const active = document.getElementById(`tab-content-${sectionId}`);
+  if (active) active.classList.remove('hidden');
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+  if (!user) return;
+
+  switch (sectionId) {
+    case 'cotizaciones':
+      loadProfileQuotes(user);
+      break;
+    case 'facturas':
+      loadProfileDocuments(user, 'factura');
+      break;
+    case 'estado-cuenta':
+      loadProfileDocuments(user, 'estado_cuenta');
+      break;
+    case 'soporte':
+      loadProfileSupport(user);
+      break;
+    case 'pagos':
+      loadProfilePayments(user);
+      break;
+    case 'mensajes':
+      loadProfilePrivateMessages(user);
+      break;
   }
+}
+
+// Volver al menú principal vertical
+function backToProfileMenu() {
+  const contents = document.querySelectorAll('.profile-tab-content');
+  contents.forEach(c => c.classList.add('hidden'));
+
+  const menu = document.getElementById('profile-menu-container');
+  if (menu) menu.classList.remove('hidden');
+}
+
+// Compatibilidad con invocaciones antiguas
+function switchProfileTab(tabName) {
+  openProfileSection(tabName);
 }
 
 async function handleSaveUserProfile(e) {
@@ -3887,7 +3966,7 @@ async function handleSaveUserProfile(e) {
   }
 
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     
     // 1. Persistir primero en el servidor
     const res = await fetch(backendUrl, {
@@ -3896,6 +3975,7 @@ async function handleSaveUserProfile(e) {
       body: JSON.stringify({
         action: 'update_user_profile_self',
         userEmail: user.email,
+        clientId: user.id || user.clientId || '',
         name: newName,
         phone: newPhone
       })
@@ -3912,22 +3992,14 @@ async function handleSaveUserProfile(e) {
       UserAuth.setSession(updatedUser, true);
     }
 
-    // Actualizar campos visuales de perfil
-    const nameEl = document.getElementById('profile-modal-name');
-    const phoneEl = document.getElementById('profile-modal-phone');
-    const avatarEl = document.getElementById('profile-modal-avatar');
-    const initials = (newName || 'U').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
-
-    if (nameEl) nameEl.textContent = newName;
-    if (phoneEl) phoneEl.textContent = newPhone || 'No registrado';
-    if (avatarEl) avatarEl.textContent = initials;
-
+    renderUserProfileHeader(updatedUser);
     updateAuthHeaderUI();
     toggleEditProfileMode(false);
-    showToast('Tus datos se actualizaron correctamente en el servidor.', 'success');
+    showToast('Cambios guardados', 'success');
   } catch (err) {
     console.error('[Profile] Error al guardar datos:', err);
-    showToast('No se pudieron guardar los cambios en el servidor: ' + (err.message || 'Error de red'), 'error');
+    showToast('No se pudieron guardar los cambios: ' + (err.message || 'Error de red. Intenta nuevamente.'), 'error');
+    // Conserva lo escrito en el formulario para reintentar
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -3936,78 +4008,40 @@ async function handleSaveUserProfile(e) {
   }
 }
 
-// ----------------------------------------------------------------------------
-// NAVEGACIÓN Y GESTIÓN DE PESTAÑAS EN "MI PERFIL"
-// ----------------------------------------------------------------------------
-function switchProfileTab(tabName) {
-  // 1. Botones de pestaña
-  const buttons = document.querySelectorAll('.profile-tab-btn');
-  buttons.forEach(b => {
-    b.classList.remove('text-wes-blue', 'border-b-2', 'border-wes-blue', 'bg-white');
-    b.classList.add('text-slate-600');
-  });
-
-  const activeBtn = document.getElementById(`tab-btn-${tabName}`);
-  if (activeBtn) {
-    activeBtn.classList.add('text-wes-blue', 'border-b-2', 'border-wes-blue', 'bg-white');
-    activeBtn.classList.remove('text-slate-600');
-  }
-
-  // 2. Contenidos de pestaña
-  const contents = document.querySelectorAll('.profile-tab-content');
-  contents.forEach(c => c.classList.add('hidden'));
-
-  const activeContent = document.getElementById(`tab-content-${tabName}`);
-  if (activeContent) {
-    activeContent.classList.remove('hidden');
-  }
-
-  // 3. Cargar datos específicos de la pestaña
-  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
-  if (!user) return;
-
-  switch (tabName) {
-    case 'cotizaciones':
-      loadProfileQuotes(user);
-      break;
-    case 'facturas':
-      loadProfileDocuments(user, 'factura');
-      break;
-    case 'estado-cuenta':
-      loadProfileDocuments(user, 'estado_cuenta');
-      break;
-    case 'soporte':
-      loadProfileSupport(user);
-      break;
-    case 'pagos':
-      loadProfilePayments(user);
-      break;
-    case 'mensajes':
-      loadProfilePrivateMessages(user);
-      break;
-  }
-}
-
-// Carga de Cotizaciones del Perfil
+// Carga de Cotizaciones del Perfil con distinción vacío vs fallo
 async function loadProfileQuotes(user) {
   const container = document.getElementById('profile-quotes-container');
   if (!container || !user.email) return;
 
+  container.innerHTML = `
+    <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
+      <i class="fas fa-spinner fa-spin text-wes-blue mb-1 text-sm block"></i>
+      <span>Consultando cotizaciones vinculadas...</span>
+    </div>
+  `;
+
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action: 'get_user_quotes', userEmail: user.email })
     });
     const data = await res.json();
-    const quotes = (data && data.success && Array.isArray(data.quotes)) ? data.quotes : [];
+    if (!data || !data.success) {
+      throw new Error((data && data.message) || 'Error en servidor');
+    }
+    const quotes = Array.isArray(data.quotes) ? data.quotes : [];
 
     if (!quotes.length) {
       container.innerHTML = `
-        <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
-          <i class="fas fa-file-invoice text-slate-300 text-xl mb-1 block"></i>
-          <span>No tienes cotizaciones registradas actualmente.</span>
+        <div class="p-6 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500 space-y-2">
+          <i class="fas fa-file-invoice text-slate-300 text-2xl block"></i>
+          <p class="font-bold text-slate-700">No tienes cotizaciones registradas</p>
+          <p class="text-[11px] text-slate-400">Puedes solicitar una cotización formal sin costo cuando lo desees.</p>
+          <button type="button" onclick="closeUserProfileModal(); openQuoteModal();" class="mt-2 inline-block px-3 py-1.5 bg-blue-50 text-wes-blue hover:bg-blue-100 rounded-xl font-bold transition">
+            Solicitar cotización
+          </button>
         </div>
       `;
       return;
@@ -4024,11 +4058,21 @@ async function loadProfileQuotes(user) {
       </div>
     `).join('');
   } catch (e) {
-    container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">No se pudieron cargar las cotizaciones.</p>';
+    console.error('[Profile] Error al cargar cotizaciones:', e);
+    container.innerHTML = `
+      <div class="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-center text-xs text-rose-700 space-y-2">
+        <i class="fas fa-exclamation-circle text-rose-500 text-lg block"></i>
+        <p class="font-bold">No se pudieron cargar las cotizaciones</p>
+        <p class="text-[11px] text-rose-500">Hubo un problema de conexión con el servidor.</p>
+        <button type="button" onclick="loadProfileQuotes(UserAuth.getCurrentUser())" class="px-3 py-1.5 bg-white hover:bg-rose-100 text-rose-700 rounded-xl font-bold border border-rose-300 transition text-[11px]">
+          <i class="fas fa-redo-alt mr-1"></i> Reintentar
+        </button>
+      </div>
+    `;
   }
 }
 
-// Carga de Facturas o Estados de Cuenta Oficiales en PDF
+// Carga de Facturas o Estados de Cuenta Oficiales en PDF con distinción de vacío y fallo
 async function loadProfileDocuments(user, filterType) {
   const containerId = filterType === 'factura' ? 'profile-invoices-container' : 'profile-statements-container';
   const container = document.getElementById(containerId);
@@ -4042,7 +4086,7 @@ async function loadProfileDocuments(user, filterType) {
   `;
 
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -4053,14 +4097,18 @@ async function loadProfileDocuments(user, filterType) {
       })
     });
     const data = await res.json();
-    const docs = (data && data.success && Array.isArray(data.documents)) ? data.documents : [];
+    if (!data || !data.success) {
+      throw new Error((data && data.message) || 'Error en servidor');
+    }
+    const docs = Array.isArray(data.documents) ? data.documents : [];
     const filtered = docs.filter(d => filterType === 'all' || d.tipo === filterType || (filterType === 'estado_cuenta' && d.tipo.includes('estado')));
 
     if (!filtered.length) {
       container.innerHTML = `
-        <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
-          <i class="fas ${filterType === 'factura' ? 'fa-receipt' : 'fa-file-invoice-dollar'} text-slate-300 text-xl mb-1 block"></i>
-          <span>No hay ${filterType === 'factura' ? 'facturas oficiales' : 'estados de cuenta'} registrados en tu cuenta.</span>
+        <div class="p-6 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500 space-y-1.5">
+          <i class="fas ${filterType === 'factura' ? 'fa-receipt' : 'fa-file-invoice-dollar'} text-slate-300 text-2xl mb-1 block"></i>
+          <p class="font-bold text-slate-700">No hay ${filterType === 'factura' ? 'facturas emitidas' : 'estados de cuenta registrados'}</p>
+          <p class="text-[11px] text-slate-400">Los documentos oficiales con valor fiscal son emitidos por el área administrativa.</p>
         </div>
       `;
       return;
@@ -4085,7 +4133,17 @@ async function loadProfileDocuments(user, filterType) {
       </div>
     `).join('');
   } catch(e) {
-    container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">Error consultando documentos del servidor.</p>';
+    console.error('[Profile] Error al cargar documentos:', e);
+    container.innerHTML = `
+      <div class="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-center text-xs text-rose-700 space-y-2">
+        <i class="fas fa-exclamation-circle text-rose-500 text-lg block"></i>
+        <p class="font-bold">Error consultando documentos del servidor</p>
+        <p class="text-[11px] text-rose-500">Por favor verifica tu conexión o intenta más tarde.</p>
+        <button type="button" onclick="loadProfileDocuments(UserAuth.getCurrentUser(), '${filterType}')" class="px-3 py-1.5 bg-white hover:bg-rose-100 text-rose-700 rounded-xl font-bold border border-rose-300 transition text-[11px]">
+          <i class="fas fa-redo-alt mr-1"></i> Reintentar
+        </button>
+      </div>
+    `;
   }
 }
 
@@ -4094,21 +4152,32 @@ async function loadProfilePayments(user) {
   const container = document.getElementById('profile-payments-container');
   if (!container || !user.email) return;
 
+  container.innerHTML = `
+    <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
+      <i class="fas fa-spinner fa-spin text-wes-blue mb-1 text-sm block"></i>
+      <span>Consultando pagos registrados...</span>
+    </div>
+  `;
+
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action: 'get_client_payments', userEmail: user.email, clientId: user.id || '' })
     });
     const data = await res.json();
-    const payments = (data && data.success && Array.isArray(data.payments)) ? data.payments : [];
+    if (!data || !data.success) {
+      throw new Error((data && data.message) || 'Error en servidor');
+    }
+    const payments = Array.isArray(data.payments) ? data.payments : [];
 
     if (!payments.length) {
       container.innerHTML = `
-        <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
-          <i class="fas fa-credit-card text-slate-300 text-xl mb-1 block"></i>
-          <span>No tienes comprobantes de pago registrados aún.</span>
+        <div class="p-6 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500 space-y-1.5">
+          <i class="fas fa-credit-card text-slate-300 text-2xl mb-1 block"></i>
+          <p class="font-bold text-slate-700">No hay pagos registrados</p>
+          <p class="text-[11px] text-slate-400">Tus comprobantes de transferencia y pagos procesados aparecerán aquí.</p>
         </div>
       `;
       return;
@@ -4125,30 +4194,54 @@ async function loadProfilePayments(user) {
       </div>
     `).join('');
   } catch(e) {
-    container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">No se pudieron cargar los pagos.</p>';
+    console.error('[Profile] Error al cargar pagos:', e);
+    container.innerHTML = `
+      <div class="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-center text-xs text-rose-700 space-y-2">
+        <i class="fas fa-exclamation-circle text-rose-500 text-lg block"></i>
+        <p class="font-bold">No se pudieron cargar los pagos</p>
+        <p class="text-[11px] text-rose-500">Ocurrió un fallo al comunicar con el servidor.</p>
+        <button type="button" onclick="loadProfilePayments(UserAuth.getCurrentUser())" class="px-3 py-1.5 bg-white hover:bg-rose-100 text-rose-700 rounded-xl font-bold border border-rose-300 transition text-[11px]">
+          <i class="fas fa-redo-alt mr-1"></i> Reintentar
+        </button>
+      </div>
+    `;
   }
 }
 
-// Carga de Soporte Técnico en Perfil
+// Carga de Soporte Técnico en Perfil con distinción de vacío vs fallo
 async function loadProfileSupport(user) {
   const container = document.getElementById('profile-support-container');
   if (!container || !user.email) return;
 
+  container.innerHTML = `
+    <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
+      <i class="fas fa-spinner fa-spin text-amber-600 mb-1 text-sm block"></i>
+      <span>Consultando historial de servicio técnico...</span>
+    </div>
+  `;
+
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action: 'get_user_support_tickets', userEmail: user.email, userPhone: user.phone || '' })
     });
     const data = await res.json();
-    const tickets = (data && data.success && Array.isArray(data.tickets)) ? data.tickets : [];
+    if (!data || !data.success) {
+      throw new Error((data && data.message) || 'Error en servidor');
+    }
+    const tickets = Array.isArray(data.tickets) ? data.tickets : [];
 
     if (!tickets.length) {
       container.innerHTML = `
-        <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
-          <i class="fas fa-tools text-slate-300 text-xl mb-1 block"></i>
-          <span>No tienes reportes de soporte activos o pasados.</span>
+        <div class="p-6 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500 space-y-2">
+          <i class="fas fa-tools text-slate-300 text-2xl block"></i>
+          <p class="font-bold text-slate-700">No tienes solicitudes de soporte activas o pasadas</p>
+          <p class="text-[11px] text-slate-400">Si requieres asistencia técnica o reparación, crea una nueva solicitud.</p>
+          <button type="button" onclick="closeUserProfileModal(); openSupportModal();" class="mt-2 inline-block px-3 py-1.5 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-xl font-bold transition">
+            Crear solicitud de soporte
+          </button>
         </div>
       `;
       return;
@@ -4165,7 +4258,17 @@ async function loadProfileSupport(user) {
       </div>
     `).join('');
   } catch(e) {
-    container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">No se pudo cargar el historial de soporte.</p>';
+    console.error('[Profile] Error al cargar tickets de soporte:', e);
+    container.innerHTML = `
+      <div class="p-4 bg-rose-50 rounded-2xl border border-rose-200 text-center text-xs text-rose-700 space-y-2">
+        <i class="fas fa-exclamation-circle text-rose-500 text-lg block"></i>
+        <p class="font-bold">No se pudo cargar el historial de soporte</p>
+        <p class="text-[11px] text-rose-500">Hubo un problema comunicando con el servidor.</p>
+        <button type="button" onclick="loadProfileSupport(UserAuth.getCurrentUser())" class="px-3 py-1.5 bg-white hover:bg-rose-100 text-rose-700 rounded-xl font-bold border border-rose-300 transition text-[11px]">
+          <i class="fas fa-redo-alt mr-1"></i> Reintentar
+        </button>
+      </div>
+    `;
   }
 }
 
@@ -4175,7 +4278,7 @@ async function loadProfilePrivateMessages(user) {
   if (!thread || !user.email) return;
 
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -4212,7 +4315,7 @@ async function submitSendProfilePrivateMessage() {
 
   input.value = '';
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -4268,7 +4371,7 @@ async function submitRequestEmailChangeOtp() {
   }
 
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -4322,7 +4425,7 @@ async function submitVerifyEmailChangeOtp() {
   }
 
   try {
-    const backendUrl = (typeof CONFIG !== 'undefined' && CONFIG.BACKEND_URL) || 'https://script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec';
+    const backendUrl = getWesBackendUrl();
     const res = await fetch(backendUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -4359,12 +4462,15 @@ async function submitVerifyEmailChangeOtp() {
   }
 }
 
+window.openProfileSection = openProfileSection;
+window.backToProfileMenu = backToProfileMenu;
 window.switchProfileTab = switchProfileTab;
 window.openEmailChangeFlow = openEmailChangeFlow;
 window.closeEmailChangeFlow = closeEmailChangeFlow;
 window.submitRequestEmailChangeOtp = submitRequestEmailChangeOtp;
 window.submitVerifyEmailChangeOtp = submitVerifyEmailChangeOtp;
 window.submitSendProfilePrivateMessage = submitSendProfilePrivateMessage;
+window.getWesBackendUrl = getWesBackendUrl;
 
 // ----------------------------------------------------------------------------
 // PORTAL DE TÉCNICO EXTERNO (VISTA DE CAMPO)

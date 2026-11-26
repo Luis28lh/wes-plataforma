@@ -1880,7 +1880,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.103 (Build 103)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.104 (Build 104)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -2593,17 +2593,17 @@
   <!-- MODAL DE DATOS DEL USUARIO / PERFIL (SESIÓN INICIADA)     -->
   <!-- ========================================================= -->
   <!-- ========================================================= -->
-  <!-- MODAL: MI PERFIL (LIMPIO, ACCESIBLE Y EDITABLE)            -->
+  <!-- MODAL: MI PERFIL (UNA SOLA COLUMNA - NAVEGACIÓN LIMPIA)     -->
   <!-- ========================================================= -->
   <div id="user-profile-modal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden my-4 relative transition-all max-h-[92vh] flex flex-col">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden my-4 relative transition-all max-h-[92vh] flex flex-col">
       
       <!-- Botón de Cerrar (X) -->
       <button onclick="closeUserProfileModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition z-10" title="Cerrar ventana" aria-label="Cerrar">
         <i class="fas fa-times text-xs"></i>
       </button>
 
-      <!-- Cabecera de Perfil Azul WES con Avatar y Botón de Edición Rápida (Lápiz) -->
+      <!-- Cabecera de Perfil Azul WES con Avatar, Nombre, Correo y Botón Lápiz -->
       <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-6 pt-6 pb-5 text-white relative shrink-0">
         <div class="flex items-center space-x-4">
           <div class="relative inline-block shrink-0">
@@ -2627,44 +2627,12 @@
             </div>
           </div>
         </div>
-
-        <!-- Accesos Rápidos: Pagos y Mensajes -->
-        <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-white/15">
-          <button type="button" onclick="switchProfileTab('pagos')" class="py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition flex items-center justify-center space-x-2 backdrop-blur-xs">
-            <i class="fas fa-credit-card text-wes-gold"></i>
-            <span>Pagos</span>
-          </button>
-          <button type="button" onclick="switchProfileTab('mensajes')" class="py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition flex items-center justify-center space-x-2 backdrop-blur-xs">
-            <i class="fas fa-comments text-amber-400"></i>
-            <span>Mensajes</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Barra de Navegación por Pestañas (Inspiración eBay: Cotizaciones, Facturas, Estado de Cuenta, Soporte) -->
-      <div class="bg-slate-100/80 px-3 pt-2 flex items-center space-x-1 border-b border-slate-200 shrink-0 overflow-x-auto scrollbar-none text-xs font-bold">
-        <button type="button" onclick="switchProfileTab('cotizaciones')" id="tab-btn-cotizaciones" class="profile-tab-btn py-2 px-3 rounded-t-xl text-wes-blue border-b-2 border-wes-blue bg-white shrink-0 transition flex items-center space-x-1.5">
-          <i class="fas fa-file-invoice"></i>
-          <span>Cotizaciones</span>
-        </button>
-        <button type="button" onclick="switchProfileTab('facturas')" id="tab-btn-facturas" class="profile-tab-btn py-2 px-3 rounded-t-xl text-slate-600 hover:text-wes-blue shrink-0 transition flex items-center space-x-1.5">
-          <i class="fas fa-receipt"></i>
-          <span>Facturas</span>
-        </button>
-        <button type="button" onclick="switchProfileTab('estado-cuenta')" id="tab-btn-estado-cuenta" class="profile-tab-btn py-2 px-3 rounded-t-xl text-slate-600 hover:text-wes-blue shrink-0 transition flex items-center space-x-1.5">
-          <i class="fas fa-file-alt"></i>
-          <span>Estado de Cuenta</span>
-        </button>
-        <button type="button" onclick="switchProfileTab('soporte')" id="tab-btn-soporte" class="profile-tab-btn py-2 px-3 rounded-t-xl text-slate-600 hover:text-wes-blue shrink-0 transition flex items-center space-x-1.5">
-          <i class="fas fa-tools"></i>
-          <span>Soporte</span>
-        </button>
       </div>
 
       <!-- Contenedor Principal Scrollable de Contenido -->
       <div class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-4 bg-slate-50/50">
 
-        <!-- Formulario de Edición de Datos (Oculto por defecto) -->
+        <!-- Formulario de Edición de Datos (Oculto por defecto, aparece solo al solicitarlo) -->
         <div id="profile-edit-container" class="hidden bg-white p-4 rounded-2xl border border-slate-200 text-xs space-y-3 shadow-xs">
           <div class="flex items-center justify-between pb-2 border-b border-slate-200">
             <span class="font-extrabold text-slate-800 text-xs flex items-center space-x-1.5">
@@ -2724,14 +2692,134 @@
           </div>
         </div>
 
-        <!-- PESTAÑA 1: MIS COTIZACIONES -->
-        <div id="tab-content-cotizaciones" class="profile-tab-content space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-slate-800">Cotizaciones Formales</span>
+        <!-- ========================================================= -->
+        <!-- MENÚ PRINCIPAL VERTICAL EN UNA SOLA COLUMNA               -->
+        <!-- 1. Cotizaciones                                           -->
+        <!-- 2. Facturas                                               -->
+        <!-- 3. Estado de cuenta                                       -->
+        <!-- 4. Soporte y reparaciones                                 -->
+        <!-- 5. Pagos                                                  -->
+        <!-- 6. Mensajes                                               -->
+        <!-- ========================================================= -->
+        <div id="profile-menu-container" class="space-y-2.5">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-1">Opciones de cuenta</p>
+
+          <!-- 1. Cotizaciones -->
+          <button type="button" onclick="openProfileSection('cotizaciones')" class="w-full py-3 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between text-xs font-bold text-slate-800 transition shadow-xs group">
+            <div class="flex items-center space-x-3">
+              <span class="w-8 h-8 rounded-xl bg-blue-50 text-wes-blue flex items-center justify-center shrink-0 group-hover:scale-105 transition">
+                <i class="fas fa-file-invoice text-sm"></i>
+              </span>
+              <div class="text-left">
+                <span class="block text-slate-900 font-bold">Cotizaciones</span>
+                <span class="block text-[10px] text-slate-400 font-normal">Propuestas y solicitudes de cotización</span>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300 text-xs group-hover:translate-x-0.5 transition"></i>
+          </button>
+
+          <!-- 2. Facturas -->
+          <button type="button" onclick="openProfileSection('facturas')" class="w-full py-3 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between text-xs font-bold text-slate-800 transition shadow-xs group">
+            <div class="flex items-center space-x-3">
+              <span class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
+                <i class="fas fa-receipt text-sm"></i>
+              </span>
+              <div class="text-left">
+                <span class="block text-slate-900 font-bold">Facturas</span>
+                <span class="block text-[10px] text-slate-400 font-normal">Facturas oficiales emitidas con PDF</span>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300 text-xs group-hover:translate-x-0.5 transition"></i>
+          </button>
+
+          <!-- 3. Estado de cuenta -->
+          <button type="button" onclick="openProfileSection('estado-cuenta')" class="w-full py-3 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between text-xs font-bold text-slate-800 transition shadow-xs group">
+            <div class="flex items-center space-x-3">
+              <span class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
+                <i class="fas fa-file-alt text-sm"></i>
+              </span>
+              <div class="text-left">
+                <span class="block text-slate-900 font-bold">Estado de cuenta</span>
+                <span class="block text-[10px] text-slate-400 font-normal">Balances y reportes oficiales en PDF</span>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300 text-xs group-hover:translate-x-0.5 transition"></i>
+          </button>
+
+          <!-- 4. Soporte y reparaciones -->
+          <button type="button" onclick="openProfileSection('soporte')" class="w-full py-3 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between text-xs font-bold text-slate-800 transition shadow-xs group">
+            <div class="flex items-center space-x-3">
+              <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
+                <i class="fas fa-tools text-sm"></i>
+              </span>
+              <div class="text-left">
+                <span class="block text-slate-900 font-bold">Soporte y reparaciones</span>
+                <span class="block text-[10px] text-slate-400 font-normal">Historial de tickets, diagnóstico y servicio</span>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300 text-xs group-hover:translate-x-0.5 transition"></i>
+          </button>
+
+          <!-- 5. Pagos -->
+          <button type="button" onclick="openProfileSection('pagos')" class="w-full py-3 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between text-xs font-bold text-slate-800 transition shadow-xs group">
+            <div class="flex items-center space-x-3">
+              <span class="w-8 h-8 rounded-xl bg-wes-gold/20 text-slate-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
+                <i class="fas fa-credit-card text-sm text-wes-blue"></i>
+              </span>
+              <div class="text-left">
+                <span class="block text-slate-900 font-bold">Pagos</span>
+                <span class="block text-[10px] text-slate-400 font-normal">Comprobantes y recibos registrados</span>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300 text-xs group-hover:translate-x-0.5 transition"></i>
+          </button>
+
+          <!-- 6. Mensajes -->
+          <button type="button" onclick="openProfileSection('mensajes')" class="w-full py-3 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between text-xs font-bold text-slate-800 transition shadow-xs group">
+            <div class="flex items-center space-x-3">
+              <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:scale-105 transition">
+                <i class="fas fa-comments text-sm"></i>
+              </span>
+              <div class="text-left">
+                <span class="block text-slate-900 font-bold">Mensajes</span>
+                <span class="block text-[10px] text-slate-400 font-normal">Canal directo y privado con administración</span>
+              </div>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300 text-xs group-hover:translate-x-0.5 transition"></i>
+          </button>
+
+          <!-- Accesos Internos solo para cuentas con roles autorizados -->
+          <div id="profile-view-tecnico-interno" class="hidden space-y-2 pt-2 border-t border-slate-100">
+            <a href="servicio-tecnico.html" target="_blank" class="w-full py-2.5 bg-slate-900 hover:bg-wes-blue text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/40 shadow-xs">
+              <i class="fas fa-tv text-wes-gold"></i>
+              <span>Abrir Tablero KDS</span>
+            </a>
+          </div>
+
+          <div id="profile-view-admin" class="hidden space-y-2 pt-2 border-t border-slate-100">
+            <a id="profile-modal-admin-btn" href="admin.html" class="w-full py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/40 shadow-xs">
+              <i class="fas fa-shield-alt text-wes-gold text-xs"></i>
+              <span>Panel Administrativo</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- SECCIÓN 1: MIS COTIZACIONES                              -->
+        <!-- ========================================================= -->
+        <div id="tab-content-cotizaciones" class="profile-tab-content hidden space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <button type="button" onclick="backToProfileMenu()" class="text-xs font-bold text-wes-blue hover:underline flex items-center space-x-1.5">
+              <i class="fas fa-arrow-left"></i>
+              <span>Volver al perfil</span>
+            </button>
             <button type="button" onclick="closeUserProfileModal(); openQuoteModal();" class="text-[11px] font-bold text-wes-blue hover:underline flex items-center space-x-1">
               <i class="fas fa-plus-circle text-xs"></i>
-              <span>Solicitar nueva cotización</span>
+              <span>Nueva cotización</span>
             </button>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-slate-800">Cotizaciones Formales</span>
           </div>
           <div id="profile-quotes-container" class="space-y-2">
             <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
@@ -2741,11 +2829,19 @@
           </div>
         </div>
 
-        <!-- PESTAÑA 2: FACTURAS -->
+        <!-- ========================================================= -->
+        <!-- SECCIÓN 2: FACTURAS                                      -->
+        <!-- ========================================================= -->
         <div id="tab-content-facturas" class="profile-tab-content hidden space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <button type="button" onclick="backToProfileMenu()" class="text-xs font-bold text-wes-blue hover:underline flex items-center space-x-1.5">
+              <i class="fas fa-arrow-left"></i>
+              <span>Volver al perfil</span>
+            </button>
+            <span class="text-[10px] text-slate-400">PDF con validez fiscal</span>
+          </div>
           <div class="flex items-center justify-between">
             <span class="text-xs font-extrabold text-slate-800">Facturas Oficiales Emitidas</span>
-            <span class="text-[10px] text-slate-400">PDF con validez fiscal</span>
           </div>
           <div id="profile-invoices-container" class="space-y-2">
             <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
@@ -2755,11 +2851,19 @@
           </div>
         </div>
 
-        <!-- PESTAÑA 3: ESTADO DE CUENTA -->
+        <!-- ========================================================= -->
+        <!-- SECCIÓN 3: ESTADO DE CUENTA                              -->
+        <!-- ========================================================= -->
         <div id="tab-content-estado-cuenta" class="profile-tab-content hidden space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <button type="button" onclick="backToProfileMenu()" class="text-xs font-bold text-wes-blue hover:underline flex items-center space-x-1.5">
+              <i class="fas fa-arrow-left"></i>
+              <span>Volver al perfil</span>
+            </button>
+            <span class="text-[10px] text-slate-400">Respaldo formal en PDF</span>
+          </div>
           <div class="flex items-center justify-between">
             <span class="text-xs font-extrabold text-slate-800">Estados de Cuenta Oficiales</span>
-            <span class="text-[10px] text-slate-400">Respaldo formal en PDF</span>
           </div>
           <div id="profile-statements-container" class="space-y-2">
             <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
@@ -2769,14 +2873,22 @@
           </div>
         </div>
 
-        <!-- PESTAÑA 4: SOPORTE TÉCNICO -->
+        <!-- ========================================================= -->
+        <!-- SECCIÓN 4: SOPORTE Y REPARACIONES                        -->
+        <!-- ========================================================= -->
         <div id="tab-content-soporte" class="profile-tab-content hidden space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-slate-800">Solicitudes y Reparaciones</span>
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <button type="button" onclick="backToProfileMenu()" class="text-xs font-bold text-wes-blue hover:underline flex items-center space-x-1.5">
+              <i class="fas fa-arrow-left"></i>
+              <span>Volver al perfil</span>
+            </button>
             <button type="button" onclick="closeUserProfileModal(); openSupportModal();" class="text-[11px] font-bold text-amber-700 hover:underline flex items-center space-x-1">
               <i class="fas fa-plus-circle text-xs"></i>
-              <span>Nueva solicitud de soporte</span>
+              <span>Nueva solicitud</span>
             </button>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-slate-800">Solicitudes y Reparaciones</span>
           </div>
           <div id="profile-support-container" class="space-y-2">
             <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
@@ -2786,11 +2898,19 @@
           </div>
         </div>
 
-        <!-- PESTAÑA 5: PAGOS -->
+        <!-- ========================================================= -->
+        <!-- SECCIÓN 5: PAGOS                                         -->
+        <!-- ========================================================= -->
         <div id="tab-content-pagos" class="profile-tab-content hidden space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <button type="button" onclick="backToProfileMenu()" class="text-xs font-bold text-wes-blue hover:underline flex items-center space-x-1.5">
+              <i class="fas fa-arrow-left"></i>
+              <span>Volver al perfil</span>
+            </button>
+            <span class="text-[10px] text-slate-400">Comprobantes validados</span>
+          </div>
           <div class="flex items-center justify-between">
             <span class="text-xs font-extrabold text-slate-800">Historial de Pagos y Recibos</span>
-            <span class="text-[10px] text-slate-400">Comprobantes validados</span>
           </div>
           <div id="profile-payments-container" class="space-y-2">
             <div class="p-4 bg-white rounded-2xl border border-slate-200 text-center text-xs text-slate-500">
@@ -2799,11 +2919,19 @@
           </div>
         </div>
 
-        <!-- PESTAÑA 6: MENSAJES PRIVADOS CON WES -->
+        <!-- ========================================================= -->
+        <!-- SECCIÓN 6: MENSAJES PRIVADOS CON WES                     -->
+        <!-- ========================================================= -->
         <div id="tab-content-mensajes" class="profile-tab-content hidden space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <button type="button" onclick="backToProfileMenu()" class="text-xs font-bold text-wes-blue hover:underline flex items-center space-x-1.5">
+              <i class="fas fa-arrow-left"></i>
+              <span>Volver al perfil</span>
+            </button>
+            <span class="text-[10px] font-bold text-emerald-600 flex items-center"><i class="fas fa-circle text-[8px] mr-1"></i>En línea</span>
+          </div>
           <div class="flex items-center justify-between">
             <span class="text-xs font-extrabold text-slate-800">Conversación Privada con WES</span>
-            <span class="text-[10px] font-bold text-emerald-600 flex items-center"><i class="fas fa-circle text-[8px] mr-1"></i>En línea</span>
           </div>
           <div id="profile-private-messages-thread" class="max-h-48 overflow-y-auto p-3 bg-white rounded-2xl border border-slate-200 space-y-2 text-xs">
             <p class="text-slate-400 text-center py-4">Inicia una consulta privada con el equipo de gerencia o administración de WES.</p>
@@ -2814,21 +2942,6 @@
               <i class="fas fa-paper-plane"></i>
             </button>
           </div>
-        </div>
-
-        <!-- ACCESOS INTERNOS SOLO PARA PERSONAL AUTORIZADO (RBAC) -->
-        <div id="profile-view-tecnico-interno" class="hidden space-y-2 pt-2 border-t border-slate-100">
-          <a href="servicio-tecnico.html" target="_blank" class="w-full py-2 bg-slate-900 hover:bg-wes-blue text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/40 shadow-xs">
-            <i class="fas fa-tv text-wes-gold"></i>
-            <span>Abrir Tablero KDS</span>
-          </a>
-        </div>
-
-        <div id="profile-view-admin" class="hidden space-y-2 pt-2 border-t border-slate-100">
-          <a id="profile-modal-admin-btn" href="admin.html" class="w-full py-2.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 border border-wes-gold/40 shadow-xs">
-            <i class="fas fa-shield-alt text-wes-gold text-xs"></i>
-            <span>Panel Administrativo</span>
-          </a>
         </div>
 
       </div>

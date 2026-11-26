@@ -183,8 +183,12 @@ function doPost(e) {
         response = handleGetUserSupportTickets(payload.userEmail, payload.userPhone);
         break;
 
+      case 'get_user_profile':
+        response = handleGetUserProfile(payload.userEmail, payload.clientId);
+        break;
+
       case 'update_user_profile_self':
-        response = handleUpdateUserProfileSelf(payload.userEmail, payload.name, payload.phone);
+        response = handleUpdateUserProfileSelf(payload.userEmail, payload.name, payload.phone, payload.clientId);
         break;
 
       case 'get_client_documents':
@@ -3649,13 +3653,89 @@ function handleGetUserSupportTickets(userEmail, userPhone) {
 }
 
 /**
+ * 7.1 OBTENER PERFIL DEL CLIENTE EN VIVO DESDE LA BASE DE DATOS
+ */
+function handleGetUserProfile(userEmail, clientId) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const cleanClientId = String(clientId || '').trim();
+
+    if (!cleanEmail && !cleanClientId) {
+      return { success: false, message: 'Identificador de usuario no provisto.' };
+    }
+
+    // Verificar si es empleado maestro
+    const sysEmployees = [
+      { id: 'USR-001', email: 'ing.lmlh@gmail.com', name: 'Luis Miguel Lizardo', role: 'propietario', roleLabel: 'Propietario WES', isEmployee: true, phone: '(849) 207-5474' },
+      { id: 'USR-002', email: 'admin@wes.com.do', name: 'Admin General', role: 'administrador', roleLabel: 'Administrador WES', isEmployee: true, phone: '(809) 578-0000' },
+      { id: 'USR-003', email: 'soporte@wes.com.do', name: 'Téc. Soporte WES', role: 'gestor_soporte', roleLabel: 'Soporte Técnico', isEmployee: true, phone: '(849) 207-5474' },
+      { id: 'USR-004', email: 'cotizaciones@wes.com.do', name: 'Gestor Cotizaciones', role: 'gestor_cotizaciones', roleLabel: 'Ventas y Cotizaciones', isEmployee: true, phone: '(849) 207-5474' },
+      { id: 'USR-005', email: 'tienda@wes.com.do', name: 'Gestor de Tienda', role: 'gestor_tienda', roleLabel: 'Gestor de Inventario', isEmployee: true, phone: '(809) 578-0000' }
+    ];
+
+    for (let se = 0; se < sysEmployees.length; se++) {
+      if (sysEmployees[se].email === cleanEmail || (cleanClientId && sysEmployees[se].id === cleanClientId)) {
+        return {
+          success: true,
+          user: sysEmployees[se]
+        };
+      }
+    }
+
+    const sheet = getClientsSheet_();
+    const lastRow = sheet.getLastRow();
+
+    if (lastRow > 1) {
+      const data = sheet.getRange(2, 1, lastRow - 1, 10).getValues();
+      for (let i = 0; i < data.length; i++) {
+        const rowId = String(data[i][0] || '').trim();
+        const rowEmail = String(data[i][2] || '').toLowerCase().trim();
+        if ((cleanEmail && rowEmail === cleanEmail) || (cleanClientId && rowId === cleanClientId)) {
+          return {
+            success: true,
+            user: {
+              id: rowId,
+              name: String(data[i][1] || ''),
+              email: rowEmail,
+              phone: String(data[i][3] || ''),
+              role: String(data[i][4] || 'cliente'),
+              roleLabel: String(data[i][5] || 'Vista Cliente'),
+              isEmployee: Boolean(data[i][6]),
+              status: String(data[i][9] || 'ACTIVO')
+            }
+          };
+        }
+      }
+    }
+
+    return {
+      success: true,
+      user: {
+        id: cleanClientId || ('WES-CLI-' + (cleanEmail.split('@')[0] || '001')),
+        name: cleanEmail.split('@')[0] || 'Cliente WES',
+        email: cleanEmail,
+        phone: '',
+        role: 'cliente',
+        roleLabel: 'Vista Cliente',
+        isEmployee: false,
+        status: 'ACTIVO'
+      }
+    };
+  } catch (err) {
+    console.error('Error en handleGetUserProfile:', err);
+    return { success: false, message: 'Error consultando perfil: ' + err.toString() };
+  }
+}
+
+/**
  * 8. ACTUALIZAR PERFIL DEL CLIENTE EN EL SERVIDOR (NOMBRE Y TELÉFONO)
  */
-function handleUpdateUserProfileSelf(userEmail, newName, newPhone) {
+function handleUpdateUserProfileSelf(userEmail, newName, newPhone, clientId) {
   try {
     const cleanEmail = String(userEmail || '').toLowerCase().trim();
     const cleanName = String(newName || '').trim();
     const cleanPhone = String(newPhone || '').trim();
+    const cleanClientId = String(clientId || '').trim();
 
     if (!cleanEmail) {
       return { success: false, message: 'Correo no especificado.' };
@@ -3669,15 +3749,20 @@ function handleUpdateUserProfileSelf(userEmail, newName, newPhone) {
     let foundRow = -1;
     let oldName = '';
     let oldPhone = '';
+    let resolvedClientId = cleanClientId;
+    let userRole = 'cliente';
 
     if (lastRow > 1) {
       const data = sheet.getRange(2, 1, lastRow - 1, 10).getValues();
       for (let i = 0; i < data.length; i++) {
+        const rowId = String(data[i][0] || '').trim();
         const rowEmail = String(data[i][2] || '').toLowerCase().trim();
-        if (rowEmail === cleanEmail) {
+        if ((cleanEmail && rowEmail === cleanEmail) || (cleanClientId && rowId === cleanClientId)) {
           foundRow = i + 2;
+          resolvedClientId = rowId;
           oldName = String(data[i][1] || '');
           oldPhone = String(data[i][3] || '');
+          userRole = String(data[i][4] || 'cliente');
           break;
         }
       }
@@ -3691,16 +3776,18 @@ function handleUpdateUserProfileSelf(userEmail, newName, newPhone) {
       sheet.getRange(foundRow, 4).setValue(cleanPhone);
       sheet.getRange(foundRow, 9).setValue(now); // Ultimo acceso / actualización
     } else {
-      // Registrar si no existía fila
-      const newClientId = 'WES-CLI-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+      // Registrar si no existía fila conservando Client ID
+      if (!resolvedClientId) {
+        resolvedClientId = 'WES-CLI-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+      }
       sheet.appendRow([
-        newClientId,
+        resolvedClientId,
         cleanName,
         cleanEmail,
         cleanPhone,
-        'cliente',
-        'Cliente Registrado',
-        false,
+        userRole,
+        userRole === 'cliente' ? 'Cliente Registrado' : userRole,
+        userRole !== 'cliente',
         now,
         now,
         'Activo'
@@ -3713,9 +3800,11 @@ function handleUpdateUserProfileSelf(userEmail, newName, newPhone) {
       success: true,
       message: 'Datos de perfil actualizados exitosamente en el servidor.',
       user: {
+        id: resolvedClientId,
         name: cleanName,
         phone: cleanPhone,
-        email: cleanEmail
+        email: cleanEmail,
+        role: userRole
       }
     };
   } catch (err) {
