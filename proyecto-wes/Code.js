@@ -3120,10 +3120,15 @@ function handleRequestAuthOtp(data) {
     // Redactar correo formal con remitente "WES · Seguridad de cuenta"
     const displayName = clientName || (isExisting ? 'Usuario de WES' : 'Nuevo Usuario');
     const timeTag = Utilities.formatDate(new Date(), 'GMT-4', 'hh:mm:ss a');
-    const subjectEmail = 'WES · Tu código de acceso es ' + rawCode + ' [' + timeTag + ']';
+    const isRecovery = (purpose === 'recuperacion');
+    const subjectEmail = isRecovery 
+      ? ('WES · Tu código de recuperación es ' + rawCode + ' [' + timeTag + ']')
+      : ('WES · Tu código de acceso es ' + rawCode + ' [' + timeTag + ']');
     const plainMsg = 'WARN ELECTRICAL SERVICES (WES)\nMoca, República Dominicana\n\n' +
       'Hola ' + displayName + ',\n\n' +
-      'Tu código de acceso de 6 dígitos para entrar o crear tu cuenta es:\n\n' +
+      (isRecovery 
+        ? ('Tu código de 6 dígitos para recuperar el acceso a tu cuenta es:\n\n')
+        : ('Tu código de acceso de 6 dígitos para entrar o crear tu cuenta es:\n\n')) +
       '       ' + rawCode + '\n\n' +
       '• Vigencia: 10 minutos.\n' +
       '• Es de un solo uso y de consumo atómico.\n' +
@@ -3134,16 +3139,16 @@ function handleRequestAuthOtp(data) {
     const htmlEmail = '<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:18px;background:#ffffff;box-shadow:0 4px 16px rgba(0,0,0,0.06);">' +
       '<div style="text-align:center;background:linear-gradient(135deg,#071836,#0D2A5C);color:#ffffff;padding:26px 20px;border-radius:14px;">' +
       '<div style="display:inline-block;padding:4px 14px;background:rgba(255,255,255,0.12);border-radius:20px;margin-bottom:8px;font-size:11px;font-weight:bold;letter-spacing:1px;color:#F5B300;">WARN ELECTRICAL SERVICES (WES)</div>' +
-      '<h2 style="color:#ffffff;margin:4px 0 0 0;font-size:22px;letter-spacing:0.5px;font-weight:800;">Código de verificación</h2>' +
-      '<p style="margin:6px 0 0 0;font-size:12px;color:#cbd5e1;">Moca, República Dominicana · Acceso Seguro</p>' +
+      '<h2 style="color:#ffffff;margin:4px 0 0 0;font-size:22px;letter-spacing:0.5px;font-weight:800;">' + (isRecovery ? 'Recuperación de cuenta' : 'Código de verificación') + '</h2>' +
+      '<p style="margin:6px 0 0 0;font-size:12px;color:#cbd5e1;">Moca, República Dominicana · ' + (isRecovery ? 'Recuperación Segura' : 'Acceso Seguro') + '</p>' +
       '</div>' +
       '<div style="padding:28px 16px;color:#334155;line-height:1.6;font-size:14px;">' +
       '<p style="margin:0 0 16px 0;">Hola, <strong>' + displayName + '</strong>:</p>' +
-      '<p style="margin:0 0 20px 0;color:#475569;">Usa este código de 6 dígitos para identificarte de forma segura en Warn Electrical Services. Puedes copiarlo tocando sobre él:</p>' +
+      '<p style="margin:0 0 20px 0;color:#475569;">' + (isRecovery ? 'Usa este código de 6 dígitos para recuperar el acceso a tu cuenta en Warn Electrical Services. Puedes copiarlo tocando sobre él:' : 'Usa este código de 6 dígitos para identificarte de forma segura en Warn Electrical Services. Puedes copiarlo tocando sobre él:') + '</p>' +
       '<div style="text-align:center;margin:24px 0;padding:22px;background:#f8fafc;border:2px dashed #0D2A5C;border-radius:14px;">' +
       '<span style="display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:#64748b;text-transform:uppercase;margin-bottom:8px;">Toca para seleccionar y copiar</span>' +
       '<div style="font-family:Consolas,Monaco,Lucida Console,Courier New,monospace;font-size:42px;font-weight:900;letter-spacing:10px;color:#0D2A5C;padding:8px 12px;display:inline-block;background:#ffffff;border:1px solid #cbd5e1;border-radius:10px;user-select:all;-webkit-user-select:all;-moz-user-select:all;cursor:pointer;" title="Toca o haz clic para copiar">' + rawCode + '</div>' +
-      '<div style="margin-top:10px;font-size:12px;color:#0284c7;font-weight:bold;">📋 En la web, presiona el botón «Pegar código y entrar» para acceder de inmediato.</div>' +
+      '<div style="margin-top:10px;font-size:12px;color:#0284c7;font-weight:bold;">📋 En la web, presiona el botón «Pegar código» para validar de inmediato.</div>' +
       '</div>' +
       '<div style="background:#fffbeb;border:1px solid #fef3c7;border-left:4px solid #f59e0b;padding:12px 14px;border-radius:10px;font-size:12px;color:#92400e;margin-bottom:20px;">' +
       '⏱️ <strong>Vencimiento:</strong> Este código es válido durante <strong>10 minutos</strong> y es de un solo uso.<br>' +
@@ -3165,8 +3170,9 @@ function handleRequestAuthOtp(data) {
       requestId: requestId,
       email: email,
       isExisting: isExisting,
+      purpose: purpose,
       expiresInMinutes: 10,
-      message: 'Código de 6 dígitos enviado exitosamente a ' + email
+      message: (isRecovery ? 'Código de recuperación de 6 dígitos enviado exitosamente a ' : 'Código de 6 dígitos enviado exitosamente a ') + email
     };
 
   } finally {
@@ -3454,12 +3460,19 @@ function handleRequestPasswordResetOtp(data) {
     ip: data.ip || 'WEB_RECOVERY'
   });
 
-  // Respuesta de seguridad: no revelar existencia
+  if (!otpRes.success) {
+    return {
+      success: false,
+      message: otpRes.message || 'No se pudo enviar el código de recuperación en este momento. Intenta nuevamente.'
+    };
+  }
+
   return {
     success: true,
     email: email,
     requestId: otpRes.requestId || '',
-    message: 'Si el correo ingresado corresponde a una cuenta registrada, recibirá un código de 6 dígitos en breve.'
+    expiresInMinutes: otpRes.expiresInMinutes || 10,
+    message: otpRes.message || ('Código de recuperación enviado a ' + email)
   };
 }
 

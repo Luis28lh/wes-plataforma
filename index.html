@@ -1880,7 +1880,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.104 (Build 104)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.105 (Build 105)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -3324,9 +3324,9 @@
 
       <!-- Cabecera Corporativa WES -->
       <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-6 pt-7 pb-6 text-center text-white relative">
-        <div class="inline-flex items-center space-x-2 bg-white/10 px-3 py-1 rounded-full backdrop-blur-md mb-2.5">
-          <img src="assets/logo-wes.png" alt="WES" class="h-4 w-auto object-contain brightness-0 invert">
-          <span class="text-[10px] font-black uppercase tracking-wider text-wes-gold">Acceso Seguro WES</span>
+        <div class="inline-flex items-center space-x-2.5 px-3 py-1 rounded-full mb-2">
+          <img src="assets/logo-buho.jpg" alt="Búho Guardián WES" class="w-8 h-8 rounded-full border border-wes-gold/70 object-cover shadow-sm ring-1 ring-white/20">
+          <span class="text-sm font-extrabold uppercase tracking-wider text-wes-gold font-brand">Acceso seguro</span>
         </div>
         <h3 id="auth-modal-title" class="text-xl sm:text-2xl font-extrabold text-white font-brand">Bienvenido a WES</h3>
         <p id="auth-modal-subtitle" class="text-xs text-slate-300 mt-1 max-w-xs mx-auto">Le enviaremos un código para entrar o crear su cuenta</p>
@@ -3369,11 +3369,7 @@
             </button>
           </form>
 
-          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-            <span class="text-slate-400 flex items-center space-x-1">
-              <i class="fas fa-lock text-[10px] text-emerald-600"></i>
-              <span>Acceso seguro sin contraseña</span>
-            </span>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-end text-[11px]">
             <button type="button" onclick="showAuthStep('recovery')" class="font-bold text-wes-blue hover:underline">
               ¿Recuperar contraseña?
             </button>
@@ -3471,6 +3467,100 @@
               <i class="fas fa-check"></i>
               <span>Finalizar y Entrar</span>
             </button>
+          </form>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- PASO 4: RECUPERACIÓN DE CONTRASEÑA             -->
+        <!-- ============================================== -->
+        <div id="auth-step-recovery" class="hidden">
+          <form id="form-auth-recovery" onsubmit="handleRequestRecoveryCodeSubmit(event)" class="space-y-4">
+            <div>
+              <label for="auth-recovery-email" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Correo electrónico</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <i class="fas fa-envelope text-xs"></i>
+                </span>
+                <input type="email" id="auth-recovery-email" required placeholder="correo@ejemplo.com" class="w-full pl-10 pr-3.5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:ring-2 focus:ring-wes-blue focus:bg-white focus:outline-none transition">
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
+                Introduzca su correo para recibir un código de recuperación.
+              </p>
+            </div>
+
+            <!-- Alerta dinámica de recuperación -->
+            <div id="auth-recovery-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
+
+            <button type="submit" id="btn-request-recovery-code" class="w-full py-3.5 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-2">
+              <i class="fas fa-key text-wes-gold"></i>
+              <span>Enviar código de recuperación</span>
+            </button>
+          </form>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-start text-[11px]">
+            <button type="button" onclick="showAuthStep('request')" class="font-bold text-slate-600 hover:text-wes-blue transition flex items-center space-x-1">
+              <i class="fas fa-arrow-left text-[10px]"></i>
+              <span>Volver al acceso</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- PASO 5: VALIDAR CÓDIGO DE RECUPERACIÓN         -->
+        <!-- ============================================== -->
+        <div id="auth-step-recovery-verify" class="hidden">
+          <div class="text-center mb-5">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-2 text-xl shadow-sm">
+              <i class="fas fa-key"></i>
+            </div>
+            <h4 class="font-extrabold text-sm sm:text-base text-slate-900">Introduzca el código de recuperación</h4>
+            <p class="text-xs text-slate-500 mt-1">
+              Enviado a <strong id="auth-recovery-email-display" class="font-bold text-slate-800">correo@ejemplo.com</strong>
+            </p>
+            <div class="mt-2 inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-[11px] text-amber-800 font-semibold">
+              <i class="fas fa-clock mr-0.5"></i>
+              <span>Vence en 10 minutos · Código único</span>
+            </div>
+          </div>
+
+          <form id="form-auth-recovery-verify" onsubmit="handleVerifyRecoveryCodeSubmit(event)" class="space-y-4">
+            <!-- Cajas de dígitos OTP para recuperación -->
+            <div>
+              <div class="flex justify-center items-center gap-2 sm:gap-2.5 my-2">
+                <input type="text" id="recovery-digit-1" maxlength="1" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required autofocus>
+                <input type="text" id="recovery-digit-2" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="recovery-digit-3" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="recovery-digit-4" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="recovery-digit-5" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+                <input type="text" id="recovery-digit-6" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="w-10 sm:w-11 h-13 sm:h-14 text-center text-xl sm:text-2xl font-black rounded-xl border-2 border-slate-200 focus:border-wes-blue focus:ring-2 focus:ring-wes-blue/20 bg-slate-50 focus:bg-white outline-none transition shadow-xs" required>
+              </div>
+
+              <div class="text-center mt-2.5">
+                <button type="button" id="auth-paste-recovery-otp-btn" onclick="handlePasteRecoveryOtp()" class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-wes-blue border border-blue-200 rounded-lg text-xs font-bold transition shadow-xs">
+                  <i class="fas fa-paste text-amber-500"></i>
+                  <span>Pegar código de recuperación</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Alerta dinámica -->
+            <div id="auth-recovery-verify-alert-box" class="hidden p-3 rounded-xl text-xs"></div>
+
+            <button type="submit" id="auth-recovery-verify-btn" class="w-full py-3.5 bg-wes-blue hover:bg-wes-dark text-white font-extrabold rounded-xl text-xs sm:text-sm shadow-md transition flex items-center justify-center space-x-2">
+              <i class="fas fa-check-circle text-wes-gold"></i>
+              <span>Verificar código y recuperar acceso</span>
+            </button>
+
+            <!-- Opciones Volver a Correo y Reenviar código -->
+            <div class="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+              <button type="button" onclick="showAuthStep('recovery')" class="font-bold text-slate-600 hover:text-wes-blue transition flex items-center space-x-1">
+                <i class="fas fa-arrow-left text-[10px]"></i>
+                <span>Cambiar correo</span>
+              </button>
+              <button type="button" id="auth-recovery-resend-btn" onclick="handleResendRecoveryCode()" class="font-bold text-wes-gold hover:text-amber-600 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <span>Reenviar código</span>
+              </button>
+            </div>
           </form>
         </div>
 

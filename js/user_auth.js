@@ -1147,76 +1147,145 @@ Moca, Provincia Espaillat, República Dominicana`;
       }
     },
 
-    // Solicitar restablecimiento de contraseña
+    // Solicitar código de recuperación de cuenta (backend criptográfico seguro)
     async requestPasswordReset(email) {
       if (!email || !email.trim() || !email.includes('@')) {
         return { success: false, message: 'Por favor ingresa un correo electrónico válido.' };
       }
       const cleanEmail = email.trim().toLowerCase();
-      const user = findUserByIdentifier(cleanEmail);
-      if (!user) {
-        return {
-          success: false,
-          message: 'No encontramos ninguna cuenta registrada con el correo ingresado. Verifica tu dirección o crea una cuenta nueva.'
-        };
-      }
-
-      const now = Date.now();
-      const code = generate6DigitCode();
-      const expiresAt = now + (10 * 60 * 1000); // 10 minutos
+      const backendUrl = (typeof window.getWesBackendUrl === 'function') 
+        ? window.getWesBackendUrl() 
+        : ((typeof AppState !== 'undefined' && AppState.backendUrl) ? AppState.backendUrl : BACKEND_URL_DEFAULT);
 
       try {
-        const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
-        const prev = codes[cleanEmail];
-        let resendCount = (prev && prev.resendCount) ? prev.resendCount : 0;
-        if (prev && (now - prev.createdAt) < 60000) {
-          return {
-            success: false,
-            message: 'Por favor espera 1 minuto antes de solicitar otro código de recuperación.'
-          };
-        }
-        if (resendCount >= 5) {
-          return {
-            success: false,
-            message: 'Has alcanzado el límite de solicitudes para este correo. Por favor intenta más tarde.'
-          };
-        }
-
-        codes[cleanEmail] = {
-          code: code,
-          expiresAt: expiresAt,
-          createdAt: now,
-          attempts: 0,
-          resendCount: resendCount + 1,
-          userName: user.name,
-          isEmployee: user.isEmployee
+        const payload = {
+          action: 'request_password_reset_otp',
+          data: {
+            email: cleanEmail,
+            purpose: 'recuperacion'
+          }
         };
-        localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
-      } catch (e) {}
 
-      const emailRes = await sendEmailCode(cleanEmail, code, user.name, 'recuperacion');
-      if (!emailRes.success) {
+        const response = await fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          return { success: false, message: 'El servidor de autenticación respondió con error HTTP ' + response.status };
+        }
+
+        const result = await response.json().catch(() => null);
+        if (!result) {
+          return { success: false, message: 'Respuesta inválida del servidor de recuperación.' };
+        }
+
+        if (result.success === false) {
+          return { success: false, message: result.message || 'No se pudo generar el código de recuperación.' };
+        }
+
+        // Guardar solicitud de recuperación en almacenamiento local
         try {
-          const codes = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
-          delete codes[cleanEmail];
-          localStorage.setItem(RESET_CODES_KEY, JSON.stringify(codes));
+          const recSessions = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+          recSessions[cleanEmail] = {
+            requestId: result.requestId || '',
+            email: cleanEmail,
+            createdAt: Date.now()
+          };
+          localStorage.setItem(RESET_CODES_KEY, JSON.stringify(recSessions));
         } catch (e) {}
-        return {
-          success: false,
-          message: emailRes.message || 'No se pudo enviar el código de recuperación al correo. Por favor intenta de nuevo.'
-        };
-      }
 
-      return {
-        success: true,
-        email: cleanEmail,
-        codeDemo: code,
-        expiresInMinutes: 10,
-        message: 'Hemos enviado un código de 6 dígitos a ' + cleanEmail + '. Vence en 10 minutos.'
-      };
+        return {
+          success: true,
+          email: cleanEmail,
+          requestId: result.requestId,
+          expiresInMinutes: result.expiresInMinutes || 10,
+          message: result.message || ('Hemos enviado un código de recuperación de 6 dígitos a ' + cleanEmail)
+        };
+      } catch (err) {
+        console.error('[UserAuth] Error solicitando código de recuperación al backend:', err);
+        return { success: false, message: 'Error de conexión con el servidor: ' + (err.message || err) };
+      }
     },
 
-    // Validar código de restablecimiento
+    // Validar código de recuperación contra el backend (consumo atómico)
+    async verifyPasswordResetOtp(email, inputCode, remember = true) {
+      if (!email || !inputCode) {
+        return { success: false, message: 'Por favor introduce el código de 6 dígitos.' };
+      }
+      const cleanEmail = email.trim().toLowerCase();
+      const cleanCode = String(inputCode).trim();
+      const backendUrl = (typeof window.getWesBackendUrl === 'function') 
+        ? window.getWesBackendUrl() 
+        : ((typeof AppState !== 'undefined' && AppState.backendUrl) ? AppState.backendUrl : BACKEND_URL_DEFAULT);
+
+      let requestId = '';
+      try {
+        const recSessions = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+        if (recSessions[cleanEmail] && recSessions[cleanEmail].requestId) {
+          requestId = recSessions[cleanEmail].requestId;
+        }
+      } catch (e) {}
+
+      try {
+        const payload = {
+          action: 'verify_auth_otp',
+          data: {
+            email: cleanEmail,
+            code: cleanCode,
+            requestId: requestId,
+            purpose: 'recuperacion'
+          }
+        };
+
+        const response = await fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          return { success: false, message: 'El servidor respondió con error HTTP ' + response.status };
+        }
+
+        const result = await response.json().catch(() => null);
+        if (!result) {
+          return { success: false, message: 'Respuesta inválida del servidor al verificar el código.' };
+        }
+
+        if (result.success === false) {
+          return {
+            success: false,
+            expired: Boolean(result.expired),
+            message: result.message || 'Código incorrecto.'
+          };
+        }
+
+        // Limpiar sesión de recuperación consumida
+        try {
+          const recSessions = JSON.parse(localStorage.getItem(RESET_CODES_KEY) || '{}');
+          delete recSessions[cleanEmail];
+          localStorage.setItem(RESET_CODES_KEY, JSON.stringify(recSessions));
+        } catch (e) {}
+
+        // Establecer sesión de usuario autenticado
+        if (result.user) {
+          this.setSession(result.user, remember);
+        }
+
+        return {
+          success: true,
+          user: result.user,
+          isNewUser: Boolean(result.isNewUser),
+          message: result.message || 'Identidad verificada exitosamente.'
+        };
+      } catch (err) {
+        console.error('[UserAuth] Error al verificar código de recuperación:', err);
+        return { success: false, message: 'Error al conectar con el servidor: ' + (err.message || err) };
+      }
+    },
+    // Validar código de restablecimiento local (compatibilidad)
     verifyResetCode(email, inputCode) {
       if (!email || !inputCode) {
         return { success: false, message: 'Debes ingresar el código de 6 dígitos.' };

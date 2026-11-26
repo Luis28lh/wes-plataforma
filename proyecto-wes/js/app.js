@@ -2977,11 +2977,16 @@ function closeAuthModal() {
   }
 }
 
+let authRecoveryEmail = '';
+let authRecoveryResendTimer = null;
+let authRecoveryCountdown = 0;
+
 function showAuthStep(step) {
   const stepRequest = document.getElementById('auth-step-request');
   const stepVerify = document.getElementById('auth-step-verify');
   const stepNewUser = document.getElementById('auth-step-new-user');
   const stepRecovery = document.getElementById('auth-step-recovery');
+  const stepRecoveryVerify = document.getElementById('auth-step-recovery-verify');
   const title = document.getElementById('auth-modal-title');
   const subtitle = document.getElementById('auth-modal-subtitle');
 
@@ -2989,6 +2994,7 @@ function showAuthStep(step) {
   if (stepVerify) stepVerify.classList.add('hidden');
   if (stepNewUser) stepNewUser.classList.add('hidden');
   if (stepRecovery) stepRecovery.classList.add('hidden');
+  if (stepRecoveryVerify) stepRecoveryVerify.classList.add('hidden');
   clearAuthAlerts();
 
   if (step === 'verify') {
@@ -2998,11 +3004,23 @@ function showAuthStep(step) {
     setupMagicOtpInputs();
   } else if (step === 'recovery') {
     if (stepRecovery) stepRecovery.classList.remove('hidden');
-    if (title) title.textContent = 'Recuperar Contraseña';
-    if (subtitle) subtitle.textContent = 'Valide su identidad mediante código seguro';
+    if (title) title.textContent = 'Recuperar contraseña';
+    if (subtitle) subtitle.textContent = 'Introduzca su correo para recibir un código de recuperación';
     const emailInp = document.getElementById('auth-access-email');
     const recEmail = document.getElementById('auth-recovery-email');
-    if (recEmail && emailInp && emailInp.value) recEmail.value = emailInp.value.trim();
+    if (recEmail) {
+      if (emailInp && emailInp.value && !recEmail.value) {
+        recEmail.value = emailInp.value.trim();
+      }
+      setTimeout(() => recEmail.focus(), 150);
+    }
+  } else if (step === 'recovery_verify') {
+    if (stepRecoveryVerify) stepRecoveryVerify.classList.remove('hidden');
+    if (title) title.textContent = 'Código de Recuperación';
+    if (subtitle) subtitle.textContent = 'Introduzca el código enviado a su correo';
+    const recDisplay = document.getElementById('auth-recovery-email-display');
+    if (recDisplay) recDisplay.textContent = authRecoveryEmail || 'su correo';
+    setupRecoveryOtpInputs();
   } else if (step === 'new_user') {
     if (stepNewUser) stepNewUser.classList.remove('hidden');
     if (title) title.textContent = 'Bienvenido a WES';
@@ -5226,90 +5244,271 @@ function forceRefreshApp() {
   }
 }
 
-// 6. HANDLERS PARA RECUPERACIÓN DE CONTRASEÑA
-async function handleRequestRecoveryCode() {
+// 6. HANDLERS PARA RECUPERACIÓN DE CONTRASEÑA Y ACCESO
+async function handleRequestRecoveryCodeSubmit(e) {
+  if (e) e.preventDefault();
+  clearAuthAlerts();
+
   const emailInp = document.getElementById('auth-recovery-email');
   const btn = document.getElementById('btn-request-recovery-code');
-  if (!emailInp || !emailInp.value || !emailInp.value.includes('@')) {
+  if (!emailInp) return;
+  const email = emailInp.value.trim().toLowerCase();
+
+  if (!email || !email.includes('@')) {
     showAuthAlert('auth-recovery-alert-box', 'Por favor ingresa un correo electrónico válido.', 'error');
     return;
   }
-  const email = emailInp.value.trim().toLowerCase();
+
   if (btn) {
     btn.disabled = true;
-    btn.textContent = 'Enviando...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Enviando código...';
   }
+
   try {
     const res = await UserAuth.requestPasswordReset(email);
-    showAuthAlert('auth-recovery-alert-box', res.message || 'Código de recuperación enviado.', 'success');
-    showToast('Código de recuperación enviado si el correo existe.', 'info');
-  } catch (e) {
-    showAuthAlert('auth-recovery-alert-box', 'Error solicitando código.', 'error');
+    if (!res.success) {
+      showAuthAlert('auth-recovery-alert-box', res.message || 'No se pudo enviar el código de recuperación.', 'error');
+      return;
+    }
+
+    authRecoveryEmail = email;
+    showAuthStep('recovery_verify');
+    startRecoveryResendTimer(60);
+    showToast(res.message || ('Código de recuperación enviado a ' + email), 'success');
+  } catch (err) {
+    console.error('[Auth] Error solicitando código de recuperación:', err);
+    showAuthAlert('auth-recovery-alert-box', 'Error al conectar con el servidor de recuperación. Intenta nuevamente.', 'error');
   } finally {
     if (btn) {
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.textContent = 'Reenviar código';
-      }, 5000);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-key text-wes-gold mr-1"></i> Enviar código de recuperación';
     }
   }
 }
 
-async function handlePasswordRecoverySubmit(e) {
+function setupRecoveryOtpInputs() {
+  const inputs = [
+    document.getElementById('recovery-digit-1'),
+    document.getElementById('recovery-digit-2'),
+    document.getElementById('recovery-digit-3'),
+    document.getElementById('recovery-digit-4'),
+    document.getElementById('recovery-digit-5'),
+    document.getElementById('recovery-digit-6')
+  ].filter(Boolean);
+
+  function checkAndAutoSubmitRecovery() {
+    const fullCode = inputs.map(inp => (inp.value || '').trim()).join('');
+    if (fullCode.length === 6) {
+      setTimeout(() => {
+        handleVerifyRecoveryCodeSubmit();
+      }, 120);
+    }
+  }
+
+  function applyDigitsToRecoveryInputs(digits) {
+    if (!digits) return;
+    const cleanDigits = String(digits).replace(/\D/g, '').slice(0, 6);
+    if (!cleanDigits) return;
+
+    for (let i = 0; i < 6; i++) {
+      if (inputs[i]) {
+        inputs[i].value = cleanDigits[i] || '';
+      }
+    }
+
+    const lastIdx = Math.min(cleanDigits.length - 1, inputs.length - 1);
+    if (inputs[lastIdx]) inputs[lastIdx].focus();
+
+    if (cleanDigits.length === 6) {
+      showToast('Código completado. Verificando...', 'info');
+      checkAndAutoSubmitRecovery();
+    }
+  }
+
+  inputs.forEach((input, index) => {
+    input.value = '';
+
+    input.oninput = () => {
+      const val = input.value.replace(/\D/g, '');
+      if (val.length > 1) {
+        applyDigitsToRecoveryInputs(val);
+        return;
+      }
+      input.value = val.slice(0, 1);
+      if (val && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+      checkAndAutoSubmitRecovery();
+    };
+
+    input.onkeydown = (e) => {
+      if (e.key === 'Backspace' && !input.value && index > 0) {
+        inputs[index - 1].focus();
+      }
+    };
+
+    input.onpaste = (e) => {
+      e.preventDefault();
+      const rawText = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+      applyDigitsToRecoveryInputs(rawText);
+    };
+  });
+
+  setTimeout(() => {
+    if (inputs[0]) inputs[0].focus();
+  }, 100);
+}
+
+async function handlePasteRecoveryOtp() {
+  const inputs = [
+    document.getElementById('recovery-digit-1'),
+    document.getElementById('recovery-digit-2'),
+    document.getElementById('recovery-digit-3'),
+    document.getElementById('recovery-digit-4'),
+    document.getElementById('recovery-digit-5'),
+    document.getElementById('recovery-digit-6')
+  ].filter(Boolean);
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      const text = await navigator.clipboard.readText();
+      const cleanDigits = text.replace(/\D/g, '').slice(0, 6);
+      if (!cleanDigits) {
+        showToast('No se encontraron números en el portapapeles. Copia el código desde tu correo.', 'warning');
+        return;
+      }
+
+      for (let i = 0; i < 6; i++) {
+        if (inputs[i]) inputs[i].value = cleanDigits[i] || '';
+      }
+      const lastInp = document.getElementById('recovery-digit-' + Math.min(cleanDigits.length, 6));
+      if (lastInp) lastInp.focus();
+
+      if (cleanDigits.length === 6) {
+        showToast('Código de recuperación pegado. Verificando...', 'success');
+        setTimeout(() => handleVerifyRecoveryCodeSubmit(), 120);
+      }
+    } else {
+      showToast('Toca una casilla y selecciona Pegar.', 'info');
+    }
+  } catch (e) {
+    showToast('Toca una casilla y selecciona Pegar.', 'info');
+  }
+}
+
+async function handleVerifyRecoveryCodeSubmit(e) {
   if (e) e.preventDefault();
-  const email = (document.getElementById('auth-recovery-email')?.value || '').trim().toLowerCase();
-  const code = (document.getElementById('auth-recovery-code')?.value || '').trim();
-  const newPass = document.getElementById('auth-recovery-newpass')?.value || '';
-  const confirmPass = document.getElementById('auth-recovery-confirmpass')?.value || '';
-  const btn = document.getElementById('auth-recovery-btn');
+  clearAuthAlerts();
 
-  if (!email || !code || !newPass) {
-    showAuthAlert('auth-recovery-alert-box', 'Por favor completa todos los campos.', 'error');
+  const d1 = document.getElementById('recovery-digit-1')?.value || '';
+  const d2 = document.getElementById('recovery-digit-2')?.value || '';
+  const d3 = document.getElementById('recovery-digit-3')?.value || '';
+  const d4 = document.getElementById('recovery-digit-4')?.value || '';
+  const d5 = document.getElementById('recovery-digit-5')?.value || '';
+  const d6 = document.getElementById('recovery-digit-6')?.value || '';
+  const fullCode = (d1 + d2 + d3 + d4 + d5 + d6).trim();
+
+  if (fullCode.length !== 6) {
+    showAuthAlert('auth-recovery-verify-alert-box', 'Por favor ingresa los 6 dígitos completos del código.', 'warning');
     return;
   }
 
-  if (newPass !== confirmPass) {
-    showAuthAlert('auth-recovery-alert-box', 'Las contraseñas de confirmación no coinciden.', 'error');
-    return;
-  }
-
-  if (newPass.length < 6) {
-    showAuthAlert('auth-recovery-alert-box', 'La contraseña debe tener al menos 6 caracteres.', 'error');
-    return;
-  }
-
+  const btn = document.getElementById('auth-recovery-verify-btn');
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Actualizando...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Verificando...';
   }
 
   try {
-    const res = await UserAuth.resetPassword(email, code, newPass, confirmPass);
+    const res = await UserAuth.verifyPasswordResetOtp(authRecoveryEmail, fullCode, true);
     if (!res.success) {
-      showAuthAlert('auth-recovery-alert-box', res.message || 'Error al actualizar contraseña.', 'error');
+      showAuthAlert('auth-recovery-verify-alert-box', res.message || 'Código incorrecto o expirado.', 'error');
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-save text-wes-gold mr-1"></i> Actualizar Contraseña y Salir';
+        btn.innerHTML = '<i class="fas fa-check-circle text-wes-gold mr-1"></i> Verificar código y recuperar acceso';
       }
       return;
     }
 
-    showToast('¡Contraseña actualizada con éxito!', 'success');
-    // Cerrar y volver al inicio de sesión limpio
+    // Acceso recuperado con éxito
     closeAuthModal();
-    setTimeout(() => {
-      openAuthModal('request');
-      showToast('Por favor ingresa con tu nueva clave o código.', 'info');
-    }, 600);
+    updateAuthHeaderUI();
+    showToast(res.message || '¡Acceso a tu cuenta recuperado con éxito!', 'success');
   } catch (err) {
-    showAuthAlert('auth-recovery-alert-box', 'Error interno al procesar recuperación.', 'error');
+    console.error('[Auth] Error al verificar código de recuperación:', err);
+    showAuthAlert('auth-recovery-verify-alert-box', 'Error al verificar el código de recuperación.', 'error');
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-save text-wes-gold mr-1"></i> Actualizar Contraseña y Salir';
+      btn.innerHTML = '<i class="fas fa-check-circle text-wes-gold mr-1"></i> Verificar código y recuperar acceso';
     }
   }
 }
+
+function startRecoveryResendTimer(seconds = 60) {
+  authRecoveryCountdown = seconds;
+  const resendBtn = document.getElementById('auth-recovery-resend-btn');
+  if (!resendBtn) return;
+
+  resendBtn.disabled = true;
+  resendBtn.textContent = 'Reenviar en ' + authRecoveryCountdown + 's';
+
+  if (authRecoveryResendTimer) clearInterval(authRecoveryResendTimer);
+  authRecoveryResendTimer = setInterval(() => {
+    authRecoveryCountdown--;
+    if (authRecoveryCountdown <= 0) {
+      clearInterval(authRecoveryResendTimer);
+      authRecoveryResendTimer = null;
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Reenviar código';
+    } else {
+      resendBtn.textContent = 'Reenviar en ' + authRecoveryCountdown + 's';
+    }
+  }, 1000);
+}
+
+async function handleResendRecoveryCode() {
+  if (authRecoveryCountdown > 0 || !authRecoveryEmail) return;
+  const resendBtn = document.getElementById('auth-recovery-resend-btn');
+  if (resendBtn) {
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Reenviando...';
+  }
+
+  try {
+    const res = await UserAuth.requestPasswordReset(authRecoveryEmail);
+    if (!res.success) {
+      showAuthAlert('auth-recovery-verify-alert-box', res.message || 'No se pudo reenviar el código.', 'error');
+      if (resendBtn) {
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Reenviar código';
+      }
+      return;
+    }
+
+    startRecoveryResendTimer(60);
+    showToast(res.message || 'Nuevo código de recuperación enviado.', 'success');
+  } catch (e) {
+    showAuthAlert('auth-recovery-verify-alert-box', 'Error al solicitar nuevo código.', 'error');
+    if (resendBtn) {
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Reenviar código';
+    }
+  }
+}
+
+// Compatibilidad con invocaciones antiguas
+function handleRequestRecoveryCode() {
+  handleRequestRecoveryCodeSubmit();
+}
+function handlePasswordRecoverySubmit(e) {
+  handleVerifyRecoveryCodeSubmit(e);
+}
+
+window.handleRequestRecoveryCodeSubmit = handleRequestRecoveryCodeSubmit;
+window.handleVerifyRecoveryCodeSubmit = handleVerifyRecoveryCodeSubmit;
+window.handlePasteRecoveryOtp = handlePasteRecoveryOtp;
+window.handleResendRecoveryCode = handleResendRecoveryCode;
 window.handleRequestRecoveryCode = handleRequestRecoveryCode;
 window.handlePasswordRecoverySubmit = handlePasswordRecoverySubmit;
 window.getProductDirectUrl = getProductDirectUrl;
