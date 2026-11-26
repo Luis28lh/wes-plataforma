@@ -42,6 +42,8 @@
     isOpen: false,
     step: 'idle',
     chatHistory: [], // Historial multiturno para Gemini
+    hasSentFollowUpInvitation: false, // Control para no repetir "¿En qué le puedo ayudar?"
+    hasAskedHelp: false, // Marca si ya se le ha preguntado en qué necesita ayuda
     ticketDraft: {
       name: '',
       phone: '',
@@ -50,6 +52,46 @@
       description: ''
     }
   };
+
+  let followUpTimer = null;
+
+  function cancelFollowUpInvitation() {
+    if (followUpTimer) {
+      clearTimeout(followUpTimer);
+      followUpTimer = null;
+    }
+  }
+
+  function scheduleFollowUpInvitation() {
+    cancelFollowUpInvitation();
+    if (chatSession.hasSentFollowUpInvitation || chatSession.hasAskedHelp) {
+      return;
+    }
+
+    followUpTimer = setTimeout(() => {
+      followUpTimer = null;
+
+      // Condiciones estrictas: chat abierto, página visible, usuario no escribiendo, sin texto en input y no enviado antes
+      if (!chatSession.isOpen) return;
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+      if (chatSession.hasSentFollowUpInvitation || chatSession.hasAskedHelp) return;
+
+      const input = document.getElementById('wes-chat-user-input');
+      if (input && input.value && input.value.trim().length > 0) return;
+
+      chatSession.hasSentFollowUpInvitation = true;
+      chatSession.hasAskedHelp = true;
+
+      const invitationText = "¿En qué le puedo ayudar?";
+      appendBotMessage(`
+        <div class="leading-relaxed text-slate-800 text-xs">${escapeHtml(invitationText)}</div>
+      `);
+
+      if (!chatSession.chatHistory) chatSession.chatHistory = [];
+      chatSession.chatHistory.push({ role: 'model', content: invitationText });
+      if (chatSession.chatHistory.length > 16) chatSession.chatHistory = chatSession.chatHistory.slice(-16);
+    }, 4000);
+  }
 
   function escapeHtml(str) {
     if (!str) return '';
@@ -406,6 +448,32 @@ function setupChatEvents() {
       }
     });
 
+    // Cancelar segundo mensaje si el usuario cambia de pestaña, minimiza la ventana o cambia visibilidad
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          cancelFollowUpInvitation();
+        }
+      });
+    }
+
+    window.addEventListener('blur', () => {
+      cancelFollowUpInvitation();
+    });
+
+    // Cancelar segundo mensaje tan pronto el cliente empieza a escribir en el input
+    const chatInput = document.getElementById('wes-chat-user-input');
+    if (chatInput) {
+      chatInput.addEventListener('input', () => {
+        if (chatInput.value.length > 0) {
+          cancelFollowUpInvitation();
+        }
+      });
+      chatInput.addEventListener('keydown', () => {
+        cancelFollowUpInvitation();
+      });
+    }
+
     window.addEventListener('wes_ai_config_updated', (e) => {
       const wrapper = document.getElementById('wes-client-chat-wrapper');
       if (e.detail && e.detail.enabled === false) {
@@ -453,6 +521,8 @@ function setupChatEvents() {
         scrollToBottom();
       }, 100);
     } else {
+      // Cancelar cualquier mensaje pendiente al cerrar el chat para no enviarlo atrasado al volver a abrir
+      cancelFollowUpInvitation();
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       removeTypingIndicator();
@@ -1091,6 +1161,7 @@ function setupChatEvents() {
   // Procesamiento principal de mensajes enviados por el usuario
   async function handleChatSubmit(e) {
     if (e && e.preventDefault) e.preventDefault();
+    cancelFollowUpInvitation();
     const input = document.getElementById('wes-chat-user-input');
     const submitBtn = document.querySelector('#wes-chat-input-form button[type="submit"]');
     if (!input || !input.value.trim()) return;
@@ -1239,20 +1310,51 @@ function setupChatEvents() {
         return;
       }
 
-      // 4.2 Atencion Inmediata a Saludos y Cortesia (Garantizado sin consumo de IA ni fallos)
-      const isPureGreeting = /^(hola|buenos d[ií]as|buenas tardes|buenas noches|saludos|hey|klk|qu[eé] tal|buenas|hola sof[ií]a|hola wes)[\s!.,?]*$/i.test(lower);
+      // 4.2 Atencion Inmediata a Saludos y Cortesia (Respuestas naturales breves sin repetir presentacion)
+      // Normalizar texto para verificar si es ÚNICAMENTE saludo de cortesía
+      const cleanGreetingText = lower
+        .replace(/^(oigan?|bueno|miren?)\s+/i, '')
+        .replace(/[,;:.!¡?¿\-_]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      // Saludos puros soportados
+      const isHowAreYou = /^(c[oó]mo\s+(est[aá]s?|te\s+va|andas?)|qu[eé]\s+tal)(\s+(sof[ií]a|wes|amiga))?$/i.test(cleanGreetingText);
+      const isMorning = /^(buenos\s+d[ií]as|buen\s+d[ií]a)(\s+(sof[ií]a|wes))?$/i.test(cleanGreetingText);
+      const isAfternoon = /^(buenas\s+tardes)(\s+(sof[ií]a|wes))?$/i.test(cleanGreetingText);
+      const isNight = /^(buenas\s+noches)(\s+(sof[ií]a|wes))?$/i.test(cleanGreetingText);
+      const isGeneralHello = /^(hola|buenas|saludos|hey|klk|hola\s+sof[ií]a|hola\s+wes|qu[eé]\s+hay)(\s+(sof[ií]a|wes))?$/i.test(cleanGreetingText);
+
+      const isPureGreeting = isHowAreYou || isMorning || isAfternoon || isNight || isGeneralHello;
       const isPureThanks = /^(gracias|muchas gracias|mil gracias|gracias sof[ií]a|muy amable|perfecto gracias)[\s!.,?]*$/i.test(lower);
 
       if (isPureGreeting) {
         removeTypingIndicator();
-        const greetingReply = "¡Hola! Soy Sofía, asesora técnica de Warn Electrical Services. ¿En qué le puedo asistir hoy?";
+
+        let greetingReply = "¡Hola! Qué gusto saludarle.";
+        if (isHowAreYou) {
+          greetingReply = "¡Muy bien, gracias! Espero que usted también.";
+        } else if (isMorning) {
+          greetingReply = "¡Buenos días! Un gusto saludarle.";
+        } else if (isAfternoon) {
+          greetingReply = "¡Buenas tardes! Un gusto saludarle.";
+        } else if (isNight) {
+          greetingReply = "¡Buenas noches! Un gusto saludarle.";
+        } else if (/hola\s+sof[ií]a/i.test(cleanGreetingText)) {
+          greetingReply = "¡Hola! Qué gusto saludarle.";
+        }
+
         appendBotMessage(`
           <div class="leading-relaxed text-slate-800 text-xs">${escapeHtml(greetingReply)}</div>
         `);
+
         if (!chatSession.chatHistory) chatSession.chatHistory = [];
         chatSession.chatHistory.push({ role: 'user', content: query });
         chatSession.chatHistory.push({ role: 'model', content: greetingReply });
         if (chatSession.chatHistory.length > 16) chatSession.chatHistory = chatSession.chatHistory.slice(-16);
+
+        // Programar segundo mensaje tras 4 segundos si el usuario no escribe y el chat sigue abierto
+        scheduleFollowUpInvitation();
         return;
       }
 
@@ -1354,9 +1456,12 @@ function setupChatEvents() {
     if (!confirm('¿Deseas reiniciar la conversación con Sofía? Se borrarán los mensajes anteriores.')) {
       return;
     }
+    cancelFollowUpInvitation();
     removeTypingIndicator();
     chatSession.chatHistory = [];
     chatSession.step = 'idle';
+    chatSession.hasSentFollowUpInvitation = false;
+    chatSession.hasAskedHelp = false;
     chatSession.ticketDraft = { name: '', phone: '', equipment: '', address: '', description: '' };
     
     const msgContainer = document.getElementById('wes-chat-messages');
