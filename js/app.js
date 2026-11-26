@@ -26,6 +26,7 @@ const AppState = {
   settings: StorageService.getCompanySettings(),
   backendUrl: localStorage.getItem('wes_backend_url') || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec'
 };
+window.AppState = AppState;
 
 let wesMapInstance = null;
 
@@ -411,12 +412,16 @@ function renderProducts() {
 
     const matchBrand = AppState.selectedBrand === 'all' || product.brand === AppState.selectedBrand;
     const matchAvail = AppState.selectedAvailability === 'all' || product.availability === AppState.selectedAvailability;
-    const query = AppState.searchQuery.toLowerCase();
+    const query = String(AppState.searchQuery || '').toLowerCase();
+    const prodName = String(product.name || product.nombre || '').toLowerCase();
+    const prodCode = String(product.code || product.codigo || '').toLowerCase();
+    const prodBrand = String(product.brand || product.marca || '').toLowerCase();
+    const prodDesc = String(product.description || product.descripcion || '').toLowerCase();
     const matchSearch = !query || 
-      product.name.toLowerCase().includes(query) ||
-      product.code.toLowerCase().includes(query) ||
-      product.brand.toLowerCase().includes(query) ||
-      product.description.toLowerCase().includes(query);
+      prodName.includes(query) ||
+      prodCode.includes(query) ||
+      prodBrand.includes(query) ||
+      prodDesc.includes(query);
     return matchCat && matchBrand && matchAvail && matchSearch;
   });
 
@@ -4951,16 +4956,16 @@ function renderVisualCategorySidebar() {
   sidebar.innerHTML = mainCats.map(cat => {
     const isSelected = (cat.id === activeVisualCategoryTab || cat.slug === activeVisualCategoryTab);
     const activeClass = isSelected 
-      ? 'bg-white text-wes-blue font-black border-l-4 border-wes-gold shadow-xs' 
-      : 'text-slate-600 hover:bg-slate-200/70 font-semibold border-l-4 border-transparent';
+      ? 'bg-white text-wes-blue font-extrabold border-l-[3px] border-wes-gold shadow-2xs' 
+      : 'text-slate-600 hover:bg-slate-200/60 font-semibold border-l-[3px] border-transparent';
 
     return `
-      <button type="button" onclick="switchVisualCategoryTab('${cat.id}')" class="w-full p-2.5 sm:p-3.5 text-left transition flex flex-col sm:flex-row items-center sm:space-x-3 text-center sm:text-left ${activeClass}">
-        <div class="w-8 h-8 rounded-xl ${isSelected ? 'bg-wes-blue text-white' : 'bg-slate-200/80 text-slate-500'} flex items-center justify-center shrink-0 mb-1 sm:mb-0 transition text-xs sm:text-sm">
+      <button type="button" onclick="switchVisualCategoryTab('${cat.id}')" class="w-full py-3 px-2 text-left transition flex flex-col items-center justify-center text-center ${activeClass}">
+        <div class="w-7 h-7 rounded-lg ${isSelected ? 'bg-wes-blue text-white' : 'bg-slate-200/90 text-slate-500'} flex items-center justify-center shrink-0 mb-1 transition text-xs">
           <i class="fas ${cat.icono || 'fa-tag'}"></i>
         </div>
-        <div class="overflow-hidden w-full">
-          <div class="text-[11px] sm:text-xs leading-tight line-clamp-2">${cat.nombre}</div>
+        <div class="text-[10px] sm:text-[11px] leading-tight line-clamp-2 px-0.5">
+          ${cat.nombre}
         </div>
       </button>
     `;
@@ -4982,66 +4987,44 @@ function renderVisualCategoryContent() {
   if (!activeCat) return;
 
   const subcats = CategoriesCatalog.getSubcategories(activeCat.id);
-  const allProds = StorageService.getProducts();
 
-  // Contar productos totales de la categoría principal
-  const totalCatProds = allProds.filter(p => matchesCategoryFilter(p, activeCat.id)).length;
-
+  // Cuadrícula limpia directa: 3 columnas en pantallas estándar, 2 en pantallas estrechas
   container.innerHTML = `
-    <div class="space-y-4">
-      
-      <!-- Banner / Cabecera de Categoría Principal -->
-      <div class="bg-gradient-to-r from-slate-900 via-wes-dark to-slate-900 text-white rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm border border-slate-800">
-        <div class="flex items-center space-x-3">
-          <div class="w-12 h-12 rounded-2xl bg-white/10 text-wes-gold flex items-center justify-center text-xl shrink-0 border border-white/10">
-            <i class="fas ${activeCat.icono || 'fa-tag'}"></i>
+    <div>
+      <div class="grid grid-cols-2 xs:grid-cols-3 gap-y-5 gap-x-2 sm:gap-x-4">
+        
+        <!-- Opción 1: Ver todos (Categoría completa) -->
+        <button type="button" onclick="selectVisualCategory('${activeCat.id}')" class="group flex flex-col items-center text-center active:scale-95 transition">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-100 hover:bg-amber-50 border border-slate-200 group-hover:border-wes-gold flex items-center justify-center mb-1.5 transition shadow-2xs">
+            <div class="w-8 h-8 rounded-full bg-wes-blue text-wes-gold flex items-center justify-center text-xs sm:text-sm shadow-xs">
+              <i class="fas fa-layer-group"></i>
+            </div>
           </div>
-          <div>
-            <h4 class="font-black text-sm sm:text-base font-brand text-white">${activeCat.nombre}</h4>
-            <p class="text-[11px] text-slate-300 max-w-md line-clamp-1">${activeCat.descripcion || 'Soluciones y equipos oficiales WES'}</p>
+          <div class="text-[11px] sm:text-xs font-bold text-slate-800 group-hover:text-wes-blue leading-tight line-clamp-2 max-w-[90px]">
+            Ver todos
           </div>
-        </div>
-
-        <button type="button" onclick="selectVisualCategory('${activeCat.id}')" class="px-4 py-2 bg-wes-gold hover:bg-amber-400 text-slate-900 font-extrabold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shrink-0 shadow-sm active:scale-95">
-          <span>Ver todo en ${activeCat.nombre.split(' ')[0]}</span>
-          <span class="bg-black/20 text-slate-900 px-1.5 py-0.2 rounded-full text-[10px] ml-1">(${totalCatProds})</span>
         </button>
-      </div>
 
-      <!-- Título de sección de subcategorías -->
-      <div class="flex items-center justify-between pt-1">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Subcategorías disponibles (${subcats.length}):</span>
-      </div>
-
-      <!-- Cuadrícula de Subcategorías con Fotografías Cuadradas Limpias -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        <!-- Subcategorías con imagen circular sobre fondo claro -->
         ${subcats.map(sub => {
-          // Contar productos reales en esta subcategoría
-          const subCount = allProds.filter(p => matchesCategoryFilter(p, activeCat.id, sub.id)).length;
-
           return `
-            <button type="button" onclick="selectVisualSubcategory('${sub.id}')" class="group bg-white hover:bg-blue-50/40 p-2.5 sm:p-3 rounded-2xl border border-slate-200 hover:border-wes-blue/60 transition flex flex-col items-center text-center shadow-xs active:scale-95">
+            <button type="button" onclick="selectVisualSubcategory('${sub.id}')" class="group flex flex-col items-center text-center active:scale-95 transition">
               
-              <!-- Imagen Cuadrada Limpia sobre Fondo Blanco -->
-              <div class="w-full aspect-square bg-slate-50 rounded-xl overflow-hidden mb-2.5 p-2 flex items-center justify-center border border-slate-100 group-hover:scale-[1.03] transition duration-200">
-                <img src="${sub.imagen_url}" alt="${sub.nombre}" class="w-full h-full object-contain" loading="lazy" onerror="this.src='assets/logo-buho.jpg'">
+              <!-- Imagen Circular Limpia sobre Fondo Claro -->
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-100 hover:bg-slate-50 border border-slate-200/90 group-hover:border-wes-blue p-2 flex items-center justify-center mb-1.5 transition overflow-hidden shadow-2xs group-hover:scale-105">
+                <img src="${sub.imagen_url}" alt="${sub.nombre}" class="w-full h-full object-contain" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fas ${sub.icono || 'fa-box'}\\' style=\\'font-size: 20px; color: #0D2A5C;\\'></i>'">
               </div>
 
-              <!-- Nombre y Contador -->
-              <div class="w-full">
-                <div class="font-extrabold text-slate-800 text-xs sm:text-[13px] leading-tight line-clamp-2 group-hover:text-wes-blue transition">
-                  ${sub.nombre}
-                </div>
-                <div class="text-[10px] sm:text-[11px] text-slate-400 font-semibold mt-1">
-                  ${subCount} producto${subCount === 1 ? '' : 's'}
-                </div>
+              <!-- Nombre Corto Centrado Debajo (Sin contadores) -->
+              <div class="text-[11px] sm:text-xs font-bold text-slate-800 group-hover:text-wes-blue leading-tight line-clamp-2 max-w-[95px] px-0.5">
+                ${sub.nombre}
               </div>
 
             </button>
           `;
         }).join('')}
-      </div>
 
+      </div>
     </div>
   `;
 }
@@ -5898,3 +5881,4 @@ window.openProductDetailModal = openProductDetailModal;
 window.closeProductDetailModal = closeProductDetailModal;
 window.showProductNotFoundNotice = showProductNotFoundNotice;
 window.goToCatalogFromNotice = goToCatalogFromNotice;
+window.AppState = AppState;

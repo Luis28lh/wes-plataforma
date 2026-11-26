@@ -731,28 +731,27 @@
           <span id="breadcrumb-current" class="text-rose-600 font-bold">Ofertas y promociones</span>
         </div>
 
-        <!-- Barra de Estado de Categoría / Subcategoría Activa con Botón Volver -->
-        <div id="active-category-banner" class="hidden bg-gradient-to-r from-wes-dark to-wes-blue text-white rounded-2xl p-4 sm:p-5 mb-5 shadow-md border border-wes-gold/30">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="flex items-center space-x-3.5">
-              <button type="button" onclick="openMobileCategoriesModal()" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition border border-white/10 shrink-0" title="Ver otras categorías">
-                <i class="fas fa-th-large text-xs text-wes-gold"></i>
+        <!-- Barra de Resultados de Categoría / Subcategoría Estilo Alibaba (Ancho Completo) -->
+        <div id="active-category-banner" class="hidden bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 mb-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center space-x-3 min-w-0">
+              <button type="button" onclick="openMobileCategoriesModal()" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 flex items-center justify-center transition shrink-0 active:scale-95" title="Volver a Categorías" aria-label="Volver a Categorías">
+                <i class="fas fa-arrow-left text-sm text-wes-blue"></i>
               </button>
-              <div>
-                <div class="flex items-center space-x-2 text-[11px] text-amber-200 font-semibold" id="active-category-breadcrumbs">
-                  <span>Catálogo</span>
-                  <i class="fas fa-chevron-right text-[9px] text-white/50"></i>
-                  <span id="active-category-parent">Categoría</span>
+              <div class="min-w-0">
+                <div class="flex items-center space-x-1.5 text-[11px] text-slate-400 font-medium truncate" id="active-category-breadcrumbs">
+                  <span class="hover:text-wes-blue cursor-pointer" onclick="clearCategoryFilter()">Catálogo</span>
+                  <i class="fas fa-chevron-right text-[8px] text-slate-300"></i>
+                  <span id="active-category-parent" class="truncate">Categoría</span>
                 </div>
-                <h3 id="active-category-title" class="text-base sm:text-lg font-black font-brand text-white tracking-tight">Nombre Categoría</h3>
+                <h3 id="active-category-title" class="text-base sm:text-lg font-black font-brand text-slate-900 tracking-tight truncate">Nombre Categoría</h3>
               </div>
             </div>
 
             <div class="flex items-center space-x-2 shrink-0">
-              <span id="active-category-count" class="text-xs font-bold bg-white/15 px-3 py-1.5 rounded-xl border border-white/10">0 resultados</span>
-              <button type="button" onclick="clearCategoryFilter()" class="text-xs font-bold bg-white text-slate-800 hover:bg-slate-100 px-3.5 py-1.5 rounded-xl transition shadow-xs flex items-center space-x-1.5">
-                <i class="fas fa-times text-[10px] text-slate-400"></i>
-                <span>Ver todo el catálogo</span>
+              <span id="active-category-count" class="text-xs font-bold bg-slate-100 text-wes-blue px-3 py-1.5 rounded-xl border border-slate-200">0 productos</span>
+              <button type="button" onclick="clearCategoryFilter()" class="hidden sm:inline-flex text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-xl transition border border-slate-200" title="Ver todo el catálogo">
+                Ver todo
               </button>
             </div>
           </div>
@@ -1907,7 +1906,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.108 (Build 108)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.109 (Build 109)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -3864,37 +3863,23 @@
   <div id="wes-categories-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden transition-opacity duration-300 flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="if(event.target===this) closeMobileCategoriesModal()">
     <div class="w-full sm:max-w-4xl bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl h-[90vh] sm:h-[82vh] max-h-[850px] flex flex-col overflow-hidden transform transition-all duration-300 translate-y-full sm:translate-y-0 sm:scale-95 border-t-2 sm:border-2 border-wes-gold" id="wes-categories-sheet">
       
-      <!-- Cabecera del Selector Visual -->
-      <div class="px-4 sm:px-6 py-3 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
-        <div class="flex items-center space-x-2.5">
-          <div class="w-8 h-8 rounded-xl bg-wes-blue/10 text-wes-blue flex items-center justify-center">
-            <i class="fas fa-th-large text-sm"></i>
-          </div>
-          <div>
-            <h3 class="font-bold text-slate-900 text-sm sm:text-base font-brand">Categorías de Soluciones WES</h3>
-            <p class="text-[11px] text-slate-500 hidden sm:block">Explora nuestras soluciones técnicas por categoría y subcategoría real</p>
-          </div>
-        </div>
-        
-        <div class="flex items-center space-x-2">
-          <button type="button" onclick="selectVisualCategory('all')" class="text-xs font-bold text-wes-blue hover:text-wes-dark bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition">
-            Ver todo el catálogo
-          </button>
-          <button type="button" onclick="closeMobileCategoriesModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition active:scale-95" aria-label="Cerrar selector de categorías">
-            <i class="fas fa-times text-xs"></i>
-          </button>
-        </div>
+      <!-- Cabecera del Selector Visual (Limpia y Compacta) -->
+      <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between bg-white shrink-0">
+        <h3 class="font-extrabold text-slate-900 text-base font-brand tracking-tight">Categorías</h3>
+        <button type="button" onclick="closeMobileCategoriesModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95" aria-label="Cerrar selector de categorías">
+          <i class="fas fa-times text-sm"></i>
+        </button>
       </div>
 
       <!-- Cuerpo Visual en Dos Columnas (Estilo Alibaba) -->
       <div class="flex-1 flex overflow-hidden bg-slate-50">
         
-        <!-- Columna Izquierda: Categorías Principales (Compacta) -->
-        <div id="wes-cat-sidebar" class="w-28 sm:w-56 bg-slate-100/90 border-r border-slate-200 overflow-y-auto shrink-0 divide-y divide-slate-200/60">
+        <!-- Columna Izquierda: Categorías Principales (Estrecha 25-30%) -->
+        <div id="wes-cat-sidebar" class="w-[30%] sm:w-[26%] max-w-[130px] sm:max-w-[190px] bg-slate-100/90 border-r border-slate-200 overflow-y-auto shrink-0 divide-y divide-slate-200/50">
           <!-- Inyectado dinámicamente por app.js (renderVisualCategorySidebar) -->
         </div>
 
-        <!-- Columna Derecha: Panel de Subcategorías con Cuadrícula de Fotos -->
+        <!-- Columna Derecha: Panel de Subcategorías con Cuadrícula de Círculos Limpios -->
         <div id="wes-cat-content" class="flex-1 bg-white overflow-y-auto p-3 sm:p-5 pb-24 sm:pb-8">
           <!-- Inyectado dinámicamente por app.js (renderVisualCategoryContent) -->
         </div>
