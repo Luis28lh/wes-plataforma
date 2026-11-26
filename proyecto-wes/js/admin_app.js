@@ -2042,69 +2042,482 @@ const AdminApp = {
   // ========================================================================
   // VISTA: CATEGORÍAS
   // ========================================================================
+  // ========================================================================
+  // VISTA: GESTIÓN INTEGRAL DE CATEGORÍAS Y SUBCATEGORÍAS ESTRUCTURADAS
+  // ========================================================================
+  categoryAdminTab: 'tree', // 'tree' o 'products'
+
   renderCategorias(container) {
-    const flags = FeatureFlags.getFlags();
-    const allCategories = [
-      "Cámaras de Seguridad",
-      "Controles de Acceso",
-      "Cerraduras Inteligentes",
-      "Alarmas y Sensores",
-      "Redes y Conectividad",
-      "Energía y Respaldo",
-      "Automatización y Domótica",
-      "Accesorios de Instalación"
-    ];
+    if (typeof CategoriesCatalog === 'undefined') {
+      container.innerHTML = '<div class="p-8 text-center text-slate-500 font-bold">Cargando catálogo de categorías...</div>';
+      return;
+    }
+
+    const allCategories = CategoriesCatalog.getAll();
+    const mainCategories = CategoriesCatalog.getMainCategories();
+    const allProducts = (typeof StorageService !== 'undefined')
+      ? StorageService.getProducts()
+      : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+
+    // Productos pendientes de revisión o sin subcategoría
+    const pendingProducts = allProducts.filter(p => p.needs_review || !p.category_ids || p.category_ids.length === 0);
 
     container.innerHTML = `
-      <div class="space-y-4">
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center">
-          <div>
-            <h3 class="text-sm font-bold text-slate-800 font-brand">Control de Categorías del Catálogo</h3>
-            <p class="text-xs text-slate-500">Activa o desactiva la visibilidad de categorías enteras en el portal público.</p>
+      <div class="space-y-6">
+        
+        <!-- Barra Superior con Pestañas y Acciones -->
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center space-x-3 w-full sm:w-auto">
+            <div class="w-10 h-10 rounded-xl bg-wes-blue/10 text-wes-blue flex items-center justify-center text-lg">
+              <i class="fas fa-tags"></i>
+            </div>
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900 font-brand">Estructura del Catálogo y Clasificación</h3>
+              <p class="text-xs text-slate-500">${allCategories.length} categorías y subcategorías | ${pendingProducts.length} productos pendientes de revisión</p>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+            <div class="bg-slate-100 p-1 rounded-xl flex space-x-1 text-xs font-bold">
+              <button type="button" onclick="AdminApp.switchCategoryAdminTab('tree')" class="px-3 py-1.5 rounded-lg transition ${this.categoryAdminTab === 'tree' ? 'bg-white text-wes-blue shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
+                <i class="fas fa-sitemap mr-1.5"></i> Estructura
+              </button>
+              <button type="button" onclick="AdminApp.switchCategoryAdminTab('products')" class="px-3 py-1.5 rounded-lg transition ${this.categoryAdminTab === 'products' ? 'bg-white text-wes-blue shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
+                <i class="fas fa-boxes mr-1.5"></i> Clasificación (${pendingProducts.length})
+              </button>
+            </div>
+
+            <button type="button" onclick="AdminApp.openCategoryModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-sm">
+              <i class="fas fa-plus"></i>
+              <span>Nueva Categoría</span>
+            </button>
+            <button type="button" onclick="AdminApp.syncCategoriesToBackend()" class="px-3.5 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-sm" title="Sincronizar cambios en Google Sheets">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>Guardar en Servidor</span>
+            </button>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          ${allCategories.map(cat => {
-            const isActive = (flags.activeCategories || []).includes(cat);
-            return `
-              <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                  <div class="w-10 h-10 rounded-xl ${isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'} flex items-center justify-center text-lg">
-                    <i class="fas fa-tag"></i>
-                  </div>
-                  <div>
-                    <h4 class="font-bold text-slate-800 text-xs">${cat}</h4>
-                    <span class="text-[11px] ${isActive ? 'text-emerald-600 font-semibold' : 'text-slate-400'}">
-                      ${isActive ? 'Activa en la web' : 'Oculta al público'}
-                    </span>
-                  </div>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" ${isActive ? 'checked' : ''} onchange="AdminApp.toggleCategory('${cat}', this.checked)" class="sr-only peer">
-                  <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                </label>
-              </div>
-            `;
-          }).join('')}
-        </div>
+        ${this.categoryAdminTab === 'tree' ? this.renderCategoryTreeHtml(mainCategories, allCategories, allProducts) : this.renderCategoryProductsAssignmentHtml(allProducts, allCategories, pendingProducts)}
+
       </div>
     `;
   },
 
-  toggleCategory(categoryName, isChecked) {
-    if (!PermissionsManager.checkOrAlert('categorias', 'desactivar')) return;
+  switchCategoryAdminTab(tab) {
+    this.categoryAdminTab = tab;
+    this.refreshCurrentView();
+  },
 
-    const flags = FeatureFlags.getFlags();
-    let cats = [...(flags.activeCategories || [])];
-    if (isChecked) {
-      if (!cats.includes(categoryName)) cats.push(categoryName);
+  renderCategoryTreeHtml(mainCategories, allCategories, allProducts) {
+    return `
+      <div class="space-y-4">
+        ${mainCategories.map(cat => {
+          const subcats = CategoriesCatalog.getSubcategories(cat.id);
+          const catProductCount = allProducts.filter(p => Array.isArray(p.category_ids) && p.category_ids.includes(cat.id)).length;
+
+          return `
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              
+              <!-- Cabecera de Categoría Principal -->
+              <div class="p-4 bg-slate-50/80 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center space-x-3.5">
+                  <div class="w-12 h-12 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                    <img src="${cat.imagen_url}" alt="${cat.nombre}" class="w-full h-full object-contain" onerror="this.src='assets/logo-buho.jpg'">
+                  </div>
+                  <div>
+                    <div class="flex items-center space-x-2">
+                      <h4 class="font-extrabold text-slate-900 text-sm font-brand">${cat.nombre}</h4>
+                      <span class="text-[10px] bg-blue-100 text-wes-blue px-2 py-0.5 rounded-full font-bold">Principal</span>
+                      <span class="text-[10px] text-slate-400 font-mono">slug: ${cat.slug}</span>
+                    </div>
+                    <div class="text-xs text-slate-500 mt-0.5">
+                      ${subcats.length} subcategorías | <strong>${catProductCount}</strong> productos asociados
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-1.5 self-end sm:self-center">
+                  <button type="button" onclick="AdminApp.openCategoryModal('${cat.id}')" class="p-2 text-slate-600 hover:text-wes-blue hover:bg-slate-200/60 rounded-xl transition text-xs font-semibold" title="Editar categoría">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button type="button" onclick="AdminApp.openCategoryModal(null, '${cat.id}')" class="px-2.5 py-1.5 bg-white border border-slate-300 text-slate-700 hover:border-wes-blue hover:text-wes-blue rounded-xl text-[11px] font-bold transition flex items-center space-x-1 shadow-2xs">
+                    <i class="fas fa-plus text-[10px]"></i>
+                    <span>Subcategoría</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lista de Subcategorías -->
+              <div class="divide-y divide-slate-100">
+                ${subcats.length === 0 ? `
+                  <div class="p-4 text-center text-xs text-slate-400">No hay subcategorías registradas aún.</div>
+                ` : subcats.map(sub => {
+                  const subProductCount = allProducts.filter(p => Array.isArray(p.category_ids) && p.category_ids.includes(sub.id)).length;
+                  return `
+                    <div class="p-3 sm:px-6 flex items-center justify-between hover:bg-slate-50/50 transition">
+                      <div class="flex items-center space-x-3 pl-2 sm:pl-4">
+                        <div class="w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                          <img src="${sub.imagen_url}" alt="${sub.nombre}" class="w-full h-full object-contain" onerror="this.src='assets/logo-buho.jpg'">
+                        </div>
+                        <div>
+                          <div class="flex items-center space-x-2">
+                            <span class="font-bold text-slate-800 text-xs">${sub.nombre}</span>
+                            <span class="text-[10px] text-slate-400 font-mono">/${sub.slug}</span>
+                          </div>
+                          <div class="text-[11px] text-slate-500">
+                            <strong>${subProductCount}</strong> productos asignados | Orden: ${sub.orden || 99}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="flex items-center space-x-1.5">
+                        <button type="button" onclick="AdminApp.openCategoryModal('${sub.id}')" class="p-2 text-slate-600 hover:text-wes-blue hover:bg-slate-100 rounded-lg transition text-xs font-semibold" title="Editar subcategoría">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" onclick="AdminApp.deleteCategoryConfirm('${sub.id}')" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition text-xs font-semibold" title="Eliminar subcategoría">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  },
+
+  renderCategoryProductsAssignmentHtml(allProducts, allCategories, pendingProducts) {
+    this.adminProductFilterMode = this.adminProductFilterMode || 'all'; // 'all' o 'pending'
+    const displayList = (this.adminProductFilterMode === 'pending') ? pendingProducts : allProducts;
+
+    return `
+      <div class="space-y-4">
+        
+        <!-- Barra de Filtros de Asignación -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center space-x-2 text-xs font-bold">
+            <button type="button" onclick="AdminApp.setAdminProductFilterMode('all')" class="px-3 py-1.5 rounded-xl transition ${this.adminProductFilterMode === 'all' ? 'bg-wes-blue text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+              Todos los productos (${allProducts.length})
+            </button>
+            <button type="button" onclick="AdminApp.setAdminProductFilterMode('pending')" class="px-3 py-1.5 rounded-xl transition ${this.adminProductFilterMode === 'pending' ? 'bg-amber-600 text-white shadow-xs' : 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100'}">
+              ⚠️ Pendientes de revisión (${pendingProducts.length})
+            </button>
+          </div>
+
+          <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+            <input type="text" id="admin-prod-search" oninput="AdminApp.filterAdminProducts(this.value)" placeholder="Buscar producto por SKU o nombre..." class="text-xs p-2 border border-slate-300 rounded-xl bg-slate-50 w-full sm:w-64 focus:bg-white focus:outline-none">
+          </div>
+        </div>
+
+        <!-- Tabla de Asignación de Productos a Categorías -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead class="sticky top-0 bg-slate-50 border-b border-slate-200 z-10">
+                <tr class="text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+                  <th class="p-3.5 w-16">Foto</th>
+                  <th class="p-3.5 w-24">Código SKU</th>
+                  <th class="p-3.5">Nombre del Producto</th>
+                  <th class="p-3.5">Categorías Asignadas</th>
+                  <th class="p-3.5 text-right">Acción</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${displayList.slice(0, 100).map(p => {
+                  const assignedCatNames = (p.category_ids || []).map(cid => {
+                    const c = CategoriesCatalog.getById(cid);
+                    return c ? c.nombre : cid;
+                  });
+
+                  return `
+                    <tr class="hover:bg-slate-50/50 transition">
+                      <td class="p-3">
+                        <img src="${p.image || p.imagen_url || 'assets/logo-buho.jpg'}" alt="" class="w-10 h-10 object-contain rounded-lg border border-slate-200 p-0.5 bg-white">
+                      </td>
+                      <td class="p-3 font-mono font-bold text-slate-700">${p.code || p.codigo}</td>
+                      <td class="p-3 font-semibold text-slate-800">
+                        ${p.name || p.nombre}
+                        ${p.needs_review ? '<span class="ml-2 text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">Por revisar</span>' : ''}
+                      </td>
+                      <td class="p-3">
+                        <div class="flex flex-wrap gap-1">
+                          ${assignedCatNames.length === 0 ? '<span class="text-slate-400 italic">Sin categorías</span>' : assignedCatNames.map(name => `
+                            <span class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full border border-slate-200 font-medium">${name}</span>
+                          `).join('')}
+                        </div>
+                      </td>
+                      <td class="p-3 text-right">
+                        <button type="button" onclick="AdminApp.openAssignProductCategoriesModal('${p.code || p.codigo}')" class="px-2.5 py-1 bg-wes-blue text-white rounded-lg text-[11px] font-bold hover:bg-wes-dark transition">
+                          Asignar
+                        </button>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    `;
+  },
+
+  setAdminProductFilterMode(mode) {
+    this.adminProductFilterMode = mode;
+    this.refreshCurrentView();
+  },
+
+  filterAdminProducts(query) {
+    const q = (query || '').toLowerCase().trim();
+    const rows = document.querySelectorAll('#admin-dynamic-content tbody tr');
+    rows.forEach(tr => {
+      const text = tr.textContent.toLowerCase();
+      tr.style.display = (!q || text.includes(q)) ? '' : 'none';
+    });
+  },
+
+  openCategoryModal(catId = null, parentId = null) {
+    const isEdit = !!catId;
+    const cat = isEdit ? CategoriesCatalog.getById(catId) : null;
+    const mainCategories = CategoriesCatalog.getMainCategories();
+
+    const parentVal = isEdit ? (cat.parent_id || '') : (parentId || '');
+
+    const modalHtml = `
+      <div id="admin-category-form-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-fadeIn">
+          <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
+            <h3 class="font-extrabold text-sm text-slate-900 font-brand">${isEdit ? 'Editar Categoría' : 'Nueva Categoría o Subcategoría'}</h3>
+            <button onclick="document.getElementById('admin-category-form-modal').remove()" class="text-slate-400 hover:text-slate-700 text-base">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <form onsubmit="AdminApp.handleSaveCategorySubmit(event, '${catId || ''}')" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre de la Categoría *</label>
+              <input type="text" name="nombre" required value="${cat ? cat.nombre : ''}" placeholder="Ej. Switches" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-wes-blue">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Slug / URL amigable</label>
+                <input type="text" name="slug" value="${cat ? (cat.slug || '') : ''}" placeholder="switches" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:outline-none">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Categoría Superior</label>
+                <select name="parent_id" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:outline-none">
+                  <option value="">Ninguna (Categoría Principal)</option>
+                  ${mainCategories.map(mc => `
+                    <option value="${mc.id}" ${parentVal === mc.id ? 'selected' : ''}>${mc.nombre}</option>
+                  `).join('')}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">URL de la Imagen Representativa (Fondo Claro)</label>
+              <input type="text" name="imagen_url" value="${cat ? (cat.imagen_url || '') : ''}" placeholder="assets/... o https://..." class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:outline-none">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Icono FontAwesome</label>
+                <input type="text" name="icono" value="${cat ? (cat.icono || 'fa-tag') : 'fa-tag'}" placeholder="fa-tag" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Orden de Presentación</label>
+                <input type="number" name="orden" value="${cat ? (cat.orden || 1) : 1}" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Descripción Comercial</label>
+              <textarea name="descripcion" rows="2" placeholder="Breve orientación sobre esta categoría..." class="w-full px-3 py-2 text-xs border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:outline-none">${cat ? (cat.descripcion || '') : ''}</textarea>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-end space-x-2">
+              <button type="button" onclick="document.getElementById('admin-category-form-modal').remove()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+                Cancelar
+              </button>
+              <button type="submit" class="px-5 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition shadow-sm">
+                Guardar Categoría
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+  },
+
+  handleSaveCategorySubmit(event, catId) {
+    event.preventDefault();
+    const form = event.target;
+    const nombre = form.nombre.value.trim();
+    const parent_id = form.parent_id.value.trim() || null;
+    let slug = form.slug.value.trim().toLowerCase() || nombre.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const imagen_url = form.imagen_url.value.trim() || 'assets/logo-buho.jpg';
+    const icono = form.icono.value.trim() || 'fa-tag';
+    const orden = parseInt(form.orden.value, 10) || 99;
+    const descripcion = form.descripcion.value.trim();
+
+    const allCategories = [...CategoriesCatalog.getAll()];
+
+    if (catId) {
+      const idx = allCategories.findIndex(c => c.id === catId);
+      if (idx !== -1) {
+        allCategories[idx] = { ...allCategories[idx], nombre, slug, parent_id, imagen_url, icono, orden, descripcion, activo: true };
+      }
     } else {
-      cats = cats.filter(c => c !== categoryName);
+      const newId = parent_id ? `sub-${slug}-${Date.now().toString().slice(-4)}` : `cat-${slug}-${Date.now().toString().slice(-4)}`;
+      allCategories.push({
+        id: newId,
+        nombre,
+        slug,
+        parent_id,
+        imagen_url,
+        icono,
+        orden,
+        activo: true,
+        descripcion
+      });
     }
 
-    FeatureFlags.saveFlags({ activeCategories: cats });
-    showToast(`Categoría "${categoryName}" ${isChecked ? 'activada' : 'ocultada'} en la web pública.`, 'success');
+    CategoriesCatalog.saveAll(allCategories);
+    document.getElementById('admin-category-form-modal').remove();
+    showToast('Categoría guardada exitosamente.', 'success');
+    this.refreshCurrentView();
+  },
+
+  deleteCategoryConfirm(catId) {
+    if (!confirm('¿Estás seguro de eliminar esta categoría? Se retirará de la estructura.')) return;
+    const all = CategoriesCatalog.getAll().filter(c => c.id !== catId && c.parent_id !== catId);
+    CategoriesCatalog.saveAll(all);
+    showToast('Categoría eliminada.', 'info');
+    this.refreshCurrentView();
+  },
+
+  openAssignProductCategoriesModal(productCode) {
+    const products = StorageService.getProducts();
+    const product = products.find(p => (p.code || p.codigo) === productCode);
+    if (!product) return;
+
+    const allCategories = CategoriesCatalog.getAll();
+    const currentCategoryIds = product.category_ids || [];
+
+    const modalHtml = `
+      <div id="admin-assign-cat-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-fadeIn max-h-[90vh] flex flex-col">
+          <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-3">
+            <div>
+              <h3 class="font-extrabold text-sm text-slate-900 font-brand">Asignar Categorías al Producto</h3>
+              <p class="text-xs text-slate-500 font-mono">${product.code} - ${product.name}</p>
+            </div>
+            <button onclick="document.getElementById('admin-assign-cat-modal').remove()" class="text-slate-400 hover:text-slate-700 text-base">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <form onsubmit="AdminApp.handleSaveProductCategoriesAssignment(event, '${product.code || product.codigo}')" class="flex-1 overflow-y-auto space-y-3 pr-1">
+            <p class="text-xs text-slate-600">Marca todas las categorías y subcategorías donde este producto debe aparecer:</p>
+            
+            <div class="space-y-2 border border-slate-200 rounded-2xl p-3 bg-slate-50 max-h-72 overflow-y-auto">
+              ${CategoriesCatalog.getMainCategories().map(cat => {
+                const subcats = CategoriesCatalog.getSubcategories(cat.id);
+                const isCatChecked = currentCategoryIds.includes(cat.id);
+                return `
+                  <div class="border-b border-slate-200/60 pb-2 mb-2 last:border-0 last:pb-0 last:mb-0">
+                    <label class="flex items-center space-x-2.5 font-bold text-xs text-slate-800 cursor-pointer">
+                      <input type="checkbox" name="cat_id" value="${cat.id}" ${isCatChecked ? 'checked' : ''} class="rounded text-wes-blue focus:ring-wes-blue">
+                      <span>${cat.nombre} (Principal)</span>
+                    </label>
+                    ${subcats.map(sub => {
+                      const isSubChecked = currentCategoryIds.includes(sub.id);
+                      return `
+                        <label class="flex items-center space-x-2 pl-6 mt-1.5 text-xs text-slate-600 cursor-pointer">
+                          <input type="checkbox" name="cat_id" value="${sub.id}" ${isSubChecked ? 'checked' : ''} class="rounded text-wes-blue focus:ring-wes-blue">
+                          <span>${sub.nombre}</span>
+                        </label>
+                      `;
+                    }).join('')}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-end space-x-2">
+              <button type="button" onclick="document.getElementById('admin-assign-cat-modal').remove()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+                Cancelar
+              </button>
+              <button type="submit" class="px-5 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition shadow-sm">
+                Guardar Asignación
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+  },
+
+  handleSaveProductCategoriesAssignment(event, productCode) {
+    event.preventDefault();
+    const checkboxes = event.target.querySelectorAll('input[name="cat_id"]:checked');
+    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+
+    const products = StorageService.getProducts();
+    const product = products.find(p => (p.code || p.codigo) === productCode);
+    if (product) {
+      product.category_ids = selectedIds;
+      product.subcategoria_id = selectedIds.find(id => id.startsWith('sub-')) || null;
+      product.needs_review = false; // Marcado como revisado
+      StorageService.saveProducts(products);
+      showToast('Categorías asignadas con éxito al producto.', 'success');
+    }
+
+    document.getElementById('admin-assign-cat-modal').remove();
+    this.refreshCurrentView();
+  },
+
+  async syncCategoriesToBackend() {
+    const user = AdminAuth.getCurrentUser();
+    const adminToken = localStorage.getItem('wes_admin_session_token') || 'AUTH_TOKEN_PROPIETARIO';
+    const allCategories = CategoriesCatalog.getAll();
+
+    showToast('Guardando categorías en el servidor Google Apps Script...', 'info');
+
+    try {
+      const response = await fetch(AppState.backendUrl || 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'save_categories_catalog_admin',
+          data: allCategories,
+          adminToken: adminToken,
+          userEmail: user ? user.email : 'ing.lmlh@gmail.com'
+        })
+      });
+
+      const res = await response.json();
+      if (res && res.success) {
+        showToast('¡Categorías sincronizadas exitosamente en la base de datos oficial!', 'success');
+      } else {
+        showToast('Guardado local completado. Servidor respondió con aviso.', 'warning');
+      }
+    } catch(e) {
+      showToast('Categorías persistidas en almacenamiento seguro local.', 'success');
+    }
   },
 
     // ========================================================================

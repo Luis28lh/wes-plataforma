@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 const AppState = {
   cart: [],
   selectedCategory: 'all',
+  selectedSubcategory: null,
+  selectedCategoryParent: null,
   selectedBrand: 'all',
   selectedAvailability: 'all',
   searchQuery: '',
@@ -42,6 +44,9 @@ function initApp() {
 
   // Revisar si la URL contiene un enlace directo a un producto (?p=SKU o ?sku=SKU)
   checkUrlForProduct();
+
+  // Revisar si la URL contiene filtro de categoría o subcategoría (?cat=... &sub=...)
+  checkUrlForCategory();
 
   // Reaccionar a cambios de Feature Flags emitidos desde el portal administrativo
   window.addEventListener('wes_flags_changed', () => {
@@ -233,30 +238,86 @@ function applyFeatureFlags() {
   }
 }
 
-// Función utilitaria para emparejar categorías tolerando sinónimos, slugs y títulos
-function matchesCategoryFilter(product, selectedCat) {
+// Función utilitaria precisa para emparejar categorías y subcategorías reales
+function matchesCategoryFilter(product, selectedCat, selectedSubcat = null) {
   if (!selectedCat || selectedCat === 'all') return true;
-  const sel = String(selectedCat).toLowerCase().trim();
-  const cat = String(product.category || '').toLowerCase().trim();
-  const catId = String(product.categoria_id || '').toLowerCase().trim();
 
-  if (cat === sel || catId === sel) return true;
+  const selCat = String(selectedCat).toLowerCase().trim();
+  const selSub = selectedSubcat ? String(selectedSubcat).toLowerCase().trim() : null;
 
-  // Cámaras / CCTV
-  if (sel.includes('camara') || sel.includes('cctv')) {
-    return cat.includes('camara') || cat.includes('cctv') || catId === 'camaras' || catId === 'grabadores';
+  // 1. Si hay subcategoría activa, debe coincidir estrictamente
+  if (selSub && selSub !== 'all') {
+    if (Array.isArray(product.category_ids)) {
+      const hasSubId = product.category_ids.some(cid => {
+        const idLower = String(cid).toLowerCase().trim();
+        return idLower === selSub;
+      });
+      if (hasSubId) return true;
+    }
+    if (product.subcategoria_id && String(product.subcategoria_id).toLowerCase().trim() === selSub) {
+      return true;
+    }
+    // Cotejar con CategoriesCatalog por slug
+    if (typeof CategoriesCatalog !== 'undefined') {
+      const subObj = CategoriesCatalog.getBySlug(selSub) || CategoriesCatalog.getById(selSub);
+      if (subObj) {
+        if (Array.isArray(product.category_ids) && product.category_ids.includes(subObj.id)) return true;
+        if (product.subcategoria_id === subObj.id) return true;
+      }
+    }
+    return false;
   }
-  // Acceso / Portones / Automatización
-  if (sel.includes('acceso') && !sel.includes('accesorio')) {
-    return (cat.includes('acceso') && !cat.includes('accesorio')) || catId === 'acceso' || catId === 'cerraduras' || catId === 'automatizacion';
+
+  // 2. Si es categoría principal (o slug de categoría)
+  if (Array.isArray(product.category_ids)) {
+    // Si coincide con el ID directo (ej: 'cat-redes')
+    if (product.category_ids.some(cid => String(cid).toLowerCase() === selCat)) {
+      return true;
+    }
   }
-  // Energía / Baterías / Respaldo
-  if (sel.includes('energia') || sel.includes('bateria') || sel.includes('respaldo')) {
-    return cat.includes('energia') || cat.includes('bateria') || catId === 'energia';
+
+  // Comprobar con CategoriesCatalog
+  if (typeof CategoriesCatalog !== 'undefined') {
+    const catObj = CategoriesCatalog.getBySlug(selCat) || CategoriesCatalog.getById(selCat);
+    if (catObj) {
+      if (Array.isArray(product.category_ids) && product.category_ids.includes(catObj.id)) {
+        return true;
+      }
+      if (product.category && product.category.toLowerCase().trim() === catObj.nombre.toLowerCase().trim()) {
+        return true;
+      }
+    }
   }
-  // Accesorios / Cableado / Redes
-  if (sel.includes('accesorio') || sel.includes('cable') || sel.includes('red')) {
-    return cat.includes('accesorio') || cat.includes('cable') || cat.includes('red') || catId === 'cables' || catId === 'redes';
+
+  // Comprobación por nombre exacto o categoria_id
+  const prodCatName = String(product.category || '').toLowerCase().trim();
+  const prodCatId = String(product.categoria_id || '').toLowerCase().trim();
+
+  if (prodCatName === selCat || prodCatId === selCat) return true;
+
+  // Redes y Conectividad
+  if (selCat.includes('redes') || selCat === 'cat-redes' || selCat === 'redes-conectividad') {
+    return prodCatName === 'redes y conectividad' || prodCatId === 'redes' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-redes'));
+  }
+
+  // Cámaras de Seguridad
+  if (selCat.includes('camara') || selCat === 'cat-camaras' || selCat === 'camaras-seguridad') {
+    return prodCatName === 'cámaras de seguridad' || prodCatName === 'camaras de seguridad' || prodCatId === 'camaras' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-camaras'));
+  }
+
+  // Controles de Acceso
+  if ((selCat.includes('acceso') && !selCat.includes('accesorio')) || selCat === 'cat-acceso' || selCat === 'controles-acceso') {
+    return prodCatName === 'controles de acceso' || prodCatId === 'acceso' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-acceso'));
+  }
+
+  // Energía y Respaldo
+  if (selCat.includes('energia') || selCat.includes('respaldo') || selCat === 'cat-energia' || selCat === 'energia-respaldo') {
+    return prodCatName === 'energía y respaldo' || prodCatName === 'energia y respaldo' || prodCatId === 'energia' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-energia'));
+  }
+
+  // Accesorios de Instalación
+  if (selCat.includes('accesorio') || selCat === 'cat-accesorios' || selCat === 'accesorios-instalacion') {
+    return prodCatName === 'accesorios de instalación' || prodCatName === 'accesorios de instalacion' || prodCatId === 'cables' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-accesorios'));
   }
 
   return false;
@@ -345,7 +406,7 @@ function renderProducts() {
         matchCat = isOffer || isNew;
       }
     } else {
-      matchCat = matchesCategoryFilter(product, AppState.selectedCategory);
+      matchCat = matchesCategoryFilter(product, AppState.selectedCategory, AppState.selectedSubcategory);
     }
 
     const matchBrand = AppState.selectedBrand === 'all' || product.brand === AppState.selectedBrand;
@@ -358,6 +419,43 @@ function renderProducts() {
       product.description.toLowerCase().includes(query);
     return matchCat && matchBrand && matchAvail && matchSearch;
   });
+
+  // Sincronizar Banner de Categoría / Subcategoría Activa
+  const activeCatBanner = document.getElementById('active-category-banner');
+  const activeCatTitle = document.getElementById('active-category-title');
+  const activeCatParent = document.getElementById('active-category-parent');
+  const activeCatBreadcrumbs = document.getElementById('active-category-breadcrumbs');
+  const activeCatCount = document.getElementById('active-category-count');
+
+  if (activeCatBanner) {
+    const isFilteredByCategory = (AppState.selectedCategory && AppState.selectedCategory !== 'all');
+    if (isFilteredByCategory) {
+      activeCatBanner.classList.remove('hidden');
+
+      // Buscar nombres en CategoriesCatalog si está disponible
+      let displayTitle = AppState.selectedCategory;
+      let displayParent = 'Categoría';
+
+      if (typeof CategoriesCatalog !== 'undefined') {
+        if (AppState.selectedSubcategory) {
+          const subObj = CategoriesCatalog.getById(AppState.selectedSubcategory) || CategoriesCatalog.getBySlug(AppState.selectedSubcategory);
+          const parentObj = CategoriesCatalog.getById(AppState.selectedCategory) || CategoriesCatalog.getBySlug(AppState.selectedCategory);
+          displayTitle = subObj ? subObj.nombre : AppState.selectedSubcategory;
+          displayParent = parentObj ? parentObj.nombre : (subObj && subObj.parent_id ? (CategoriesCatalog.getById(subObj.parent_id) || {}).nombre : 'Categoría');
+        } else {
+          const catObj = CategoriesCatalog.getById(AppState.selectedCategory) || CategoriesCatalog.getBySlug(AppState.selectedCategory);
+          displayTitle = catObj ? catObj.nombre : AppState.selectedCategory;
+          displayParent = 'Catálogo General';
+        }
+      }
+
+      if (activeCatTitle) activeCatTitle.textContent = displayTitle;
+      if (activeCatParent) activeCatParent.textContent = displayParent;
+      if (activeCatCount) activeCatCount.textContent = `${filtered.length} producto${filtered.length === 1 ? '' : 's'}`;
+    } else {
+      activeCatBanner.classList.add('hidden');
+    }
+  }
 
   // Ordenamiento
   if (AppState.sortBy === 'price-asc') {
@@ -478,7 +576,7 @@ function renderProducts() {
       `;
 
     return `
-      <div onclick="openProductDetailModal('${product.id}')" class="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer hover:border-wes-blue/50">
+      <div onclick="openProductDetailModal('${product.id}')" class="product-card bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer hover:border-wes-blue/50">
         <div class="relative h-28 xs:h-32 sm:h-36 md:h-40 lg:h-44 bg-white flex items-center justify-center p-2 sm:p-2.5 border-b border-slate-100 overflow-hidden">
           <img src="${product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500" loading="lazy">
           ${promoBadgeHtml}
@@ -632,16 +730,14 @@ function syncCategoryPillsUI(categoryName) {
   });
 }
 
-function filterByCategory(categoryName, subFilter = null) {
-  AppState.selectedCategory = categoryName;
+function filterByCategory(categoryName, subcategoryOrSlug = null, skipScroll = false) {
+  AppState.selectedCategory = categoryName || 'all';
+  AppState.selectedSubcategory = subcategoryOrSlug || null;
   AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
-  if (subFilter) {
-    AppState.offerSubFilter = subFilter;
-  }
-  
+
   const catSelect = document.getElementById('category-filter');
   if (catSelect) {
-    const hasOption = Array.from(catSelect.options).some(o => o.value.toLowerCase() === categoryName.toLowerCase());
+    const hasOption = Array.from(catSelect.options).some(o => o.value.toLowerCase() === String(categoryName).toLowerCase());
     if (hasOption) {
       catSelect.value = categoryName;
     } else {
@@ -649,15 +745,78 @@ function filterByCategory(categoryName, subFilter = null) {
     }
   }
 
+  // Actualizar URL con deep-linking sin recargar
+  try {
+    const url = new URL(window.location.href);
+    if (AppState.selectedCategory && AppState.selectedCategory !== 'all') {
+      let slug = AppState.selectedCategory;
+      if (typeof CategoriesCatalog !== 'undefined') {
+        const obj = CategoriesCatalog.getById(AppState.selectedCategory) || CategoriesCatalog.getBySlug(AppState.selectedCategory);
+        if (obj && obj.slug) slug = obj.slug;
+      }
+      url.searchParams.set('cat', slug);
+    } else {
+      url.searchParams.delete('cat');
+    }
+
+    if (AppState.selectedSubcategory) {
+      let subSlug = AppState.selectedSubcategory;
+      if (typeof CategoriesCatalog !== 'undefined') {
+        const subObj = CategoriesCatalog.getById(AppState.selectedSubcategory) || CategoriesCatalog.getBySlug(AppState.selectedSubcategory);
+        if (subObj && subObj.slug) subSlug = subObj.slug;
+      }
+      url.searchParams.set('sub', subSlug);
+    } else {
+      url.searchParams.delete('sub');
+    }
+    window.history.replaceState({}, '', url.toString());
+  } catch(e) {}
+
   syncCategoryPillsUI(categoryName);
   renderProducts();
 
-  const storeSection = document.getElementById('tienda');
-  if (storeSection) {
-    storeSection.scrollIntoView({ behavior: 'smooth' });
+  if (!skipScroll) {
+    const storeSection = document.getElementById('tienda');
+    if (storeSection) {
+      storeSection.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }
 window.filterByCategory = filterByCategory;
+
+function filterBySubcategory(subcategoryIdOrSlug) {
+  if (typeof CategoriesCatalog !== 'undefined') {
+    const subObj = CategoriesCatalog.getBySlug(subcategoryIdOrSlug) || CategoriesCatalog.getById(subcategoryIdOrSlug);
+    if (subObj && subObj.parent_id) {
+      const parentObj = CategoriesCatalog.getById(subObj.parent_id);
+      filterByCategory(parentObj ? parentObj.id : subObj.parent_id, subObj.id);
+      return;
+    }
+  }
+  filterByCategory(AppState.selectedCategory || 'all', subcategoryIdOrSlug);
+}
+window.filterBySubcategory = filterBySubcategory;
+
+function clearCategoryFilter() {
+  AppState.selectedCategory = 'all';
+  AppState.selectedSubcategory = null;
+  AppState.selectedCategoryParent = null;
+  AppState.catalogVisibleCount = AppState.catalogPageSize || 24;
+
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('cat');
+    url.searchParams.delete('sub');
+    window.history.replaceState({}, '', url.toString());
+  } catch(e) {}
+
+  const catSelect = document.getElementById('category-filter');
+  if (catSelect) catSelect.value = 'all';
+
+  syncCategoryPillsUI('all');
+  renderProducts();
+}
+window.clearCategoryFilter = clearCategoryFilter;
 
 function setOfferSubFilter(subFilter) {
   AppState.offerSubFilter = subFilter;
@@ -2868,13 +3027,35 @@ function checkUrlForProduct() {
       window.pendingDeepLinkQuery = targetQuery;
       // Mostrar aviso claro y opción para ir al catálogo si no se encuentra tras comprobar productos
       showProductNotFoundNotice(targetQuery);
-      return false;
     }
   } catch (err) {
     console.warn('[WesApp] Error procesando enlace directo de producto:', err);
     return false;
   }
 }
+
+/**
+ * Analiza la URL del navegador al cargar para filtrar automáticamente por categoría o subcategoría.
+ * Admite parámetros: ?cat=slug o ?categoria=slug, y ?sub=slug o ?subcategoria=slug.
+ */
+function checkUrlForCategory() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const catQuery = urlParams.get('cat') || urlParams.get('categoria') || urlParams.get('category');
+    const subQuery = urlParams.get('sub') || urlParams.get('subcategoria') || urlParams.get('subcategory');
+
+    if (catQuery || subQuery) {
+      if (typeof filterByCategory === 'function') {
+        filterByCategory(catQuery || 'all', subQuery || null, true);
+      }
+      return true;
+    }
+  } catch (err) {
+    console.warn('[WesApp] Error procesando enlace directo de categoría:', err);
+  }
+  return false;
+}
+window.checkUrlForCategory = checkUrlForCategory;
 
 /**
  * Notificación accesible cuando un producto solicitado por enlace directo ya no existe en el catálogo.
@@ -4708,19 +4889,35 @@ window.closeMobileMenu = window.closeMobileMenu || function() {
 // ============================================================================
 // NAVEGACIÓN MÓVIL INFERIOR (BOTTOM NAVIGATION BAR - 5 ACCIONES ESTÁNDAR)
 // ============================================================================
-// MODAL DE CATEGORÍAS MÓVILES WES
 // ============================================================================
-function openMobileCategoriesModal() {
+// SELECTOR VISUAL DE CATEGORÍAS ESTILO ALIBABA (DOS COLUMNAS WES)
+// ============================================================================
+var activeVisualCategoryTab = 'cat-redes'; // Categoría predeterminada al abrir
+window.activeVisualCategoryTab = activeVisualCategoryTab;
+
+function openMobileCategoriesModal(targetCatId = null) {
   const modal = document.getElementById('wes-categories-modal');
   const sheet = document.getElementById('wes-categories-sheet');
   if (!modal || !sheet) return;
 
+  // Si nos indican categoría objetivo o usamos la activa en AppState
+  if (targetCatId) {
+    activeVisualCategoryTab = targetCatId;
+  } else if (AppState.selectedCategory && AppState.selectedCategory !== 'all') {
+    activeVisualCategoryTab = AppState.selectedCategory;
+  }
+
+  // Renderizar contenido de dos columnas
+  renderVisualCategorySidebar();
+  renderVisualCategoryContent();
+
   modal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  // Animar entrada del drawer
+
   requestAnimationFrame(() => {
     modal.classList.remove('opacity-0');
     sheet.classList.remove('translate-y-full');
+    sheet.classList.remove('sm:scale-95');
   });
 }
 
@@ -4730,34 +4927,173 @@ function closeMobileCategoriesModal() {
   if (!modal || !sheet) return;
 
   sheet.classList.add('translate-y-full');
+  sheet.classList.add('sm:scale-95');
   setTimeout(() => {
     modal.classList.add('hidden');
     document.body.style.overflow = '';
   }, 250);
 }
 
-function selectMobileCategory(categoryName) {
+function renderVisualCategorySidebar() {
+  const sidebar = document.getElementById('wes-cat-sidebar');
+  if (!sidebar) return;
+
+  if (typeof CategoriesCatalog === 'undefined') return;
+
+  const mainCats = CategoriesCatalog.getMainCategories();
+  
+  // Asegurar que activeVisualCategoryTab sea válido
+  const exists = mainCats.some(c => c.id === activeVisualCategoryTab || c.slug === activeVisualCategoryTab);
+  if (!exists && mainCats.length > 0) {
+    activeVisualCategoryTab = mainCats[0].id;
+  }
+
+  sidebar.innerHTML = mainCats.map(cat => {
+    const isSelected = (cat.id === activeVisualCategoryTab || cat.slug === activeVisualCategoryTab);
+    const activeClass = isSelected 
+      ? 'bg-white text-wes-blue font-black border-l-4 border-wes-gold shadow-xs' 
+      : 'text-slate-600 hover:bg-slate-200/70 font-semibold border-l-4 border-transparent';
+
+    return `
+      <button type="button" onclick="switchVisualCategoryTab('${cat.id}')" class="w-full p-2.5 sm:p-3.5 text-left transition flex flex-col sm:flex-row items-center sm:space-x-3 text-center sm:text-left ${activeClass}">
+        <div class="w-8 h-8 rounded-xl ${isSelected ? 'bg-wes-blue text-white' : 'bg-slate-200/80 text-slate-500'} flex items-center justify-center shrink-0 mb-1 sm:mb-0 transition text-xs sm:text-sm">
+          <i class="fas ${cat.icono || 'fa-tag'}"></i>
+        </div>
+        <div class="overflow-hidden w-full">
+          <div class="text-[11px] sm:text-xs leading-tight line-clamp-2">${cat.nombre}</div>
+        </div>
+      </button>
+    `;
+  }).join('');
+}
+
+function switchVisualCategoryTab(catId) {
+  activeVisualCategoryTab = catId;
+  renderVisualCategorySidebar();
+  renderVisualCategoryContent();
+}
+window.switchVisualCategoryTab = switchVisualCategoryTab;
+
+function renderVisualCategoryContent() {
+  const container = document.getElementById('wes-cat-content');
+  if (!container || typeof CategoriesCatalog === 'undefined') return;
+
+  const activeCat = CategoriesCatalog.getById(activeVisualCategoryTab) || CategoriesCatalog.getBySlug(activeVisualCategoryTab);
+  if (!activeCat) return;
+
+  const subcats = CategoriesCatalog.getSubcategories(activeCat.id);
+  const allProds = StorageService.getProducts();
+
+  // Contar productos totales de la categoría principal
+  const totalCatProds = allProds.filter(p => matchesCategoryFilter(p, activeCat.id)).length;
+
+  container.innerHTML = `
+    <div class="space-y-4">
+      
+      <!-- Banner / Cabecera de Categoría Principal -->
+      <div class="bg-gradient-to-r from-slate-900 via-wes-dark to-slate-900 text-white rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm border border-slate-800">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 rounded-2xl bg-white/10 text-wes-gold flex items-center justify-center text-xl shrink-0 border border-white/10">
+            <i class="fas ${activeCat.icono || 'fa-tag'}"></i>
+          </div>
+          <div>
+            <h4 class="font-black text-sm sm:text-base font-brand text-white">${activeCat.nombre}</h4>
+            <p class="text-[11px] text-slate-300 max-w-md line-clamp-1">${activeCat.descripcion || 'Soluciones y equipos oficiales WES'}</p>
+          </div>
+        </div>
+
+        <button type="button" onclick="selectVisualCategory('${activeCat.id}')" class="px-4 py-2 bg-wes-gold hover:bg-amber-400 text-slate-900 font-extrabold rounded-xl text-xs transition flex items-center justify-center space-x-1.5 shrink-0 shadow-sm active:scale-95">
+          <span>Ver todo en ${activeCat.nombre.split(' ')[0]}</span>
+          <span class="bg-black/20 text-slate-900 px-1.5 py-0.2 rounded-full text-[10px] ml-1">(${totalCatProds})</span>
+        </button>
+      </div>
+
+      <!-- Título de sección de subcategorías -->
+      <div class="flex items-center justify-between pt-1">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Subcategorías disponibles (${subcats.length}):</span>
+      </div>
+
+      <!-- Cuadrícula de Subcategorías con Fotografías Cuadradas Limpias -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        ${subcats.map(sub => {
+          // Contar productos reales en esta subcategoría
+          const subCount = allProds.filter(p => matchesCategoryFilter(p, activeCat.id, sub.id)).length;
+
+          return `
+            <button type="button" onclick="selectVisualSubcategory('${sub.id}')" class="group bg-white hover:bg-blue-50/40 p-2.5 sm:p-3 rounded-2xl border border-slate-200 hover:border-wes-blue/60 transition flex flex-col items-center text-center shadow-xs active:scale-95">
+              
+              <!-- Imagen Cuadrada Limpia sobre Fondo Blanco -->
+              <div class="w-full aspect-square bg-slate-50 rounded-xl overflow-hidden mb-2.5 p-2 flex items-center justify-center border border-slate-100 group-hover:scale-[1.03] transition duration-200">
+                <img src="${sub.imagen_url}" alt="${sub.nombre}" class="w-full h-full object-contain" loading="lazy" onerror="this.src='assets/logo-buho.jpg'">
+              </div>
+
+              <!-- Nombre y Contador -->
+              <div class="w-full">
+                <div class="font-extrabold text-slate-800 text-xs sm:text-[13px] leading-tight line-clamp-2 group-hover:text-wes-blue transition">
+                  ${sub.nombre}
+                </div>
+                <div class="text-[10px] sm:text-[11px] text-slate-400 font-semibold mt-1">
+                  ${subCount} producto${subCount === 1 ? '' : 's'}
+                </div>
+              </div>
+
+            </button>
+          `;
+        }).join('')}
+      </div>
+
+    </div>
+  `;
+}
+
+function selectVisualCategory(catId) {
   closeMobileCategoriesModal();
   setTimeout(() => {
-    if (typeof window.filterByCategory === 'function') {
-      window.filterByCategory(categoryName);
+    if (catId === 'all') {
+      clearCategoryFilter();
     } else {
-      const catSelect = document.getElementById('category-filter');
-      if (catSelect) {
-        catSelect.value = categoryName;
-        catSelect.dispatchEvent(new Event('change'));
-      }
-      const storeSection = document.getElementById('tienda');
-      if (storeSection) {
-        storeSection.scrollIntoView({ behavior: 'smooth' });
-      }
+      filterByCategory(catId, null);
     }
   }, 150);
 }
+window.selectVisualCategory = selectVisualCategory;
+
+function selectVisualSubcategory(subcatId) {
+  closeMobileCategoriesModal();
+  setTimeout(() => {
+    filterBySubcategory(subcatId);
+  }, 150);
+}
+window.selectVisualSubcategory = selectVisualSubcategory;
+
+function selectMobileCategory(categoryName) {
+  // Retrocompatibilidad con accesos previos
+  if (categoryName === 'all') {
+    selectVisualCategory('all');
+  } else if (categoryName === 'ofertas') {
+    closeMobileCategoriesModal();
+    setTimeout(() => {
+      filterByCategory('ofertas');
+    }, 150);
+  } else {
+    // Si coincide con alguna categoría del catálogo
+    if (typeof CategoriesCatalog !== 'undefined') {
+      const match = CategoriesCatalog.getMainCategories().find(c => c.nombre.toLowerCase().includes(categoryName.toLowerCase()) || categoryName.toLowerCase().includes(c.nombre.toLowerCase()));
+      if (match) {
+        selectVisualCategory(match.id);
+        return;
+      }
+    }
+    closeMobileCategoriesModal();
+    setTimeout(() => {
+      filterByCategory(categoryName);
+    }, 150);
+  }
+}
+window.selectMobileCategory = selectMobileCategory;
 
 window.openMobileCategoriesModal = openMobileCategoriesModal;
 window.closeMobileCategoriesModal = closeMobileCategoriesModal;
-window.selectMobileCategory = selectMobileCategory;
 
 // ============================================================================
 // MANEJADOR PRINCIPAL DE NAVEGACIÓN MÓVIL (BARRA INFERIOR)

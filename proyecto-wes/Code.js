@@ -129,6 +129,14 @@ function doPost(e) {
         response = createUserAdminHandler(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+      case 'get_categories_catalog_public':
+        response = getCategoriesCatalogPublicHandler();
+        break;
+
+      case 'save_categories_catalog_admin':
+        response = saveCategoriesCatalogAdminHandler(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
       case 'save_push_subscription':
         response = savePushSubscriptionHandler(payload.data);
         break;
@@ -5066,6 +5074,96 @@ function ensureHistoricalCaptureRequestRecovered_() {
     recordAuditLog_('sistema', 'solicitudes', 'recuperacion_captura', `Recuperación de solicitud histórica ${targetId}`, 'ing.lmlh@gmail.com', 'PENDIENTE', 'En gestion');
   } catch(e) {
     console.warn('Advertencia asegurando caso de captura histórica:', e);
+  }
+}
+
+/**
+ * ============================================================================
+ * GESTIÓN DE CATEGORÍAS Y SUBCATEGORÍAS ESTRUCTURADAS DEL CATÁLOGO
+ * ============================================================================
+ */
+
+function getCategoriesCatalogPublicHandler() {
+  try {
+    const ss = getOrCreateDatabase();
+    let sheet = ss.getSheetByName('Categorias_Catalogo');
+    if (!sheet) {
+      return { success: true, categories: [] };
+    }
+    const rows = sheet.getDataRange().getValues();
+    if (rows.length <= 1) {
+      return { success: true, categories: [] };
+    }
+    const categories = [];
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r[0]) continue;
+      categories.push({
+        id: String(r[0]),
+        nombre: String(r[1] || ''),
+        slug: String(r[2] || ''),
+        parent_id: r[3] ? String(r[3]) : null,
+        imagen_url: String(r[4] || ''),
+        icono: String(r[5] || 'fa-tag'),
+        orden: Number(r[6] || 99),
+        activo: r[7] !== false && String(r[7]).toUpperCase() !== 'FALSE',
+        descripcion: String(r[8] || '')
+      });
+    }
+    return { success: true, categories: categories };
+  } catch (err) {
+    return { success: false, message: 'Error leyendo categorías: ' + err.toString() };
+  }
+}
+
+function saveCategoriesCatalogAdminHandler(categoriesList, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: permisos administrativos requeridos.' };
+    }
+
+    if (!Array.isArray(categoriesList)) {
+      return { success: false, message: 'Lista de categorías inválida o vacía.' };
+    }
+
+    const ss = getOrCreateDatabase();
+    let sheet = ss.getSheetByName('Categorias_Catalogo');
+    if (!sheet) {
+      sheet = ss.insertSheet('Categorias_Catalogo');
+    }
+
+    sheet.clearContents();
+    sheet.appendRow([
+      'ID_Categoria', 'Nombre', 'Slug', 'Parent_ID', 'Imagen_URL', 'Icono', 'Orden', 'Activo', 'Descripcion', 'Actualizado'
+    ]);
+    sheet.getRange(1, 1, 1, 10).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    categoriesList.forEach(function(c) {
+      sheet.appendRow([
+        c.id || '',
+        c.nombre || '',
+        c.slug || '',
+        c.parent_id || '',
+        c.imagen_url || '',
+        c.icono || 'fa-tag',
+        c.orden !== undefined ? c.orden : 99,
+        c.activo !== false,
+        c.descripcion || '',
+        now
+      ]);
+    });
+
+    recordAuditLog_(userEmail, 'catalogo', 'actualizar_categorias', 'Actualización de ' + categoriesList.length + ' categorías y subcategorías en catálogo', userEmail, 'CATEGORIAS', 'ACTUALIZADAS');
+
+    return {
+      success: true,
+      message: 'Catálogo de categorías guardado exitosamente en el servidor.',
+      count: categoriesList.length
+    };
+  } catch (err) {
+    return { success: false, message: 'Error guardando categorías: ' + err.toString() };
   }
 }
 

@@ -2,6 +2,198 @@
 // Sincronizado desde ERP en modo Solo Lectura con soporte bilingüe de propiedades
 const INITIAL_PRODUCTS = [
   {
+    "id": "wes-net-ap-wifi6",
+    "codigo": "RG-RAP2260G",
+    "nombre": "ACCESS POINT WI-FI 6 DUAL BAND GIGABIT AX1800 REYEE RUIJIE",
+    "marca": "Ruijie",
+    "categoria_id": "redes",
+    "category": "Redes y Conectividad",
+    "category_ids": [
+      "cat-redes",
+      "sub-red-ap"
+    ],
+    "subcategoria_id": "sub-red-ap",
+    "needs_review": false,
+    "descripcion": "Punto de acceso de techo Wi-Fi 6 de ultra alto rendimiento (hasta 1775 Mbps). Equipado con tecnología MU-MIMO, roaming fluido Mesh, alimentación PoE 802.3at y cobertura de hasta 150 metros cuadrados.",
+    "caracteristicas": [
+      "SKU: RG-RAP2260G",
+      "Estándar: Wi-Fi 6 (802.11ax) Dual Band AX1800",
+      "Velocidad: 574 Mbps en 2.4GHz + 1201 Mbps en 5GHz",
+      "Puertos: 2 x Gigabit RJ45 con soporte PoE in",
+      "Usuarios Concurrentes: Hasta 512 dispositivos",
+      "Garantía WES: 1 año"
+    ],
+    "features": [
+      "SKU: RG-RAP2260G",
+      "Estándar: Wi-Fi 6 (802.11ax) Dual Band AX1800",
+      "Velocidad: 574 Mbps en 2.4GHz + 1201 Mbps en 5GHz",
+      "Puertos: 2 x Gigabit RJ45 con soporte PoE in",
+      "Usuarios Concurrentes: Hasta 512 dispositivos",
+      "Garantía WES: 1 año"
+    ],
+    "precio": 6200,
+    "price": 6200,
+    "moneda": "DOP",
+    "currency": "DOP",
+    "disponibilidad": "Disponible",
+    "availability": "Disponible",
+    "stock": 4,
+    "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "code": "RG-RAP2260G",
+    "name": "ACCESS POINT WI-FI 6 DUAL BAND GIGABIT AX1800 REYEE RUIJIE",
+    "brand": "Ruijie",
+    "destacado": true,
+    "featured": true,
+    "activo": true,
+    "active": true
+  },
+  {
+    "id": "wes-net-router-gbe",
+    "codigo": "RG-EG105G-V2",
+    "nombre": "ROUTER MULTI-WAN GIGABIT EMPRESARIAL REYEE RUIJIE (5 PUERTOS)",
+    "marca": "Ruijie",
+    "categoria_id": "redes",
+    "category": "Redes y Conectividad",
+    "category_ids": [
+      "cat-redes",
+      "sub-red-routers"
+    ],
+    "subcategoria_id": "sub-red-routers",
+    "needs_review": false,
+    "descripcion": "Enrutador empresarial Gigabit con balanceo de carga Multi-WAN de hasta 4 proveedores simultáneos, portal cautivo para clientes, túneles VPN IPSec/WireGuard y gestión 100% en la nube sin costo de licencia.",
+    "caracteristicas": [
+      "SKU: RG-EG105G-V2",
+      "Rendimiento: 600 Mbps de ancho de banda simultáneo",
+      "Puertos: 5 x Gigabit RJ45 (hasta 4 puertos WAN)",
+      "Clientes Recomendados: Hasta 100 concurrentes",
+      "Seguridad: Control de aplicaciones y filtrado web",
+      "Garantía WES: 1 año"
+    ],
+    "features": [
+      "SKU: RG-EG105G-V2",
+      "Rendimiento: 600 Mbps de ancho de banda simultáneo",
+      "Puertos: 5 x Gigabit RJ45 (hasta 4 puertos WAN)",
+      "Clientes Recomendados: Hasta 100 concurrentes",
+      "Seguridad: Control de aplicaciones y filtrado web",
+      "Garantía WES: 1 año"
+    ],
+    "precio": 4650,
+    "price": 4650,
+    "moneda": "DOP",
+    "currency": "DOP",
+    "disponibilidad": "Disponible",
+    "availability": "Disponible",
+    "stock": 6,
+    "imagen_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+    "code": "RG-EG105G-V2",
+    "name": "ROUTER MULTI-WAN GIGABIT EMPRESARIAL REYEE RUIJIE (5 PUERTOS)",
+    "brand": "Ruijie",
+    "destacado": true,
+    "featured": true,
+    "activo": true,
+    "active": true
+  },
+  {
+    "id": "wes-net-sw-poe-16",
+    "codigo": "DH-CS4018-16ET-190",
+    "nombre": "SWITCH 16 PUERTOS POE + 2 PUERTOS COMBO GIGABIT DAHUA (190W)",
+    "marca": "Dahua",
+    "categoria_id": "redes",
+    "category": "Redes y Conectividad",
+    "category_ids": [
+      "cat-redes",
+      "sub-red-switches"
+    ],
+    "subcategoria_id": "sub-red-switches",
+    "needs_review": false,
+    "descripcion": "Switch empresarial de 16 puertos PoE 10/100 Mbps con 190W totales y 2 puertos combo Gigabit RJ45/SFP. Protección contra sobretensiones de 6kV ideal para grabadores NVR y proyectos de videovigilancia.",
+    "caracteristicas": [
+      "SKU: DH-CS4018-16ET-190",
+      "Puertos: 16 x PoE + 2 x Combo Gigabit RJ45/SFP",
+      "Presupuesto PoE: 190 Watts",
+      "Protección: Descargas electrostáticas 6kV",
+      "Montaje: En rack estándar de 19 pulgadas",
+      "Garantía WES: 1 año"
+    ],
+    "features": [
+      "SKU: DH-CS4018-16ET-190",
+      "Puertos: 16 x PoE + 2 x Combo Gigabit RJ45/SFP",
+      "Presupuesto PoE: 190 Watts",
+      "Protección: Descargas electrostáticas 6kV",
+      "Montaje: En rack estándar de 19 pulgadas",
+      "Garantía WES: 1 año"
+    ],
+    "precio": 9800,
+    "price": 9800,
+    "moneda": "DOP",
+    "currency": "DOP",
+    "disponibilidad": "Disponible",
+    "availability": "Disponible",
+    "stock": 5,
+    "imagen_url": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80",
+    "image": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80",
+    "code": "DH-CS4018-16ET-190",
+    "name": "SWITCH 16 PUERTOS POE + 2 PUERTOS COMBO GIGABIT DAHUA (190W)",
+    "brand": "Dahua",
+    "destacado": true,
+    "featured": true,
+    "activo": true,
+    "active": true
+  },
+  {
+    "id": "wes-net-sw-poe-8",
+    "codigo": "DH-CS4010-8ET-110",
+    "nombre": "SWITCH 8 PUERTOS POE FAST ETHERNET + 2 GIGABIT DAHUA (110W CLOUD)",
+    "marca": "Dahua",
+    "categoria_id": "redes",
+    "category": "Redes y Conectividad",
+    "category_ids": [
+      "cat-redes",
+      "sub-red-switches"
+    ],
+    "subcategoria_id": "sub-red-switches",
+    "needs_review": false,
+    "descripcion": "Switch PoE administrable en la nube de 8 puertos 10/100 Mbps 802.3af/at con presupuesto de 110W y 2 puertos uplink Gigabit. Diseñado para energizar hasta 8 cámaras IP con transmisión PoE de largo alcance hasta 250 metros.",
+    "caracteristicas": [
+      "SKU: DH-CS4010-8ET-110",
+      "Puertos: 8 x PoE 10/100M + 2 x Uplink Gigabit RJ45",
+      "Potencia PoE Total: 110W",
+      "Modo Extendido: PoE hasta 250 metros",
+      "Gestión: DoLynk Care Cloud y Web local",
+      "Garantía WES: 1 año"
+    ],
+    "features": [
+      "SKU: DH-CS4010-8ET-110",
+      "Puertos: 8 x PoE 10/100M + 2 x Uplink Gigabit RJ45",
+      "Potencia PoE Total: 110W",
+      "Modo Extendido: PoE hasta 250 metros",
+      "Gestión: DoLynk Care Cloud y Web local",
+      "Garantía WES: 1 año"
+    ],
+    "precio": 4950,
+    "price": 4950,
+    "moneda": "DOP",
+    "currency": "DOP",
+    "disponibilidad": "Disponible",
+    "availability": "Disponible",
+    "stock": 8,
+    "imagen_url": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80",
+    "image": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80",
+    "code": "DH-CS4010-8ET-110",
+    "name": "SWITCH 8 PUERTOS POE FAST ETHERNET + 2 GIGABIT DAHUA (110W CLOUD)",
+    "brand": "Dahua",
+    "destacado": true,
+    "featured": true,
+    "activo": true,
+    "active": true,
+    "en_oferta": true,
+    "is_offer": true,
+    "tipo_promocion": "oferta",
+    "precio_anterior": 5500
+  },
+  {
     "id": "odoo-96",
     "codigo": "122",
     "nombre": "BATERIA 12V-4A (FORZA FUB-1245 / 4.5AH AGM)",
@@ -85,7 +277,13 @@ const INITIAL_PRODUCTS = [
     "en_oferta": true,
     "is_offer": true,
     "tipo_promocion": "oferta",
-    "precio_anterior": 890
+    "precio_anterior": 890,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-baterias"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-baterias"
   },
   {
     "id": "odoo-97",
@@ -171,7 +369,13 @@ const INITIAL_PRODUCTS = [
     "en_oferta": true,
     "is_offer": true,
     "tipo_promocion": "oferta",
-    "precio_anterior": 1350
+    "precio_anterior": 1350,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-baterias"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-baterias"
   },
   {
     "id": "odoo-125",
@@ -209,7 +413,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-baterias"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-baterias"
   },
   {
     "id": "odoo-127",
@@ -247,7 +457,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-baterias"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-baterias"
   },
   {
     "id": "odoo-160",
@@ -285,7 +501,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-conectores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-conectores"
   },
   {
     "id": "odoo-162",
@@ -331,7 +553,13 @@ const INITIAL_PRODUCTS = [
     "en_oferta": true,
     "is_offer": true,
     "tipo_promocion": "oferta",
-    "precio_anterior": 15.50
+    "precio_anterior": 15.5,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-170",
@@ -373,7 +601,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-171",
@@ -472,7 +706,13 @@ const INITIAL_PRODUCTS = [
     "en_oferta": true,
     "is_offer": true,
     "tipo_promocion": "oferta",
-    "precio_anterior": 35
+    "precio_anterior": 35,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-173",
@@ -587,7 +827,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://material.dahuasecurity.com/uploads/cpq/prm-os-srv-res/smart/formal/Product/HQ/1.0.99.50.10127/Datasheet/PFM922I-6UN-C_datasheet_20220407.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-175",
@@ -625,7 +871,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-177",
@@ -726,7 +978,13 @@ const INITIAL_PRODUCTS = [
     "en_oferta": true,
     "is_offer": true,
     "tipo_promocion": "oferta",
-    "precio_anterior": 52
+    "precio_anterior": 52,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-178",
@@ -764,7 +1022,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-181",
@@ -802,7 +1066,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-184",
@@ -840,7 +1110,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-patch-cords"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-patch-cords"
   },
   {
     "id": "odoo-185",
@@ -878,7 +1154,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-patch-cords"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-patch-cords"
   },
   {
     "id": "odoo-187",
@@ -920,7 +1202,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-patch-cords"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-patch-cords"
   },
   {
     "id": "odoo-1751",
@@ -997,7 +1285,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "assets/manuals/manual-inversor-wave-platinum-prostec.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-inversores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-inversores"
   },
   {
     "id": "odoo-1776",
@@ -1039,7 +1333,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_inversores_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-inversores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-inversores"
   },
   {
     "id": "odoo-5976",
@@ -1077,7 +1377,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-5980",
@@ -1115,7 +1421,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-5981",
@@ -1153,7 +1465,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-5983",
@@ -1191,7 +1509,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-5984",
@@ -1229,7 +1553,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-5985",
@@ -1267,7 +1597,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-5988",
@@ -1305,7 +1641,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-5990",
@@ -1343,7 +1685,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-baterias"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-baterias"
   },
   {
     "id": "odoo-5991",
@@ -1381,7 +1729,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-baterias"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-baterias"
   },
   {
     "id": "odoo-5993",
@@ -1419,7 +1773,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-baterias"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-baterias"
   },
   {
     "id": "odoo-5994",
@@ -1457,7 +1817,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-cables-utp"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-cables-utp"
   },
   {
     "id": "odoo-5995",
@@ -1495,7 +1861,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6002",
@@ -1533,7 +1905,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6003",
@@ -1571,7 +1949,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6004",
@@ -1609,7 +1993,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6005",
@@ -1647,7 +2037,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6006",
@@ -1685,7 +2081,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6007",
@@ -1723,7 +2125,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6008",
@@ -1761,7 +2169,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6012",
@@ -1799,7 +2213,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6016",
@@ -1837,7 +2257,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6017",
@@ -1875,7 +2301,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6018",
@@ -1913,7 +2345,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6019",
@@ -1951,7 +2389,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6021",
@@ -1989,7 +2433,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6036",
@@ -2027,7 +2477,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6037",
@@ -2065,7 +2521,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6038",
@@ -2103,7 +2565,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6039",
@@ -2141,7 +2609,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6040",
@@ -2179,7 +2653,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6041",
@@ -2217,7 +2697,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6042",
@@ -2255,7 +2741,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6043",
@@ -2293,7 +2785,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6044",
@@ -2331,7 +2829,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6046",
@@ -2369,7 +2873,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6048",
@@ -2407,7 +2917,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6049",
@@ -2445,7 +2961,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6050",
@@ -2483,7 +3005,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6052",
@@ -2521,7 +3049,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6064",
@@ -2559,7 +3093,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6065",
@@ -2597,7 +3137,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6066",
@@ -2635,7 +3181,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6067",
@@ -2673,7 +3225,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6068",
@@ -2711,7 +3269,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6069",
@@ -2749,7 +3313,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6070",
@@ -2787,7 +3357,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6071",
@@ -2825,7 +3401,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6072",
@@ -2863,7 +3445,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6079",
@@ -2901,7 +3489,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6081",
@@ -2939,7 +3533,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6083",
@@ -2977,7 +3577,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6094",
@@ -3015,7 +3621,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6096",
@@ -3053,7 +3665,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6102",
@@ -3091,7 +3709,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6105",
@@ -3129,7 +3753,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6109",
@@ -3167,7 +3797,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6130",
@@ -3205,7 +3841,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6132",
@@ -3243,7 +3885,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6137",
@@ -3281,7 +3929,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6139",
@@ -3319,7 +3973,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6143",
@@ -3357,7 +4017,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6145",
@@ -3395,7 +4061,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6151",
@@ -3433,7 +4105,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6152",
@@ -3471,7 +4149,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6153",
@@ -3509,7 +4193,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6154",
@@ -3547,7 +4237,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6155",
@@ -3585,7 +4281,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6156",
@@ -3623,7 +4325,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6158",
@@ -3661,7 +4369,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6165",
@@ -3699,7 +4413,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6169",
@@ -3737,7 +4457,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6171",
@@ -3775,7 +4501,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6172",
@@ -3813,7 +4545,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6173",
@@ -3851,7 +4589,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6176",
@@ -3889,7 +4633,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6178",
@@ -3927,7 +4677,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6182",
@@ -3965,7 +4721,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6183",
@@ -4003,7 +4765,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6184",
@@ -4041,7 +4809,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-tuberia"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-tuberia"
   },
   {
     "id": "odoo-6534",
@@ -4079,7 +4853,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6535",
@@ -4117,7 +4897,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6545",
@@ -4155,7 +4941,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6546",
@@ -4193,7 +4985,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6550",
@@ -4231,7 +5029,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6551",
@@ -4269,7 +5073,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6552",
@@ -4307,7 +5117,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6553",
@@ -4345,7 +5161,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6559",
@@ -4383,7 +5205,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6560",
@@ -4421,7 +5249,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6563",
@@ -4459,7 +5293,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6564",
@@ -4497,7 +5337,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6565",
@@ -4535,7 +5381,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6566",
@@ -4573,7 +5425,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6567",
@@ -4611,7 +5469,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6568",
@@ -4649,7 +5513,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6569",
@@ -4687,7 +5557,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6571",
@@ -4725,7 +5601,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6574",
@@ -4763,7 +5645,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6575",
@@ -4801,7 +5689,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6578",
@@ -4839,7 +5733,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6579",
@@ -4877,7 +5777,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6580",
@@ -4915,7 +5821,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6581",
@@ -4953,7 +5865,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6582",
@@ -4991,7 +5909,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6583",
@@ -5029,7 +5953,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6584",
@@ -5067,7 +5997,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6585",
@@ -5105,7 +6041,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6586",
@@ -5143,7 +6085,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6587",
@@ -5181,7 +6129,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6590",
@@ -5219,7 +6173,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6591",
@@ -5257,7 +6217,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6592",
@@ -5295,7 +6261,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6593",
@@ -5333,7 +6305,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6598",
@@ -5371,7 +6349,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6600",
@@ -5409,7 +6393,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6601",
@@ -5447,7 +6437,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6602",
@@ -5485,7 +6481,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6603",
@@ -5523,7 +6525,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6606",
@@ -5561,7 +6569,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6613",
@@ -5599,7 +6613,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6615",
@@ -5637,7 +6657,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6618",
@@ -5675,7 +6701,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-6620",
@@ -5713,7 +6745,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6621",
@@ -5751,7 +6789,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6623",
@@ -5789,7 +6833,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-conectores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-conectores"
   },
   {
     "id": "odoo-6624",
@@ -5827,7 +6877,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-conectores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-conectores"
   },
   {
     "id": "odoo-6625",
@@ -5865,7 +6921,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-conectores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-conectores"
   },
   {
     "id": "odoo-6627",
@@ -5903,7 +6965,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6628",
@@ -5941,7 +7009,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6635",
@@ -5979,7 +7053,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6636",
@@ -6017,7 +7097,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6639",
@@ -6055,7 +7141,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6640",
@@ -6093,7 +7185,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-6644",
@@ -6131,7 +7229,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-18254",
@@ -6173,7 +7277,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-accesorios"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-accesorios"
   },
   {
     "id": "odoo-18256",
@@ -6215,7 +7325,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18257",
@@ -6257,7 +7373,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-accesorios"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-accesorios"
   },
   {
     "id": "odoo-18261",
@@ -6295,7 +7417,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-ip"
   },
   {
     "id": "odoo-18263",
@@ -6333,7 +7461,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18265",
@@ -6371,7 +7505,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18271",
@@ -6413,7 +7553,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18273",
@@ -6455,7 +7601,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18274",
@@ -6493,7 +7645,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18275",
@@ -6535,7 +7693,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18277",
@@ -6577,7 +7741,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18282",
@@ -6619,7 +7789,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18288",
@@ -6661,7 +7838,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18291",
@@ -6699,7 +7883,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18296",
@@ -6741,7 +7932,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18297",
@@ -6783,7 +7981,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18308",
@@ -6821,7 +8026,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18316",
@@ -6859,7 +8071,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18320",
@@ -6897,7 +8115,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18322",
@@ -6939,7 +8163,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18323",
@@ -6977,7 +8207,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18324",
@@ -7019,7 +8256,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18325",
@@ -7061,7 +8304,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18326",
@@ -7103,7 +8352,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18328",
@@ -7145,7 +8400,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18329",
@@ -7187,7 +8448,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18333",
@@ -7229,7 +8496,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18334",
@@ -7271,7 +8544,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18338",
@@ -7313,7 +8592,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18340",
@@ -7355,7 +8641,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18341",
@@ -7397,7 +8690,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18349",
@@ -7439,7 +8739,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18351",
@@ -7481,7 +8787,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18358",
@@ -7523,7 +8836,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18359",
@@ -7561,7 +8881,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18369",
@@ -7603,7 +8930,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18376",
@@ -7645,7 +8979,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18377",
@@ -7687,7 +9027,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18380",
@@ -7725,7 +9071,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18381",
@@ -7767,7 +9120,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-bullet",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-bullet"
   },
   {
     "id": "odoo-18383",
@@ -7809,7 +9169,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18384",
@@ -7851,7 +9218,14 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-18393",
@@ -7889,7 +9263,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18394",
@@ -7927,7 +9307,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18397",
@@ -7965,7 +9351,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18398",
@@ -8007,7 +9399,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_hikvision_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-ip"
   },
   {
     "id": "odoo-18399",
@@ -8045,7 +9443,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-ip"
   },
   {
     "id": "odoo-18402",
@@ -8083,7 +9487,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18403",
@@ -8121,7 +9531,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-wifi"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-wifi"
   },
   {
     "id": "odoo-18407",
@@ -8159,7 +9575,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-ip"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-ip"
   },
   {
     "id": "odoo-18410",
@@ -8197,7 +9619,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-accesorios"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-accesorios"
   },
   {
     "id": "odoo-18413",
@@ -8235,7 +9663,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-accesorios"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-accesorios"
   },
   {
     "id": "odoo-18416",
@@ -8273,7 +9707,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-domos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-domos"
   },
   {
     "id": "odoo-21415",
@@ -8315,7 +9755,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-camaras",
+      "sub-cam-accesorios"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-cam-accesorios"
   },
   {
     "id": "odoo-27936",
@@ -8353,7 +9799,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conductores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-conductores"
   },
   {
     "id": "odoo-34064",
@@ -8391,7 +9843,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-inversores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-inversores"
   },
   {
     "id": "odoo-34077",
@@ -8433,7 +9891,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://warnelectricalservices.com/docs/manual_dahua_wes.pdf",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-redes",
+      "sub-red-patch-cords"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-red-patch-cords"
   },
   {
     "id": "odoo-34079",
@@ -8471,7 +9935,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-34095",
@@ -8509,7 +9979,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-cables"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-cables"
   },
   {
     "id": "odoo-34096",
@@ -8547,7 +10023,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-34127",
@@ -8585,7 +10067,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-accesorios",
+      "sub-acc-conectores-ind"
+    ],
+    "needs_review": true,
+    "subcategoria_id": "sub-acc-conectores-ind"
   },
   {
     "id": "odoo-34195",
@@ -8623,7 +10111,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": null,
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-repuestos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-repuestos"
   },
   {
     "id": "odoo-28119",
@@ -8665,7 +10159,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-31568",
@@ -8707,7 +10207,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-controles"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-controles"
   },
   {
     "id": "odoo-31569",
@@ -8787,7 +10293,13 @@ const INITIAL_PRODUCTS = [
       "Material": "Policarbonato antichoque ergonómico",
       "Compatibilidad": "Gama completa CAME (BX, BK, BXV, ATI, Fast, etc.)",
       "Garantía WES": "1 año oficial WES"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-controles"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-controles"
   },
   {
     "id": "odoo-31570",
@@ -8874,7 +10386,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-controles"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-controles"
   },
   {
     "id": "odoo-31571",
@@ -8916,7 +10434,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://www.came.com/global/sites/default/files/2021-04/FA01358M04.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-controles"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-controles"
   },
   {
     "id": "odoo-31572",
@@ -8995,7 +10519,13 @@ const INITIAL_PRODUCTS = [
       "Alcance": "50 a 150 metros en campo abierto",
       "Color": "Bitono Negro / Azul con pulsadores reforzados",
       "Garantía WES": "1 año oficial certificada"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-controles"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-controles"
   },
   {
     "id": "odoo-33659",
@@ -9037,7 +10567,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-repuestos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-repuestos"
   },
   {
     "id": "odoo-33665",
@@ -9117,7 +10653,13 @@ const INITIAL_PRODUCTS = [
       "Dimensiones": "46 mm ancho x 108 mm alto x 23 mm profundidad",
       "Temperatura de Trabajo": "-20 °C a +55 °C",
       "Garantía WES": "2 años oficial CAME"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-repuestos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-repuestos"
   },
   {
     "id": "odoo-18519",
@@ -9159,7 +10701,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-21467",
@@ -9288,7 +10836,13 @@ const INITIAL_PRODUCTS = [
       "Cuadro de Control": "ZN8 integrado con pantalla gráfica y autodiagnóstico",
       "Protección Ambiental": "IP54 resistente a polvo denso y lluvia torrencial",
       "Garantía WES": "2 años oficial CAME Italia"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-21468",
@@ -9379,7 +10933,13 @@ const INITIAL_PRODUCTS = [
       "Grado de Protección": "IP44 / Aislamiento Clase I",
       "Color Chasis": "Gris Grafito RAL 7024",
       "Garantía WES": "2 años oficial certificada CAME"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-21469",
@@ -9467,7 +11027,13 @@ const INITIAL_PRODUCTS = [
       "Ciclo de Trabajo": "Servicio pesado industrial (50%)",
       "Protección": "IP54 (resistente a lluvia, polvo y ambientes exigentes)",
       "Garantía WES": "2 años oficial certificada"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-21470",
@@ -9555,7 +11121,13 @@ const INITIAL_PRODUCTS = [
       "Ciclo de Trabajo": "Uso intensivo continuo",
       "Grado de Protección": "IP44 / IP54 resistente a intemperie",
       "Garantía WES": "2 años con certificación de origen CAME"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-21471",
@@ -9648,7 +11220,13 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "novedad": true,
     "is_new": true,
-    "tipo_promocion": "novedad"
+    "tipo_promocion": "novedad",
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-21472",
@@ -9703,10 +11281,6 @@ const INITIAL_PRODUCTS = [
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
     "active": true,
-    "en_oferta": true,
-    "is_offer": true,
-    "tipo_promocion": "oferta",
-    "precio_anterior": 47900,
     "gallery_images": [
       {
         "url": "https://sc04.alicdn.com/kf/H541089cf56e54fcf9bfc4f9a8691647ft.jpg_960x960q80.jpg",
@@ -9742,7 +11316,13 @@ const INITIAL_PRODUCTS = [
       "Ciclo de Trabajo": "Uso intensivo (30%)",
       "Protección": "IP54 intemperie",
       "Garantía WES": "2 años integral WES"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-34115",
@@ -9820,7 +11400,13 @@ const INITIAL_PRODUCTS = [
       "Cerradura": "Bombín cilíndrico metálico con llave CAME",
       "Protección": "Sellado perimetral contra humedad",
       "Garantía WES": "1 año oficial WES"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-25184",
@@ -9862,7 +11448,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-25186",
@@ -9904,7 +11496,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-repuestos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-repuestos"
   },
   {
     "id": "odoo-18539",
@@ -9946,7 +11544,13 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "assets/manuals/manual-came-bx-800kg.pdf",
     "featured": false,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "odoo-26418",
@@ -10025,7 +11629,13 @@ const INITIAL_PRODUCTS = [
       "Funciones de Seguridad": "Autotest de fotoceldas antes de cada maniobra",
       "Regulación": "Trimmers de par motor, tiempo de trabajo y cierre automático",
       "Garantía WES": "2 años oficial CAME"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-motores"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-motores"
   },
   {
     "id": "wes-crem-m4",
@@ -10102,7 +11712,13 @@ const INITIAL_PRODUCTS = [
       "Accesorios Incluidos": "3 separadores cilíndricos y 3 pernos M8 por tramo",
       "Capacidad de Carga": "Portones de hasta 2,200 kg",
       "Garantía WES": "3 años contra corrosión y desgaste"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-repuestos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-repuestos"
   },
   {
     "id": "wes-crem-nyl",
@@ -10179,7 +11795,13 @@ const INITIAL_PRODUCTS = [
       "Capacidad Recomendada": "Portones correderos de hasta 800 kg",
       "Ventaja Principal": "Desplazamiento supersilencioso sin engrase ni óxido",
       "Garantía WES": "2 años de fábrica"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-repuestos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-repuestos"
   },
   {
     "id": "wes-lamp-krx",
@@ -10256,7 +11878,13 @@ const INITIAL_PRODUCTS = [
       "Grado de Protección": "IP54 para intemperie total contra lluvias torrenciales",
       "Montaje": "Base horizontal o soporte angular lateral para pared",
       "Garantía WES": "2 años oficial CAME"
-    }
+    },
+    "category_ids": [
+      "cat-acceso",
+      "sub-acc-repuestos"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-acc-repuestos"
   },
   {
     "id": "odoo-1646",
@@ -10354,14 +11982,19 @@ const INITIAL_PRODUCTS = [
     ],
     "manualUrl": "https://smartxbd.com/product/sonoff-pow-elite-20a-wifi-power-meter-smart-switch-module-powr320d/",
     "featured": true,
-    "active": true
+    "active": true,
+    "category_ids": [
+      "cat-energia",
+      "sub-ene-smart"
+    ],
+    "needs_review": false,
+    "subcategoria_id": "sub-ene-smart"
   }
 ];
 
-// Almacenamiento local para permitir gestión dinámica desde el panel admin y tienda pública
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v30_catalog';
+    const versionKey = 'wes_products_v31_catalog';
     let products = null;
     try {
       if (typeof localStorage !== 'undefined') {
