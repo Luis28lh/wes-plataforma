@@ -865,10 +865,25 @@ function setupChatEvents() {
 
     const description = text;
 
+    // Detectar ubicación
+    let loc = 'Moca, Rep. Dominicana';
+    const locMatch = text.match(/(?:en\s+|ubicaci[oó]n:?\s*|direcci[oó]n:?\s*)([A-Za-z0-9\s#.,\-]+?)(?:(?:\s+ma[ñn]ana|\s+el\s+lunes|\s+a\s+las|\s+tel|\s*,\s*|$))/i);
+    if (locMatch && locMatch[1] && locMatch[1].length > 3) {
+      loc = locMatch[1].trim();
+    }
+
+    // Detectar fecha/horario deseado
+    let when = 'En horario laboral regular';
+    const whenMatch = text.match(/(ma[ñn]ana(?:\s+en\s+la\s+ma[ñn]ana|\s+en\s+la\s+tarde|\s+a\s+las\s+[0-9:apm\s.]+)?|el\s+lunes(?:\s+a\s+las\s+[0-9:apm\s.]+)?|a\s+las\s+[0-9]+(?::[0-9]+)?\s*(?:am|pm|a\.m\.|p\.m\.)?)/i);
+    if (whenMatch) {
+      when = whenMatch[0].trim();
+    }
+
     chatSession.ticketDraft.name = name;
     chatSession.ticketDraft.phone = phone || '(809) ';
-    chatSession.ticketDraft.address = 'Moca, Rep. Dominicana';
-    chatSession.ticketDraft.equipment = chatSession.ticketDraft.equipment || 'Revisión Técnica General';
+    chatSession.ticketDraft.address = loc;
+    chatSession.ticketDraft.requestedWhen = when;
+    chatSession.ticketDraft.equipment = chatSession.ticketDraft.equipment || 'Atención y Requerimiento Técnico/Comercial';
     chatSession.ticketDraft.description = description;
 
     // Presentar borrador con Human-in-the-Loop para confirmación antes de guardar
@@ -876,18 +891,20 @@ function setupChatEvents() {
       <div class="p-3 bg-white rounded-xl border border-amber-300 shadow-sm space-y-2">
         <div class="flex items-center space-x-1.5 font-bold text-amber-900 text-xs border-b border-amber-100 pb-1.5">
           <i class="fas fa-clipboard-check text-amber-600"></i>
-          <span>Confirmación de Datos para Soporte Técnico</span>
+          <span>Confirmación de Datos de Solicitud</span>
         </div>
-        <p class="text-[11px] text-slate-600">Por favor confirma que tus datos estén correctos:</p>
+        <p class="text-[11px] text-slate-600">Por favor confirma que tus datos estén correctos antes de registrar:</p>
         <div class="space-y-1 text-slate-700 text-xs">
           <div><span class="text-slate-400 font-bold">Cliente:</span> <strong>${escapeHtml(chatSession.ticketDraft.name)}</strong></div>
-          <div><span class="text-slate-400 font-bold">Teléfono:</span> <strong>${escapeHtml(chatSession.ticketDraft.phone)}</strong></div>
-          <div><span class="text-slate-400 font-bold">Detalle del requerimiento:</span> ${escapeHtml(chatSession.ticketDraft.description)}</div>
+          <div><span class="text-slate-400 font-bold">Contacto:</span> <strong>${escapeHtml(chatSession.ticketDraft.phone)}</strong></div>
+          <div><span class="text-slate-400 font-bold">Ubicación:</span> ${escapeHtml(chatSession.ticketDraft.address)}</div>
+          <div><span class="text-slate-400 font-bold">Horario solicitado:</span> ${escapeHtml(chatSession.ticketDraft.requestedWhen)}</div>
+          <div><span class="text-slate-400 font-bold">Requerimiento:</span> ${escapeHtml(chatSession.ticketDraft.description)}</div>
         </div>
         <div class="pt-2 flex items-center space-x-2">
           <button type="button" onclick="confirmTicketDraft()" class="flex-1 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold text-xs transition shadow-xs flex items-center justify-center space-x-1 border border-wes-gold/40">
             <i class="fas fa-check text-wes-gold"></i>
-            <span>Confirmar y Enviar Datos</span>
+            <span>Confirmar y Enviar Solicitud</span>
           </button>
           <button type="button" onclick="cancelTicketDraft()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition">
             Cancelar
@@ -897,46 +914,125 @@ function setupChatEvents() {
     `);
   }
 
-  function confirmTicketDraft() {
-    if (typeof KDSService === 'undefined' || typeof KDSService.createService !== 'function') {
-      appendBotMessage(`
-        <p class="text-rose-600 font-bold">No fue posible conectar con el sistema de órdenes en este momento.</p>
-        <p class="text-slate-600">Por favor comunícate directamente por WhatsApp al <a href="${WES_KB.empresa.whatsappUrl}" class="text-emerald-600 font-bold">${WES_KB.empresa.telefono}</a>.</p>
-      `);
-      return;
-    }
-
+  async function confirmTicketDraft() {
     const draft = chatSession.ticketDraft;
-    const res = KDSService.createService({
-      clientName: draft.name || 'Cliente WES',
-      phone: draft.phone && draft.phone.length > 5 ? draft.phone : '(809) 578-0000',
-      productSystem: draft.equipment || 'Servicio Técnico Solicitado',
-      address: draft.address || 'Moca, Rep. Dominicana',
-      description: draft.description || 'Solicitud generada desde el Asistente Virtual Web.',
-      priority: 'Normal'
-    });
+    
+    // Obtener identidad del usuario autenticado si existe
+    let currentUser = null;
+    try {
+      if (typeof UserAuth !== 'undefined' && typeof UserAuth.getCurrentUser === 'function') {
+        currentUser = UserAuth.getCurrentUser();
+      }
+    } catch(uErr) {}
 
-    if (res.success) {
+    const payloadData = {
+      name: draft.name || (currentUser && currentUser.name) || 'Cliente WES',
+      phone: draft.phone && draft.phone.length > 5 ? draft.phone : (currentUser && currentUser.phone) || '(809) 578-0000',
+      contact: draft.phone || (currentUser && currentUser.email) || draft.name,
+      location: draft.address || 'Moca, Rep. Dominicana',
+      detail: draft.description || draft.equipment || 'Solicitud de atención y servicio técnico generada desde el chat de Sofía.',
+      type: /(cotiz|precio|compr|bater[ií]a|motor)/i.test(draft.description) ? 'ventas' : 'soporte',
+      requestedWhen: draft.requestedWhen || 'lo antes posible en horario laboral',
+      clientId: (currentUser && currentUser.id) || 'INVITADO',
+      channel: 'chat_sofia'
+    };
+
+    scheduleTypingIndicator();
+
+    try {
+      const backendUrl = getEffectiveBackendUrl();
+      let resData = null;
+
+      if (backendUrl) {
+        const response = await fetch(backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'create_sofia_service_request',
+            data: payloadData
+          })
+        });
+
+        if (response.ok) {
+          resData = await response.json();
+        }
+      }
+
+      removeTypingIndicator();
+
+      if (resData && resData.success && resData.solicitudNumber) {
+        const solNum = resData.solicitudNumber;
+        const dateReq = resData.dateRequested || 'el próximo día hábil';
+        const timeReq = resData.timeRequested || 'en horario laboral';
+        
+        appendBotMessage(`
+          <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-950 space-y-2">
+            <div class="flex items-center space-x-1.5 font-black text-emerald-800 text-xs">
+              <i class="fas fa-check-circle text-emerald-600 text-sm"></i>
+              <span>Solicitud Registrada en el Sistema</span>
+            </div>
+            <p class="text-xs text-slate-800 leading-relaxed font-semibold">
+              Registré su solicitud con el número <strong>${escapeHtml(solNum)}</strong>, para atención solicitada el <strong>${escapeHtml(dateReq)}</strong> a las <strong>${escapeHtml(timeReq)}</strong>. Nuestro equipo confirmará la disponibilidad.
+            </p>
+            <div class="p-2.5 bg-white rounded-lg border border-emerald-200 text-xs text-slate-700">
+              <div>• <strong>Cliente:</strong> ${escapeHtml(payloadData.name)}</div>
+              <div>• <strong>Contacto:</strong> ${escapeHtml(payloadData.phone)}</div>
+              <div>• <strong>Requerimiento:</strong> ${escapeHtml(payloadData.detail)}</div>
+            </div>
+            <p class="text-[11px] text-emerald-800">Se ha generado una notificación para nuestro personal técnico y comercial.</p>
+          </div>
+        `);
+
+        // Registrar en memoria conversacional
+        if (!chatSession.chatHistory) chatSession.chatHistory = [];
+        chatSession.chatHistory.push({ role: 'user', content: `Confirmar solicitud para ${payloadData.name}` });
+        chatSession.chatHistory.push({ role: 'model', content: `Registré su solicitud con el número ${solNum}, para atención solicitada el ${dateReq} a las ${timeReq}. Nuestro equipo confirmará la disponibilidad.` });
+
+        chatSession.step = 'idle';
+        chatSession.ticketDraft = {};
+        return;
+      }
+
+      // Si el backend no respondió favorablemente, permitir reintento sin perder datos
+      const errMsg = (resData && resData.message) ? resData.message : 'No fue posible registrar la solicitud en el servidor central en este momento.';
       appendBotMessage(`
-        <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-950 space-y-2">
-          <div class="flex items-center space-x-1.5 font-black text-emerald-800 text-xs">
-            <i class="fas fa-check-circle text-emerald-600 text-sm"></i>
-            <span>¡Datos Recibidos Correctamente!</span>
+        <div class="p-3 bg-rose-50 border border-rose-300 rounded-xl text-rose-950 space-y-2">
+          <div class="flex items-center space-x-1.5 font-bold text-rose-700 text-xs">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>No se pudo completar el registro</span>
           </div>
-          <p class="text-xs text-slate-800 leading-relaxed">
-            Hemos tomado tu nombre, tu número de teléfono y la indicación de tu requerimiento técnico.
-          </p>
-          <div class="p-2.5 bg-white rounded-lg border border-emerald-200 text-xs text-slate-800 font-semibold">
-            El lunes uno de nuestros técnicos te estará atendiendo para dar seguimiento directo a tu caso.
+          <p class="text-xs text-rose-800">${escapeHtml(errMsg)}</p>
+          <p class="text-[11px] text-slate-600">Sus datos se han conservado intactos. Puede reintentar el envío ahora o escribirnos por WhatsApp.</p>
+          <div class="pt-1 flex items-center space-x-2">
+            <button type="button" onclick="confirmTicketDraft()" class="flex-1 py-1.5 bg-wes-blue text-white rounded-lg text-xs font-bold hover:bg-wes-dark transition">
+              <i class="fas fa-redo-alt mr-1"></i>Reintentar Guardar
+            </button>
+            <button type="button" onclick="cancelTicketDraft()" class="px-2.5 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-300 transition">
+              Cancelar
+            </button>
           </div>
-          <p class="text-[11px] text-emerald-800">Muchas gracias por comunicarte con Warn Electrical Services.</p>
         </div>
       `);
-      chatSession.step = 'idle';
-      chatSession.ticketDraft = {};
-    } else {
+
+    } catch (err) {
+      removeTypingIndicator();
+      console.error('[WES Chat] Error guardando solicitud:', err);
       appendBotMessage(`
-        <p class="text-rose-600 font-bold">${escapeHtml(res.message || 'Error al guardar la solicitud')}</p>
+        <div class="p-3 bg-rose-50 border border-rose-300 rounded-xl text-rose-950 space-y-2">
+          <div class="flex items-center space-x-1.5 font-bold text-rose-700 text-xs">
+            <i class="fas fa-wifi"></i>
+            <span>Interrupción temporal de conexión</span>
+          </div>
+          <p class="text-xs text-rose-800">No pudimos conectar con el servidor central para confirmar su número de solicitud.</p>
+          <div class="pt-1 flex items-center space-x-2">
+            <button type="button" onclick="confirmTicketDraft()" class="flex-1 py-1.5 bg-wes-blue text-white rounded-lg text-xs font-bold hover:bg-wes-dark transition">
+              <i class="fas fa-redo-alt mr-1"></i>Reintentar
+            </button>
+            <button type="button" onclick="cancelTicketDraft()" class="px-2.5 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-300 transition">
+              Cancelar
+            </button>
+          </div>
+        </div>
       `);
     }
   }
@@ -1003,6 +1099,14 @@ function setupChatEvents() {
           <p class="font-bold text-slate-900 mb-1">🔍 Consulta de Ticket Técnico WES</p>
           <p class="text-slate-600">Por favor indíqueme el <strong>código de su ticket</strong> (ejemplo: <code>SRV-2026-0001</code> o solo <code>0001</code>) o su número de teléfono registrado en el taller:</p>
         `);
+        return;
+      }
+
+      // 4.0 Detección de solicitud de atención, cotización, visita o servicio
+      const isExplicitServiceRequest = /(solicitar\s+visita|solicitar\s+atenci[oó]n|solicitar\s+cotizaci[oó]n|quiero\s+una\s+visita|necesito\s+una\s+visita|quiero\s+que\s+vengan|enviar\s+un\s+t[eé]cnico|solicitar\s+soporte|quiero\s+cotizar\s+formalmente)/i.test(lower);
+      if (isExplicitServiceRequest) {
+        removeTypingIndicator();
+        startServiceRequestFlow();
         return;
       }
 

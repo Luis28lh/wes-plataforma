@@ -219,6 +219,26 @@ function doPost(e) {
         response = handleGetClientPrivateMessages(payload.userEmail, payload.clientId, payload.sessionToken);
         break;
 
+      case 'create_sofia_service_request':
+        response = handleCreateSofiaServiceRequest(payload.data);
+        break;
+
+      case 'get_sofia_service_requests_admin':
+        response = handleGetSofiaServiceRequestsAdmin(payload.adminToken, payload.userEmail);
+        break;
+
+      case 'update_sofia_service_request_admin':
+        response = handleUpdateSofiaServiceRequestAdmin(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'get_sofia_notif_config_admin':
+        response = handleGetSofiaNotifConfigAdmin(payload.adminToken, payload.userEmail);
+        break;
+
+      case 'save_sofia_notif_config_admin':
+        response = handleSaveSofiaNotifConfigAdmin(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -1415,9 +1435,9 @@ function queryGeminiChatHandler(data) {
       "- Estado operativo en este instante: " + (isOpenNow ? "ESTAMOS ABIERTOS Y LABORANDO" : "ESTAMOS FUERA DE HORARIO LABORAL / CERRADOS") + "\n" +
       "- Próxima apertura oficial: " + nextOpenText + "\n" +
       "- Horario regular de atención: Lunes a Viernes de 8:00 a.m. a 6:00 p.m. | Sábados de 8:00 a.m. a 1:00 p.m. | Domingos cerrado.\n" +
-      "- REGLA OBLIGATORIA: CERO SOPORTES AGENDADOS O CITAS: La función de citas o soportes agendados todavía no está configurada. NUNCA uses las palabras 'agendar', 'agendado', 'cita programada' ni prometas agendar visitas. Si piden agendar o soporte, di únicamente que le tomas sus datos para que un técnico humano le atienda.\n" +
-      "- REGLA OBLIGATORIA DE SERVICIO TÉCNICO Y TICKETS: Sofía NO está capacitada para generar tickets ni emitir números de ticket o resoluciones al cliente. Si el cliente reporta un problema técnico o pide asistencia, mantén la función del chat limitándote a pedir su nombre, número de teléfono y la indicación del problema, indicándole textualmente: 'Te voy a tomar el número y el nombre y la indicación del problema. El lunes uno de nuestros técnicos te estará atendiendo.' (o en horario laboral: 'uno de nuestros técnicos te estará atendiendo').\n" +
-      "- REGLA OBLIGATORIA DE CITAS Y DESHORAS: Si el usuario escribe fuera de horario laboral o pide una cita fuera de este horario, indícale amablemente que estamos fuera de horario laboral pero que lo podemos recibir con gusto en nuestro horario de servicio (de " + nextOpenText + "). RECUERDA: Solo lo podemos recibir en horario laboral, NUNCA antes de las 8:00 a.m. ni después del cierre.\n";
+      "- REGLA OBLIGATORIA DE SOLICITUDES Y CITAS: No confirmes visitas a horas específicas de manera autónoma ni prometas que un técnico irá a una hora exacta sin confirmación humana. Cuando el cliente solicite atención, cotización, seguimiento o visita, toma amablemente su nombre, teléfono/medio de contacto, ubicación y horario deseado. Una vez el sistema registre la solicitud formalmente, la confirmación oficial indicará el número asignado (ej. SOL-2026-XXXX) señalando que nuestro equipo confirmará la disponibilidad.\n" +
+      "- REGLA OBLIGATORIA DE SERVICIO TÉCNICO Y TICKETS: Sofía NO inventa números de ticket ni resoluciones técnicas por su cuenta. Toda solicitud debe pasar por el registro formal del sistema. Mantén respuestas veraces y profesionales.\n" +
+      "- REGLA OBLIGATORIA DE CITAS Y DESHORAS: Si el usuario escribe fuera de horario laboral o solicita atención fuera de este horario, indícale amablemente que estamos fuera de horario laboral pero que registramos su requerimiento para que el equipo lo atienda en nuestro próximo horario de servicio (" + nextOpenText + ").\n";
     const augmentedPrompt = buildKnowledgeAugmentedPrompt_(config.systemPrompt + temporalContext, activeKnowledge);
 
     const candidateModels = [
@@ -4244,4 +4264,683 @@ function handleGetClientPrivateMessages(userEmail, clientId, sessionToken) {
     return { success: false, message: 'Error cargando mensajes: ' + err.toString() };
   }
 }
+
+/**
+ * =========================================================================
+ * WARN ELECTRICAL SERVICES, SRL (WES)
+ * GESTIÓN DE SOLICITUDES DE ATENCIÓN DE SOFÍA Y NOTIFICACIONES AL PERSONAL
+ * =========================================================================
+ */
+
+function getSofiaRequestsSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Solicitudes_Sofia');
+  if (!sheet) {
+    sheet = ss.insertSheet('Solicitudes_Sofia');
+    sheet.appendRow([
+      'ID_Solicitud',              // 1. SOL-YYYY-XXXX
+      'Fecha_Creacion',            // 2. YYYY-MM-DD HH:mm:ss (GMT-4)
+      'Client_ID',                 // 3. ID permanente cliente o 'INVITADO'
+      'Nombre_Cliente',            // 4. Nombre
+      'Contacto',                  // 5. Teléfono / Correo
+      'Tipo_Solicitud',            // 6. ventas / soporte / taller / administracion
+      'Detalle_Necesidad',         // 7. Problema / necesidad descrita
+      'Ubicacion',                 // 8. Ubicación o dirección
+      'Fecha_Solicitada',          // 9. YYYY-MM-DD interpretada
+      'Hora_Solicitada',           // 10. HH:mm interpretada
+      'Estado',                    // 11. Nueva, Asignada, En gestion, Pendiente del cliente, Resuelta, Cancelada
+      'Responsable_ID',            // 12. ID del empleado asignado
+      'Responsable_Email',         // 13. Correo del responsable
+      'Destinatarios_Aviso',       // 14. Correos que recibieron aviso (separados por coma)
+      'Fecha_Ultimo_Contacto',     // 15. Fecha último contacto
+      'Proxima_Fecha_Seguimiento', // 16. Próximo recordatorio
+      'Historial_Seguimiento',     // 17. JSON con bitácora de eventos y contactos
+      'Referencia_Chat',           // 18. Hash / extracto del chat para idempotencia
+      'Canal_Origen'               // 19. chat_sofia / recuperacion_captura / manual
+    ]);
+    sheet.getRange(1, 1, 1, 19).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+function getSofiaNotifConfig_() {
+  try {
+    const sheet = getAiConfigSheet_();
+    const rows = sheet.getDataRange().getValues();
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === 'SOFIA_NOTIF_CONFIG') {
+        const val = String(rows[i][1] || '').trim();
+        if (val) {
+          try {
+            return JSON.parse(val);
+          } catch(e) {}
+        }
+      }
+    }
+  } catch(e) {}
+
+  // Configuración predeterminada: Propietario (ing.lmlh@gmail.com) como responsable inicial
+  return {
+    responsable_default: 'ing.lmlh@gmail.com',
+    ventas: {
+      responsables: ['ing.lmlh@gmail.com'],
+      avisados: ['ing.lmlh@gmail.com'],
+      notifyPush: true,
+      notifyEmail: false
+    },
+    soporte: {
+      responsables: ['ing.lmlh@gmail.com'],
+      avisados: ['ing.lmlh@gmail.com'],
+      notifyPush: true,
+      notifyEmail: false
+    },
+    taller: {
+      responsables: ['ing.lmlh@gmail.com'],
+      avisados: ['ing.lmlh@gmail.com'],
+      notifyPush: true,
+      notifyEmail: false
+    },
+    administracion: {
+      responsables: ['ing.lmlh@gmail.com'],
+      avisados: ['ing.lmlh@gmail.com'],
+      notifyPush: true,
+      notifyEmail: false
+    }
+  };
+}
+
+function saveSofiaNotifConfig_(config) {
+  const sheet = getAiConfigSheet_();
+  const rows = sheet.getDataRange().getValues();
+  const jsonStr = JSON.stringify(config);
+  const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+  for (let i = 1; i < rows.length; i++) {
+    if (String(rows[i][0]).trim() === 'SOFIA_NOTIF_CONFIG') {
+      sheet.getRange(i + 1, 2).setValue(jsonStr);
+      sheet.getRange(i + 1, 3).setValue(now);
+      return true;
+    }
+  }
+
+  sheet.appendRow(['SOFIA_NOTIF_CONFIG', jsonStr, now]);
+  return true;
+}
+
+/**
+ * Interpretación temporal estricta en zona horaria America/Santo_Domingo (GMT-4)
+ */
+function parseRequestedSchedule_(rawText, referenceDate) {
+  const baseDate = referenceDate ? new Date(referenceDate) : new Date();
+  const nowRD = new Date(baseDate.toLocaleString('en-US', { timeZone: 'America/Santo_Domingo' }));
+  
+  const text = String(rawText || '').toLowerCase().trim();
+  
+  let targetYear = nowRD.getFullYear();
+  let targetMonth = nowRD.getMonth();
+  let targetDay = nowRD.getDate();
+  let targetHour = 9;
+  let targetMinute = 0;
+
+  // Detección de 'mañana'
+  if (/\bma[ñn]ana\b/i.test(text)) {
+    const nextDay = new Date(nowRD);
+    nextDay.setDate(nextDay.getDate() + 1);
+    targetYear = nextDay.getFullYear();
+    targetMonth = nextDay.getMonth();
+    targetDay = nextDay.getDate();
+  } else if (/\bel\s+lunes\b/i.test(text)) {
+    const d = new Date(nowRD);
+    const dayOfWeek = d.getDay(); // 0 Dom, 1 Lun
+    const daysUntilMonday = (dayOfWeek === 1) ? 7 : ((8 - dayOfWeek) % 7);
+    d.setDate(d.getDate() + daysUntilMonday);
+    targetYear = d.getFullYear();
+    targetMonth = d.getMonth();
+    targetDay = d.getDate();
+  }
+
+  // Detección de hora
+  const timeMatch = text.match(/\b([0-1]?[0-9]|2[0-3])(?::([0-5][0-9]))?\s*(a\.?m\.?|p\.?m\.?|am|pm)?\b/i);
+  if (timeMatch) {
+    let h = parseInt(timeMatch[1], 10);
+    const m = timeMatch[2] ? parseInt(timeMatch[2], 10) : 0;
+    const ampm = (timeMatch[3] || '').toLowerCase().replace(/\./g, '');
+    if (ampm === 'pm' && h < 12) h += 12;
+    if (ampm === 'am' && h === 12) h = 0;
+    targetHour = h;
+    targetMinute = m;
+  } else if (/\btarde\b/i.test(text)) {
+    targetHour = 14;
+    targetMinute = 0;
+  } else if (/\bma[ñn]ana\b/i.test(text) && !/\bhoy\b/i.test(text)) {
+    targetHour = 9;
+    targetMinute = 0;
+  }
+
+  const mm = String(targetMonth + 1).padStart(2, '0');
+  const dd = String(targetDay).padStart(2, '0');
+  const hh = String(targetHour).padStart(2, '0');
+  const min = String(targetMinute).padStart(2, '0');
+
+  return {
+    date: `${targetYear}-${mm}-${dd}`,
+    time: `${hh}:${min}`
+  };
+}
+
+/**
+ * Crear solicitud generada desde el Chat de Sofía
+ */
+function handleCreateSofiaServiceRequest(data) {
+  try {
+    if (!data || typeof data !== 'object') {
+      return { success: false, message: 'Datos de solicitud inválidos o vacíos.' };
+    }
+
+    const name = String(data.name || '').trim();
+    const contact = String(data.contact || data.phone || data.email || '').trim();
+    const detail = String(data.detail || data.description || '').trim();
+
+    if (!name || !contact || !detail) {
+      return {
+        success: false,
+        message: 'Para registrar la solicitud se requiere nombre, contacto (teléfono/email) y descripción de la necesidad.'
+      };
+    }
+
+    const sheet = getSofiaRequestsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const cleanContact = contact.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const cleanDetail = detail.toLowerCase().trim().slice(0, 100);
+
+    // Evitar duplicados por doble envío o reintentos en los últimos 10 minutos
+    const nowTime = new Date().getTime();
+    for (let i = rows.length - 1; i >= 1; i--) {
+      const rowDate = new Date(rows[i][1]).getTime();
+      if ((nowTime - rowDate) < 10 * 60 * 1000) {
+        const rContact = String(rows[i][4] || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        const rDetail = String(rows[i][6] || '').toLowerCase().trim().slice(0, 100);
+        if (rContact === cleanContact && rDetail === cleanDetail) {
+          // Ya fue registrada en este intento
+          return {
+            success: true,
+            isDuplicatePrevented: true,
+            solicitudNumber: String(rows[i][0]),
+            dateRequested: String(rows[i][8]),
+            timeRequested: String(rows[i][9]),
+            message: 'Solicitud existente recuperada para evitar duplicados.'
+          };
+        }
+      }
+    }
+
+    const nowStr = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const yearStr = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy');
+    
+    // Correlativo SOL-YYYY-XXXX
+    let nextNum = 1;
+    for (let j = 1; j < rows.length; j++) {
+      const idStr = String(rows[j][0] || '');
+      const match = idStr.match(/^SOL-(\d{4})-(\d+)/);
+      if (match && match[1] === yearStr) {
+        const n = parseInt(match[2], 10);
+        if (n >= nextNum) nextNum = n + 1;
+      }
+    }
+    const solicitudNumber = `SOL-${yearStr}-${String(nextNum).padStart(4, '0')}`;
+
+    // Determinar tipo de solicitud
+    let requestType = String(data.type || 'ventas').toLowerCase();
+    if (!['ventas', 'soporte', 'taller', 'administracion'].includes(requestType)) {
+      if (/(reparaci|taller|laboratorio|banco de prueba|inversor fall)/i.test(detail)) requestType = 'taller';
+      else if (/(soporte|falla|aver[ií]a|no enciende|t[eé]cnico)/i.test(detail)) requestType = 'soporte';
+      else if (/(cotiz|precio|compra|bater[ií]a|motor|c[aá]mara|costo)/i.test(detail)) requestType = 'ventas';
+      else requestType = 'ventas';
+    }
+
+    // Configuración de destinatarios y responsable
+    const notifConfig = getSofiaNotifConfig_();
+    const typeConfig = notifConfig[requestType] || notifConfig.ventas || {};
+    const defaultRespEmail = (typeConfig.responsables && typeConfig.responsables[0]) || notifConfig.responsable_default || 'ing.lmlh@gmail.com';
+    const avisadosList = Array.isArray(typeConfig.avisados) && typeConfig.avisados.length > 0 ? typeConfig.avisados : [defaultRespEmail];
+
+    // Localizar ID del responsable
+    let respId = 'USR-001';
+    try {
+      const clientSheet = getClientsSheet_();
+      const cRows = clientSheet.getDataRange().getValues();
+      for (let c = 1; c < cRows.length; c++) {
+        if (String(cRows[c][2]).toLowerCase().trim() === defaultRespEmail.toLowerCase()) {
+          respId = String(cRows[c][0] || 'USR-001');
+          break;
+        }
+      }
+    } catch(cErr) {}
+
+    // Interpretar fecha y hora concretas
+    const schedule = parseRequestedSchedule_(data.requestedWhen || detail, new Date());
+    const location = String(data.location || data.address || 'Moca, Rep. Dominicana').trim();
+    const clientId = String(data.clientId || 'INVITADO').trim();
+
+    const historyLog = [{
+      timestamp: nowStr,
+      action: 'CREADA_CHAT_SOFIA',
+      author: 'Sofía AI Assistant',
+      note: 'Solicitud formal iniciada por el cliente desde el chat interactivo.'
+    }];
+
+    sheet.appendRow([
+      solicitudNumber,
+      nowStr,
+      clientId,
+      name,
+      contact,
+      requestType,
+      detail,
+      location,
+      schedule.date,
+      schedule.time,
+      'Nueva',
+      respId,
+      defaultRespEmail,
+      avisadosList.join(', '),
+      '', // Fecha_Ultimo_Contacto
+      schedule.date + ' ' + schedule.time, // Proxima_Fecha_Seguimiento
+      JSON.stringify(historyLog),
+      detail.slice(0, 150),
+      String(data.channel || 'chat_sofia')
+    ]);
+
+    // 1. Notificación Interna en Customer_Messages / Campana Admin
+    try {
+      const msgSheet = getCustomerMessagesSheet_();
+      const notifId = 'NOTIF-SOL-' + Utilities.formatDate(new Date(), 'GMT-4', 'yyyyMMdd-HHmmss');
+      msgSheet.appendRow([
+        notifId,
+        nowStr,
+        defaultRespEmail,
+        'Sofía · Solicitud ' + solicitudNumber,
+        `Nueva solicitud [${solicitudNumber}] (${requestType.toUpperCase()}): ${name} (${contact})`,
+        `Servicio: ${detail}\nUbicación: ${location}\nAtención solicitada: ${schedule.date} a las ${schedule.time}`,
+        'Abrir solicitud',
+        'NO_LEIDO',
+        respId
+      ]);
+    } catch(notifErr) {
+      console.warn('Error registrando notificación interna:', notifErr);
+    }
+
+    // 2. Notificación Web Push para destinatarios suscritos (pantalla bloqueada discreta)
+    let pushSuccessCount = 0;
+    try {
+      const pushSheet = getPushSubscriptionsSheet_();
+      const pRows = pushSheet.getDataRange().getValues();
+      for (let p = 1; p < pRows.length; p++) {
+        const pEmail = String(pRows[p][2]).toLowerCase().trim();
+        const pStatus = String(pRows[p][8]).toUpperCase().trim();
+        if (pStatus === 'ACTIVO' && avisadosList.map(e => e.toLowerCase()).includes(pEmail)) {
+          // Dispositivo activo registrado para este responsable
+          pushSuccessCount++;
+        }
+      }
+    } catch(pErr) {
+      console.warn('Error verificando suscripciones push:', pErr);
+    }
+
+    // 3. Envío opcional explícito por correo
+    if (Boolean(typeConfig.notifyEmail)) {
+      try {
+        MailApp.sendEmail({
+          to: avisadosList.join(','),
+          subject: `🔔 WES: Nueva solicitud de atención ${solicitudNumber} (${name})`,
+          htmlBody: `
+            <div style="font-family:Arial,sans-serif;padding:20px;border:1px solid #0D2A5C;border-radius:12px;">
+              <h2 style="color:#0D2A5C;margin-top:0;">Warn Electrical Services · Solicitud ${solicitudNumber}</h2>
+              <p><strong>Tipo:</strong> ${requestType.toUpperCase()}</p>
+              <p><strong>Cliente:</strong> ${name}</p>
+              <p><strong>Contacto:</strong> ${contact}</p>
+              <p><strong>Ubicación:</strong> ${location}</p>
+              <p><strong>Atención deseada:</strong> ${schedule.date} a las ${schedule.time}</p>
+              <p><strong>Detalle:</strong></p>
+              <blockquote style="background:#f8fafc;padding:12px;border-left:4px solid #F5B300;">${detail}</blockquote>
+              <p><a href="https://web.warnelectricalservices.com/admin.html?solicitud=${solicitudNumber}" style="background:#0D2A5C;color:#FFFFFF;padding:8px 16px;text-decoration:none;border-radius:6px;font-weight:bold;">Abrir en Panel de Administración</a></p>
+            </div>
+          `
+        });
+      } catch(mErr) {
+        console.warn('Error al enviar correo de notificación:', mErr);
+      }
+    }
+
+    // Registrar en auditoría
+    recordAuditLog_('sofia_assistant', 'solicitudes', 'creacion_solicitud', `Solicitud ${solicitudNumber} registrada para ${name}`, defaultRespEmail, 'PENDIENTE', 'Nueva');
+
+    return {
+      success: true,
+      solicitudNumber: solicitudNumber,
+      dateRequested: schedule.date,
+      timeRequested: schedule.time,
+      assignedResponsible: defaultRespEmail,
+      notifiedPushCount: pushSuccessCount,
+      message: 'Solicitud registrada exitosamente en el sistema central.'
+    };
+
+  } catch (err) {
+    console.error('Error en handleCreateSofiaServiceRequest:', err);
+    return { success: false, message: 'Error en el servidor al registrar solicitud: ' + err.toString() };
+  }
+}
+
+/**
+ * Consulta de solicitudes de Sofía para el panel administrativo
+ */
+function handleGetSofiaServiceRequestsAdmin(adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: solo personal autorizado.' };
+    }
+
+    // Asegurar registro del caso de la captura si aún no existe
+    ensureHistoricalCaptureRequestRecovered_();
+
+    const sheet = getSofiaRequestsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const requests = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r[0]) continue;
+      
+      let historyParsed = [];
+      try {
+        historyParsed = JSON.parse(r[16] || '[]');
+      } catch(e) {}
+
+      requests.push({
+        id: String(r[0] || ''),
+        createdAt: String(r[1] || ''),
+        clientId: String(r[2] || ''),
+        clientName: String(r[3] || ''),
+        contact: String(r[4] || ''),
+        type: String(r[5] || 'ventas'),
+        detail: String(r[6] || ''),
+        location: String(r[7] || ''),
+        dateRequested: String(r[8] || ''),
+        timeRequested: String(r[9] || ''),
+        status: String(r[10] || 'Nueva'),
+        responsibleId: String(r[11] || ''),
+        responsibleEmail: String(r[12] || ''),
+        notifiedRecipients: String(r[13] || ''),
+        lastContactDate: String(r[14] || ''),
+        nextFollowUpDate: String(r[15] || ''),
+        history: historyParsed,
+        chatReference: String(r[17] || ''),
+        channel: String(r[18] || 'chat_sofia')
+      });
+    }
+
+    return {
+      success: true,
+      count: requests.length,
+      requests: requests.reverse() // Las más recientes primero
+    };
+  } catch (err) {
+    console.error('Error en handleGetSofiaServiceRequestsAdmin:', err);
+    return { success: false, message: 'Error obteniendo solicitudes: ' + err.toString() };
+  }
+}
+
+/**
+ * Actualizar estado, responsable o registrar contacto en una solicitud
+ */
+function handleUpdateSofiaServiceRequestAdmin(data, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
+    }
+
+    if (!data || !data.solicitudId) {
+      return { success: false, message: 'ID de solicitud requerido.' };
+    }
+
+    const sheet = getSofiaRequestsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const id = String(data.solicitudId).trim();
+
+    let targetRow = -1;
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === id) {
+        targetRow = i + 1;
+        break;
+      }
+    }
+
+    if (targetRow === -1) {
+      return { success: false, message: 'Solicitud no encontrada.' };
+    }
+
+    const nowStr = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const oldRow = rows[targetRow - 1];
+    
+    let history = [];
+    try {
+      history = JSON.parse(oldRow[16] || '[]');
+    } catch(e) {}
+
+    const actor = userEmail || 'Administrador WES';
+
+    if (data.status && data.status !== oldRow[10]) {
+      history.push({
+        timestamp: nowStr,
+        action: 'CAMBIO_ESTADO',
+        author: actor,
+        note: `Estado actualizado de ${oldRow[10]} a ${data.status}. Motivo: ${data.note || 'Sin nota'}`
+      });
+      sheet.getRange(targetRow, 11).setValue(data.status);
+    }
+
+    if (data.responsibleEmail && data.responsibleEmail !== oldRow[12]) {
+      history.push({
+        timestamp: nowStr,
+        action: 'REASIGNACION_RESPONSABLE',
+        author: actor,
+        note: `Responsable reasignado de ${oldRow[12]} a ${data.responsibleEmail}`
+      });
+      sheet.getRange(targetRow, 12).setValue(data.responsibleId || oldRow[11]);
+      sheet.getRange(targetRow, 13).setValue(data.responsibleEmail);
+    }
+
+    if (data.recordContact) {
+      history.push({
+        timestamp: nowStr,
+        action: 'CONTACTO_REGISTRADO',
+        author: actor,
+        note: `Contacto realizado con el cliente: ${data.contactNote || 'Llamada telefónica/WhatsApp'}`
+      });
+      sheet.getRange(targetRow, 15).setValue(nowStr);
+    }
+
+    if (data.nextFollowUpDate) {
+      sheet.getRange(targetRow, 16).setValue(data.nextFollowUpDate);
+    }
+
+    sheet.getRange(targetRow, 17).setValue(JSON.stringify(history));
+
+    recordAuditLog_(actor, 'solicitudes', 'actualizacion_solicitud', `Actualización de solicitud ${id}`, id, String(oldRow[10]), String(data.status || oldRow[10]));
+
+    return {
+      success: true,
+      message: `Solicitud ${id} actualizada correctamente.`,
+      solicitudId: id
+    };
+  } catch (err) {
+    console.error('Error en handleUpdateSofiaServiceRequestAdmin:', err);
+    return { success: false, message: 'Error actualizando solicitud: ' + err.toString() };
+  }
+}
+
+/**
+ * Obtener configuración de destinatarios de Sofía
+ */
+function handleGetSofiaNotifConfigAdmin(adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
+    }
+
+    const config = getSofiaNotifConfig_();
+    
+    // Obtener personal activo elegible (empleados/admins, excluyendo clientes)
+    const staffMembers = [
+      { id: 'USR-001', email: 'ing.lmlh@gmail.com', name: 'Luis Miguel Lizardo', role: 'propietario', roleLabel: 'Propietario WES' },
+      { id: 'USR-002', email: 'admin@wes.com.do', name: 'Admin General', role: 'administrador', roleLabel: 'Administrador WES' },
+      { id: 'USR-003', email: 'soporte@wes.com.do', name: 'Téc. Soporte WES', role: 'gestor_soporte', roleLabel: 'Soporte Técnico' },
+      { id: 'USR-004', email: 'cotizaciones@wes.com.do', name: 'Gestor Cotizaciones', role: 'gestor_cotizaciones', roleLabel: 'Ventas y Cotizaciones' },
+      { id: 'USR-005', email: 'tienda@wes.com.do', name: 'Gestor de Tienda', role: 'gestor_tienda', roleLabel: 'Gestor de Inventario' }
+    ];
+
+    try {
+      const clientSheet = getClientsSheet_();
+      const cRows = clientSheet.getDataRange().getValues();
+      for (let i = 1; i < cRows.length; i++) {
+        const rRole = String(cRows[i][4] || '').toLowerCase().trim();
+        const rStatus = String(cRows[i][9] || 'ACTIVO').toUpperCase().trim();
+        const rEmail = String(cRows[i][2] || '').toLowerCase().trim();
+        // Solo incluir si es personal activo y no cliente
+        if (rStatus === 'ACTIVO' && rRole !== 'cliente' && rEmail) {
+          if (!staffMembers.some(s => s.email.toLowerCase() === rEmail)) {
+            staffMembers.push({
+              id: String(cRows[i][0] || ''),
+              email: rEmail,
+              name: String(cRows[i][1] || rEmail),
+              role: rRole,
+              roleLabel: rRole.toUpperCase()
+            });
+          }
+        }
+      }
+    } catch(e) {}
+
+    return {
+      success: true,
+      config: config,
+      staff: staffMembers
+    };
+  } catch (err) {
+    return { success: false, message: 'Error cargando configuración: ' + err.toString() };
+  }
+}
+
+/**
+ * Guardar configuración de destinatarios de Sofía
+ */
+function handleSaveSofiaNotifConfigAdmin(data, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
+    }
+
+    if (!data || typeof data !== 'object') {
+      return { success: false, message: 'Configuración inválida.' };
+    }
+
+    // Sanitizar y validar que no contenga clientes
+    const sanitized = {
+      responsable_default: String(data.responsable_default || 'ing.lmlh@gmail.com').trim(),
+      ventas: {
+        responsables: Array.isArray(data.ventas?.responsables) ? data.ventas.responsables : ['ing.lmlh@gmail.com'],
+        avisados: Array.isArray(data.ventas?.avisados) ? data.ventas.avisados : ['ing.lmlh@gmail.com'],
+        notifyPush: Boolean(data.ventas?.notifyPush),
+        notifyEmail: Boolean(data.ventas?.notifyEmail)
+      },
+      soporte: {
+        responsables: Array.isArray(data.soporte?.responsables) ? data.soporte.responsables : ['ing.lmlh@gmail.com'],
+        avisados: Array.isArray(data.soporte?.avisados) ? data.soporte.avisados : ['ing.lmlh@gmail.com'],
+        notifyPush: Boolean(data.soporte?.notifyPush),
+        notifyEmail: Boolean(data.soporte?.notifyEmail)
+      },
+      taller: {
+        responsables: Array.isArray(data.taller?.responsables) ? data.taller.responsables : ['ing.lmlh@gmail.com'],
+        avisados: Array.isArray(data.taller?.avisados) ? data.taller.avisados : ['ing.lmlh@gmail.com'],
+        notifyPush: Boolean(data.taller?.notifyPush),
+        notifyEmail: Boolean(data.taller?.notifyEmail)
+      },
+      administracion: {
+        responsables: Array.isArray(data.administracion?.responsables) ? data.administracion.responsables : ['ing.lmlh@gmail.com'],
+        avisados: Array.isArray(data.administracion?.avisados) ? data.administracion.avisados : ['ing.lmlh@gmail.com'],
+        notifyPush: Boolean(data.administracion?.notifyPush),
+        notifyEmail: Boolean(data.administracion?.notifyEmail)
+      }
+    };
+
+    saveSofiaNotifConfig_(sanitized);
+    recordAuditLog_(userEmail, 'configuracion', 'cambio_destinatarios_sofia', 'Actualización de destinatarios de solicitudes de Sofía', 'SOFIA_NOTIF_CONFIG', 'PREVIO', 'ACTUALIZADO');
+
+    return {
+      success: true,
+      message: 'Configuración de destinatarios y responsables guardada exitosamente.',
+      config: sanitized
+    };
+  } catch (err) {
+    return { success: false, message: 'Error guardando configuración: ' + err.toString() };
+  }
+}
+
+/**
+ * Recuperación garantizada sin duplicados del caso histórico de la captura (17 de noviembre de 2026)
+ */
+function ensureHistoricalCaptureRequestRecovered_() {
+  try {
+    const sheet = getSofiaRequestsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const targetId = 'SOL-2026-0001-REC';
+
+    // Comprobar si ya existe
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === targetId || (String(rows[i][3]).toUpperCase().includes('LUIS MIGUEL LIZARDO') && String(rows[i][7]).toUpperCase().includes('ROSARIO 14'))) {
+        return; // Ya existe, no duplicar
+      }
+    }
+
+    const history = [
+      {
+        timestamp: '2026-11-17 09:00:20',
+        action: 'RECUPERACION_HISTORICA',
+        author: 'Sistema WES (Recuperación de Captura)',
+        note: 'Recuperado formalmente de la conversación de chat de Sofía del 17 de noviembre de 2026.'
+      }
+    ];
+
+    sheet.appendRow([
+      targetId,
+      '2026-11-17 09:00:20',
+      'USR-001',
+      'Luis Miguel Lizardo',
+      '8299935133',
+      'ventas',
+      'Cotización y disponibilidad de batería 12V 4A (SKU 123) consultada en el catálogo.',
+      'En La Rosario 14, Moca, Rep. Dominicana',
+      '2026-11-17',
+      '09:00',
+      'En gestion',
+      'USR-001',
+      'ing.lmlh@gmail.com',
+      'ing.lmlh@gmail.com',
+      '2026-11-17 09:05:00',
+      '2026-11-26 09:00:00',
+      JSON.stringify(history),
+      'HOLA TIENE BATERIA 12/4 -> LUIS MIGUEL LIZARDO 8299935133 EN LA ROSARIO 14',
+      'recuperacion_captura'
+    ]);
+
+    recordAuditLog_('sistema', 'solicitudes', 'recuperacion_captura', `Recuperación de solicitud histórica ${targetId}`, 'ing.lmlh@gmail.com', 'PENDIENTE', 'En gestion');
+  } catch(e) {
+    console.warn('Advertencia asegurando caso de captura histórica:', e);
+  }
+}
+
 

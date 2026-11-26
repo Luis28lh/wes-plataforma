@@ -367,6 +367,7 @@ const AdminApp = {
     const navItems = [
       { id: 'dashboard', name: 'Panel Principal', icon: 'fa-chart-pie', module: 'dashboard' },
       { header: 'Solicitudes y Clientes' },
+      { id: 'sofia_solicitudes', name: 'Solicitudes de Sofía', icon: 'fa-headset', module: 'soportes' },
       { id: 'cotizaciones', name: 'Cotizaciones', icon: 'fa-file-invoice-dollar', module: 'cotizaciones' },
       { id: 'soportes', name: 'Soporte Técnico', icon: 'fa-tools', module: 'soportes' },
       { id: 'kds_servicio', name: 'KDS Servicio Técnico', icon: 'fa-tv', href: 'servicio-tecnico.html', module: 'soportes' },
@@ -429,7 +430,7 @@ const AdminApp = {
     const user = AdminAuth.getCurrentUser();
     
     // Verificar permiso para el módulo solicitado
-    const mappedModule = (moduleId === 'permisos') ? 'usuarios' : (moduleId === 'correos' || moduleId === 'ia_config') ? 'ajustes' : moduleId;
+    const mappedModule = (moduleId === 'permisos') ? 'usuarios' : (moduleId === 'correos' || moduleId === 'ia_config') ? 'ajustes' : (moduleId === 'sofia_solicitudes') ? 'soportes' : moduleId;
     if (mappedModule !== 'dashboard' && !PermissionsManager.hasPermission(mappedModule, 'ver', user)) {
       showToast('No tienes autorización para realizar esta acción', 'error');
       return;
@@ -441,6 +442,7 @@ const AdminApp = {
     // Título de la vista
     const titleMap = {
       dashboard: 'Resumen Operativo y Métricas',
+      sofia_solicitudes: 'Solicitudes y Atención de Sofía (Chat)',
       cotizaciones: 'Gestión de Cotizaciones',
       soportes: 'Tickets de Soporte Técnico',
       contactos: 'Mensajes de Contacto y Consultas',
@@ -468,6 +470,9 @@ const AdminApp = {
     switch (this.activeModule) {
       case 'dashboard':
         this.renderDashboard(container);
+        break;
+      case 'sofia_solicitudes':
+        this.renderSofiaSolicitudes(container);
         break;
       case 'cotizaciones':
         this.renderCotizaciones(container);
@@ -4953,6 +4958,10 @@ const effectivePrompt = (parsed.systemPrompt && parsed.systemPrompt.trim().lengt
             </div>
           </div>
           <div class="flex items-center space-x-2 shrink-0">
+            <button type="button" onclick="AdminApp.openSofiaNotifConfigModal()" class="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl text-xs font-black transition flex items-center space-x-1.5 shadow-md">
+              <i class="fas fa-bell"></i>
+              <span>Notificaciones de Sofía</span>
+            </button>
             <button type="button" onclick="AdminApp.testIAConnection()" id="btn-ia-test-ping" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border border-white/20">
               <i class="fas fa-bolt text-amber-400"></i>
               <span>Probar Conexión con IA</span>
@@ -6633,3 +6642,818 @@ AdminApp.openGenericModal = function(title, contentHtml) {
     modal.classList.remove('hidden');
   }
 };
+
+// ========================================================================
+// VISTA: SOLICITUDES Y ATENCIÓN DE SOFÍA (CHAT)
+// ========================================================================
+AdminApp.sofiaRequestsData = [];
+AdminApp.sofiaRequestsFilter = 'all';
+
+AdminApp.renderSofiaSolicitudes = async function(container) {
+  if (!container) container = document.getElementById('admin-dynamic-content');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="space-y-6 animate-fadeIn">
+      <!-- Encabezado con métricas y botón de configuración -->
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 rounded-3xl p-6 text-white shadow-xl flex flex-col md:flex-row md:items-center md:justify-between gap-4 border border-wes-gold/30">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-wes-gold text-slate-950 flex items-center justify-center font-black text-xl shadow-inner">
+            <i class="fas fa-headset"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 class="text-base font-extrabold font-brand tracking-wide text-white">Solicitudes de Atención de Sofía (Chat)</h3>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-white">
+                En vivo
+              </span>
+            </div>
+            <p class="text-xs text-slate-300 mt-0.5">
+              Casos confirmados por clientes a través del asistente virtual con asignación y seguimiento operativo.
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button type="button" onclick="AdminApp.openSofiaNotifConfigModal()" class="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl text-xs flex items-center space-x-2 shadow-lg transition active:scale-95">
+            <i class="fas fa-bell"></i>
+            <span>Notificaciones de solicitudes de Sofía</span>
+          </button>
+          <button type="button" onclick="AdminApp.loadSofiaSolicitudes(true)" class="p-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs transition" title="Refrescar">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Métricas Resumen -->
+      <div id="sofia-requests-metrics" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm text-center">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total</span>
+          <span id="sofia-stat-total" class="text-lg font-black text-slate-800">--</span>
+        </div>
+        <div class="bg-white p-3.5 rounded-2xl border border-blue-200 shadow-sm text-center">
+          <span class="text-[10px] font-bold text-blue-500 uppercase tracking-wider block">Nuevas</span>
+          <span id="sofia-stat-nuevas" class="text-lg font-black text-blue-600">--</span>
+        </div>
+        <div class="bg-white p-3.5 rounded-2xl border border-purple-200 shadow-sm text-center">
+          <span class="text-[10px] font-bold text-purple-500 uppercase tracking-wider block">Asignadas</span>
+          <span id="sofia-stat-asignadas" class="text-lg font-black text-purple-600">--</span>
+        </div>
+        <div class="bg-white p-3.5 rounded-2xl border border-amber-200 shadow-sm text-center">
+          <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider block">En gestión</span>
+          <span id="sofia-stat-gestion" class="text-lg font-black text-amber-600">--</span>
+        </div>
+        <div class="bg-white p-3.5 rounded-2xl border border-emerald-200 shadow-sm text-center">
+          <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-wider block">Resueltas</span>
+          <span id="sofia-stat-resueltas" class="text-lg font-black text-emerald-600">--</span>
+        </div>
+        <div class="bg-white p-3.5 rounded-2xl border border-rose-200 shadow-sm text-center">
+          <span class="text-[10px] font-bold text-rose-500 uppercase tracking-wider block">Pend. Cliente</span>
+          <span id="sofia-stat-pendientes" class="text-lg font-black text-rose-600">--</span>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros y Búsqueda -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <span class="text-xs font-bold text-slate-500">Filtrar:</span>
+          <select id="sofia-filter-status" onchange="AdminApp.filterSofiaSolicitudes(this.value)" class="text-xs p-2 border border-slate-300 rounded-xl bg-slate-50 font-medium">
+            <option value="all">Todos los estados</option>
+            <option value="Nueva">Nuevas</option>
+            <option value="Asignada">Asignadas</option>
+            <option value="En gestion">En gestión</option>
+            <option value="Pendiente del cliente">Pendientes del cliente</option>
+            <option value="Resuelta">Resueltas</option>
+            <option value="Cancelada">Canceladas</option>
+          </select>
+          <select id="sofia-filter-type" onchange="AdminApp.filterSofiaSolicitudes()" class="text-xs p-2 border border-slate-300 rounded-xl bg-slate-50 font-medium">
+            <option value="all">Todos los tipos</option>
+            <option value="cotizacion">Cotización</option>
+            <option value="soporte">Soporte Técnico</option>
+            <option value="visita">Visita Técnica</option>
+            <option value="atencion">Atención / Consulta</option>
+            <option value="seguimiento">Seguimiento</option>
+          </select>
+        </div>
+        <div class="relative w-full sm:w-64">
+          <input type="text" id="sofia-search-input" oninput="AdminApp.filterSofiaSolicitudes()" placeholder="Buscar por cliente, tel, caso o ubicación..." class="w-full text-xs p-2 pl-8 border border-slate-300 rounded-xl bg-slate-50 font-medium focus:bg-white focus:outline-none focus:ring-1 focus:ring-wes-blue">
+          <i class="fas fa-search absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Tabla de Solicitudes -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                <th class="p-3.5">Número / Caso</th>
+                <th class="p-3.5">Cliente & Contacto</th>
+                <th class="p-3.5">Servicio / Solicitud</th>
+                <th class="p-3.5">Fecha y Horario</th>
+                <th class="p-3.5">Responsable</th>
+                <th class="p-3.5">Estado</th>
+                <th class="p-3.5 text-right">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="sofia-requests-tbody" class="divide-y divide-slate-100">
+              <tr>
+                <td colspan="7" class="p-8 text-center text-slate-400">
+                  <i class="fas fa-spinner fa-spin text-xl mb-2 text-wes-blue block"></i>
+                  Cargando solicitudes de atención...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+
+  await this.loadSofiaSolicitudes();
+};
+
+AdminApp.loadSofiaSolicitudes = async function(isRefresh = false) {
+  const tbody = document.getElementById('sofia-requests-tbody');
+  try {
+    const user = AdminAuth.getCurrentUser();
+    const token = (user && user.token) || localStorage.getItem('wes_admin_token') || 'admin_token_wes';
+    const apiUrl = (typeof WES_CONFIG !== 'undefined' && WES_CONFIG.API_URL) ? WES_CONFIG.API_URL : (typeof CONFIG !== 'undefined' && CONFIG.API_URL ? CONFIG.API_URL : '');
+    
+    let list = [];
+    if (apiUrl && !apiUrl.includes('script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec')) {
+      try {
+        const resp = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'get_sofia_service_requests_admin',
+            adminToken: token,
+            userEmail: user ? user.email : ''
+          })
+        });
+        const data = await resp.json();
+        if (data.success && Array.isArray(data.solicitudes)) {
+          list = data.solicitudes;
+          localStorage.setItem('wes_sofia_requests_cache', JSON.stringify(list));
+        }
+      } catch (e) {
+        console.warn('Fetch get_sofia_service_requests_admin offline o fallido:', e);
+      }
+    }
+
+    if (!list.length) {
+      list = JSON.parse(localStorage.getItem('wes_sofia_requests_cache') || '[]');
+    }
+
+    // Si aún está vacío, incluir el caso recuperado de la captura para garantizar continuidad
+    if (!list.length) {
+      list = [{
+        numero: 'SOL-2026-0001-REC',
+        fecha_creacion: '2026-11-17 09:00:20',
+        cliente_id: 'USR-001',
+        cliente_nombre: 'Luis Miguel Lizardo',
+        medio_contacto: 'WhatsApp 8299935133 (Moca)',
+        telefono: '8299935133',
+        email: 'ing.lmlh@gmail.com',
+        tipo_solicitud: 'cotizacion',
+        servicio_solicitado: 'Cotización Batería 12/4 (SKU 123) - Caso recuperado captura',
+        ubicacion: 'En La Rosario 14, Moca, Rep. Dominicana',
+        fecha_solicitada: '2026-11-17',
+        horario_solicitado: '09:00:20 a.m.',
+        resumen_chat: 'Cliente solicita cotización de batería 12/4 SKU 123. Ubicación: En La Rosario 14.',
+        estado: 'En gestion',
+        responsable_email: 'ing.lmlh@gmail.com',
+        responsable_nombre: 'Luis Lizardo (Propietario)',
+        origen: 'recuperacion_captura',
+        contacto_realizado: 'Sí - Contactado por WhatsApp',
+        fecha_seguimiento: '2026-11-26 10:00:00',
+        historial_cambios: 'Caso recuperado de captura de pantalla original.'
+      }];
+    }
+
+    this.sofiaRequestsData = list;
+    this.updateSofiaMetrics(list);
+    this.renderSofiaRequestsTable(list);
+  } catch (err) {
+    console.warn('Error cargando solicitudes de Sofía:', err);
+    const cached = JSON.parse(localStorage.getItem('wes_sofia_requests_cache') || '[]');
+    this.sofiaRequestsData = cached;
+    this.renderSofiaRequestsTable(cached);
+  }
+};
+
+AdminApp.updateSofiaMetrics = function(list) {
+  const total = list.length;
+  const nuevas = list.filter(r => r.estado === 'Nueva').length;
+  const asignadas = list.filter(r => r.estado === 'Asignada').length;
+  const gestion = list.filter(r => r.estado === 'En gestion').length;
+  const resueltas = list.filter(r => r.estado === 'Resuelta').length;
+  const pendientes = list.filter(r => r.estado === 'Pendiente del cliente').length;
+
+  const setEl = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+  setEl('sofia-stat-total', total);
+  setEl('sofia-stat-nuevas', nuevas);
+  setEl('sofia-stat-asignadas', asignadas);
+  setEl('sofia-stat-gestion', gestion);
+  setEl('sofia-stat-resueltas', resueltas);
+  setEl('sofia-stat-pendientes', pendientes);
+};
+
+AdminApp.filterSofiaSolicitudes = function() {
+  const statusFilter = document.getElementById('sofia-filter-status')?.value || 'all';
+  const typeFilter = document.getElementById('sofia-filter-type')?.value || 'all';
+  const search = (document.getElementById('sofia-search-input')?.value || '').toLowerCase().trim();
+
+  let filtered = this.sofiaRequestsData.filter(r => {
+    const matchStatus = (statusFilter === 'all') || (r.estado === statusFilter);
+    const matchType = (typeFilter === 'all') || (r.tipo_solicitud === typeFilter);
+    const textBlob = `${r.numero || ''} ${r.cliente_nombre || ''} ${r.telefono || ''} ${r.email || ''} ${r.ubicacion || ''} ${r.servicio_solicitado || ''} ${r.responsable_nombre || ''}`.toLowerCase();
+    const matchSearch = !search || textBlob.includes(search);
+    return matchStatus && matchType && matchSearch;
+  });
+
+  this.renderSofiaRequestsTable(filtered);
+};
+
+AdminApp.renderSofiaRequestsTable = function(list) {
+  const tbody = document.getElementById('sofia-requests-tbody');
+  if (!tbody) return;
+
+  if (!list || !list.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="p-8 text-center text-slate-400">
+          <i class="fas fa-folder-open text-2xl mb-2 text-slate-300 block"></i>
+          No hay solicitudes de atención que coincidan con los filtros.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = list.map(item => {
+    const statusBadges = {
+      'Nueva': 'bg-blue-100 text-blue-700 border-blue-200',
+      'Asignada': 'bg-purple-100 text-purple-700 border-purple-200',
+      'En gestion': 'bg-amber-100 text-amber-800 border-amber-200',
+      'Pendiente del cliente': 'bg-rose-100 text-rose-700 border-rose-200',
+      'Resuelta': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      'Cancelada': 'bg-slate-100 text-slate-600 border-slate-200'
+    };
+    const badgeCls = statusBadges[item.estado] || 'bg-slate-100 text-slate-600 border-slate-200';
+
+    return `
+      <tr class="hover:bg-slate-50/70 transition">
+        <td class="p-3.5 whitespace-nowrap">
+          <div class="font-black text-slate-800 font-mono text-[11px]">${escapeHtml(item.numero)}</div>
+          <div class="text-[10px] text-slate-400">${escapeHtml(item.fecha_creacion || '')}</div>
+          ${item.origen === 'recuperacion_captura' ? '<span class="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/10 text-amber-600 border border-amber-300">Caso Histórico</span>' : ''}
+        </td>
+        <td class="p-3.5">
+          <div class="font-bold text-slate-800">${escapeHtml(item.cliente_nombre || 'Cliente anónimo')}</div>
+          <div class="text-[11px] text-slate-500 flex items-center space-x-1 mt-0.5">
+            <i class="fas fa-phone-alt text-[9px] text-slate-400"></i>
+            <span>${escapeHtml(item.telefono || item.medio_contacto || '--')}</span>
+          </div>
+          ${item.cliente_id ? `<div class="text-[9px] text-wes-blue font-mono">ID: ${escapeHtml(item.cliente_id)}</div>` : ''}
+        </td>
+        <td class="p-3.5">
+          <div class="font-semibold text-slate-700 line-clamp-2 max-w-xs">${escapeHtml(item.servicio_solicitado || '--')}</div>
+          ${item.ubicacion ? `
+            <div class="text-[10px] text-slate-500 flex items-center space-x-1 mt-0.5 truncate max-w-xs">
+              <i class="fas fa-map-marker-alt text-rose-500 text-[9px]"></i>
+              <span>${escapeHtml(item.ubicacion)}</span>
+            </div>
+          ` : ''}
+        </td>
+        <td class="p-3.5 whitespace-nowrap">
+          <div class="font-medium text-slate-800">
+            <i class="far fa-calendar-alt text-wes-blue mr-1"></i>
+            ${escapeHtml(item.fecha_solicitada || 'Por coordinar')}
+          </div>
+          <div class="text-[10px] text-slate-500 mt-0.5">
+            <i class="far fa-clock text-slate-400 mr-1"></i>
+            ${escapeHtml(item.horario_solicitado || '--')}
+          </div>
+        </td>
+        <td class="p-3.5">
+          <div class="font-bold text-slate-800 text-[11px]">${escapeHtml(item.responsable_nombre || 'Sin asignar')}</div>
+          <div class="text-[10px] text-slate-400 truncate max-w-[140px]">${escapeHtml(item.responsable_email || '')}</div>
+        </td>
+        <td class="p-3.5 whitespace-nowrap">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${badgeCls}">
+            ${escapeHtml(item.estado || 'Nueva')}
+          </span>
+        </td>
+        <td class="p-3.5 text-right whitespace-nowrap">
+          <button type="button" onclick="AdminApp.openSofiaSolicitudModal('${escapeHtml(item.numero)}')" class="px-2.5 py-1 bg-wes-blue hover:bg-wes-dark text-white rounded-lg text-xs font-bold transition shadow-sm">
+            <i class="fas fa-edit mr-1"></i>
+            Gestionar
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+};
+
+AdminApp.openSofiaSolicitudModal = function(numero) {
+  const item = this.sofiaRequestsData.find(r => r.numero === numero);
+  if (!item) {
+    showToast('No se encontró la solicitud seleccionada', 'error');
+    return;
+  }
+
+  const modalHtml = `
+    <div class="space-y-4 text-xs">
+      <!-- Ficha de la solicitud -->
+      <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 mb-2">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Número correlativo</span>
+            <div class="text-sm font-black text-slate-800 font-mono">${escapeHtml(item.numero)}</div>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Origen</span>
+            <div class="font-bold text-slate-700">${escapeHtml(item.origen || 'chat_sofia')}</div>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Fecha creación</span>
+            <div class="text-slate-700">${escapeHtml(item.fecha_creacion || '--')}</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Cliente</span>
+            <div class="font-bold text-slate-800 text-sm">${escapeHtml(item.cliente_nombre || 'Cliente')}</div>
+            <div class="text-slate-600 mt-0.5"><i class="fas fa-phone mr-1 text-slate-400"></i> ${escapeHtml(item.telefono || '--')}</div>
+            <div class="text-slate-600"><i class="fas fa-envelope mr-1 text-slate-400"></i> ${escapeHtml(item.email || '--')}</div>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Atención solicitada</span>
+            <div class="font-semibold text-slate-800"><i class="far fa-calendar mr-1 text-wes-blue"></i> ${escapeHtml(item.fecha_solicitada || '--')}</div>
+            <div class="text-slate-600 mt-0.5"><i class="far fa-clock mr-1 text-slate-400"></i> ${escapeHtml(item.horario_solicitado || '--')}</div>
+            <div class="text-slate-600 mt-0.5"><i class="fas fa-map-marker-alt mr-1 text-rose-500"></i> ${escapeHtml(item.ubicacion || 'No especificada')}</div>
+          </div>
+        </div>
+
+        <div class="mt-3 pt-2 border-t border-slate-200">
+          <span class="text-[10px] font-bold text-slate-400 uppercase">Problema o servicio requerido</span>
+          <p class="text-slate-700 font-medium mt-0.5 bg-white p-2.5 rounded-xl border border-slate-200">${escapeHtml(item.servicio_solicitado || '')}</p>
+        </div>
+
+        ${item.resumen_chat ? `
+          <div class="mt-2">
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Resumen de la conversación con Sofía</span>
+            <p class="text-slate-600 text-[11px] mt-0.5 bg-slate-100 p-2 rounded-xl italic">${escapeHtml(item.resumen_chat)}</p>
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Formulario de Actualización y Seguimiento Operativo -->
+      <form id="sofia-manage-form" onsubmit="AdminApp.saveSofiaSolicitudManagement(event, '${escapeHtml(item.numero)}')" class="space-y-3 bg-white p-4 rounded-2xl border border-slate-200">
+        <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wide flex items-center">
+          <i class="fas fa-tasks text-wes-blue mr-1.5"></i>
+          Seguimiento y Asignación Operativa
+        </h4>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1">Estado de la Solicitud</label>
+            <select id="manage-sofia-status" class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50 font-bold">
+              <option value="Nueva" ${item.estado === 'Nueva' ? 'selected' : ''}>Nueva</option>
+              <option value="Asignada" ${item.estado === 'Asignada' ? 'selected' : ''}>Asignada</option>
+              <option value="En gestion" ${item.estado === 'En gestion' ? 'selected' : ''}>En gestión</option>
+              <option value="Pendiente del cliente" ${item.estado === 'Pendiente del cliente' ? 'selected' : ''}>Pendiente del cliente</option>
+              <option value="Resuelta" ${item.estado === 'Resuelta' ? 'selected' : ''}>Resuelta</option>
+              <option value="Cancelada" ${item.estado === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1">Responsable Operativo</label>
+            <input type="email" id="manage-sofia-responsable" value="${escapeHtml(item.responsable_email || 'ing.lmlh@gmail.com')}" placeholder="correo@warnelectricalservices.com" class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50">
+            <span class="text-[9px] text-slate-400">Predeterminado: ing.lmlh@gmail.com (Propietario WES)</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1">Contacto Realizado con el Cliente</label>
+            <input type="text" id="manage-sofia-contacto" value="${escapeHtml(item.contacto_realizado || '')}" placeholder="Ej: Llamada realizada el 26/11 a las 10am" class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50">
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1">Próxima Fecha / Hora de Seguimiento</label>
+            <input type="text" id="manage-sofia-seguimiento" value="${escapeHtml(item.fecha_seguimiento || '')}" placeholder="YYYY-MM-DD HH:MM" class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Nota de gestión / Historial de cambios</label>
+          <textarea id="manage-sofia-nota" rows="2" placeholder="Describa el avance, acuerdo con el cliente o resolución..." class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+          <button type="button" onclick="AdminApp.closeModal('admin-modal-detail')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition">
+            Cancelar
+          </button>
+          <button type="submit" id="btn-save-sofia-manage" class="px-4 py-1.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-bold text-xs shadow-md transition flex items-center space-x-1.5">
+            <i class="fas fa-save"></i>
+            <span>Guardar Seguimiento</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  this.openGenericModal(`Gestión de Solicitud #${numero}`, modalHtml);
+};
+
+AdminApp.saveSofiaSolicitudManagement = async function(event, numero) {
+  if (event) event.preventDefault();
+  const btn = document.getElementById('btn-save-sofia-manage');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Guardando...`;
+  }
+
+  const estado = document.getElementById('manage-sofia-status')?.value || 'Nueva';
+  const responsable = document.getElementById('manage-sofia-responsable')?.value || '';
+  const contacto = document.getElementById('manage-sofia-contacto')?.value || '';
+  const seguimiento = document.getElementById('manage-sofia-seguimiento')?.value || '';
+  const nota = document.getElementById('manage-sofia-nota')?.value || '';
+
+  try {
+    const user = AdminAuth.getCurrentUser();
+    const token = (user && user.token) || localStorage.getItem('wes_admin_token') || 'admin_token_wes';
+    const apiUrl = (typeof WES_CONFIG !== 'undefined' && WES_CONFIG.API_URL) ? WES_CONFIG.API_URL : (typeof CONFIG !== 'undefined' && CONFIG.API_URL ? CONFIG.API_URL : '');
+
+    if (apiUrl && !apiUrl.includes('script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec')) {
+      try {
+        const resp = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'update_sofia_service_request_admin',
+            adminToken: token,
+            userEmail: user ? user.email : '',
+            numero: numero,
+            estado: estado,
+            responsable_email: responsable,
+            contacto_realizado: contacto,
+            fecha_seguimiento: seguimiento,
+            nota_gestion: nota
+          })
+        });
+        const data = await resp.json();
+        if (!data.success) {
+          throw new Error(data.message || 'Error al actualizar');
+        }
+      } catch (err) {
+        console.warn('Error sincronizando update con backend:', err);
+      }
+    }
+
+    // Actualizar cache local
+    const item = this.sofiaRequestsData.find(r => r.numero === numero);
+    if (item) {
+      item.estado = estado;
+      item.responsable_email = responsable;
+      item.contacto_realizado = contacto;
+      item.fecha_seguimiento = seguimiento;
+      if (nota) {
+        item.historial_cambios = (item.historial_cambios ? item.historial_cambios + ' | ' : '') + `[${new Date().toISOString()}] ${nota}`;
+      }
+      localStorage.setItem('wes_sofia_requests_cache', JSON.stringify(this.sofiaRequestsData));
+    }
+
+    showToast('Solicitud actualizada con éxito', 'success');
+    this.closeModal('admin-modal-detail');
+    this.filterSofiaSolicitudes();
+    this.updateSofiaMetrics(this.sofiaRequestsData);
+  } catch (err) {
+    alert('Error al guardar: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-save mr-1"></i> Guardar Seguimiento`;
+    }
+  }
+};
+
+// ========================================================================
+// MODAL: CONFIGURACIÓN DE NOTIFICACIONES DE SOLICITUDES DE SOFÍA
+// ========================================================================
+AdminApp.openSofiaNotifConfigModal = async function() {
+  const loadingHtml = `
+    <div class="p-8 text-center text-slate-500 text-xs">
+      <i class="fas fa-spinner fa-spin text-2xl text-wes-blue mb-2 block"></i>
+      Cargando configuración de personal y destinatarios...
+    </div>
+  `;
+  this.openGenericModal('Configurar Notificaciones de Solicitudes de Sofía', loadingHtml);
+
+  try {
+    const user = AdminAuth.getCurrentUser();
+    const token = (user && user.token) || localStorage.getItem('wes_admin_token') || 'admin_token_wes';
+    const apiUrl = (typeof WES_CONFIG !== 'undefined' && WES_CONFIG.API_URL) ? WES_CONFIG.API_URL : (typeof CONFIG !== 'undefined' && CONFIG.API_URL ? CONFIG.API_URL : '');
+
+    let config = {
+      default_responsable: 'ing.lmlh@gmail.com',
+      notify_email_enabled: true,
+      notify_push_enabled: true,
+      routes: {
+        ventas: { responsable: 'ing.lmlh@gmail.com', notify: ['ing.lmlh@gmail.com'] },
+        soporte: { responsable: 'ing.lmlh@gmail.com', notify: ['ing.lmlh@gmail.com'] },
+        taller: { responsable: 'ing.lmlh@gmail.com', notify: ['ing.lmlh@gmail.com'] },
+        administracion: { responsable: 'ing.lmlh@gmail.com', notify: ['ing.lmlh@gmail.com'] }
+      }
+    };
+    let personalList = [
+      { email: 'ing.lmlh@gmail.com', name: 'Luis Miguel Lizardo (Propietario)', role: 'propietario' },
+      { email: 'admin@wes.com.do', name: 'Admin General', role: 'administrador' },
+      { email: 'soporte@wes.com.do', name: 'Téc. Soporte WES', role: 'gestor_soporte' },
+      { email: 'cotizaciones@wes.com.do', name: 'Gestor Cotizaciones', role: 'gestor_cotizaciones' }
+    ];
+
+    if (apiUrl && !apiUrl.includes('script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec')) {
+      try {
+        const resp = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'get_sofia_notif_config_admin',
+            adminToken: token,
+            userEmail: user ? user.email : ''
+          })
+        });
+        const data = await resp.json();
+        if (data.success) {
+          if (data.config) config = data.config;
+          if (Array.isArray(data.personal_disponible) && data.personal_disponible.length) {
+            personalList = data.personal_disponible;
+          }
+        }
+      } catch (errFetch) {
+        console.warn('Backend get_sofia_notif_config_admin no accesible:', errFetch);
+      }
+    }
+
+    const savedCfg = JSON.parse(localStorage.getItem('wes_sofia_notif_config') || 'null');
+    if (savedCfg) {
+      config = Object.assign(config, savedCfg);
+    }
+
+    const renderStaffOptions = (selectedEmail) => {
+      return personalList.map(p => `
+        <option value="${escapeHtml(p.email)}" ${p.email.toLowerCase() === (selectedEmail || '').toLowerCase() ? 'selected' : ''}>
+          ${escapeHtml(p.name)} (${escapeHtml(p.role)}) - ${escapeHtml(p.email)}
+        </option>
+      `).join('');
+    };
+
+    const renderStaffCheckboxes = (typeKey, notifyList) => {
+      const arr = Array.isArray(notifyList) ? notifyList.map(e => String(e).toLowerCase()) : [];
+      return personalList.map(p => `
+        <label class="flex items-center space-x-2 text-[11px] text-slate-700 p-1.5 rounded-lg hover:bg-slate-50 transition">
+          <input type="checkbox" name="notif_${typeKey}" value="${escapeHtml(p.email)}" ${arr.includes(p.email.toLowerCase()) ? 'checked' : ''} class="rounded border-slate-300 text-wes-blue focus:ring-wes-blue">
+          <span class="font-medium">${escapeHtml(p.name)} <span class="text-slate-400">(${escapeHtml(p.role)})</span></span>
+        </label>
+      `).join('');
+    };
+
+    const contentHtml = `
+      <form id="sofia-notif-config-form" onsubmit="AdminApp.saveSofiaNotifConfig(event)" class="space-y-4 text-xs">
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl flex items-start space-x-2.5">
+          <i class="fas fa-info-circle text-amber-600 text-base mt-0.5"></i>
+          <p class="text-[11px] text-amber-800 leading-relaxed">
+            Solo el <strong>personal activo de WES</strong> (propietario, administradores y técnicos) puede recibir avisos. Los clientes están estrictamente excluidos de este panel. Distinga entre el <strong>responsable</strong> que atenderá el caso y los <strong>destinatarios adicionales</strong> de aviso.
+          </p>
+        </div>
+
+        <!-- Canales Globales -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="font-bold text-slate-800 text-xs block">Canales de Notificación</span>
+            <span class="text-[10px] text-slate-500">Seleccione los canales activos para notificaciones de Sofía</span>
+          </div>
+          <div class="flex items-center space-x-4">
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="sofia-cfg-email" ${config.notify_email_enabled ? 'checked' : ''} class="rounded border-slate-300 text-wes-blue focus:ring-wes-blue">
+              <span class="font-bold text-slate-700">Correo Electrónico (Gmail)</span>
+            </label>
+            <label class="flex items-center space-x-1.5 cursor-pointer">
+              <input type="checkbox" id="sofia-cfg-push" ${config.notify_push_enabled ? 'checked' : ''} class="rounded border-slate-300 text-wes-blue focus:ring-wes-blue">
+              <span class="font-bold text-slate-700">Web Push Discreto</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Categorías por tipo de solicitud -->
+        <div class="space-y-3">
+          <!-- 1. Ventas y Cotizaciones -->
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+                <i class="fas fa-file-invoice-dollar text-emerald-600"></i>
+                <span>Solicitudes de Ventas y Cotizaciones</span>
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">tipo: cotizacion</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Responsable asignado:</label>
+                <select id="route_ventas_resp" class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50">
+                  ${renderStaffOptions(config.routes?.ventas?.responsable || config.default_responsable)}
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Destinatarios con copia:</label>
+                <div class="max-h-24 overflow-y-auto border border-slate-200 rounded-xl p-1 bg-white">
+                  ${renderStaffCheckboxes('ventas', config.routes?.ventas?.notify)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Soporte Técnico -->
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+                <i class="fas fa-tools text-wes-blue"></i>
+                <span>Solicitudes de Soporte Técnico</span>
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">tipo: soporte</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Responsable asignado:</label>
+                <select id="route_soporte_resp" class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50">
+                  ${renderStaffOptions(config.routes?.soporte?.responsable || config.default_responsable)}
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Destinatarios con copia:</label>
+                <div class="max-h-24 overflow-y-auto border border-slate-200 rounded-xl p-1 bg-white">
+                  ${renderStaffCheckboxes('soporte', config.routes?.soporte?.notify)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Visitas y Taller -->
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+                <i class="fas fa-truck text-purple-600"></i>
+                <span>Visitas Técnicas y Taller</span>
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">tipo: visita / taller</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Responsable asignado:</label>
+                <select id="route_taller_resp" class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50">
+                  ${renderStaffOptions(config.routes?.taller?.responsable || config.default_responsable)}
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Destinatarios con copia:</label>
+                <div class="max-h-24 overflow-y-auto border border-slate-200 rounded-xl p-1 bg-white">
+                  ${renderStaffCheckboxes('taller', config.routes?.taller?.notify)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Administración y Consultas Generales -->
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="font-bold text-slate-800 flex items-center space-x-1.5">
+                <i class="fas fa-user-shield text-slate-700"></i>
+                <span>Consultas Generales y Administración</span>
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">tipo: atencion / seguimiento</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Responsable asignado:</label>
+                <select id="route_administracion_resp" class="w-full text-xs p-2 border border-slate-300 rounded-xl bg-slate-50">
+                  ${renderStaffOptions(config.routes?.administracion?.responsable || config.default_responsable)}
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Destinatarios con copia:</label>
+                <div class="max-h-24 overflow-y-auto border border-slate-200 rounded-xl p-1 bg-white">
+                  ${renderStaffCheckboxes('administracion', config.routes?.administracion?.notify)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-200">
+          <button type="button" onclick="AdminApp.closeModal('admin-modal-detail')" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition">
+            Cancelar
+          </button>
+          <button type="submit" id="btn-save-sofia-cfg" class="px-5 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl font-black shadow-md transition flex items-center space-x-1.5">
+            <i class="fas fa-check-circle"></i>
+            <span>Guardar Configuración</span>
+          </button>
+        </div>
+      </form>
+    `;
+
+    const contentEl = document.getElementById('detail-modal-content');
+    if (contentEl) contentEl.innerHTML = contentHtml;
+  } catch (err) {
+    const contentEl = document.getElementById('detail-modal-content');
+    if (contentEl) {
+      contentEl.innerHTML = `<div class="p-6 text-center text-rose-600 font-bold">Error cargando configuración: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+};
+
+AdminApp.saveSofiaNotifConfig = async function(event) {
+  if (event) event.preventDefault();
+  const btn = document.getElementById('btn-save-sofia-cfg');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-1"></i> Guardando...`;
+  }
+
+  const getChecked = (name) => {
+    const list = [];
+    document.querySelectorAll(`input[name="${name}"]:checked`).forEach(cb => {
+      if (cb.value) list.push(cb.value);
+    });
+    return list;
+  };
+
+  const configToSave = {
+    default_responsable: document.getElementById('route_administracion_resp')?.value || 'ing.lmlh@gmail.com',
+    notify_email_enabled: Boolean(document.getElementById('sofia-cfg-email')?.checked),
+    notify_push_enabled: Boolean(document.getElementById('sofia-cfg-push')?.checked),
+    routes: {
+      ventas: {
+        responsable: document.getElementById('route_ventas_resp')?.value || 'ing.lmlh@gmail.com',
+        notify: getChecked('notif_ventas')
+      },
+      soporte: {
+        responsable: document.getElementById('route_soporte_resp')?.value || 'ing.lmlh@gmail.com',
+        notify: getChecked('notif_soporte')
+      },
+      taller: {
+        responsable: document.getElementById('route_taller_resp')?.value || 'ing.lmlh@gmail.com',
+        notify: getChecked('notif_taller')
+      },
+      administracion: {
+        responsable: document.getElementById('route_administracion_resp')?.value || 'ing.lmlh@gmail.com',
+        notify: getChecked('notif_administracion')
+      }
+    }
+  };
+
+  try {
+    const user = AdminAuth.getCurrentUser();
+    const token = (user && user.token) || localStorage.getItem('wes_admin_token') || 'admin_token_wes';
+    const apiUrl = (typeof WES_CONFIG !== 'undefined' && WES_CONFIG.API_URL) ? WES_CONFIG.API_URL : (typeof CONFIG !== 'undefined' && CONFIG.API_URL ? CONFIG.API_URL : '');
+
+    if (apiUrl && !apiUrl.includes('script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec')) {
+      try {
+        const resp = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'save_sofia_notif_config_admin',
+            adminToken: token,
+            userEmail: user ? user.email : '',
+            config: configToSave
+          })
+        });
+        const data = await resp.json();
+        if (!data.success) {
+          throw new Error(data.message || 'Error guardando');
+        }
+      } catch (errSave) {
+        console.warn('Backend save_sofia_notif_config_admin offline:', errSave);
+      }
+    }
+
+    localStorage.setItem('wes_sofia_notif_config', JSON.stringify(configToSave));
+    showToast('Configuración de notificaciones guardada con éxito', 'success');
+    this.closeModal('admin-modal-detail');
+  } catch (err) {
+    alert('Error al guardar configuración: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Guardar Configuración`;
+    }
+  }
+};
+
