@@ -1021,6 +1021,149 @@ function setupChatEvents() {
     }
   }
 
+  /**
+   * Búsqueda e inspección estructurada en catálogo oficial (Aprendizaje Supervisado)
+   */
+  function searchProductInOfficialCatalog(userQuery) {
+    if (!userQuery || typeof userQuery !== 'string') return { handled: false };
+    const raw = userQuery.trim().toLowerCase();
+
+    // Solo procesar si contiene intención de producto o compra/precio/disponibilidad
+    const isProductIntent = /(micro\s*sd|memoria|bater[ií]a|c[aá]mara|motor|inversor|precio\s+de|cu[aá]nto\s+cuesta|tienen\s+|disponib|hay\s+en\s+stock|sku|cotiz)/i.test(raw);
+    if (!isProductIntent) return { handled: false };
+
+    // Obtener catálogo unificado (StorageService, wes_custom_products, WES_CATALOG_STATE o INITIAL_PRODUCTS)
+    let catalog = [];
+    try {
+      const customSaved = localStorage.getItem('wes_custom_products');
+      if (customSaved) {
+        const parsedCustom = JSON.parse(customSaved);
+        if (Array.isArray(parsedCustom) && parsedCustom.length) catalog = parsedCustom;
+      }
+    } catch(e) {}
+
+    if (!catalog.length && typeof StorageService !== 'undefined' && typeof StorageService.getProducts === 'function') {
+      catalog = StorageService.getProducts() || [];
+    } else if (!catalog.length && window.WES_CATALOG_STATE && Array.isArray(window.WES_CATALOG_STATE.products)) {
+      catalog = window.WES_CATALOG_STATE.products;
+    } else if (!catalog.length && typeof INITIAL_PRODUCTS !== 'undefined' && Array.isArray(INITIAL_PRODUCTS)) {
+      catalog = INITIAL_PRODUCTS;
+    }
+
+    if (!catalog.length) return { handled: false };
+
+    // Extraer cantidad si se especifica
+    let requestedQty = 1;
+    const qtyMatch = raw.match(/\b([1-9][0-9]?)\s*(?:unidades?|piezas?|memorias?|bater[ií]as?|c[aá]maras?|motores?)\b/i) || raw.match(/\bde\s+([1-9][0-9]?)\b/i);
+    if (qtyMatch && qtyMatch[1]) requestedQty = parseInt(qtyMatch[1], 10);
+
+    // Detección específica: Micro SD
+    const isMicroSd = /(micro\s*sd|tarjeta\s+sd|tf\s+card|memoria\s+sd|memoria\s+para\s+c[aá]mara)/i.test(raw);
+    if (isMicroSd) {
+      // Verificar si especifica capacidad
+      const is32 = /\b32\s*(?:gb|gigas?)?\b/i.test(raw);
+      const is64 = /\b64\s*(?:gb|gigas?)?\b/i.test(raw);
+      const is128 = /\b128\s*(?:gb|gigas?)?\b/i.test(raw);
+
+      // Si no especificó capacidad o hay ambigüedad entre varias
+      if (!is32 && !is64 && !is128) {
+        appendBotMessage(`
+          <div class="leading-relaxed text-slate-800 text-xs space-y-2">
+            <p>Disponemos de memorias Micro SD clase 10 para videovigilancia en varias capacidades. ¿La requiere de <strong>32 GB, 64 GB o 128 GB</strong>?</p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              <button type="button" onclick="window.sendSofiaPromptMessage ? window.sendSofiaPromptMessage('Precio de memoria Micro SD 32GB') : null" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-950 rounded-lg text-xs font-bold transition">Micro SD 32 GB</button>
+              <button type="button" onclick="window.sendSofiaPromptMessage ? window.sendSofiaPromptMessage('Precio de memoria Micro SD 64GB') : null" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-950 rounded-lg text-xs font-bold transition">Micro SD 64 GB</button>
+            </div>
+          </div>
+        `);
+        return { handled: true };
+      }
+
+      // Buscar coincidencia en catálogo
+      let targetProduct = null;
+      if (is64) {
+        targetProduct = catalog.find(p => {
+          const n = (p.name || p.nombre || '').toLowerCase();
+          const c = (p.code || p.codigo || '').toLowerCase();
+          return (n.includes('64') && (n.includes('micro sd') || n.includes('sd'))) || c === '2630' || c === 'dhi-tf-64gb';
+        });
+      } else if (is32) {
+        targetProduct = catalog.find(p => {
+          const n = (p.name || p.nombre || '').toLowerCase();
+          const c = (p.code || p.codigo || '').toLowerCase();
+          return (n.includes('32') && (n.includes('micro sd') || n.includes('sd'))) || c === '2629';
+        });
+      }
+
+      // Si el producto está agotado
+      if (targetProduct && (targetProduct.availability === 'Agotado' || targetProduct.disponibilidad === 'Agotado')) {
+        appendBotMessage(`
+          <div class="leading-relaxed text-slate-800 text-xs space-y-2">
+            <p>La <strong>${escapeHtml(targetProduct.name || targetProduct.nombre || 'Memoria Micro SD')}</strong> está agotada temporalmente para entrega inmediata en nuestra tienda en Moca. ¿Desea que tomemos sus datos para cotizársela bajo pedido?</p>
+          </div>
+        `);
+        return { handled: true };
+      }
+
+      // Si el producto existe en catálogo y tiene precio asignado > 0 y disponible
+      if (targetProduct && targetProduct.price && targetProduct.price > 0 && targetProduct.availability !== 'Agotado' && targetProduct.disponibilidad !== 'Agotado') {
+        const pPrice = Number(targetProduct.price).toLocaleString('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const pCurrency = targetProduct.currency || 'DOP';
+        const pName = targetProduct.name || targetProduct.nombre || 'Memoria Micro SD';
+        const pSku = targetProduct.code || targetProduct.codigo || '';
+
+        // Si la cantidad solicitada excede el stock conocido o el stock no está garantizado
+        let stockNote = '';
+        if (targetProduct.stock !== undefined && targetProduct.stock !== null) {
+          if (targetProduct.stock < requestedQty) {
+            stockNote = `<p class="text-[11px] text-amber-800">Nota: Disponemos de ${targetProduct.stock} unidades en tienda; para completar las ${requestedQty} unidades ventas validará la entrega inmediata.</p>`;
+          }
+        }
+
+        appendBotMessage(`
+          <div class="leading-relaxed text-slate-800 text-xs space-y-2">
+            <p>La <strong>${escapeHtml(pName)}</strong> (SKU: ${escapeHtml(pSku)}) tiene un precio oficial de <strong>RD$${pPrice} ${pCurrency}</strong> por unidad y se encuentra disponible en nuestra tienda en Moca.</p>
+            ${stockNote}
+            <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-400 uppercase font-bold block">Precio Público Verificado</span>
+                <span class="font-black text-wes-blue text-sm">RD$${pPrice} ${pCurrency}</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-100 text-emerald-800">Disponible</span>
+            </div>
+          </div>
+        `);
+        return { handled: true };
+      }
+
+      // Si el producto no tiene precio verificado o no está cargado con precio público:
+      // Sofía responde honestamente y ofrece tomar los datos para generar la solicitud formal
+      const prodLabel = is64 ? 'Memoria Micro SD 64 GB' : (is32 ? 'Memoria Micro SD 32 GB' : 'Memoria Micro SD');
+      appendBotMessage(`
+        <div class="leading-relaxed text-slate-800 text-xs space-y-2">
+          <p>Disponemos de la <strong>${escapeHtml(prodLabel)}</strong> para cámaras en catálogo, pero el precio unitario exacto y la disponibilidad para ${requestedQty} unidades están en confirmación con el encargado.</p>
+          <p>Por favor indíqueme su <strong>nombre y número de teléfono</strong> para registrar su solicitud y que un asesor comercial le confirme de inmediato.</p>
+        </div>
+      `);
+
+      // Iniciar el flujo de solicitud para registrar los datos
+      chatSession.step = 'drafting_ticket';
+      chatSession.ticketDraft = {
+        name: '',
+        phone: '',
+        equipment: `${prodLabel} (${requestedQty} unidades)`,
+        productSku: prodLabel,
+        quantity: String(requestedQty),
+        address: 'No proporcionada',
+        description: `Cotización y confirmación de disponibilidad para ${requestedQty} unidades de ${prodLabel}.`
+      };
+
+      return { handled: true };
+    }
+
+    return { handled: false };
+  }
+
   // Buscar un ticket y mostrar ÚNICAMENTE información pública para el cliente (Taller 3 Security & Privacy)
   function findTicketPublicStatus(query) {
     if (!query || !query.trim()) return null;
@@ -1421,11 +1564,15 @@ function setupChatEvents() {
         return;
       }
 
-      // 2. Si estábamos en el flujo de borrador de ticket
-      if (chatSession.step === 'drafting_ticket') {
+      // 2. Si estábamos en el flujo de borrador de ticket y no es una consulta de producto nueva
+      const isProductQuery = /(micro\s*sd|memoria|bater[ií]a|c[aá]mara|motor|inversor|precio|cu[aá]nto\s+cuesta)/i.test(query);
+      if (chatSession.step === 'drafting_ticket' && !isProductQuery) {
         removeTypingIndicator();
         handleDraftParsing(query);
         return;
+      } else if (chatSession.step === 'drafting_ticket' && isProductQuery) {
+        chatSession.step = 'idle';
+        chatSession.ticketDraft = {};
       }
 
       const lower = query.toLowerCase().trim();
@@ -1453,6 +1600,13 @@ function setupChatEvents() {
       if (isExplicitServiceRequest) {
         removeTypingIndicator();
         startServiceRequestFlow();
+        return;
+      }
+
+      // 4.01 Consulta Estructurada de Productos en Catálogo Oficial (Aprendizaje Supervisado)
+      const catalogSearchResult = searchProductInOfficialCatalog(query);
+      if (catalogSearchResult.handled) {
+        removeTypingIndicator();
         return;
       }
 

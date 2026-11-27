@@ -11994,12 +11994,12 @@ const INITIAL_PRODUCTS = [
 
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v32_catalog';
+    const versionKey = 'wes_products_v33_catalog';
     let products = null;
     try {
       if (typeof localStorage !== 'undefined') {
         // Purgar versiones antiguas para garantizar actualización instantánea en el navegador
-        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog', 'wes_products_v27_catalog', 'wes_products_v28_catalog', 'wes_products_v29_catalog'].forEach(k => {
+        ['wes_products_v16_catalog', 'wes_products_v17_catalog', 'wes_products_v18_catalog', 'wes_products_v19_catalog', 'wes_products_v20_catalog', 'wes_products_v25_catalog', 'wes_products_v26_catalog', 'wes_products_v27_catalog', 'wes_products_v28_catalog', 'wes_products_v29_catalog', 'wes_products_v32_catalog'].forEach(k => {
           try { localStorage.removeItem(k); } catch(e) {}
         });
       }
@@ -12173,7 +12173,7 @@ const StorageService = {
   saveProducts: function(products) {
     if (typeof localStorage !== 'undefined') {
       try {
-        localStorage.setItem('wes_products_v26_catalog', JSON.stringify(products));
+        localStorage.setItem('wes_products_v33_catalog', JSON.stringify(products));
         localStorage.setItem('wes_custom_products', JSON.stringify(products));
       } catch (e) {}
     }

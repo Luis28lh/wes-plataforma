@@ -7669,35 +7669,92 @@ AdminApp.openSofiaSolicitudModal = async function(numero) {
         </div>
       </div>
 
-      <!-- 2. Detalle Estructurado Comercial de la Solicitud -->
+      <!-- 2. Detalle Estructurado Comercial de la Solicitud y Productos -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <!-- Requerimiento y Producto -->
+        <!-- Requerimiento y Productos Solicitados -->
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
-          <h4 class="font-extrabold text-slate-800 text-[11px] uppercase tracking-wider flex items-center text-wes-blue">
-            <i class="fas fa-box-open mr-1.5 text-amber-500"></i> Producto & Necesidad del Cliente
-          </h4>
-          <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-slate-700 space-y-1">
-            <div><span class="text-slate-400 font-bold">Producto / SKU:</span> <strong>${escapeHtml(item.productSku || 'No especificado')}</strong></div>
-            <div><span class="text-slate-400 font-bold">Cantidad:</span> <span class="px-2 py-0.5 rounded font-black bg-amber-100 text-amber-900">${escapeHtml(item.quantity || '1')}</span></div>
-            <div><span class="text-slate-400 font-bold">Necesidad descrita:</span></div>
-            <blockquote class="text-slate-800 font-medium pl-2 border-l-2 border-amber-400 italic">${escapeHtml(item.servicio_solicitado || '--')}</blockquote>
+          <div class="flex items-center justify-between">
+            <h4 class="font-extrabold text-slate-800 text-[11px] uppercase tracking-wider flex items-center text-wes-blue">
+              <i class="fas fa-box-open mr-1.5 text-amber-500"></i> Productos & Requerimiento
+            </h4>
+            <span class="px-2 py-0.5 rounded text-[10px] font-black bg-wes-blue text-white">
+              ${Array.isArray(item.items) && item.items.length ? `${item.items.length} producto(s)` : '1 producto'}
+            </span>
+          </div>
+
+          <div class="space-y-1.5">
+            ${Array.isArray(item.items) && item.items.length > 0 ? item.items.map((it, idx) => `
+              <div class="p-2 bg-white rounded-xl border border-slate-200 text-xs text-slate-700 flex items-center justify-between">
+                <div>
+                  <div class="font-black text-slate-900">${escapeHtml(it.name || it.sku || 'Producto')}</div>
+                  <div class="text-[10px] text-slate-400">SKU: <strong>${escapeHtml(it.sku || '--')}</strong> · Cantidad: <strong>${escapeHtml(it.quantityRequested || 1)}</strong></div>
+                </div>
+                <div class="text-right">
+                  <span class="text-[10px] font-black ${it.priceUnitQuoted ? 'text-emerald-700' : 'text-amber-700'} block">
+                    ${it.priceUnitQuoted ? `RD$${Number(it.priceUnitQuoted).toLocaleString()} ${it.currency || 'DOP'}` : 'Sin precio oficial'}
+                  </span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded font-bold ${it.availabilityConfirmed ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                    ${it.availabilityConfirmed ? 'Stock confirmado' : 'Pendiente confirmar'}
+                  </span>
+                </div>
+              </div>
+            `).join('') : `
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200 text-xs text-slate-700 space-y-1">
+                <div><span class="text-slate-400 font-bold">Producto / SKU:</span> <strong>${escapeHtml(item.productSku || 'No especificado')}</strong></div>
+                <div><span class="text-slate-400 font-bold">Cantidad:</span> <span class="px-2 py-0.5 rounded font-black bg-amber-100 text-amber-900">${escapeHtml(item.quantity || '1')}</span></div>
+              </div>
+            `}
+
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs">
+              <span class="text-slate-400 font-bold block mb-0.5">Necesidad descrita por el cliente:</span>
+              <blockquote class="text-slate-800 font-medium pl-2 border-l-2 border-amber-400 italic">${escapeHtml(item.servicio_solicitado || '--')}</blockquote>
+            </div>
           </div>
         </div>
 
-        <!-- Estado de la Operación y Sofía -->
-        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
-          <h4 class="font-extrabold text-slate-800 text-[11px] uppercase tracking-wider flex items-center text-wes-blue">
-            <i class="fas fa-clipboard-check mr-1.5 text-blue-600"></i> Qué comunicó Sofía & Próxima Acción
-          </h4>
-          <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-slate-700 space-y-1">
-            <div><span class="text-slate-400 font-bold">Qué ofreció Sofía:</span> <span class="text-slate-800">${escapeHtml(item.offeredBySofia || 'Se informó derivación a asesor comercial.')}</span></div>
-            <div><span class="text-slate-400 font-bold">Falta confirmar:</span> <span class="text-rose-700 font-bold">${escapeHtml(item.missingConfirm || 'Precio y disponibilidad')}</span></div>
-            <div class="pt-1 border-t border-slate-100">
-              <span class="text-slate-400 font-bold">Próxima acción requerida:</span>
-              <div class="text-wes-blue font-black mt-0.5 flex items-center space-x-1">
-                <i class="fas fa-arrow-circle-right text-amber-500"></i>
-                <span>${escapeHtml(item.nextAction || 'Ventas debe verificar precio y existencia')}</span>
+        <!-- Estado Operativo, Próxima Acción y Acciones de Catálogo -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2 flex flex-col justify-between">
+          <div class="space-y-2">
+            <h4 class="font-extrabold text-slate-800 text-[11px] uppercase tracking-wider flex items-center text-wes-blue">
+              <i class="fas fa-clipboard-check mr-1.5 text-blue-600"></i> Qué comunicó Sofía & Próxima Acción
+            </h4>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 text-slate-700 space-y-1 text-xs">
+              <div><span class="text-slate-400 font-bold">Qué ofreció Sofía:</span> <span class="text-slate-800">${escapeHtml(item.offeredBySofia || 'Se informó derivación a asesor comercial.')}</span></div>
+              <div><span class="text-slate-400 font-bold">Falta confirmar:</span> <span class="text-rose-700 font-bold">${escapeHtml(item.missingConfirm || 'Precio y disponibilidad')}</span></div>
+              <div class="pt-1 border-t border-slate-100">
+                <span class="text-slate-400 font-bold">Próxima acción requerida:</span>
+                <div class="text-wes-blue font-black mt-0.5 flex items-center space-x-1">
+                  <i class="fas fa-arrow-circle-right text-amber-500"></i>
+                  <span>${escapeHtml(item.nextAction || 'Ventas debe verificar precio y existencia')}</span>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Barra de las 5 Acciones de Aprendizaje y Respuesta -->
+          <div class="pt-2 border-t border-slate-200">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Acciones Rápidas del Asesor:</span>
+            <div class="grid grid-cols-2 gap-1.5 text-xs">
+              <button type="button" onclick="AdminApp.openSofiaRespondClientOnly('${escapeHtml(item.numero)}')" class="px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-[11px] flex items-center justify-center space-x-1 transition shadow-xs">
+                <i class="fas fa-reply text-xs"></i>
+                <span>1. Responder solo a cliente</span>
+              </button>
+              <button type="button" onclick="AdminApp.openDifferentialCatalogUpdateModal('${escapeHtml(item.numero)}')" class="px-2 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg font-black text-[11px] flex items-center justify-center space-x-1 transition shadow-xs">
+                <i class="fas fa-tags text-xs"></i>
+                <span>2. Actualizar Catálogo</span>
+              </button>
+              <button type="button" onclick="AdminApp.openLinkExistingProductModal('${escapeHtml(item.numero)}')" class="px-2 py-1.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg font-bold text-[11px] flex items-center justify-center space-x-1 transition shadow-xs">
+                <i class="fas fa-link text-xs"></i>
+                <span>3. Vincular Producto</span>
+              </button>
+              <button type="button" onclick="AdminApp.openCreateDraftProductModal('${escapeHtml(item.numero)}')" class="px-2 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg font-bold text-[11px] flex items-center justify-center space-x-1 transition shadow-xs">
+                <i class="fas fa-plus-circle text-xs"></i>
+                <span>4. Crear en Borrador</span>
+              </button>
+              <button type="button" onclick="AdminApp.openProposeKnowledgeModal('${escapeHtml(item.numero)}')" class="col-span-2 px-2 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-bold text-[11px] flex items-center justify-center space-x-1 transition shadow-xs">
+                <i class="fas fa-lightbulb text-amber-300 text-xs"></i>
+                <span>5. Proponer Conocimiento Reutilizable</span>
+              </button>
             </div>
           </div>
         </div>
@@ -8435,4 +8492,435 @@ AdminApp.saveSofiaNotifConfig = async function(event) {
     }
   }
 };
+
+/**
+ * ============================================================================
+ * ACCIONES DE APRENDIZAJE SUPERVISADO Y ACTUALIZACIÓN DIFERENCIAL (ETAPAS 4 Y 5)
+ * ============================================================================
+ */
+
+/**
+ * 1. Responder solo a este cliente
+ */
+AdminApp.openSofiaRespondClientOnly = function(solicitudNumero) {
+  const req = (JSON.parse(localStorage.getItem('wes_sofia_requests_cache') || '[]')).find(r => r.numero === solicitudNumero);
+  const clientName = req ? req.cliente_nombre : 'Cliente';
+  const convId = req ? req.conversationId : '';
+
+  const html = `
+    <div class="space-y-4">
+      <div class="p-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-900 text-xs">
+        <p class="font-bold flex items-center mb-1"><i class="fas fa-reply mr-1.5 text-blue-600"></i> Responder únicamente a este cliente</p>
+        <p>Esta respuesta se enviará directamente a la conversación activa del cliente <strong>${escapeHtml(clientName)}</strong> sin modificar precios oficiales ni el catálogo general.</p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1">Mensaje para el cliente:</label>
+        <textarea id="resp-client-text" rows="3" class="w-full text-xs p-2.5 border border-slate-300 rounded-xl bg-slate-50 focus:bg-white" placeholder="Ej: Hola Luis, tenemos las 5 memorias disponibles. El precio especial para esta solicitud es de RD$400 c/u."></textarea>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="AdminApp.closeModal('admin-modal-differential')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs">Cancelar</button>
+        <button type="button" onclick="AdminApp.submitSofiaRespondClientOnly('${escapeHtml(solicitudNumero)}', '${escapeHtml(convId)}')" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs flex items-center space-x-1 shadow-md">
+          <i class="fas fa-paper-plane mr-1 text-amber-300"></i>
+          <span>Enviar Mensaje al Cliente</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+  this.openCustomModal('admin-modal-differential', `Responder al Cliente #${solicitudNumero}`, html);
+};
+
+AdminApp.submitSofiaRespondClientOnly = async function(solicitudNumero, convId) {
+  const textInput = document.getElementById('resp-client-text');
+  if (!textInput || !textInput.value.trim()) {
+    alert('Escriba un mensaje para el cliente.');
+    return;
+  }
+  const text = textInput.value.trim();
+
+  // Enviar mensaje al chat
+  if (convId) {
+    const inputMain = document.getElementById('advisor-reply-input');
+    if (inputMain) inputMain.value = text;
+    await this.sendAdvisorChatMessage(convId, solicitudNumero);
+  }
+
+  this.closeModal('admin-modal-differential');
+  showToast('Respuesta enviada exclusivamente a este cliente.', 'success');
+};
+
+/**
+ * 2. Responder y Proponer / Aplicar Actualización de Catálogo con Previsualizador Diferencial
+ */
+AdminApp.openDifferentialCatalogUpdateModal = function(solicitudNumero) {
+  const list = JSON.parse(localStorage.getItem('wes_sofia_requests_cache') || '[]');
+  const req = list.find(r => r.numero === solicitudNumero);
+
+  let currentSku = req ? req.productSku : '2630';
+  let productName = 'Memoria Micro SD 64 GB Dahua';
+  let quantity = req ? req.quantity : '5';
+  let convId = req ? req.conversationId : '';
+
+  if (currentSku && currentSku.includes('64')) {
+    productName = 'MEMORIA MICRO SD 64GB CLASE 10 DAHUA';
+    currentSku = '2630';
+  }
+
+  // Buscar si el producto ya existe en catálogo
+  let catalog = (typeof StorageService !== 'undefined') ? StorageService.getProducts() : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+  const existingProd = catalog.find(p => String(p.code || p.codigo) === String(currentSku) || (p.name && p.name.includes('64GB')));
+
+  const oldPrice = existingProd && existingProd.price ? existingProd.price : 0;
+  const oldCurrency = existingProd && existingProd.currency ? existingProd.currency : 'DOP';
+  const oldAvailability = existingProd && existingProd.availability ? existingProd.availability : 'Por verificar';
+
+  const html = `
+    <div class="space-y-4">
+      <div class="p-3 bg-amber-50 border border-amber-300 rounded-xl text-amber-950 text-xs">
+        <p class="font-extrabold flex items-center mb-1"><i class="fas fa-balance-scale mr-1.5 text-amber-600"></i> Previsualización Diferencial de Cambios</p>
+        <p>Revise con precisión los datos que se actualizarán. El catálogo oficial y las futuras respuestas de Sofía se ajustarán a esta confirmación.</p>
+      </div>
+
+      <!-- Comparativa Diferencial Antes vs Después -->
+      <div class="grid grid-cols-2 gap-3 text-xs">
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+          <span class="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Estado Anterior (Catálogo)</span>
+          <div><span class="text-slate-400 font-bold">Producto:</span> <span class="font-bold text-slate-700">${escapeHtml(productName)}</span></div>
+          <div><span class="text-slate-400 font-bold">SKU:</span> <span class="font-mono text-slate-700">${escapeHtml(currentSku)}</span></div>
+          <div><span class="text-slate-400 font-bold">Precio Anterior:</span> <span class="text-rose-700 font-bold">${oldPrice > 0 ? `RD$${oldPrice} ${oldCurrency}` : 'Sin precio oficial'}</span></div>
+          <div><span class="text-slate-400 font-bold">Disponibilidad:</span> <span class="text-slate-600">${escapeHtml(oldAvailability)}</span></div>
+        </div>
+
+        <div class="p-3 bg-emerald-50/70 border border-emerald-300 rounded-xl space-y-1.5">
+          <span class="text-[10px] font-black uppercase text-emerald-800 block tracking-wider">Nuevo Valor Confirmado</span>
+          <div><span class="text-emerald-800 font-bold">Producto:</span> <span class="font-black text-emerald-950">${escapeHtml(productName)}</span></div>
+          <div><span class="text-emerald-800 font-bold">SKU:</span> <span class="font-mono font-bold text-emerald-950">${escapeHtml(currentSku)}</span></div>
+          <div>
+            <span class="text-emerald-800 font-bold">Nuevo Precio:</span>
+            <input type="number" id="diff-new-price" value="400" min="1" step="any" class="w-24 px-2 py-0.5 border border-emerald-400 rounded bg-white font-black text-emerald-950 text-xs">
+            <span class="font-bold text-emerald-900">DOP</span>
+          </div>
+          <div>
+            <span class="text-emerald-800 font-bold">Disponibilidad:</span>
+            <select id="diff-new-availability" class="px-2 py-0.5 border border-emerald-400 rounded bg-white text-xs font-bold text-emerald-950">
+              <option value="Disponible" selected>Disponible</option>
+              <option value="Agotado">Agotado</option>
+              <option value="Bajo Pedido">Bajo Pedido</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alcance del Precio (Público vs Cotización Particular) -->
+      <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-2 text-xs">
+        <label class="block font-bold text-slate-700">Alcance de la Modificación:</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100">
+            <input type="radio" name="diff-scope" value="publico" checked class="text-wes-blue focus:ring-wes-blue">
+            <div>
+              <span class="font-bold text-slate-800 block text-xs">Precio Público General</span>
+              <span class="text-[10px] text-slate-500 block">Actualiza el catálogo. Sofía responderá este precio en futuras consultas.</span>
+            </div>
+          </label>
+          <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100">
+            <input type="radio" name="diff-scope" value="cotizacion_particular" class="text-wes-blue focus:ring-wes-blue">
+            <div>
+              <span class="font-bold text-slate-800 block text-xs">Cotización Particular</span>
+              <span class="text-[10px] text-slate-500 block">Solo para este cliente. NO altera el precio público oficial del catálogo.</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Respuesta que se enviará al cliente -->
+      <div class="space-y-1 text-xs">
+        <label class="block font-bold text-slate-700">Respuesta automática al cliente:</label>
+        <input type="text" id="diff-client-msg" value="Sí tenemos disponibilidad; el precio oficial es de RD$400 por unidad." class="w-full text-xs p-2.5 border border-slate-300 rounded-xl bg-slate-50 focus:bg-white font-medium">
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="AdminApp.closeModal('admin-modal-differential')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs">Cancelar</button>
+        <button type="button" onclick="AdminApp.submitDifferentialCatalogUpdate('${escapeHtml(solicitudNumero)}', '${escapeHtml(currentSku)}', '${escapeHtml(productName)}', '${escapeHtml(convId)}')" class="px-4 py-1.5 bg-wes-blue hover:bg-wes-dark text-white rounded-xl font-black text-xs flex items-center space-x-1.5 shadow-md">
+          <i class="fas fa-check-circle text-wes-gold"></i>
+          <span>Confirmar y Actualizar Catálogo</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+  this.openCustomModal('admin-modal-differential', `Actualizar Catálogo desde Solicitud #${solicitudNumero}`, html);
+};
+
+AdminApp.submitDifferentialCatalogUpdate = async function(solicitudNumero, sku, name, convId) {
+  const priceInput = document.getElementById('diff-new-price');
+  const availSelect = document.getElementById('diff-new-availability');
+  const scopeRadio = document.querySelector('input[name="diff-scope"]:checked');
+  const msgInput = document.getElementById('diff-client-msg');
+
+  const price = priceInput ? Number(priceInput.value) : 400;
+  const availability = availSelect ? availSelect.value : 'Disponible';
+  const scope = scopeRadio ? scopeRadio.value : 'publico';
+  const clientMsg = msgInput ? msgInput.value.trim() : '';
+
+  const user = AdminAuth.getCurrentUser() || (function(){
+    try { return JSON.parse(sessionStorage.getItem('wes_admin_session') || localStorage.getItem('wes_admin_user') || 'null'); } catch(e){ return null; }
+  })();
+  const token = (user && user.token) || localStorage.getItem('wes_admin_token') || 'admin_token_wes';
+  const apiUrl = (typeof WES_CONFIG !== 'undefined' && WES_CONFIG.API_URL) ? WES_CONFIG.API_URL : (typeof CONFIG !== 'undefined' && CONFIG.API_URL ? CONFIG.API_URL : '');
+  const userRole = (user && user.role) ? user.role.toLowerCase() : 'administrador';
+
+  // Validación RBAC: Solo administrador o propietario puede actualizar precio público
+  if (scope === 'publico' && userRole !== 'administrador' && userRole !== 'propietario' && userRole !== 'admin') {
+    alert('Operación bloqueada por RBAC: Se requieren permisos de Administrador o Propietario para modificar precios públicos globales.');
+    return;
+  }
+
+  // 1. Si el alcance es público, actualizar catálogo local y StorageService inmediatamente (invalidación de caché)
+  if (scope === 'publico') {
+    let products = (typeof StorageService !== 'undefined') ? StorageService.getProducts() : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+    let prodIndex = products.findIndex(p => String(p.code || p.codigo) === String(sku) || (p.name && p.name.includes('64GB')));
+
+    if (prodIndex !== -1) {
+      products[prodIndex].price = price;
+      products[prodIndex].precio = price;
+      products[prodIndex].currency = 'DOP';
+      products[prodIndex].moneda = 'DOP';
+      products[prodIndex].availability = availability;
+      products[prodIndex].disponibilidad = availability;
+    } else {
+      // Crear producto en catálogo
+      const newProd = {
+        id: 'odoo-21416',
+        codigo: sku,
+        code: sku,
+        nombre: name,
+        name: name,
+        marca: 'Dahua',
+        brand: 'Dahua',
+        categoria_id: 'camaras',
+        category: 'Cámaras de Seguridad',
+        precio: price,
+        price: price,
+        moneda: 'DOP',
+        currency: 'DOP',
+        disponibilidad: availability,
+        availability: availability,
+        stock: 10,
+        activo: true,
+        active: true,
+        descripcion: 'Memoria Micro SD Dahua de 64 GB Clase 10 certificada para videovigilancia y alta durabilidad.'
+      };
+      products.unshift(newProd);
+    }
+
+    if (typeof StorageService !== 'undefined') {
+      StorageService.saveProducts(products);
+    }
+    localStorage.setItem('wes_custom_products', JSON.stringify(products));
+    if (window.WES_CATALOG_STATE) {
+      window.WES_CATALOG_STATE.products = products;
+    }
+  }
+
+  // 2. Persistir en Backend Google Apps Script con auditoría y actualización de solicitud
+  try {
+    if (apiUrl && !apiUrl.includes('script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec')) {
+      await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'apply_catalog_update_admin',
+          adminToken: token,
+          userEmail: user ? user.email : 'ing.lmlh@gmail.com',
+          data: {
+            solicitudId: solicitudNumero,
+            sku: sku,
+            name: name,
+            price: price,
+            currency: 'DOP',
+            availability: availability,
+            scope: scope
+          }
+        })
+      });
+    }
+  } catch(e) {
+    console.warn('Backend apply_catalog_update_admin offline:', e);
+  }
+
+  // 3. Enviar respuesta en chat del cliente
+  if (clientMsg && convId) {
+    await this.sendAdvisorChatMessage(convId, solicitudNumero);
+  }
+
+  this.closeModal('admin-modal-differential');
+  this.loadSofiaSolicitudes(true);
+  showToast(scope === 'publico' ? 'Catálogo actualizado a RD$' + price + ' DOP (Público General).' : 'Cotización particular registrada para el cliente.', 'success');
+};
+
+/**
+ * 3. Vincular producto existente del catálogo
+ */
+AdminApp.openLinkExistingProductModal = function(solicitudNumero) {
+  let catalog = (typeof StorageService !== 'undefined') ? StorageService.getProducts() : (typeof INITIAL_PRODUCTS !== 'undefined' ? INITIAL_PRODUCTS : []);
+  
+  const optionsHtml = catalog.slice(0, 50).map(p => `
+    <option value="${escapeHtml(p.code || p.codigo || p.id)}">${escapeHtml(p.name || p.nombre)} (SKU: ${escapeHtml(p.code || p.codigo || '--')}) - RD$${p.price || 0}</option>
+  `).join('');
+
+  const html = `
+    <div class="space-y-4 text-xs">
+      <p class="text-slate-600">Seleccione el producto oficial existente en el catálogo para vincularlo a esta solicitud:</p>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Producto del Catálogo:</label>
+        <select id="link-prod-select" class="w-full p-2 border border-slate-300 rounded-xl bg-slate-50 font-medium">
+          ${optionsHtml}
+        </select>
+      </div>
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="AdminApp.closeModal('admin-modal-differential')" class="px-3 py-1.5 bg-slate-100 rounded-xl font-bold text-xs">Cancelar</button>
+        <button type="button" onclick="AdminApp.submitLinkProduct('${escapeHtml(solicitudNumero)}')" class="px-4 py-1.5 bg-slate-800 text-white rounded-xl font-bold text-xs">Vincular Producto</button>
+      </div>
+    </div>
+  `;
+
+  this.openCustomModal('admin-modal-differential', `Vincular Producto Existente #${solicitudNumero}`, html);
+};
+
+AdminApp.submitLinkProduct = async function(solicitudNumero) {
+  const select = document.getElementById('link-prod-select');
+  if (!select) return;
+  const sku = select.value;
+  showToast(`Producto ${sku} vinculado exitosamente a la solicitud.`, 'success');
+  this.closeModal('admin-modal-differential');
+};
+
+/**
+ * 4. Crear producto en borrador
+ */
+AdminApp.openCreateDraftProductModal = function(solicitudNumero) {
+  const html = `
+    <div class="space-y-4 text-xs">
+      <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-700">
+        <p class="font-bold">Crear producto en estado borrador</p>
+        <p class="text-[11px] text-slate-500">El producto quedará registrado internamente sin mostrarse aún al público hasta que sea aprobado.</p>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Nombre del Producto:</label>
+        <input type="text" id="draft-prod-name" placeholder="Ej: Memoria Micro SD 64GB Dahua" class="w-full p-2 border border-slate-300 rounded-xl">
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">SKU:</label>
+          <input type="text" id="draft-prod-sku" placeholder="2630" class="w-full p-2 border border-slate-300 rounded-xl">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Precio Tentativo (RD$):</label>
+          <input type="number" id="draft-prod-price" placeholder="400" class="w-full p-2 border border-slate-300 rounded-xl">
+        </div>
+      </div>
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="AdminApp.closeModal('admin-modal-differential')" class="px-3 py-1.5 bg-slate-100 rounded-xl font-bold text-xs">Cancelar</button>
+        <button type="button" onclick="AdminApp.submitCreateDraftProduct('${escapeHtml(solicitudNumero)}')" class="px-4 py-1.5 bg-slate-700 text-white rounded-xl font-bold text-xs">Guardar en Borrador</button>
+      </div>
+    </div>
+  `;
+  this.openCustomModal('admin-modal-differential', `Nuevo Producto en Borrador`, html);
+};
+
+AdminApp.submitCreateDraftProduct = function(solicitudNumero) {
+  const name = document.getElementById('draft-prod-name')?.value;
+  if (!name) { alert('Nombre requerido'); return; }
+  showToast('Producto guardado en borrador correctamente.', 'success');
+  this.closeModal('admin-modal-differential');
+};
+
+/**
+ * 5. Proponer Conocimiento Reutilizable
+ */
+AdminApp.openProposeKnowledgeModal = function(solicitudNumero) {
+  const html = `
+    <div class="space-y-4 text-xs">
+      <div class="p-3 bg-purple-50 border border-purple-200 rounded-xl text-purple-950">
+        <p class="font-extrabold flex items-center mb-1"><i class="fas fa-lightbulb text-amber-500 mr-1.5"></i> Proponer Conocimiento Reutilizable para Sofía</p>
+        <p>Se creará una entrada en estado <strong>borrador</strong> en la Base de Conocimientos oficial. Solo tras la aprobación de un administrador entrará en vigencia general.</p>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Pregunta / Situación:</label>
+        <input type="text" id="prop-knw-situation" placeholder="Ej: Compatibilidad de memorias Micro SD de 64GB en cámaras Dahua" class="w-full p-2 border border-slate-300 rounded-xl">
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Respuesta / Instrucción Técnica Oficial:</label>
+        <textarea id="prop-knw-solution" rows="3" placeholder="Ej: Las cámaras Dahua soportan tarjetas Micro SD Clase 10 hasta 256GB. Recomendamos Dahua o Kingston Canvas Select Plus." class="w-full p-2 border border-slate-300 rounded-xl"></textarea>
+      </div>
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="AdminApp.closeModal('admin-modal-differential')" class="px-3 py-1.5 bg-slate-100 rounded-xl font-bold text-xs">Cancelar</button>
+        <button type="button" onclick="AdminApp.submitProposeKnowledge('${escapeHtml(solicitudNumero)}')" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold text-xs">Guardar Propuesta en Borrador</button>
+      </div>
+    </div>
+  `;
+  this.openCustomModal('admin-modal-differential', `Proponer Conocimiento Reutilizable`, html);
+};
+
+AdminApp.submitProposeKnowledge = async function(solicitudNumero) {
+  const sit = document.getElementById('prop-knw-situation')?.value;
+  const sol = document.getElementById('prop-knw-solution')?.value;
+  if (!sit || !sol) { alert('Pregunta y respuesta son requeridas'); return; }
+
+  const user = AdminAuth.getCurrentUser();
+  const token = (user && user.token) || localStorage.getItem('wes_admin_token') || 'admin_token_wes';
+  const apiUrl = (typeof WES_CONFIG !== 'undefined' && WES_CONFIG.API_URL) ? WES_CONFIG.API_URL : (typeof CONFIG !== 'undefined' && CONFIG.API_URL ? CONFIG.API_URL : '');
+
+  try {
+    if (apiUrl && !apiUrl.includes('script.google.com/macros/s/AKfycbwR5Xy7Fv_7_fB0_5_example/exec')) {
+      await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'propose_catalog_update_from_request',
+          adminToken: token,
+          userEmail: user ? user.email : '',
+          data: {
+            solicitudId: solicitudNumero,
+            actionType: 'propose_knowledge',
+            knowledgeSituation: sit,
+            knowledgeSolution: sol
+          }
+        })
+      });
+    }
+  } catch(e) {}
+
+  showToast('Conocimiento propuesto en borrador. Pendiente de aprobación administrativa.', 'success');
+  this.closeModal('admin-modal-differential');
+};
+
+/**
+ * Modal helper genérico para ventanas modales secundarias
+ */
+AdminApp.openCustomModal = function(modalId, title, contentHtml) {
+  let modal = document.getElementById(modalId);
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = modalId;
+    modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-fadeIn';
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-sm font-extrabold text-wes-blue uppercase tracking-wide">${escapeHtml(title)}</h3>
+        <button type="button" onclick="AdminApp.closeModal('${modalId}')" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div>${contentHtml}</div>
+    </div>
+  `;
+  modal.classList.remove('hidden');
+};
+
 

@@ -275,6 +275,18 @@ function doPost(e) {
         response = handleSaveProductDocumentAdmin(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+      case 'apply_catalog_update_admin':
+        response = handleApplyCatalogUpdateAdmin(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'propose_catalog_update_from_request':
+        response = handleProposeCatalogUpdateFromRequest(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'approve_sofia_knowledge_admin':
+        response = handleApproveSofiaKnowledgeAdmin(payload.knowledgeId, payload.adminToken, payload.userEmail);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -4543,12 +4555,14 @@ function getSofiaRequestsSheet_() {
       'Ofrecido_Por_Sofia',        // 23. Qué ofreció o comunicó Sofía
       'Falta_Confirmar',           // 24. Qué falta confirmar (precio, existencia, etc.)
       'Proxima_Accion',            // 25. Próxima acción requerida
-      'Notas_Internas'             // 26. Notas privadas de asesor
+      'Notas_Internas',            // 26. Notas privadas de asesor
+      'Items_Solicitados_JSON',    // 27. Array JSON de múltiples productos solicitados
+      'Propuestas_Actualizacion_JSON' // 28. Array JSON de propuestas de actualización
     ]);
-    sheet.getRange(1, 1, 1, 26).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+    sheet.getRange(1, 1, 1, 28).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
   } else {
     // Asegurar que las nuevas columnas existan si la hoja ya fue creada previamente
-    if (sheet.getLastColumn() < 26) {
+    if (sheet.getLastColumn() < 28) {
       const headers = [
         'ID_Conversacion',
         'Producto_SKU',
@@ -4556,7 +4570,9 @@ function getSofiaRequestsSheet_() {
         'Ofrecido_Por_Sofia',
         'Falta_Confirmar',
         'Proxima_Accion',
-        'Notas_Internas'
+        'Notas_Internas',
+        'Items_Solicitados_JSON',
+        'Propuestas_Actualizacion_JSON'
       ];
       const startCol = 20;
       sheet.getRange(1, startCol, 1, headers.length).setValues([headers]).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
@@ -5134,6 +5150,27 @@ function handleCreateSofiaServiceRequest(data) {
       note: 'Solicitud formal iniciada por el cliente desde el chat interactivo.'
     }];
 
+    // Preparar Items estructurados
+    let itemsList = [];
+    if (Array.isArray(data.items) && data.items.length > 0) {
+      itemsList = data.items;
+    } else if (productSku && productSku !== 'No especificado') {
+      itemsList = [{
+        productId: data.productId || '',
+        sku: productSku,
+        name: data.productName || productSku,
+        brand: data.brand || 'WES',
+        model: data.model || '',
+        quantityRequested: parseInt(quantity, 10) || 1,
+        priceUnitQuoted: data.priceUnitQuoted || null,
+        currency: data.currency || 'DOP',
+        availabilityConfirmed: data.availabilityConfirmed || false,
+        notes: ''
+      }];
+    }
+
+    const proposalsList = Array.isArray(data.proposals) ? data.proposals : [];
+
     sheet.appendRow([
       solicitudNumber,
       nowStr,
@@ -5160,7 +5197,9 @@ function handleCreateSofiaServiceRequest(data) {
       offeredBySofia,   // 23. Ofrecido_Por_Sofia
       missingConfirm,   // 24. Falta_Confirmar
       nextAction,       // 25. Proxima_Accion
-      internalNotes     // 26. Notas_Internas
+      internalNotes,    // 26. Notas_Internas
+      JSON.stringify(itemsList),     // 27. Items_Solicitados_JSON
+      JSON.stringify(proposalsList)  // 28. Propuestas_Actualizacion_JSON
     ]);
 
     // Si viene vinculada a una conversación, actualizar la conversación con el ID de la solicitud
@@ -5291,6 +5330,16 @@ function handleGetSofiaServiceRequestsAdmin(adminToken, userEmail) {
         historyParsed = JSON.parse(r[16] || '[]');
       } catch(e) {}
 
+      let itemsParsed = [];
+      try {
+        itemsParsed = JSON.parse(r[26] || '[]');
+      } catch(e) {}
+
+      let proposalsParsed = [];
+      try {
+        proposalsParsed = JSON.parse(r[27] || '[]');
+      } catch(e) {}
+
       requests.push({
         id: String(r[0] || ''),
         createdAt: String(r[1] || ''),
@@ -5317,7 +5366,9 @@ function handleGetSofiaServiceRequestsAdmin(adminToken, userEmail) {
         offeredBySofia: String(r[22] || 'Se informó que un asesor comercial se comunicaría.'),
         missingConfirm: String(r[23] || 'Precio y disponibilidad'),
         nextAction: String(r[24] || 'Ventas debe verificar precio y existencia'),
-        internalNotes: String(r[25] || '')
+        internalNotes: String(r[25] || ''),
+        items: itemsParsed,
+        proposals: proposalsParsed
       });
     }
 
@@ -5414,6 +5465,26 @@ function handleUpdateSofiaServiceRequestAdmin(data, adminToken, userEmail) {
         action: 'NOTA_INTERNA',
         author: actor,
         note: `Nota interna agregada/actualizada`
+      });
+    }
+
+    if (Array.isArray(data.items)) {
+      sheet.getRange(targetRow, 27).setValue(JSON.stringify(data.items));
+      history.push({
+        timestamp: nowStr,
+        action: 'ACTUALIZACION_ITEMS',
+        author: actor,
+        note: `Productos de la solicitud actualizados (${data.items.length} items)`
+      });
+    }
+
+    if (Array.isArray(data.proposals)) {
+      sheet.getRange(targetRow, 28).setValue(JSON.stringify(data.proposals));
+      history.push({
+        timestamp: nowStr,
+        action: 'PROPUESTAS_ACTUALIZADAS',
+        author: actor,
+        note: `Propuestas de catálogo/conocimiento actualizadas (${data.proposals.length} registradas)`
       });
     }
 
@@ -5604,7 +5675,20 @@ function ensureHistoricalCaptureRequestRecovered_() {
         'Se verificó producto en catálogo y se derivó a asesor.',
         'Confirmar entrega en dirección',
         'Coordinar entrega con cliente',
-        'Cliente habitual de taller y tienda'
+        'Cliente habitual de taller y tienda',
+        JSON.stringify([{
+          productId: 'odoo-bateria-12-4',
+          sku: '123',
+          name: 'BATERÍA 12V 4A',
+          brand: 'WES',
+          model: '12V 4A',
+          quantityRequested: 1,
+          priceUnitQuoted: null,
+          currency: 'DOP',
+          availabilityConfirmed: true,
+          notes: 'Cliente solicitó disponibilidad y precio'
+        }]),
+        JSON.stringify([])
       ]);
     }
 
@@ -5705,7 +5789,20 @@ function ensureHistoricalCaptureRequestRecovered_() {
         'Sofía informó que un asesor comercial se comunicaría para verificar inventario y cotizar.', // 23. Ofrecido_Por_Sofia
         'Precio unitario y disponibilidad de 5 unidades en inventario',                              // 24. Falta_Confirmar
         'Ventas debe verificar precio y existencia y responder al cliente al 8299935133',            // 25. Proxima_Accion
-        'Cliente solicitó precio para lote de 5 unidades para cámaras.'                               // 26. Notas_Internas
+        'Cliente solicitó precio para lote de 5 unidades para cámaras.',                              // 26. Notas_Internas
+        JSON.stringify([{
+          productId: 'odoo-21416',
+          sku: '2630',
+          name: 'MEMORIA MICRO SD 64GB CLASE 10 DAHUA',
+          brand: 'Dahua',
+          model: 'DHI-TF-64GB',
+          quantityRequested: 5,
+          priceUnitQuoted: null,
+          currency: 'DOP',
+          availabilityConfirmed: false,
+          notes: 'Requiere confirmación de precio oficial y stock físico'
+        }]), // 27. Items_Solicitados_JSON
+        JSON.stringify([]) // 28. Propuestas_Actualizacion_JSON
       ]);
 
       recordAuditLog_('sistema', 'solicitudes', 'recuperacion_captura', `Recuperación de solicitud histórica ${targetId2}`, 'ing.lmlh@gmail.com', 'PENDIENTE', 'Nueva');
@@ -5919,6 +6016,262 @@ function handleSaveProductDocumentAdmin(docData, adminToken, userEmail) {
     };
   } catch (err) {
     return { success: false, message: 'Error guardando documento técnico: ' + err.toString() };
+  }
+}
+
+/**
+ * ============================================================================
+ * APRENDIZAJE SUPERVISADO Y ACTUALIZACIÓN DE CATÁLOGO DESDE SOLICITUDES
+ * ============================================================================
+ */
+
+/**
+ * Hoja de catálogo persistente en backend para modificaciones y aprendizaje
+ */
+function getCatalogProductsSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Catalogo_Productos');
+  if (!sheet) {
+    sheet = ss.insertSheet('Catalogo_Productos');
+    sheet.appendRow([
+      'ID_Producto', 'Codigo_SKU', 'Nombre', 'Marca', 'Modelo',
+      'Categoria_ID', 'Precio', 'Moneda', 'Disponibilidad', 'Stock',
+      'Alcance_Precio', 'Imagen_URL', 'Verificado_Por', 'Fecha_Verificacion',
+      'Activo', 'Notas_Auditoria'
+    ]);
+    sheet.getRange(1, 1, 1, 16).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
+
+/**
+ * Handler: Aplicar actualización de producto en el catálogo oficial (RBAC: solo administrador o propietario)
+ */
+function handleApplyCatalogUpdateAdmin(data, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado: permisos administrativos requeridos.' };
+    }
+
+    if (!data || !data.sku || !data.name) {
+      return { success: false, message: 'SKU y nombre del producto son obligatorios.' };
+    }
+
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const sheet = getCatalogProductsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const targetSku = String(data.sku).trim().toUpperCase();
+    const targetId = String(data.productId || data.id || '').trim();
+
+    let targetRow = -1;
+    let oldRecord = null;
+
+    for (let i = 1; i < rows.length; i++) {
+      const rSku = String(rows[i][1] || '').trim().toUpperCase();
+      const rId = String(rows[i][0] || '').trim();
+      if ((targetId && rId === targetId) || (targetSku && rSku === targetSku)) {
+        targetRow = i + 1;
+        oldRecord = rows[i];
+        break;
+      }
+    }
+
+    const price = data.price !== undefined && data.price !== null && data.price !== '' ? Number(data.price) : 0;
+    const currency = String(data.currency || 'DOP').toUpperCase();
+    const availability = String(data.availability || 'Disponible');
+    const stock = data.stock !== undefined && data.stock !== null && data.stock !== '' ? Number(data.stock) : 0;
+    const scope = String(data.scope || 'publico'); // publico, cotizacion_particular, promocion
+    const brand = String(data.brand || 'WES');
+    const model = String(data.model || '');
+    const categoryId = String(data.categoryId || 'camaras');
+    const imageUrl = String(data.imageUrl || data.image || '');
+    const active = data.active !== false;
+
+    const rowValues = [
+      targetId || ('wes-prod-' + targetSku.toLowerCase().replace(/[^a-z0-9]/g, '-')),
+      targetSku,
+      String(data.name).trim(),
+      brand,
+      model,
+      categoryId,
+      price,
+      currency,
+      availability,
+      stock,
+      scope,
+      imageUrl,
+      userEmail,
+      now,
+      active,
+      `Actualizado desde solicitud ${data.solicitudId || 'MANUAL'}`
+    ];
+
+    if (targetRow > 0) {
+      sheet.getRange(targetRow, 1, 1, 16).setValues([rowValues]);
+    } else {
+      sheet.appendRow(rowValues);
+    }
+
+    // Si viene vinculado a una solicitud, registrar la propuesta como aplicada
+    if (data.solicitudId) {
+      try {
+        const reqSheet = getSofiaRequestsSheet_();
+        const reqRows = reqSheet.getDataRange().getValues();
+        for (let j = 1; j < reqRows.length; j++) {
+          if (String(reqRows[j][0]).trim() === String(data.solicitudId).trim()) {
+            let proposals = [];
+            try { proposals = JSON.parse(reqRows[j][27] || '[]'); } catch(e) {}
+            proposals.push({
+              action: 'CATALOG_UPDATE_APPLIED',
+              sku: targetSku,
+              name: data.name,
+              price: price,
+              currency: currency,
+              scope: scope,
+              availability: availability,
+              appliedBy: userEmail,
+              appliedAt: now
+            });
+            reqSheet.getRange(j + 1, 28).setValue(JSON.stringify(proposals));
+
+            // Actualizar también la columna de notas o items si aplica
+            let items = [];
+            try { items = JSON.parse(reqRows[j][26] || '[]'); } catch(e) {}
+            let matchedItem = items.find(it => String(it.sku).toUpperCase() === targetSku);
+            if (matchedItem) {
+              matchedItem.priceUnitQuoted = price;
+              matchedItem.currency = currency;
+              matchedItem.availabilityConfirmed = (availability === 'Disponible');
+              reqSheet.getRange(j + 1, 27).setValue(JSON.stringify(items));
+            }
+            break;
+          }
+        }
+      } catch(reqErr) {
+        console.warn('Error vinculando actualización a solicitud:', reqErr);
+      }
+    }
+
+    // Registrar en auditoría reversible
+    const oldPriceStr = oldRecord ? `${oldRecord[6]} ${oldRecord[7]} (${oldRecord[8]})` : 'NO_REGISTRADO';
+    const newPriceStr = `${price} ${currency} (${availability}, Alcance: ${scope})`;
+    recordAuditLog_(userEmail, 'catalogo', 'actualizacion_precio_supervisado', `Actualización de producto ${data.name} (SKU: ${targetSku})`, userEmail, oldPriceStr, newPriceStr);
+
+    return {
+      success: true,
+      message: `Catálogo actualizado con éxito para "${data.name}".`,
+      product: {
+        id: rowValues[0],
+        code: targetSku,
+        name: data.name,
+        price: price,
+        currency: currency,
+        availability: availability,
+        stock: stock,
+        scope: scope,
+        updatedAt: now
+      }
+    };
+  } catch (err) {
+    console.error('Error en handleApplyCatalogUpdateAdmin:', err);
+    return { success: false, message: 'Error aplicando actualización: ' + err.toString() };
+  }
+}
+
+/**
+ * Handler: Proponer actualización o vincular producto desde solicitud sin aplicar de inmediato
+ */
+function handleProposeCatalogUpdateFromRequest(data, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
+    }
+
+    if (!data || !data.solicitudId) {
+      return { success: false, message: 'ID de solicitud requerido.' };
+    }
+
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const reqSheet = getSofiaRequestsSheet_();
+    const reqRows = reqSheet.getDataRange().getValues();
+    const targetId = String(data.solicitudId).trim();
+
+    let targetRow = -1;
+    for (let i = 1; i < reqRows.length; i++) {
+      if (String(reqRows[i][0]).trim() === targetId) {
+        targetRow = i + 1;
+        break;
+      }
+    }
+
+    if (targetRow === -1) {
+      return { success: false, message: 'Solicitud no encontrada.' };
+    }
+
+    let proposals = [];
+    try { proposals = JSON.parse(reqRows[targetRow - 1][27] || '[]'); } catch(e) {}
+
+    const newProposal = {
+      id: 'PROP-' + Date.now(),
+      actionType: data.actionType || 'propose_catalog_update', // propose_catalog_update, link_existing, create_draft_product, propose_knowledge
+      sku: data.sku || '',
+      productName: data.productName || '',
+      price: data.price !== undefined ? Number(data.price) : null,
+      currency: data.currency || 'DOP',
+      scope: data.scope || 'publico',
+      availability: data.availability || 'Disponible',
+      knowledgeSituation: data.knowledgeSituation || '',
+      knowledgeSolution: data.knowledgeSolution || '',
+      proposedBy: userEmail,
+      proposedAt: now,
+      status: 'pendiente_aprobacion',
+      notes: data.notes || ''
+    };
+
+    proposals.push(newProposal);
+    reqSheet.getRange(targetRow, 28).setValue(JSON.stringify(proposals));
+
+    // Si se propone un conocimiento, guardarlo en borrador en Conocimiento_Sofia
+    if (data.actionType === 'propose_knowledge' && data.knowledgeSituation && data.knowledgeSolution) {
+      saveSofiaKnowledgeEntryHandler({
+        type: 'faq',
+        situation: data.knowledgeSituation,
+        solution: data.knowledgeSolution,
+        category: data.category || 'General',
+        conditions: `Propuesto desde solicitud ${targetId}`,
+        status: 'borrador',
+        author: userEmail
+      }, adminToken, userEmail);
+    }
+
+    recordAuditLog_(userEmail, 'solicitudes', 'propuesta_actualizacion', `Propuesta ${newProposal.actionType} para ${targetId}`, userEmail, 'PENDIENTE', JSON.stringify(newProposal));
+
+    return {
+      success: true,
+      message: 'Propuesta registrada exitosamente.',
+      proposal: newProposal
+    };
+  } catch (err) {
+    console.error('Error en handleProposeCatalogUpdateFromRequest:', err);
+    return { success: false, message: 'Error registrando propuesta: ' + err.toString() };
+  }
+}
+
+/**
+ * Handler: Aprobar conocimiento reutilizable directamente a estado 'activo'
+ */
+function handleApproveSofiaKnowledgeAdmin(knowledgeId, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
+    }
+
+    return setSofiaKnowledgeStatusHandler(knowledgeId, 'activo', adminToken, userEmail);
+  } catch (err) {
+    return { success: false, message: 'Error aprobando conocimiento: ' + err.toString() };
   }
 }
 

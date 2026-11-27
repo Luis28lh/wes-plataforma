@@ -59,10 +59,26 @@ function initApp() {
   if (window.WesDB && window.WesDB.isConfigured()) {
     window.WesDB.getProducts().then(remoteProducts => {
       if (Array.isArray(remoteProducts) && remoteProducts.length >= 200) {
-        StorageService.saveProducts(remoteProducts);
+        // Preservar productos locales y personalizados (p. ej. altas desde Solicitudes de Sofía)
+        let mergedProducts = [...remoteProducts];
+        try {
+          const currentLocal = JSON.parse(localStorage.getItem('wes_custom_products') || '[]');
+          if (Array.isArray(currentLocal) && currentLocal.length) {
+            currentLocal.forEach(localItem => {
+              const localSku = String(localItem.code || localItem.codigo || '');
+              const remoteIdx = mergedProducts.findIndex(r => String(r.code || r.codigo || '') === localSku);
+              if (remoteIdx === -1 && localSku) {
+                mergedProducts.unshift(localItem);
+              } else if (remoteIdx !== -1 && localItem._customConfirmed) {
+                mergedProducts[remoteIdx] = Object.assign({}, mergedProducts[remoteIdx], localItem);
+              }
+            });
+          }
+        } catch(e) {}
+        StorageService.saveProducts(mergedProducts);
         renderProducts();
         if (typeof populateFilterOptions === 'function') {
-          populateFilterOptions(remoteProducts);
+          populateFilterOptions(mergedProducts);
         }
         // Si había una petición de enlace directo pendiente mientras cargaba la base de datos
         if (window.pendingDeepLinkQuery) {
