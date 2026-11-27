@@ -194,6 +194,18 @@
                 <span id="dropdown-kds-badge" class="hidden px-1.5 py-0.5 rounded-full text-[9px] font-black bg-rose-600 text-white font-mono shadow-xs">0</span>
               </a>
 
+              <!-- Enlace a Proyectos en Instalación (Odoo) para Técnicos -->
+              <button id="dropdown-tech-projects-link" type="button" role="menuitem" onclick="openInstallationProjectsModal(); closeMyAccountDropdown();" class="hidden w-full text-left px-4 py-2.5 text-xs font-bold text-slate-900 bg-amber-50/70 hover:bg-amber-100/70 flex items-center justify-between border-b border-amber-200/70 transition">
+                <div class="flex items-center space-x-2.5">
+                  <i class="fas fa-hard-hat text-amber-600 text-sm w-4 text-center"></i>
+                  <div>
+                    <span class="block">Proyectos en Instalación</span>
+                    <span class="text-[10px] text-amber-800 font-normal">Kanban oficial en vivo (Odoo)</span>
+                  </div>
+                </div>
+                <span id="dropdown-projects-badge" class="hidden px-1.5 py-0.5 rounded-full text-[9px] font-black bg-amber-600 text-white font-mono shadow-xs">0</span>
+              </button>
+
               <!-- 1. Mi Perfil -->
               <button type="button" role="menuitem" onclick="openUserProfileCleanModal(); closeMyAccountDropdown();" class="w-full text-left px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-wes-blue flex items-center space-x-2.5 transition">
                 <i class="fas fa-id-card text-slate-400 w-4 text-center"></i>
@@ -303,6 +315,12 @@
             <span class="flex items-center space-x-2"><i class="fas fa-wrench text-emerald-600"></i><span>Servicio Técnico (KDS)</span></span>
             <span id="mobile-tech-kds-badge" class="hidden px-1.5 py-0.2 rounded-full text-[9px] font-black bg-rose-600 text-white font-mono">0</span>
           </a>
+
+          <!-- Enlace a Proyectos en Instalación en Móvil (Odoo) -->
+          <button id="mobile-tech-projects-link" onclick="openInstallationProjectsModal(); closeMobileMenu();" class="hidden w-full py-2 px-3 rounded-lg bg-amber-50 text-slate-800 font-bold text-xs flex items-center justify-between border border-amber-200 transition">
+            <span class="flex items-center space-x-2"><i class="fas fa-hard-hat text-amber-600"></i><span>Proyectos en Instalación</span></span>
+            <span id="mobile-tech-projects-badge" class="hidden px-1.5 py-0.2 rounded-full text-[9px] font-black bg-amber-600 text-white font-mono">0</span>
+          </button>
 
           <button onclick="openUserProfileCleanModal(); closeMobileMenu();" class="w-full py-2 px-3 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-between border border-slate-200 transition">
             <span class="flex items-center space-x-2"><i class="fas fa-id-card text-slate-400"></i><span>Mi perfil</span></span>
@@ -1917,7 +1935,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.119 (Build 119)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.121 (Build 121)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -3870,6 +3888,109 @@
         <button onclick="closeTecnicoExternoPortal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition">
           Cerrar
         </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL / PORTAL KANBAN: PROYECTOS EN INSTALACIÓN (ODOO ERP) -->
+  <!-- ========================================================= -->
+  <div id="modal-proyectos-instalacion" class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-proyectos-title">
+    <div class="bg-slate-100 rounded-3xl max-w-6xl w-full shadow-2xl border border-slate-200 overflow-hidden my-3 sm:my-6 relative transition-all flex flex-col max-h-[94vh]">
+      
+      <!-- Cabecera Institucional WES -->
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-4 sm:px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0 shadow-sm">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-wes-gold flex items-center justify-center text-lg shadow-inner shrink-0">
+            <i class="fas fa-hard-hat"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 id="modal-proyectos-title" class="text-sm sm:text-base font-extrabold font-brand text-white">Proyectos en Instalación</h3>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950">Columna Odoo</span>
+            </div>
+            <p class="text-[11px] text-slate-300">Tablero de solo lectura sincronizado en vivo con la columna «Instalación» de Odoo ERP.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-2 self-end sm:self-auto">
+          <!-- Indicador de Auto-actualización y Botón Refrescar -->
+          <div class="flex items-center space-x-1.5 bg-white/10 px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-200 border border-white/10">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="hidden sm:inline text-slate-300">Auto:</span>
+            <span class="font-bold">60s</span>
+          </div>
+
+          <button type="button" onclick="loadInstallationProjects(false)" class="p-2 sm:px-3 sm:py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border border-white/10" title="Refrescar lista ahora">
+            <i class="fas fa-sync-alt text-[10px]"></i>
+            <span class="hidden sm:inline">Refrescar</span>
+          </button>
+
+          <button type="button" onclick="closeInstallationProjectsModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition" title="Cerrar ventana">
+            <i class="fas fa-times text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros y Resumen Métrico -->
+      <div class="bg-white px-4 sm:px-6 py-3 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center space-x-2 w-full sm:w-auto">
+          <span class="text-xs font-black text-slate-800 uppercase tracking-wider">Total de proyectos en Instalación:</span>
+          <span id="odoo-projects-total-count" class="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-100 text-amber-900 border border-amber-300 font-mono">0</span>
+        </div>
+
+        <div class="relative w-full sm:w-72">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <i class="fas fa-search text-xs"></i>
+          </span>
+          <input type="text" id="odoo-projects-search-input" oninput="handleInstallationProjectsSearch(this.value)" placeholder="Buscar por proyecto o cliente..." class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 transition">
+        </div>
+      </div>
+
+      <!-- Banner de Alerta de Conexión (Oculto por defecto) -->
+      <div id="odoo-connection-alert" class="hidden mx-4 sm:mx-6 mt-3 p-3 bg-amber-50 border border-amber-300 rounded-2xl flex items-center space-x-2.5 text-amber-900 text-xs">
+        <i class="fas fa-exclamation-triangle text-amber-600 text-base shrink-0"></i>
+        <div class="flex-1">
+          <span class="font-bold">Aviso de sincronización:</span>
+          <span id="odoo-connection-alert-text">No fue posible actualizar la información en este momento. Se mantiene la última consulta válida.</span>
+        </div>
+      </div>
+
+      <!-- Contenedor Principal de Tarjetas Kanban -->
+      <div class="p-4 sm:p-6 overflow-y-auto flex-1">
+        <div id="odoo-projects-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Tarjetas renderizadas dinámicamente -->
+        </div>
+
+        <!-- Estado de Carga -->
+        <div id="odoo-projects-loading" class="py-16 text-center space-y-3">
+          <div class="w-10 h-10 border-3 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p class="text-xs font-bold text-slate-600">Consultando columna «Instalación» en Odoo ERP...</p>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div id="odoo-projects-empty-state" class="hidden py-16 text-center space-y-2">
+          <div class="w-14 h-14 rounded-2xl bg-white border border-slate-200 text-slate-400 flex items-center justify-center mx-auto text-xl shadow-xs">
+            <i class="fas fa-folder-open"></i>
+          </div>
+          <h4 class="text-sm font-bold text-slate-800">No hay proyectos en esta vista</h4>
+          <p class="text-xs text-slate-500 max-w-sm mx-auto">Actualmente no hay proyectos en la etapa de Instalación o ninguno coincide con el filtro de búsqueda.</p>
+        </div>
+      </div>
+
+      <!-- Pie del Modal -->
+      <div class="px-4 sm:px-6 py-3 bg-white border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-xs text-slate-500">
+        <div class="flex items-center space-x-2 text-[11px]">
+          <i class="fas fa-shield-alt text-emerald-600"></i>
+          <span>Fuente oficial: Odoo ERP • Modo Estrictamente Solo Lectura</span>
+        </div>
+        <div class="flex items-center space-x-3 w-full sm:w-auto justify-end">
+          <span id="odoo-projects-last-sync" class="text-[11px] font-mono text-slate-400">Última sincr.: --:--:--</span>
+          <button type="button" onclick="closeInstallationProjectsModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition">
+            Cerrar
+          </button>
+        </div>
       </div>
 
     </div>

@@ -49,6 +49,14 @@ function initApp() {
   // Revisar si la URL contiene filtro de categoría o subcategoría (?cat=... &sub=...)
   checkUrlForCategory();
 
+  // Revisar si se solicitó abrir proyectos en instalación (desde tablero técnico)
+  if (window.location.hash === '#proyectos-instalacion' || localStorage.getItem('wes_open_odoo_projects_on_load') === 'true') {
+    localStorage.removeItem('wes_open_odoo_projects_on_load');
+    setTimeout(() => {
+      if (typeof openInstallationProjectsModal === 'function') openInstallationProjectsModal();
+    }, 400);
+  }
+
   // Reaccionar a cambios de Feature Flags emitidos desde el portal administrativo
   window.addEventListener('wes_flags_changed', () => {
     applyFeatureFlags();
@@ -1957,7 +1965,8 @@ function setupEventListeners() {
     { id: 'user-messages-modal', closeFn: () => typeof closeUserMessagesModal === 'function' && closeUserMessagesModal() },
     { id: 'ongoing-support-modal', closeFn: () => typeof closeOngoingSupportModal === 'function' && closeOngoingSupportModal() },
     { id: 'auth-modal', closeFn: () => typeof closeAuthModal === 'function' && closeAuthModal() },
-    { id: 'modal-tecnico-externo', closeFn: () => typeof closeTecnicoExternoPortal === 'function' && closeTecnicoExternoPortal() }
+    { id: 'modal-tecnico-externo', closeFn: () => typeof closeTecnicoExternoPortal === 'function' && closeTecnicoExternoPortal() },
+    { id: 'modal-proyectos-instalacion', closeFn: () => typeof closeInstallationProjectsModal === 'function' && closeInstallationProjectsModal() }
   ];
 
   modalCloseRegistry.forEach(item => {
@@ -5073,6 +5082,13 @@ function updateAuthHeaderUI() {
       else dropdownTechKdsLink.classList.add('hidden');
     }
 
+    // Proyectos en Instalación (Odoo): Técnicos y administradores autorizados
+    const dropdownTechProjectsLink = document.getElementById('dropdown-tech-projects-link');
+    if (dropdownTechProjectsLink) {
+      if (hasKdsAccess) dropdownTechProjectsLink.classList.remove('hidden');
+      else dropdownTechProjectsLink.classList.add('hidden');
+    }
+
     // Mis Servicios: Visible para Clientes (o rol cliente)
     if (dropdownClientServicesBtn) {
       if (isClientRole) dropdownClientServicesBtn.classList.remove('hidden');
@@ -5096,6 +5112,12 @@ function updateAuthHeaderUI() {
       else mobileTechKdsLink.classList.add('hidden');
     }
 
+    const mobileTechProjectsLink = document.getElementById('mobile-tech-projects-link');
+    if (mobileTechProjectsLink) {
+      if (hasKdsAccess) mobileTechProjectsLink.classList.remove('hidden');
+      else mobileTechProjectsLink.classList.add('hidden');
+    }
+
     if (mobileClientServicesBtn) {
       if (isClientRole) mobileClientServicesBtn.classList.remove('hidden');
       else mobileClientServicesBtn.classList.add('hidden');
@@ -5104,8 +5126,12 @@ function updateAuthHeaderUI() {
     // Visitante (No autenticado)
     if (dropdownAdminLink) dropdownAdminLink.classList.add('hidden');
     if (dropdownTechKdsLink) dropdownTechKdsLink.classList.add('hidden');
+    const dropdownTechProjectsLink = document.getElementById('dropdown-tech-projects-link');
+    if (dropdownTechProjectsLink) dropdownTechProjectsLink.classList.add('hidden');
     if (dropdownClientServicesBtn) dropdownClientServicesBtn.classList.remove('hidden');
     if (mobileTechKdsLink) mobileTechKdsLink.classList.add('hidden');
+    const mobileTechProjectsLink = document.getElementById('mobile-tech-projects-link');
+    if (mobileTechProjectsLink) mobileTechProjectsLink.classList.add('hidden');
     // No autenticado
     if (iconLoggedOut) iconLoggedOut.classList.remove('hidden');
     if (iconLoggedIn) iconLoggedIn.classList.add('hidden');
@@ -6172,3 +6198,258 @@ window.closeProductDetailModal = closeProductDetailModal;
 window.showProductNotFoundNotice = showProductNotFoundNotice;
 window.goToCatalogFromNotice = goToCatalogFromNotice;
 window.AppState = AppState;
+
+
+// ============================================================================
+// MÓDULO: PROYECTOS EN INSTALACIÓN (ODOO ERP KANBAN)
+// ============================================================================
+var odooProjectsCache = [];
+var odooProjectsPollingInterval = null;
+window.odooProjectsCache = odooProjectsCache;
+window.odooProjectsPollingInterval = odooProjectsPollingInterval;
+
+function sanitizeOdooDescriptionHtml(rawHtml) {
+  if (!rawHtml || typeof rawHtml !== 'string') return '';
+  let clean = rawHtml.trim();
+
+  // Eliminar etiquetas potencialmente peligrosas
+  clean = clean.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+  clean = clean.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
+  clean = clean.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+  clean = clean.replace(/on\w+="[^"]*"/gi, '');
+  clean = clean.replace(/on\w+='[^']*'/gi, '');
+  clean = clean.replace(/javascript:[^"']*/gi, '');
+
+  // Formatear listas de verificación de Odoo (.o_checklist) de modo visual inmutable
+  clean = clean.replace(/<li([^>]*)\bclass="([^"]*o_checked[^"]*)"([^>]*)>([\s\S]*?)<\/li>/gi, function(match, pre, cls, post, inner) {
+    return '<li class="flex items-start space-x-2 text-slate-800 my-1"><span class="w-4 h-4 rounded bg-emerald-500 text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5 shadow-2xs"><i class="fas fa-check"></i></span><span class="line-through text-slate-500 flex-1">' + inner + '</span></li>';
+  });
+
+  clean = clean.replace(/<li([^>]*)\bclass="([^"]*o_checklist[^"]*|[^"]*)"([^>]*)>([\s\S]*?)<\/li>/gi, function(match, pre, cls, post, inner) {
+    if (match.includes('fa-check')) return match;
+    return '<li class="flex items-start space-x-2 text-slate-700 my-1"><span class="w-4 h-4 rounded border border-slate-300 bg-white flex items-center justify-center text-[10px] shrink-0 mt-0.5"></span><span class="flex-1">' + inner + '</span></li>';
+  });
+
+  return clean;
+}
+
+async function openInstallationProjectsModal() {
+  if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+  if (typeof closeMyAccountDropdown === 'function') closeMyAccountDropdown();
+
+  const modal = document.getElementById('modal-proyectos-instalacion');
+  if (!modal) return;
+
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+  document.body.classList.add('overflow-hidden');
+
+  // Iniciar temporizador de auto-actualización cada 60 segundos
+  if (odooProjectsPollingInterval) {
+    clearInterval(odooProjectsPollingInterval);
+  }
+  odooProjectsPollingInterval = setInterval(() => {
+    loadInstallationProjects(true);
+  }, 60000);
+
+  await loadInstallationProjects(false);
+}
+
+function closeInstallationProjectsModal() {
+  const modal = document.getElementById('modal-proyectos-instalacion');
+  if (!modal) return;
+
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
+  document.body.classList.remove('overflow-hidden');
+  document.body.style.overflow = '';
+
+  if (odooProjectsPollingInterval) {
+    clearInterval(odooProjectsPollingInterval);
+    odooProjectsPollingInterval = null;
+  }
+}
+
+async function loadInstallationProjects(silent = false) {
+  const grid = document.getElementById('odoo-projects-cards-grid');
+  const loading = document.getElementById('odoo-projects-loading');
+  const empty = document.getElementById('odoo-projects-empty-state');
+  const totalCountEl = document.getElementById('odoo-projects-total-count');
+  const lastSyncEl = document.getElementById('odoo-projects-last-sync');
+  const alertBox = document.getElementById('odoo-connection-alert');
+  const alertText = document.getElementById('odoo-connection-alert-text');
+
+  if (!silent) {
+    if (loading) loading.classList.remove('hidden');
+    if (grid) grid.innerHTML = '';
+    if (empty) empty.classList.add('hidden');
+  }
+
+  try {
+    const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+    const sessionToken = (user && user.sessionToken) || localStorage.getItem('wes_session_token') || '';
+    const adminToken = localStorage.getItem('wes_admin_token') || '';
+    const userEmail = (user && user.email) || (function(){
+      try {
+        const adminSession = JSON.parse(sessionStorage.getItem('wes_admin_session') || '{}');
+        return adminSession.email || 'ing.lmlh@gmail.com';
+      } catch(e) { return 'ing.lmlh@gmail.com'; }
+    })();
+
+    const apiUrl = getWesBackendUrl();
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'get_odoo_installation_projects',
+        userEmail: userEmail,
+        sessionToken: sessionToken,
+        adminToken: adminToken
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success && Array.isArray(data.projects)) {
+      odooProjectsCache = data.projects;
+      window.odooProjectsCache = data.projects;
+      if (alertBox) alertBox.classList.add('hidden');
+      if (totalCountEl) totalCountEl.textContent = data.projects.length;
+
+      // Actualizar badges
+      const pBadge1 = document.getElementById('dropdown-projects-badge');
+      const pBadge2 = document.getElementById('mobile-tech-projects-badge');
+      if (pBadge1) {
+        pBadge1.textContent = data.projects.length;
+        pBadge1.classList.toggle('hidden', data.projects.length === 0);
+      }
+      if (pBadge2) {
+        pBadge2.textContent = data.projects.length;
+        pBadge2.classList.toggle('hidden', data.projects.length === 0);
+      }
+
+      if (lastSyncEl) {
+        const now = new Date();
+        lastSyncEl.textContent = 'Última sincr.: ' + now.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+
+      renderInstallationProjectsGrid(odooProjectsCache);
+    } else {
+      console.warn('[Odoo Projects Sync Warning]:', data.message);
+      if (alertBox && alertText) {
+        alertText.textContent = 'No fue posible actualizar la información desde Odoo: ' + (data.message || 'Error de conexión');
+        alertBox.classList.remove('hidden');
+      }
+      // Si ya teníamos datos previos en caché, mantenerlos para no dejar en blanco
+      if (odooProjectsCache.length > 0) {
+        renderInstallationProjectsGrid(odooProjectsCache);
+      } else {
+        if (grid) grid.innerHTML = '';
+        if (empty) empty.classList.remove('hidden');
+      }
+    }
+  } catch (err) {
+    console.error('Error cargando proyectos de Odoo:', err);
+    if (alertBox && alertText) {
+      alertText.textContent = 'No fue posible conectar con el servidor para actualizar los proyectos. Se mantendrá el reintento automático.';
+      alertBox.classList.remove('hidden');
+    }
+    if (odooProjectsCache.length > 0) {
+      renderInstallationProjectsGrid(odooProjectsCache);
+    } else {
+      if (grid) grid.innerHTML = '';
+      if (empty) empty.classList.remove('hidden');
+    }
+  } finally {
+    if (loading) loading.classList.add('hidden');
+  }
+}
+
+function renderInstallationProjectsGrid(projects) {
+  const grid = document.getElementById('odoo-projects-cards-grid');
+  const empty = document.getElementById('odoo-projects-empty-state');
+  if (!grid) return;
+
+  grid.innerHTML = '';
+
+  if (!projects || projects.length === 0) {
+    if (empty) empty.classList.remove('hidden');
+    return;
+  }
+  if (empty) empty.classList.add('hidden');
+
+  projects.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md hover:border-amber-300 transition flex flex-col p-4 sm:p-5 relative overflow-hidden group space-y-3';
+
+    // Barra de acento institucional
+    const accent = document.createElement('div');
+    accent.className = 'absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-wes-gold via-amber-500 to-wes-blue';
+    card.appendChild(accent);
+
+    // 1. Encabezado del proyecto
+    const headerWrapper = document.createElement('div');
+    headerWrapper.className = 'space-y-1';
+    
+    const titleEl = document.createElement('h4');
+    titleEl.className = 'text-xs sm:text-sm font-extrabold text-slate-900 leading-snug line-clamp-2 tracking-tight group-hover:text-wes-blue transition';
+    titleEl.textContent = p.name || 'Proyecto sin título';
+    titleEl.title = p.name || '';
+    headerWrapper.appendChild(titleEl);
+
+    // 2. Cliente asociado
+    const clientWrapper = document.createElement('div');
+    clientWrapper.className = 'flex items-center space-x-1.5 text-xs text-slate-600 font-semibold';
+    clientWrapper.innerHTML = '<i class="fas fa-user-tie text-[11px] text-amber-600 shrink-0"></i><span class="truncate">' + escapeHtml(p.client || 'Cliente no especificado') + '</span>';
+    headerWrapper.appendChild(clientWrapper);
+
+    card.appendChild(headerWrapper);
+
+    // Separador sutil
+    const sep = document.createElement('div');
+    sep.className = 'border-t border-slate-100 pt-2';
+    card.appendChild(sep);
+
+    // 3. Descripción completa
+    const descContainer = document.createElement('div');
+    descContainer.className = 'flex-1 text-xs text-slate-700 leading-relaxed overflow-y-auto max-h-56 pr-1 custom-scrollbar';
+
+    if (p.description && typeof p.description === 'string' && p.description.trim() !== '' && p.description !== 'false') {
+      const sanitizedDesc = sanitizeOdooDescriptionHtml(p.description);
+      descContainer.innerHTML = '<div class="prose prose-xs max-w-none text-slate-700 space-y-1.5 leading-relaxed">' + sanitizedDesc + '</div>';
+    } else {
+      descContainer.innerHTML = '<p class="text-slate-400 italic text-[11px] flex items-center space-x-1.5"><i class="fas fa-info-circle text-[10px]"></i><span>Sin descripción registrada</span></p>';
+    }
+
+    card.appendChild(descContainer);
+
+    grid.appendChild(card);
+  });
+}
+
+function handleInstallationProjectsSearch(rawQuery) {
+  const cache = Array.isArray(window.odooProjectsCache) ? window.odooProjectsCache : (Array.isArray(odooProjectsCache) ? odooProjectsCache : []);
+  const query = (rawQuery || '').toLowerCase().trim();
+  if (!query) {
+    renderInstallationProjectsGrid(cache);
+    const countEl = document.getElementById('odoo-projects-total-count');
+    if (countEl) countEl.textContent = cache.length;
+    return;
+  }
+
+  const filtered = cache.filter(p => {
+    const name = (p.name || '').toLowerCase();
+    const client = (p.client || '').toLowerCase();
+    const desc = (p.description || '').toLowerCase();
+    return name.includes(query) || client.includes(query) || desc.includes(query);
+  });
+
+  renderInstallationProjectsGrid(filtered);
+  const countEl = document.getElementById('odoo-projects-total-count');
+  if (countEl) countEl.textContent = filtered.length;
+}
+
+window.openInstallationProjectsModal = openInstallationProjectsModal;
+window.closeInstallationProjectsModal = closeInstallationProjectsModal;
+window.loadInstallationProjects = loadInstallationProjects;
+window.handleInstallationProjectsSearch = handleInstallationProjectsSearch;

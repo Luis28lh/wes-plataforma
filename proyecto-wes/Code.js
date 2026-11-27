@@ -287,6 +287,10 @@ function doPost(e) {
         response = handleApproveSofiaKnowledgeAdmin(payload.knowledgeId, payload.adminToken, payload.userEmail);
         break;
 
+      case 'get_odoo_installation_projects':
+        response = handleGetOdooInstallationProjects(payload.userEmail, payload.sessionToken, payload.adminToken);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -6276,3 +6280,187 @@ function handleApproveSofiaKnowledgeAdmin(knowledgeId, adminToken, userEmail) {
 }
 
 
+
+
+/**
+ * =========================================================================
+ * FASE 2: INTEGRACIÓN DEL PORTAL TÉCNICO CON ODOO (PROYECTOS EN INSTALACIÓN)
+ * Protocolo: ESTRICTAMENTE SOLO LECTURA (READ-ONLY)
+ * =========================================================================
+ */
+function handleGetOdooInstallationProjects(userEmail, sessionToken, adminToken) {
+  try {
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const tokenStr = String(sessionToken || adminToken || '').trim();
+
+    // 1. Verificación de Seguridad y Permisos RBAC de Técnico / Administrador
+    let isAuthorized = false;
+    let userRole = 'cliente';
+
+    // Propietario por defecto
+    if (cleanEmail === 'ing.lmlh@gmail.com') {
+      isAuthorized = true;
+      userRole = 'propietario';
+    }
+
+    // Token secreto administrativo
+    const props = PropertiesService.getScriptProperties();
+    const storedSecretToken = props.getProperty('WES_ADMIN_SECRET_TOKEN') || 'wes-admin-2026-auth-token';
+    if (tokenStr && tokenStr === storedSecretToken) {
+      isAuthorized = true;
+      userRole = 'administrador';
+    }
+
+    // Si aún no está autorizado, comprobar en la hoja Clientes o lista de empleados
+    if (!isAuthorized && cleanEmail) {
+      const allowedRoles = ['tecnico_interno', 'tecnico_externo', 'administrador', 'propietario', 'gestor_soporte'];
+      
+      const sysEmployees = [
+        { email: 'ing.lmlh@gmail.com', role: 'propietario' },
+        { email: 'admin@wes.com.do', role: 'administrador' },
+        { email: 'soporte@wes.com.do', role: 'gestor_soporte' }
+      ];
+      for (let s = 0; s < sysEmployees.length; s++) {
+        if (sysEmployees[s].email === cleanEmail) {
+          isAuthorized = true;
+          userRole = sysEmployees[s].role;
+          break;
+        }
+      }
+
+      if (!isAuthorized) {
+        try {
+          const clientSheet = getClientsSheet_();
+          const rows = clientSheet.getDataRange().getValues();
+          for (let i = 1; i < rows.length; i++) {
+            const rEmail = String(rows[i][2] || '').toLowerCase().trim();
+            const rRole = String(rows[i][4] || '').toLowerCase().trim();
+            const rStatus = String(rows[i][9] || 'ACTIVO').toUpperCase().trim();
+            const isEmp = Boolean(rows[i][6]);
+
+            if (rEmail === cleanEmail) {
+              if (rStatus === 'SUSPENDIDO') {
+                return { success: false, unauthorized: true, message: 'Cuenta suspendida por seguridad.' };
+              }
+              if (allowedRoles.indexOf(rRole) !== -1 || isEmp) {
+                isAuthorized = true;
+                userRole = rRole || 'tecnico_interno';
+              }
+              break;
+            }
+          }
+        } catch(e) {
+          console.warn('Error verificando rol técnico en Clientes:', e);
+        }
+      }
+    }
+
+    if (!isAuthorized) {
+      return {
+        success: false,
+        unauthorized: true,
+        message: 'Acceso denegado: Se requieren permisos de Técnico o Administrador para consultar proyectos en instalación.'
+      };
+    }
+
+    // 2. Conexión segura con Odoo (JSON-RPC) en Modo Estrictamente Solo Lectura
+    const odooHost = props.getProperty('ODOO_HOST') || 'https://odoo.warnelectricalservices.com';
+    const odooDb = props.getProperty('ODOO_DB') || 'odoo-warnelectricalservices-com';
+    const odooLogin = props.getProperty('ODOO_LOGIN') || 'ing.lmlh@gmail.com';
+    const odooApiKey = props.getProperty('ODOO_API_KEY') || '8452f71f6b11c68a539c728b92c2f93dff26c943';
+
+    // Función auxiliar para JSON-RPC en Apps Script con bloqueo de métodos de escritura
+    function callOdooRpc(service, method, args) {
+      const forbidden = ['write', 'create', 'unlink', 'delete', 'copy', 'action_'];
+      for (let f = 0; f < forbidden.length; f++) {
+        if (String(method).toLowerCase().indexOf(forbidden[f]) !== -1) {
+          throw new Error('Operación prohibida: Solo lectura autorizada.');
+        }
+      }
+
+      const payload = {
+        jsonrpc: '2.0',
+        method: 'call',
+        params: {
+          service: service,
+          method: method,
+          args: args
+        },
+        id: Math.floor(Math.random() * 100000)
+      };
+
+      const response = UrlFetchApp.fetch(odooHost + '/jsonrpc', {
+        method: 'post',
+        contentType: 'application/json',
+        payload: JSON.stringify(payload),
+        muteHttpExceptions: true
+      });
+
+      const resCode = response.getResponseCode();
+      const resText = response.getContentText();
+
+      if (resCode !== 200) {
+        throw new Error('Error de conexión HTTP con Odoo [' + resCode + ']');
+      }
+
+      const resJson = JSON.parse(resText);
+      if (resJson.error) {
+        const errMsg = resJson.error.data ? resJson.error.data.message : resJson.error.message;
+        throw new Error(errMsg || 'Error en respuesta de Odoo');
+      }
+
+      return resJson.result;
+    }
+
+    // 3. Autenticación en Odoo
+    const uid = callOdooRpc('common', 'authenticate', [odooDb, odooLogin, odooApiKey, {}]);
+    if (!uid) {
+      throw new Error('Fallo de autenticación con Odoo ERP.');
+    }
+
+    // 4. Consulta de Proyectos en Instalación (Modelo project.project, stage_id=5, active=true)
+    const odooProjects = callOdooRpc('object', 'execute_kw', [
+      odooDb, uid, odooApiKey,
+      'project.project', 'search_read',
+      [[['stage_id', '=', 5], ['active', '=', true]]],
+      {
+        fields: ['id', 'name', 'partner_id', 'description'],
+        order: 'id desc'
+      }
+    ]);
+
+    // 5. Normalizar datos sin exponer ID interno al frontend innecesariamente ni alterar información
+    const formattedProjects = (odooProjects || []).map(function(p) {
+      let clientName = 'Cliente no especificado';
+      if (Array.isArray(p.partner_id) && p.partner_id.length > 1) {
+        clientName = p.partner_id[1];
+      } else if (typeof p.partner_id === 'string') {
+        clientName = p.partner_id;
+      }
+
+      return {
+        id: p.id,
+        name: p.name || 'Proyecto sin título',
+        client: clientName,
+        description: p.description || null
+      };
+    });
+
+    return {
+      success: true,
+      count: formattedProjects.length,
+      stageId: 5,
+      stageName: 'Instalación',
+      timestamp: Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss'),
+      projects: formattedProjects
+    };
+
+  } catch (err) {
+    console.error('Error en handleGetOdooInstallationProjects:', err);
+    return {
+      success: false,
+      error: 'CONNECTION_ERROR',
+      message: 'No fue posible actualizar la información desde Odoo: ' + err.message
+    };
+  }
+}
