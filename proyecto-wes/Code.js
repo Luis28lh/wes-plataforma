@@ -6424,13 +6424,23 @@ function handleGetOdooInstallationProjects(userEmail, sessionToken, adminToken) 
       'project.project', 'search_read',
       [[['stage_id', '=', 5], ['active', '=', true]]],
       {
-        fields: ['id', 'name', 'partner_id', 'description'],
+        fields: ['id', 'name', 'partner_id', 'description', 'user_id'],
         order: 'id desc'
       }
     ]);
 
+    // Identificar si el usuario tiene rol de supervisión (ve el conjunto completo de proyectos)
+    // o técnico de campo asignado
+    const isSupervisor = (
+      userRole === 'propietario' ||
+      userRole === 'administrador' ||
+      userRole === 'gestor_soporte' ||
+      cleanEmail === 'ing.lmlh@gmail.com' ||
+      cleanEmail === 'admin@wes.com.do'
+    );
+
     // 5. Normalizar datos sin exponer ID interno al frontend innecesariamente ni alterar información
-    const formattedProjects = (odooProjects || []).map(function(p) {
+    let formattedProjects = (odooProjects || []).map(function(p) {
       let clientName = 'Cliente no especificado';
       if (Array.isArray(p.partner_id) && p.partner_id.length > 1) {
         clientName = p.partner_id[1];
@@ -6438,13 +6448,38 @@ function handleGetOdooInstallationProjects(userEmail, sessionToken, adminToken) 
         clientName = p.partner_id;
       }
 
+      let assignedUserName = null;
+      let assignedUserId = null;
+      if (Array.isArray(p.user_id) && p.user_id.length > 1) {
+        assignedUserId = p.user_id[0];
+        assignedUserName = p.user_id[1];
+      }
+
       return {
         id: p.id,
         name: p.name || 'Proyecto sin título',
         client: clientName,
-        description: p.description || null
+        description: p.description || null,
+        assignedUserId: assignedUserId,
+        assignedUserName: assignedUserName
       };
     });
+
+    // Si es técnico de campo y tiene proyectos asignados específicamente, filtrar por asignación
+    if (!isSupervisor && cleanEmail) {
+      const technicianAssigned = formattedProjects.filter(function(proj) {
+        if (!proj.assignedUserName) return false;
+        const assignedNameLower = String(proj.assignedUserName).toLowerCase();
+        // Coincidencia con nombre o correo
+        return assignedNameLower.indexOf(cleanEmail.split('@')[0]) !== -1;
+      });
+
+      // Si tiene proyectos explícitamente asignados a su cuenta, retornar los suyos;
+      // si aún no tiene asignación directa específica, mantener acceso a los proyectos de campo autorizados
+      if (technicianAssigned.length > 0) {
+        formattedProjects = technicianAssigned;
+      }
+    }
 
     return {
       success: true,

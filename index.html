@@ -1935,7 +1935,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.122 (Build 122)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.123 (Build 123)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -4070,19 +4070,24 @@
         <span class="text-[10px] font-bold mt-0.5 tracking-tight">Categorías</span>
       </button>
 
-      <!-- 3. Avisos (con campana y contador) -->
+      <!-- 3. Mis proyectos (Condicional exclusivo para Técnicos y Supervisores) -->
+      <button type="button" id="mobile-bottom-nav-projects" onclick="handleMobileNavAction('proyectos')" class="mobile-bottom-nav-btn hidden flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition" data-nav="proyectos" aria-label="Consultar Mis Proyectos Técnicos">
+        <svg class="w-5 h-5 group-hover:text-wes-blue transition shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <!-- Casco de seguridad de contorno -->
+          <path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"></path>
+          <path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"></path>
+          <path d="M4 15v-3a8 8 0 0 1 16 0v3"></path>
+        </svg>
+        <span class="text-[10px] font-bold mt-0.5 tracking-tight">Mis proyectos</span>
+      </button>
+
+      <!-- 4. Avisos (con campana y contador) -->
       <button type="button" onclick="handleMobileNavAction('notificaciones')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition relative" data-nav="notificaciones" aria-label="Buzón de avisos">
         <div class="relative inline-flex items-center justify-center">
           <i class="fas fa-bell text-base group-hover:text-wes-blue transition"></i>
           <span id="mobile-bottom-notifications-badge" class="hidden absolute -top-1.5 -right-2 px-1 py-0.2 rounded-full text-[9px] font-black bg-rose-500 text-white leading-none">0</span>
         </div>
         <span class="text-[10px] font-bold mt-0.5 tracking-tight">Avisos</span>
-      </button>
-
-      <!-- 4. Ventas (abre catálogo) -->
-      <button type="button" onclick="handleMobileNavAction('ventas')" class="mobile-bottom-nav-btn flex-1 w-full group flex flex-col items-center justify-center h-full text-slate-500 hover:text-wes-blue active:scale-95 transition" data-nav="ventas" aria-label="Explorar Catálogo de Ventas">
-        <i class="fas fa-store text-base group-hover:text-wes-blue transition"></i>
-        <span class="text-[10px] font-bold mt-0.5 tracking-tight">Ventas</span>
       </button>
 
       <!-- 5. Mi perfil (extremo derecho) -->

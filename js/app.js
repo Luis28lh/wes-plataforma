@@ -5118,6 +5118,16 @@ function updateAuthHeaderUI() {
       else mobileTechProjectsLink.classList.add('hidden');
     }
 
+    // Barra inferior móvil: Acceso condicional para técnicos ("Mis proyectos")
+    const mobileBottomNavProjects = document.getElementById('mobile-bottom-nav-projects');
+    if (mobileBottomNavProjects) {
+      if (hasKdsAccess) {
+        mobileBottomNavProjects.classList.remove('hidden');
+      } else {
+        mobileBottomNavProjects.classList.add('hidden');
+      }
+    }
+
     if (mobileClientServicesBtn) {
       if (isClientRole) mobileClientServicesBtn.classList.remove('hidden');
       else mobileClientServicesBtn.classList.add('hidden');
@@ -5132,6 +5142,8 @@ function updateAuthHeaderUI() {
     if (mobileTechKdsLink) mobileTechKdsLink.classList.add('hidden');
     const mobileTechProjectsLink = document.getElementById('mobile-tech-projects-link');
     if (mobileTechProjectsLink) mobileTechProjectsLink.classList.add('hidden');
+    const mobileBottomNavProjects = document.getElementById('mobile-bottom-nav-projects');
+    if (mobileBottomNavProjects) mobileBottomNavProjects.classList.add('hidden');
     // No autenticado
     if (iconLoggedOut) iconLoggedOut.classList.remove('hidden');
     if (iconLoggedIn) iconLoggedIn.classList.add('hidden');
@@ -5438,6 +5450,28 @@ function handleMobileNavAction(action) {
         }
       } else {
         if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal('login');
+        }
+      }
+      break;
+    }
+
+    case 'proyectos': {
+      // Apertura condicional de proyectos en ejecución (solo técnicos y supervisores)
+      const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+      const allowedRoles = ['tecnico_interno', 'tecnico_externo', 'administrador', 'propietario', 'gestor_soporte'];
+      const userRole = user && user.role ? String(user.role).toLowerCase() : '';
+      const isAuthorized = Boolean(user && (allowedRoles.includes(userRole) || user.isEmployee === true));
+
+      if (isAuthorized) {
+        if (typeof window.openInstallationProjectsModal === 'function') {
+          window.openInstallationProjectsModal();
+        }
+      } else {
+        if (typeof showToast === 'function') {
+          showToast('Acceso restringido a personal técnico autorizado.', 'warning');
+        }
+        if (!user && typeof window.openAuthModal === 'function') {
           window.openAuthModal('login');
         }
       }
