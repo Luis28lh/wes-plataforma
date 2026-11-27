@@ -37,11 +37,27 @@
     ]
   };
 
+  // Identificador de conversación estable para visitante o usuario registrado
+  function getOrCreateConversationId() {
+    let id = localStorage.getItem('wes_sofia_conv_id');
+    if (!id || !id.startsWith('CONV-')) {
+      const year = new Date().getFullYear();
+      const rand = Math.floor(10000 + Math.random() * 90000);
+      id = `CONV-${year}-${rand}`;
+      localStorage.setItem('wes_sofia_conv_id', id);
+    }
+    return id;
+  }
+
   // Estado del flujo conversacional interactivo
   let chatSession = {
     isOpen: false,
     step: 'idle',
+    conversationId: getOrCreateConversationId(),
+    isHumanTakeover: false,
+    assignedAdvisor: '',
     chatHistory: [], // Historial multiturno para Gemini
+    renderedMessageIds: new Set(), // Evitar duplicar mensajes renderizados
     hasSentFollowUpInvitation: false, // Control para no repetir "¿En qué le puedo ayudar?"
     hasAskedHelp: false, // Marca si ya se le ha preguntado en qué necesita ayuda
     ticketDraft: {
@@ -54,6 +70,7 @@
   };
 
   let followUpTimer = null;
+  let syncIntervalTimer = null;
 
   function cancelFollowUpInvitation() {
     if (followUpTimer) {
@@ -368,17 +385,17 @@
         <div class="px-4 py-3.5 bg-gradient-to-r from-[#071836] via-[#0D2A5C] to-[#0A224A] text-white flex items-center justify-between shadow-lg shrink-0 border-b border-[#F5B300]/30">
           <div class="flex items-center space-x-3">
             <div class="relative">
-              <img src="assets/sofia-avatar.jpg" alt="Sofía" class="w-11 h-11 rounded-full object-cover border-2 border-[#F5B300] shadow-md ring-2 ring-white/10">
-              <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#071836] rounded-full shadow-xs"></span>
+              <img id="wes-chat-header-avatar" src="assets/sofia-avatar.jpg" alt="Sofía" class="w-11 h-11 rounded-full object-cover border-2 border-[#F5B300] shadow-md ring-2 ring-white/10">
+              <span id="wes-chat-header-status-dot" class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#071836] rounded-full shadow-xs"></span>
             </div>
             <div>
               <div class="flex items-center space-x-2">
                 <h3 class="font-extrabold text-sm tracking-wide text-white font-brand" id="wes-chat-header-title">Sofía</h3>
-                <span class="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <span id="wes-chat-header-badge" class="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   En línea
                 </span>
               </div>
-              <p class="text-[11px] text-slate-300">Asistente WES · Soporte y cotizaciones</p>
+              <p class="text-[11px] text-slate-300" id="wes-chat-header-subtitle">Asistente WES · Soporte y cotizaciones</p>
             </div>
           </div>
 
@@ -393,10 +410,19 @@
           </div>
         </div>
 
+        <!-- Aviso discreto de revisión de conversación por el equipo comercial -->
+        <div id="wes-chat-privacy-notice" class="px-3.5 py-1.5 bg-slate-100/95 border-b border-slate-200 text-[10px] text-slate-500 flex items-center justify-between shrink-0">
+          <div class="flex items-center space-x-1.5 truncate">
+            <i class="fas fa-user-shield text-slate-400 text-[10px]"></i>
+            <span class="truncate">Conversación sujeta a revisión por nuestro equipo comercial para atender su solicitud.</span>
+          </div>
+          <span class="text-[9px] font-mono text-slate-400 shrink-0 ml-1" id="wes-chat-conv-id-label"></span>
+        </div>
+
         <!-- Área de Mensajes Desplazable con Fondo Claro Texturizado WES -->
         <div id="wes-chat-messages" class="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3.5 text-xs bg-[#f4f6f9] bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px]">
           <!-- Mensaje de Bienvenida Inicial -->
-          <div class="flex items-end space-x-2 animate-fadeIn">
+          <div class="flex items-end space-x-2 animate-fadeIn" data-msg-role="sofia" data-msg-id="welcome-msg">
             <img src="assets/sofia-avatar.jpg" alt="Sofía" class="w-7 h-7 rounded-full object-cover border border-[#F5B300]/80 shrink-0 mb-4 shadow-xs">
             <div class="max-w-[85%]">
               <div class="bg-white p-3.5 rounded-2xl rounded-bl-none border border-slate-200/80 shadow-xs leading-relaxed text-slate-800">
@@ -520,9 +546,17 @@ function setupChatEvents() {
         document.getElementById('wes-chat-user-input')?.focus();
         scrollToBottom();
       }, 100);
+      syncSofiaConversationWithServer();
+      if (!syncIntervalTimer) {
+        syncIntervalTimer = setInterval(syncSofiaConversationWithServer, 5000);
+      }
     } else {
       // Cancelar cualquier mensaje pendiente al cerrar el chat para no enviarlo atrasado al volver a abrir
       cancelFollowUpInvitation();
+      if (syncIntervalTimer) {
+        clearInterval(syncIntervalTimer);
+        syncIntervalTimer = null;
+      }
       modal.classList.add('hidden');
       modal.classList.remove('flex');
       removeTypingIndicator();
@@ -557,6 +591,8 @@ function setupChatEvents() {
     const timeStr = getCurrentMessageTime();
     const div = document.createElement('div');
     div.className = 'flex justify-end animate-fadeIn';
+    div.setAttribute('data-msg-role', 'cliente');
+    div.setAttribute('data-msg-id', `user-${Date.now()}`);
     div.innerHTML = `
       <div class="max-w-[85%] flex flex-col items-end">
         <div class="bg-[#0D2A5C] text-white px-4 py-2.5 rounded-2xl rounded-br-none shadow-sm leading-relaxed text-xs font-normal">
@@ -567,6 +603,7 @@ function setupChatEvents() {
     `;
     msgContainer.appendChild(div);
     scrollToBottom();
+    setTimeout(syncSofiaConversationWithServer, 500);
   }
 
   function appendBotMessage(htmlContent) {
@@ -576,6 +613,8 @@ function setupChatEvents() {
     const timeStr = getCurrentMessageTime();
     const div = document.createElement('div');
     div.className = 'flex items-end space-x-2 animate-fadeIn';
+    div.setAttribute('data-msg-role', 'sofia');
+    div.setAttribute('data-msg-id', `sofia-${Date.now()}`);
     div.innerHTML = `
       <img src="assets/sofia-avatar.jpg" alt="Sofía" class="w-7 h-7 rounded-full object-cover border border-[#F5B300]/80 shrink-0 mb-4 shadow-xs">
       <div class="max-w-[88%] flex flex-col items-start">
@@ -587,6 +626,139 @@ function setupChatEvents() {
     `;
     msgContainer.appendChild(div);
     scrollToBottom();
+    setTimeout(syncSofiaConversationWithServer, 500);
+  }
+
+  function appendAdvisorMessage(advisorName, text, timeStr = '') {
+    const msgContainer = document.getElementById('wes-chat-messages');
+    if (!msgContainer) return;
+
+    const div = document.createElement('div');
+    div.className = 'flex items-end space-x-2 animate-fadeIn';
+    div.setAttribute('data-msg-role', 'asesor');
+    div.innerHTML = `
+      <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#0D2A5C] to-blue-700 text-amber-300 flex items-center justify-center font-bold text-xs shrink-0 mb-4 shadow-xs border border-amber-400/80">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      <div class="max-w-[88%] flex flex-col items-start">
+        <div class="bg-blue-50/95 p-3.5 rounded-2xl rounded-bl-none border border-blue-200 shadow-xs leading-relaxed text-slate-800 text-xs">
+          <div class="flex items-center space-x-1.5 font-bold text-blue-900 text-[11px] mb-1">
+            <i class="fas fa-badge-check text-blue-600"></i>
+            <span>${escapeHtml(advisorName || 'Asesor WES')}</span>
+            <span class="px-1 py-0.2 bg-blue-600 text-white rounded text-[8px] uppercase tracking-wider font-extrabold">Personal WES</span>
+          </div>
+          <div class="text-slate-800 leading-relaxed font-medium">
+            ${escapeHtml(text).replace(/\n/g, '<br>')}
+          </div>
+        </div>
+        ${timeStr ? `<span class="text-[10px] text-slate-400 mt-1 ml-1 font-mono">${escapeHtml(timeStr)}</span>` : `<span class="text-[10px] text-slate-400 mt-1 ml-1 font-mono">${getCurrentMessageTime()}</span>`}
+      </div>
+    `;
+    msgContainer.appendChild(div);
+    scrollToBottom();
+  }
+
+  function updateChatHeaderState(isHumanTakeover, advisorName) {
+    chatSession.isHumanTakeover = Boolean(isHumanTakeover);
+    chatSession.assignedAdvisor = advisorName || '';
+
+    const titleEl = document.getElementById('wes-chat-header-title');
+    const subtitleEl = document.getElementById('wes-chat-header-subtitle');
+    const badgeEl = document.getElementById('wes-chat-header-badge');
+    const avatarEl = document.getElementById('wes-chat-header-avatar');
+    const convLabel = document.getElementById('wes-chat-conv-id-label');
+
+    if (convLabel && chatSession.conversationId) {
+      convLabel.textContent = `ID: ${chatSession.conversationId}`;
+    }
+
+    if (chatSession.isHumanTakeover) {
+      if (titleEl) titleEl.textContent = chatSession.assignedAdvisor || 'Asesor WES';
+      if (subtitleEl) subtitleEl.textContent = 'Atención personalizada en vivo';
+      if (badgeEl) {
+        badgeEl.textContent = 'Asesor Activo';
+        badgeEl.className = 'inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 border border-amber-300';
+      }
+    } else {
+      if (titleEl) titleEl.textContent = 'Sofía';
+      if (subtitleEl) subtitleEl.textContent = 'Asistente WES · Soporte y cotizaciones';
+      if (badgeEl) {
+        badgeEl.textContent = 'En línea';
+        badgeEl.className = 'inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      }
+    }
+  }
+
+  /**
+   * Sincronización transparente de mensajes con la base de datos Google Sheets
+   */
+  async function syncSofiaConversationWithServer() {
+    try {
+      const backendUrl = getEffectiveBackendUrl();
+      if (!backendUrl) return;
+
+      let currentUser = null;
+      try {
+        if (typeof UserAuth !== 'undefined' && typeof UserAuth.getCurrentUser === 'function') {
+          currentUser = UserAuth.getCurrentUser();
+        }
+      } catch(e) {}
+
+      // Recopilar mensajes actuales en UI
+      const msgNodes = document.querySelectorAll('#wes-chat-messages > div[data-msg-role]');
+      const messagesPayload = [];
+
+      msgNodes.forEach((node, idx) => {
+        const role = node.getAttribute('data-msg-role') || 'cliente';
+        const msgId = node.getAttribute('data-msg-id') || `m-${idx + 1}`;
+        const text = node.innerText || node.textContent || '';
+        messagesPayload.push({
+          id: msgId,
+          role: role,
+          timestamp: new Date().toISOString(),
+          text: text.slice(0, 1000)
+        });
+      });
+
+      const convId = getOrCreateConversationId();
+      chatSession.conversationId = convId;
+
+      const payload = {
+        action: 'sync_sofia_conversation',
+        data: {
+          conversationId: convId,
+          clientId: (currentUser && currentUser.id) || (currentUser && currentUser.email) || 'INVITADO',
+          clientName: (currentUser && currentUser.name) || (chatSession.ticketDraft && chatSession.ticketDraft.name) || 'Visitante WES',
+          contact: (currentUser && currentUser.phone) || (currentUser && currentUser.email) || (chatSession.ticketDraft && chatSession.ticketDraft.phone) || '',
+          messages: messagesPayload
+        }
+      };
+
+      const resp = await fetch(backendUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data && data.success) {
+          updateChatHeaderState(data.isHumanTakeover, data.assignedAdvisor);
+
+          // Si el servidor devolvió mensajes del asesor que no están en la UI, renderizarlos
+          if (Array.isArray(data.messages)) {
+            data.messages.forEach(m => {
+              if (m.role === 'asesor' && !chatSession.renderedMessageIds.has(m.id)) {
+                chatSession.renderedMessageIds.add(m.id);
+                appendAdvisorMessage(m.authorName || data.assignedAdvisor || 'Asesor WES', m.text, m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '');
+              }
+            });
+          }
+        }
+      }
+    } catch (syncErr) {
+      console.warn('[WES Chat] Sincronización silenciosa no completada:', syncErr);
+    }
   }
 
   let typingIndicatorTimer = null;
@@ -967,9 +1139,12 @@ function setupChatEvents() {
   }
 
   function handleDraftParsing(text) {
-    // Extracción inteligente de datos
+    // Extracción inteligente de datos de contacto
     const phoneMatch = text.match(/(?:\+?1[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})/);
     const phone = phoneMatch ? phoneMatch[0] : '';
+
+    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const email = emailMatch ? emailMatch[0] : '';
 
     // Separar posibles partes
     const parts = text.split(/[,;\n]+/).map(p => p.trim()).filter(Boolean);
@@ -980,11 +1155,34 @@ function setupChatEvents() {
 
     const description = text;
 
-    // Detectar ubicación
-    let loc = 'Moca, Rep. Dominicana';
+    // Detectar ubicación real si fue mencionada
+    let loc = 'No proporcionada';
     const locMatch = text.match(/(?:en\s+|ubicaci[oó]n:?\s*|direcci[oó]n:?\s*)([A-Za-z0-9\s#.,\-]+?)(?:(?:\s+ma[ñn]ana|\s+el\s+lunes|\s+a\s+las|\s+tel|\s*,\s*|$))/i);
     if (locMatch && locMatch[1] && locMatch[1].length > 3) {
       loc = locMatch[1].trim();
+    }
+
+    // Detectar producto / SKU consultado
+    let productSku = 'No especificado';
+    if (/(micro\s*sd|memoria)/i.test(text)) productSku = 'Memoria Micro SD (Vigilancia CCTV)';
+    else if (/(bater[ií]a)/i.test(text)) productSku = 'Batería 12V 4A / Respaldo';
+    else if (/(motor|port[oó]n)/i.test(text)) productSku = 'Motor Portón Eléctrico CAME';
+    else if (/(c[aá]mara|dvr|nvr)/i.test(text)) productSku = 'Sistema CCTV Cámaras de Seguridad';
+    else if (/(inversor)/i.test(text)) productSku = 'Inversor / Tarjeta de Potencia';
+
+    // Detectar cantidad
+    let quantity = '1';
+    const qtyMatch = text.match(/\b([1-9][0-9]?)\s*(?:unidades?|piezas?|memorias?|bater[ií]as?|c[aá]maras?|motores?|kits?)\b/i) || text.match(/\bde\s+([1-9][0-9]?)\b/i);
+    if (qtyMatch && qtyMatch[1]) {
+      quantity = qtyMatch[1];
+    } else {
+      const pureNumMatch = text.match(/\b([1-9][0-9]?)\b/);
+      if (pureNumMatch && !phone.includes(pureNumMatch[1])) {
+        // Podría ser cantidad si precede al producto
+        if (new RegExp(pureNumMatch[1] + '\\s*(?:de\\s+)?(?:memorias?|bater[ií]as?|c[aá]maras?)', 'i').test(text)) {
+          quantity = pureNumMatch[1];
+        }
+      }
     }
 
     // Detectar fecha/horario deseado
@@ -995,13 +1193,16 @@ function setupChatEvents() {
     }
 
     chatSession.ticketDraft.name = name;
-    chatSession.ticketDraft.phone = phone || '(809) ';
+    chatSession.ticketDraft.phone = phone || '';
+    chatSession.ticketDraft.email = email || '';
     chatSession.ticketDraft.address = loc;
+    chatSession.ticketDraft.productSku = productSku;
+    chatSession.ticketDraft.quantity = quantity;
     chatSession.ticketDraft.requestedWhen = when;
-    chatSession.ticketDraft.equipment = chatSession.ticketDraft.equipment || 'Atención y Requerimiento Técnico/Comercial';
+    chatSession.ticketDraft.equipment = productSku;
     chatSession.ticketDraft.description = description;
 
-    // Presentar borrador con Human-in-the-Loop para confirmación antes de guardar
+    // Presentar borrador estructurado para confirmación
     appendBotMessage(`
       <div class="p-3 bg-white rounded-xl border border-amber-300 shadow-sm space-y-2">
         <div class="flex items-center space-x-1.5 font-bold text-amber-900 text-xs border-b border-amber-100 pb-1.5">
@@ -1011,7 +1212,8 @@ function setupChatEvents() {
         <p class="text-[11px] text-slate-600">Por favor confirma que tus datos estén correctos antes de registrar:</p>
         <div class="space-y-1 text-slate-700 text-xs">
           <div><span class="text-slate-400 font-bold">Cliente:</span> <strong>${escapeHtml(chatSession.ticketDraft.name)}</strong></div>
-          <div><span class="text-slate-400 font-bold">Contacto:</span> <strong>${escapeHtml(chatSession.ticketDraft.phone)}</strong></div>
+          <div><span class="text-slate-400 font-bold">Contacto:</span> <strong>${escapeHtml(chatSession.ticketDraft.phone || chatSession.ticketDraft.email || 'No proporcionado')}</strong></div>
+          <div><span class="text-slate-400 font-bold">Producto/SKU:</span> ${escapeHtml(chatSession.ticketDraft.productSku)} (Cantidad: ${escapeHtml(chatSession.ticketDraft.quantity)})</div>
           <div><span class="text-slate-400 font-bold">Ubicación:</span> ${escapeHtml(chatSession.ticketDraft.address)}</div>
           <div><span class="text-slate-400 font-bold">Horario solicitado:</span> ${escapeHtml(chatSession.ticketDraft.requestedWhen)}</div>
           <div><span class="text-slate-400 font-bold">Requerimiento:</span> ${escapeHtml(chatSession.ticketDraft.description)}</div>
@@ -1040,16 +1242,26 @@ function setupChatEvents() {
       }
     } catch(uErr) {}
 
+    const contactVal = draft.phone || draft.email || (currentUser && currentUser.phone) || (currentUser && currentUser.email) || 'No proporcionado';
+
     const payloadData = {
-      name: draft.name || (currentUser && currentUser.name) || 'Cliente WES',
-      phone: draft.phone && draft.phone.length > 5 ? draft.phone : (currentUser && currentUser.phone) || '(809) 578-0000',
-      contact: draft.phone || (currentUser && currentUser.email) || draft.name,
-      location: draft.address || 'Moca, Rep. Dominicana',
-      detail: draft.description || draft.equipment || 'Solicitud de atención y servicio técnico generada desde el chat de Sofía.',
-      type: /(cotiz|precio|compr|bater[ií]a|motor)/i.test(draft.description) ? 'ventas' : 'soporte',
+      name: draft.name || (currentUser && currentUser.name) || 'No proporcionado',
+      phone: draft.phone || (currentUser && currentUser.phone) || 'No proporcionado',
+      email: draft.email || (currentUser && currentUser.email) || 'No proporcionado',
+      contact: contactVal,
+      location: draft.address || 'No proporcionada',
+      detail: draft.description || draft.equipment || 'Solicitud de cotización o disponibilidad generada desde el chat de Sofía.',
+      type: /(cotiz|precio|compr|bater[ií]a|motor|memoria)/i.test(draft.description) ? 'ventas' : 'soporte',
       requestedWhen: draft.requestedWhen || 'lo antes posible en horario laboral',
-      clientId: (currentUser && currentUser.id) || 'INVITADO',
-      channel: 'chat_sofia'
+      clientId: (currentUser && currentUser.id) || (currentUser && currentUser.email) || 'INVITADO',
+      channel: 'chat_sofia',
+      conversationId: chatSession.conversationId || getOrCreateConversationId(),
+      productSku: draft.productSku || 'No especificado',
+      quantity: draft.quantity || '1',
+      offeredBySofia: 'Sofía informó que un asesor comercial se comunicaría para verificar existencias y responder.',
+      missingConfirm: 'Precio y disponibilidad en inventario',
+      nextAction: 'Ventas debe verificar precio y existencia con el cliente',
+      internalNotes: ''
     };
 
     scheduleTypingIndicator();
@@ -1077,8 +1289,7 @@ function setupChatEvents() {
 
       if (resData && resData.success && resData.solicitudNumber) {
         const solNum = resData.solicitudNumber;
-        const dateReq = resData.dateRequested || 'el próximo día hábil';
-        const timeReq = resData.timeRequested || 'en horario laboral';
+        const confirmationMsg = `Registré su solicitud de cotización y disponibilidad con el número <strong>${escapeHtml(solNum)}</strong>. Nuestro asesor comercial verificará existencia y precio para comunicarse con usted a la brevedad.`;
         
         appendBotMessage(`
           <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-950 space-y-2">
@@ -1087,24 +1298,29 @@ function setupChatEvents() {
               <span>Solicitud Registrada en el Sistema</span>
             </div>
             <p class="text-xs text-slate-800 leading-relaxed font-semibold">
-              Registré su solicitud con el número <strong>${escapeHtml(solNum)}</strong>, para atención solicitada el <strong>${escapeHtml(dateReq)}</strong> a las <strong>${escapeHtml(timeReq)}</strong>. Nuestro equipo confirmará la disponibilidad.
+              ${confirmationMsg}
             </p>
-            <div class="p-2.5 bg-white rounded-lg border border-emerald-200 text-xs text-slate-700">
+            <div class="p-2.5 bg-white rounded-lg border border-emerald-200 text-xs text-slate-700 space-y-1">
+              <div>• <strong>Número de Solicitud:</strong> ${escapeHtml(solNum)}</div>
               <div>• <strong>Cliente:</strong> ${escapeHtml(payloadData.name)}</div>
-              <div>• <strong>Contacto:</strong> ${escapeHtml(payloadData.phone)}</div>
+              <div>• <strong>Contacto:</strong> ${escapeHtml(payloadData.contact)}</div>
+              <div>• <strong>Producto:</strong> ${escapeHtml(payloadData.productSku)} (Cant: ${escapeHtml(payloadData.quantity)})</div>
               <div>• <strong>Requerimiento:</strong> ${escapeHtml(payloadData.detail)}</div>
             </div>
-            <p class="text-[11px] text-emerald-800">Se ha generado una notificación para nuestro personal técnico y comercial.</p>
+            <p class="text-[11px] text-emerald-800 font-medium">Aviso enviado al equipo comercial de Warn Electrical Services.</p>
           </div>
         `);
 
         // Registrar en memoria conversacional
         if (!chatSession.chatHistory) chatSession.chatHistory = [];
         chatSession.chatHistory.push({ role: 'user', content: `Confirmar solicitud para ${payloadData.name}` });
-        chatSession.chatHistory.push({ role: 'model', content: `Registré su solicitud con el número ${solNum}, para atención solicitada el ${dateReq} a las ${timeReq}. Nuestro equipo confirmará la disponibilidad.` });
+        chatSession.chatHistory.push({ role: 'model', content: `Registré su solicitud de cotización y disponibilidad con el número ${solNum}. Nuestro asesor comercial verificará existencia y precio.` });
 
         chatSession.step = 'idle';
         chatSession.ticketDraft = {};
+
+        // Sincronizar inmediatamente la confirmación con el servidor
+        setTimeout(syncSofiaConversationWithServer, 500);
         return;
       }
 
@@ -1184,6 +1400,13 @@ function setupChatEvents() {
     scheduleTypingIndicator();
 
     try {
+      // 0. Si la conversación ha sido asumida por un asesor humano, Sofía pausa sus respuestas automáticas
+      if (chatSession.isHumanTakeover) {
+        removeTypingIndicator();
+        // El mensaje del cliente ya fue renderizado y sincronizado al servidor.
+        return;
+      }
+
       // 1. Si estábamos esperando el código del ticket
       if (chatSession.step === 'awaiting_ticket_query') {
         removeTypingIndicator();

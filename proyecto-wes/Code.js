@@ -251,6 +251,22 @@ function doPost(e) {
         response = handleSaveSofiaNotifConfigAdmin(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+      case 'sync_sofia_conversation':
+        response = handleSyncSofiaConversation(payload.data, payload.userEmail, payload.sessionToken);
+        break;
+
+      case 'get_sofia_conversation':
+        response = handleGetSofiaConversation(payload.conversationId, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'send_advisor_chat_message':
+        response = handleSendAdvisorChatMessage(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
+      case 'toggle_sofia_pause':
+        response = handleToggleSofiaPause(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
       case 'get_product_documents':
         response = handleGetProductDocuments();
         break;
@@ -4410,9 +4426,31 @@ function handleGetClientPrivateMessages(userEmail, clientId, sessionToken) {
 /**
  * =========================================================================
  * WARN ELECTRICAL SERVICES, SRL (WES)
- * GESTIÓN DE SOLICITUDES DE ATENCIÓN DE SOFÍA Y NOTIFICACIONES AL PERSONAL
+ * GESTIÓN DE CONVERSACIONES, SOLICITUDES DE ATENCIÓN DE SOFÍA Y NOTIFICACIONES
  * =========================================================================
  */
+
+function getSofiaConversationsSheet_() {
+  const ss = getOrCreateDatabase();
+  let sheet = ss.getSheetByName('Conversaciones_Sofia');
+  if (!sheet) {
+    sheet = ss.insertSheet('Conversaciones_Sofia');
+    sheet.appendRow([
+      'ID_Conversacion',         // 1. CONV-YYYY-XXXXX
+      'Client_ID',               // 2. ID permanente cliente o 'INVITADO'
+      'Nombre_Cliente',          // 3. Nombre
+      'Contacto',                // 4. Teléfono / Email
+      'Fecha_Inicio',            // 5. YYYY-MM-DD HH:mm:ss (GMT-4)
+      'Fecha_Ultimo_Mensaje',    // 6. YYYY-MM-DD HH:mm:ss (GMT-4)
+      'Estado_Atencion',         // 7. sofia_activa / atencion_humana / pausada / cerrada
+      'Asesor_Asignado',         // 8. Email / Nombre del asesor
+      'Mensajes_JSON',           // 9. Array de mensajes [{ id, timestamp, role, authorName, text }]
+      'ID_Solicitud_Vinculada'   // 10. SOL-YYYY-XXXX cuando aplique
+    ]);
+    sheet.getRange(1, 1, 1, 10).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  }
+  return sheet;
+}
 
 function getSofiaRequestsSheet_() {
   const ss = getOrCreateDatabase();
@@ -4430,7 +4468,7 @@ function getSofiaRequestsSheet_() {
       'Ubicacion',                 // 8. Ubicación o dirección
       'Fecha_Solicitada',          // 9. YYYY-MM-DD interpretada
       'Hora_Solicitada',           // 10. HH:mm interpretada
-      'Estado',                    // 11. Nueva, Asignada, En gestion, Pendiente del cliente, Resuelta, Cancelada
+      'Estado',                    // 11. Nueva, Asignada, En atencion, Esperando al cliente, Resuelta, Cancelada
       'Responsable_ID',            // 12. ID del empleado asignado
       'Responsable_Email',         // 13. Correo del responsable
       'Destinatarios_Aviso',       // 14. Correos que recibieron aviso (separados por coma)
@@ -4438,11 +4476,369 @@ function getSofiaRequestsSheet_() {
       'Proxima_Fecha_Seguimiento', // 16. Próximo recordatorio
       'Historial_Seguimiento',     // 17. JSON con bitácora de eventos y contactos
       'Referencia_Chat',           // 18. Hash / extracto del chat para idempotencia
-      'Canal_Origen'               // 19. chat_sofia / recuperacion_captura / manual
+      'Canal_Origen',              // 19. chat_sofia / recuperacion_captura / manual
+      'ID_Conversacion',           // 20. CONV-YYYY-XXXXX
+      'Producto_SKU',              // 21. Producto / SKU consultado
+      'Cantidad',                  // 22. Cantidad solicitada (ej. 5)
+      'Ofrecido_Por_Sofia',        // 23. Qué ofreció o comunicó Sofía
+      'Falta_Confirmar',           // 24. Qué falta confirmar (precio, existencia, etc.)
+      'Proxima_Accion',            // 25. Próxima acción requerida
+      'Notas_Internas'             // 26. Notas privadas de asesor
     ]);
-    sheet.getRange(1, 1, 1, 19).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+    sheet.getRange(1, 1, 1, 26).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+  } else {
+    // Asegurar que las nuevas columnas existan si la hoja ya fue creada previamente
+    if (sheet.getLastColumn() < 26) {
+      const headers = [
+        'ID_Conversacion',
+        'Producto_SKU',
+        'Cantidad',
+        'Ofrecido_Por_Sofia',
+        'Falta_Confirmar',
+        'Proxima_Accion',
+        'Notas_Internas'
+      ];
+      const startCol = 20;
+      sheet.getRange(1, startCol, 1, headers.length).setValues([headers]).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+    }
   }
   return sheet;
+}
+
+/**
+ * Handler: Sincronizar mensajes de conversación de Sofía (cliente/servidor)
+ */
+function handleSyncSofiaConversation(data, userEmail, sessionToken) {
+  try {
+    if (!data || typeof data !== 'object') {
+      return { success: false, message: 'Datos de conversación inválidos.' };
+    }
+
+    const sheet = getSofiaConversationsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const nowStr = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const yearStr = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy');
+
+    let convId = String(data.conversationId || '').trim();
+    const clientId = String(data.clientId || (userEmail ? userEmail : 'INVITADO')).trim();
+    const clientName = String(data.clientName || 'Visitante WES').trim();
+    const contact = String(data.contact || '').trim();
+    const incomingMessages = Array.isArray(data.messages) ? data.messages : [];
+
+    let targetRow = -1;
+    let existingStatus = 'sofia_activa';
+    let assignedAdvisor = '';
+    let existingLinkedSolicitud = '';
+    let storedMessages = [];
+
+    if (convId) {
+      for (let i = 1; i < rows.length; i++) {
+        if (String(rows[i][0]).trim() === convId) {
+          targetRow = i + 1;
+          existingStatus = String(rows[i][6] || 'sofia_activa').trim();
+          assignedAdvisor = String(rows[i][7] || '').trim();
+          existingLinkedSolicitud = String(rows[i][9] || '').trim();
+          try {
+            storedMessages = JSON.parse(rows[i][8] || '[]');
+          } catch(e) {
+            storedMessages = [];
+          }
+          break;
+        }
+      }
+    }
+
+    // Si no existe, crear nuevo ID de conversación correlativo CONV-YYYY-XXXXX
+    if (targetRow === -1) {
+      let maxNum = 0;
+      for (let j = 1; j < rows.length; j++) {
+        const idMatch = String(rows[j][0] || '').match(/^CONV-(\d{4})-(\d+)/);
+        if (idMatch && idMatch[1] === yearStr) {
+          const n = parseInt(idMatch[2], 10);
+          if (n > maxNum) maxNum = n;
+        }
+      }
+      convId = `CONV-${yearStr}-${String(maxNum + 1).padStart(5, '0')}`;
+      targetRow = rows.length + 1;
+
+      // Sanitizar mensajes iniciales
+      storedMessages = incomingMessages.map((m, idx) => ({
+        id: String(m.id || `msg-${idx + 1}`),
+        timestamp: String(m.timestamp || nowStr),
+        role: String(m.role || 'cliente'), // cliente, sofia, asesor
+        authorName: String(m.authorName || (m.role === 'sofia' ? 'Sofía' : (m.role === 'asesor' ? 'Asesor WES' : clientName))),
+        text: String(m.text || '')
+      }));
+
+      sheet.appendRow([
+        convId,
+        clientId,
+        clientName,
+        contact,
+        nowStr,
+        nowStr,
+        'sofia_activa',
+        '',
+        JSON.stringify(storedMessages),
+        String(data.solicitudId || '')
+      ]);
+    } else {
+      // Conversación existente: mezclar mensajes sin duplicar por ID o texto idéntico y autor
+      const msgMap = new Map();
+      storedMessages.forEach(m => {
+        const key = m.id || `${m.role}_${m.text.slice(0, 40)}`;
+        msgMap.set(key, m);
+      });
+
+      incomingMessages.forEach((m, idx) => {
+        const key = m.id || `${m.role}_${m.text.slice(0, 40)}`;
+        if (!msgMap.has(key)) {
+          msgMap.set(key, {
+            id: String(m.id || `msg-${nowStr}-${idx}`),
+            timestamp: String(m.timestamp || nowStr),
+            role: String(m.role || 'cliente'),
+            authorName: String(m.authorName || (m.role === 'sofia' ? 'Sofía' : (m.role === 'asesor' ? (assignedAdvisor || 'Asesor WES') : clientName))),
+            text: String(m.text || '')
+          });
+        }
+      });
+
+      const mergedList = Array.from(msgMap.values()).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+      // Actualizar campos
+      if (clientName && clientName !== 'Visitante WES') {
+        sheet.getRange(targetRow, 3).setValue(clientName);
+      }
+      if (contact) {
+        sheet.getRange(targetRow, 4).setValue(contact);
+      }
+      sheet.getRange(targetRow, 6).setValue(nowStr);
+      sheet.getRange(targetRow, 9).setValue(JSON.stringify(mergedList));
+      if (data.solicitudId && !existingLinkedSolicitud) {
+        sheet.getRange(targetRow, 10).setValue(String(data.solicitudId));
+      }
+
+      storedMessages = mergedList;
+    }
+
+    return {
+      success: true,
+      conversationId: convId,
+      status: existingStatus,
+      isHumanTakeover: existingStatus === 'atencion_humana',
+      assignedAdvisor: assignedAdvisor,
+      messages: storedMessages,
+      lastSync: nowStr
+    };
+  } catch (err) {
+    console.error('Error en handleSyncSofiaConversation:', err);
+    return { success: false, message: 'Error sincronizando conversación: ' + err.toString() };
+  }
+}
+
+/**
+ * Handler: Obtener conversación completa por ID (Panel Admin o Cliente)
+ */
+function handleGetSofiaConversation(conversationId, adminToken, userEmail) {
+  try {
+    if (!conversationId) {
+      return { success: false, message: 'ID de conversación requerido.' };
+    }
+
+    const sheet = getSofiaConversationsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const targetId = String(conversationId).trim();
+
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === targetId) {
+        const clientId = String(rows[i][1] || '');
+        
+        // Verificación de seguridad si no es admin
+        if (adminToken) {
+          const auth = verifyAdminAuthorization_(adminToken, userEmail);
+          if (!auth.authorized) {
+            return { success: false, unauthorized: true, message: 'Acceso no autorizado a conversaciones.' };
+          }
+        } else if (userEmail && clientId !== 'INVITADO') {
+          // Cliente autenticado debe coincidir con el ID
+          if (clientId.toLowerCase() !== userEmail.toLowerCase()) {
+            return { success: false, unauthorized: true, message: 'Acceso no permitido a esta conversación.' };
+          }
+        }
+
+        let messages = [];
+        try {
+          messages = JSON.parse(rows[i][8] || '[]');
+        } catch(e) {}
+
+        return {
+          success: true,
+          conversation: {
+            id: String(rows[i][0]),
+            clientId: clientId,
+            clientName: String(rows[i][2] || 'Visitante WES'),
+            contact: String(rows[i][3] || ''),
+            startedAt: String(rows[i][4] || ''),
+            lastMessageAt: String(rows[i][5] || ''),
+            status: String(rows[i][6] || 'sofia_activa'),
+            assignedAdvisor: String(rows[i][7] || ''),
+            messages: messages,
+            linkedSolicitudId: String(rows[i][9] || '')
+          }
+        };
+      }
+    }
+
+    return { success: false, message: 'Conversación no encontrada.' };
+  } catch (err) {
+    console.error('Error en handleGetSofiaConversation:', err);
+    return { success: false, message: 'Error obteniendo conversación: ' + err.toString() };
+  }
+}
+
+/**
+ * Handler: Enviar mensaje de asesor humano a la conversación del cliente
+ */
+function handleSendAdvisorChatMessage(data, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
+    }
+
+    if (!data || !data.conversationId || !data.text) {
+      return { success: false, message: 'ID de conversación y texto del mensaje son obligatorios.' };
+    }
+
+    const sheet = getSofiaConversationsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const targetId = String(data.conversationId).trim();
+    const nowStr = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const advisorName = String(data.advisorName || userEmail || 'Asesor WES').trim();
+
+    let targetRow = -1;
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === targetId) {
+        targetRow = i + 1;
+        break;
+      }
+    }
+
+    if (targetRow === -1) {
+      return { success: false, message: 'Conversación no encontrada.' };
+    }
+
+    let messages = [];
+    try {
+      messages = JSON.parse(rows[targetRow - 1][8] || '[]');
+    } catch(e) {}
+
+    const newMsg = {
+      id: `adv-${Date.now()}`,
+      timestamp: nowStr,
+      role: 'asesor',
+      authorName: advisorName,
+      text: String(data.text).trim()
+    };
+    messages.push(newMsg);
+
+    // Al responder el asesor, la conversación pasa a atención humana y se asigna el asesor
+    sheet.getRange(targetRow, 6).setValue(nowStr);
+    sheet.getRange(targetRow, 7).setValue('atencion_humana');
+    sheet.getRange(targetRow, 8).setValue(advisorName);
+    sheet.getRange(targetRow, 9).setValue(JSON.stringify(messages));
+
+    // Si hay solicitud vinculada, registrar evento en su historial
+    const linkedSolId = String(rows[targetRow - 1][9] || data.solicitudId || '').trim();
+    if (linkedSolId) {
+      try {
+        const solSheet = getSofiaRequestsSheet_();
+        const solRows = solSheet.getDataRange().getValues();
+        for (let s = 1; s < solRows.length; s++) {
+          if (String(solRows[s][0]).trim() === linkedSolId) {
+            let solHist = [];
+            try { solHist = JSON.parse(solRows[s][16] || '[]'); } catch(e) {}
+            solHist.push({
+              timestamp: nowStr,
+              action: 'RESPUESTA_ASESOR_CHAT',
+              author: advisorName,
+              note: `Mensaje directo enviado al cliente: "${data.text.slice(0, 100)}..."`
+            });
+            solSheet.getRange(s + 1, 15).setValue(nowStr); // Ultimo contacto
+            solSheet.getRange(s + 1, 17).setValue(JSON.stringify(solHist));
+            if (solRows[s][10] === 'Nueva') {
+              solSheet.getRange(s + 1, 11).setValue('En atencion');
+            }
+            break;
+          }
+        }
+      } catch(eHist) {
+        console.warn('Error actualizando historial de solicitud vinculada:', eHist);
+      }
+    }
+
+    return {
+      success: true,
+      message: 'Mensaje de asesor enviado correctamente.',
+      newMessage: newMsg,
+      conversationStatus: 'atencion_humana'
+    };
+  } catch (err) {
+    console.error('Error en handleSendAdvisorChatMessage:', err);
+    return { success: false, message: 'Error enviando mensaje de asesor: ' + err.toString() };
+  }
+}
+
+/**
+ * Handler: Pausar o reanudar a Sofía en una conversación
+ */
+function handleToggleSofiaPause(data, adminToken, userEmail) {
+  try {
+    const auth = verifyAdminAuthorization_(adminToken, userEmail);
+    if (!auth.authorized) {
+      return { success: false, unauthorized: true, message: auth.message || 'Acceso denegado.' };
+    }
+
+    if (!data || !data.conversationId) {
+      return { success: false, message: 'ID de conversación requerido.' };
+    }
+
+    const sheet = getSofiaConversationsSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const targetId = String(data.conversationId).trim();
+    const nowStr = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+    const newStatus = data.pause ? 'atencion_humana' : 'sofia_activa';
+    const advisorName = String(data.advisorName || userEmail || 'Asesor WES').trim();
+
+    let targetRow = -1;
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]).trim() === targetId) {
+        targetRow = i + 1;
+        break;
+      }
+    }
+
+    if (targetRow === -1) {
+      return { success: false, message: 'Conversación no encontrada.' };
+    }
+
+    sheet.getRange(targetRow, 7).setValue(newStatus);
+    if (data.pause) {
+      sheet.getRange(targetRow, 8).setValue(advisorName);
+    }
+    sheet.getRange(targetRow, 6).setValue(nowStr);
+
+    return {
+      success: true,
+      conversationId: targetId,
+      status: newStatus,
+      isHumanTakeover: newStatus === 'atencion_humana',
+      message: data.pause ? 'Sofía pausada. Atención asumida por asesor humano.' : 'Control devuelto a Sofía.'
+    };
+  } catch (err) {
+    console.error('Error en handleToggleSofiaPause:', err);
+    return { success: false, message: 'Error alternando estado de Sofía: ' + err.toString() };
+  }
 }
 
 function getSofiaNotifConfig_() {
@@ -4661,8 +5057,15 @@ function handleCreateSofiaServiceRequest(data) {
 
     // Interpretar fecha y hora concretas
     const schedule = parseRequestedSchedule_(data.requestedWhen || detail, new Date());
-    const location = String(data.location || data.address || 'Moca, Rep. Dominicana').trim();
+    const location = String(data.location || data.address || 'No proporcionada').trim();
     const clientId = String(data.clientId || 'INVITADO').trim();
+    const convId = String(data.conversationId || '').trim();
+    const productSku = String(data.productSku || data.product || 'No especificado').trim();
+    const quantity = String(data.quantity || '1').trim();
+    const offeredBySofia = String(data.offeredBySofia || 'Se informó que un asesor comercial se comunicaría para confirmar detalles.').trim();
+    const missingConfirm = String(data.missingConfirm || 'Precio y disponibilidad en inventario').trim();
+    const nextAction = String(data.nextAction || 'Ventas debe verificar precio y existencia con el cliente').trim();
+    const internalNotes = String(data.internalNotes || '').trim();
 
     const historyLog = [{
       timestamp: nowStr,
@@ -4690,8 +5093,33 @@ function handleCreateSofiaServiceRequest(data) {
       schedule.date + ' ' + schedule.time, // Proxima_Fecha_Seguimiento
       JSON.stringify(historyLog),
       detail.slice(0, 150),
-      String(data.channel || 'chat_sofia')
+      String(data.channel || 'chat_sofia'),
+      convId,           // 20. ID_Conversacion
+      productSku,       // 21. Producto_SKU
+      quantity,         // 22. Cantidad
+      offeredBySofia,   // 23. Ofrecido_Por_Sofia
+      missingConfirm,   // 24. Falta_Confirmar
+      nextAction,       // 25. Proxima_Accion
+      internalNotes     // 26. Notas_Internas
     ]);
+
+    // Si viene vinculada a una conversación, actualizar la conversación con el ID de la solicitud
+    if (convId) {
+      try {
+        const convSheet = getSofiaConversationsSheet_();
+        const convRows = convSheet.getDataRange().getValues();
+        for (let k = 1; k < convRows.length; k++) {
+          if (String(convRows[k][0]).trim() === convId) {
+            convSheet.getRange(k + 1, 10).setValue(solicitudNumber);
+            if (name) convSheet.getRange(k + 1, 3).setValue(name);
+            if (contact) convSheet.getRange(k + 1, 4).setValue(contact);
+            break;
+          }
+        }
+      } catch(eConv) {
+        console.warn('Error vinculando solicitud a conversación:', eConv);
+      }
+    }
 
     // 1. Notificación Interna en Customer_Messages / Campana Admin
     try {
@@ -4703,7 +5131,7 @@ function handleCreateSofiaServiceRequest(data) {
         defaultRespEmail,
         'Sofía · Solicitud ' + solicitudNumber,
         `Nueva solicitud [${solicitudNumber}] (${requestType.toUpperCase()}): ${name} (${contact})`,
-        `Servicio: ${detail}\nUbicación: ${location}\nAtención solicitada: ${schedule.date} a las ${schedule.time}`,
+        `Producto: ${productSku} (Cant: ${quantity})\nNecesidad: ${detail}\nUbicación: ${location}\nPróxima acción: ${nextAction}`,
         'Abrir solicitud',
         'NO_LEIDO',
         respId
@@ -4742,9 +5170,12 @@ function handleCreateSofiaServiceRequest(data) {
               <p><strong>Cliente:</strong> ${name}</p>
               <p><strong>Contacto:</strong> ${contact}</p>
               <p><strong>Ubicación:</strong> ${location}</p>
-              <p><strong>Atención deseada:</strong> ${schedule.date} a las ${schedule.time}</p>
-              <p><strong>Detalle:</strong></p>
+              <p><strong>Producto/SKU:</strong> ${productSku} (Cantidad: ${quantity})</p>
+              <p><strong>Necesidad:</strong></p>
               <blockquote style="background:#f8fafc;padding:12px;border-left:4px solid #F5B300;">${detail}</blockquote>
+              <p><strong>Qué comunicó Sofía:</strong> ${offeredBySofia}</p>
+              <p><strong>Falta confirmar:</strong> ${missingConfirm}</p>
+              <p><strong>Próxima acción requerida:</strong> ${nextAction}</p>
               <p><a href="https://web.warnelectricalservices.com/admin.html?solicitud=${solicitudNumber}" style="background:#0D2A5C;color:#FFFFFF;padding:8px 16px;text-decoration:none;border-radius:6px;font-weight:bold;">Abrir en Panel de Administración</a></p>
             </div>
           `
@@ -4764,6 +5195,7 @@ function handleCreateSofiaServiceRequest(data) {
       timeRequested: schedule.time,
       assignedResponsible: defaultRespEmail,
       notifiedPushCount: pushSuccessCount,
+      conversationId: convId,
       message: 'Solicitud registrada exitosamente en el sistema central.'
     };
 
@@ -4803,11 +5235,11 @@ function handleGetSofiaServiceRequestsAdmin(adminToken, userEmail) {
         id: String(r[0] || ''),
         createdAt: String(r[1] || ''),
         clientId: String(r[2] || ''),
-        clientName: String(r[3] || ''),
-        contact: String(r[4] || ''),
+        clientName: String(r[3] || 'No proporcionado'),
+        contact: String(r[4] || 'No proporcionado'),
         type: String(r[5] || 'ventas'),
         detail: String(r[6] || ''),
-        location: String(r[7] || ''),
+        location: String(r[7] || 'No proporcionada'),
         dateRequested: String(r[8] || ''),
         timeRequested: String(r[9] || ''),
         status: String(r[10] || 'Nueva'),
@@ -4818,7 +5250,14 @@ function handleGetSofiaServiceRequestsAdmin(adminToken, userEmail) {
         nextFollowUpDate: String(r[15] || ''),
         history: historyParsed,
         chatReference: String(r[17] || ''),
-        channel: String(r[18] || 'chat_sofia')
+        channel: String(r[18] || 'chat_sofia'),
+        conversationId: String(r[19] || ''),
+        productSku: String(r[20] || 'No especificado'),
+        quantity: String(r[21] || '1'),
+        offeredBySofia: String(r[22] || 'Se informó que un asesor comercial se comunicaría.'),
+        missingConfirm: String(r[23] || 'Precio y disponibilidad'),
+        nextAction: String(r[24] || 'Ventas debe verificar precio y existencia'),
+        internalNotes: String(r[25] || '')
       });
     }
 
@@ -4906,6 +5345,16 @@ function handleUpdateSofiaServiceRequestAdmin(data, adminToken, userEmail) {
 
     if (data.nextFollowUpDate) {
       sheet.getRange(targetRow, 16).setValue(data.nextFollowUpDate);
+    }
+
+    if (data.internalNotes !== undefined) {
+      sheet.getRange(targetRow, 26).setValue(String(data.internalNotes || ''));
+      history.push({
+        timestamp: nowStr,
+        action: 'NOTA_INTERNA',
+        author: actor,
+        note: `Nota interna agregada/actualizada`
+      });
     }
 
     sheet.getRange(targetRow, 17).setValue(JSON.stringify(history));
@@ -5033,55 +5482,176 @@ function handleSaveSofiaNotifConfigAdmin(data, adminToken, userEmail) {
 }
 
 /**
- * Recuperación garantizada sin duplicados del caso histórico de la captura (17 de noviembre de 2026)
+ * Recuperación garantizada sin duplicados del caso histórico de la captura (17 de noviembre de 2026 y memorias Micro SD 64GB)
  */
 function ensureHistoricalCaptureRequestRecovered_() {
   try {
     const sheet = getSofiaRequestsSheet_();
     const rows = sheet.getDataRange().getValues();
-    const targetId = 'SOL-2026-0001-REC';
+    const targetId1 = 'SOL-2026-0001-REC';
+    const targetId2 = 'SOL-2026-0002-REC';
 
-    // Comprobar si ya existe
+    let hasCase1 = false;
+    let hasCase2 = false;
+
     for (let i = 1; i < rows.length; i++) {
-      if (String(rows[i][0]).trim() === targetId || (String(rows[i][3]).toUpperCase().includes('LUIS MIGUEL LIZARDO') && String(rows[i][7]).toUpperCase().includes('ROSARIO 14'))) {
-        return; // Ya existe, no duplicar
+      const rowId = String(rows[i][0]).trim();
+      const rowClient = String(rows[i][3]).toUpperCase();
+      const rowDetail = String(rows[i][6]).toUpperCase();
+      
+      if (rowId === targetId1 || (rowClient.includes('LUIS MIGUEL LIZARDO') && rowDetail.includes('BATERÍA'))) {
+        hasCase1 = true;
+      }
+      if (rowId === targetId2 || (rowClient.includes('LUIS MIGUEL LIZARDO') && rowDetail.includes('MICRO SD'))) {
+        hasCase2 = true;
       }
     }
 
-    const history = [
-      {
-        timestamp: '2026-11-17 09:00:20',
-        action: 'RECUPERACION_HISTORICA',
-        author: 'Sistema WES (Recuperación de Captura)',
-        note: 'Recuperado formalmente de la conversación de chat de Sofía del 17 de noviembre de 2026.'
+    // Caso 1: Batería 12V 4A
+    if (!hasCase1) {
+      const history1 = [
+        {
+          timestamp: '2026-11-17 09:00:20',
+          action: 'RECUPERACION_HISTORICA',
+          author: 'Sistema WES (Recuperación de Captura)',
+          note: 'Recuperado formalmente de la conversación de chat de Sofía del 17 de noviembre de 2026.'
+        }
+      ];
+
+      sheet.appendRow([
+        targetId1,
+        '2026-11-17 09:00:20',
+        'USR-001',
+        'Luis Miguel Lizardo',
+        '8299935133',
+        'ventas',
+        'Cotización y disponibilidad de batería 12V 4A (SKU 123) consultada en el catálogo.',
+        'En La Rosario 14, Moca, Rep. Dominicana',
+        '2026-11-17',
+        '09:00',
+        'En atencion',
+        'USR-001',
+        'ing.lmlh@gmail.com',
+        'ing.lmlh@gmail.com',
+        '2026-11-17 09:05:00',
+        '2026-11-26 09:00:00',
+        JSON.stringify(history1),
+        'HOLA TIENE BATERIA 12/4 -> LUIS MIGUEL LIZARDO 8299935133 EN LA ROSARIO 14',
+        'recuperacion_captura',
+        'CONV-2026-00001',
+        'Batería 12V 4A (SKU 123)',
+        '1',
+        'Se verificó producto en catálogo y se derivó a asesor.',
+        'Confirmar entrega en dirección',
+        'Coordinar entrega con cliente',
+        'Cliente habitual de taller y tienda'
+      ]);
+    }
+
+    // Caso 2: 5 memorias Micro SD 64 GB
+    if (!hasCase2) {
+      const history2 = [
+        {
+          timestamp: '2026-11-27 08:30:00',
+          action: 'RECUPERACION_HISTORICA',
+          author: 'Sistema WES (Recuperación de Solicitud de Sofía)',
+          note: 'Solicitud real del cliente Luis Miguel Lizardo: cotización y disponibilidad de 5 memorias Micro SD 64 GB.'
+        }
+      ];
+
+      // Crear también la conversación asociada si no existe
+      try {
+        const convSheet = getSofiaConversationsSheet_();
+        const convRows = convSheet.getDataRange().getValues();
+        let convExists = false;
+        for (let c = 1; c < convRows.length; c++) {
+          if (String(convRows[c][0]).trim() === 'CONV-2026-00002') {
+            convExists = true;
+            break;
+          }
+        }
+        if (!convExists) {
+          const sampleMessages = [
+            {
+              id: 'msg-rec-1',
+              timestamp: '2026-11-27 08:28:15',
+              role: 'cliente',
+              authorName: 'Luis Miguel Lizardo',
+              text: 'Hola, necesito saber el precio y disponibilidad de 5 memorias micro sd de 64gb para unas cámaras.'
+            },
+            {
+              id: 'msg-rec-2',
+              timestamp: '2026-11-27 08:28:30',
+              role: 'sofia',
+              authorName: 'Sofía',
+              text: 'Con gusto puedo ayudarle. Por favor indíqueme su nombre y número de teléfono para que nuestro departamento de ventas verifique inventario y le envíe la cotización.'
+            },
+            {
+              id: 'msg-rec-3',
+              timestamp: '2026-11-27 08:29:10',
+              role: 'cliente',
+              authorName: 'Luis Miguel Lizardo',
+              text: 'Luis Miguel Lizardo, mi teléfono es 8299935133.'
+            },
+            {
+              id: 'msg-rec-4',
+              timestamp: '2026-11-27 08:29:45',
+              role: 'sofia',
+              authorName: 'Sofía',
+              text: 'Registré su solicitud de cotización y disponibilidad con el número SOL-2026-0002-REC. Nuestro asesor comercial verificará existencia de las 5 memorias y se comunicará a la brevedad.'
+            }
+          ];
+
+          convSheet.appendRow([
+            'CONV-2026-00002',
+            'USR-001',
+            'Luis Miguel Lizardo',
+            '8299935133',
+            '2026-11-27 08:28:15',
+            '2026-11-27 08:29:45',
+            'sofia_activa',
+            '',
+            JSON.stringify(sampleMessages),
+            targetId2
+          ]);
+        }
+      } catch(eConv2) {
+        console.warn('Advertencia creando conversación para caso 2:', eConv2);
       }
-    ];
 
-    sheet.appendRow([
-      targetId,
-      '2026-11-17 09:00:20',
-      'USR-001',
-      'Luis Miguel Lizardo',
-      '8299935133',
-      'ventas',
-      'Cotización y disponibilidad de batería 12V 4A (SKU 123) consultada en el catálogo.',
-      'En La Rosario 14, Moca, Rep. Dominicana',
-      '2026-11-17',
-      '09:00',
-      'En gestion',
-      'USR-001',
-      'ing.lmlh@gmail.com',
-      'ing.lmlh@gmail.com',
-      '2026-11-17 09:05:00',
-      '2026-11-26 09:00:00',
-      JSON.stringify(history),
-      'HOLA TIENE BATERIA 12/4 -> LUIS MIGUEL LIZARDO 8299935133 EN LA ROSARIO 14',
-      'recuperacion_captura'
-    ]);
+      sheet.appendRow([
+        targetId2,
+        '2026-11-27 08:30:00',
+        'USR-001',
+        'Luis Miguel Lizardo',
+        '8299935133',
+        'ventas',
+        'Cotización y confirmación de disponibilidad de 5 memorias Micro SD de 64 GB para cámaras de seguridad.',
+        'No proporcionada',
+        '2026-11-27',
+        '09:00',
+        'Nueva',
+        'USR-001',
+        'ing.lmlh@gmail.com',
+        'ing.lmlh@gmail.com',
+        '', // Fecha_Ultimo_Contacto
+        '2026-11-27 10:00:00', // Proxima_Fecha_Seguimiento
+        JSON.stringify(history2),
+        'SOLICITUD 5 MEMORIAS MICRO SD 64GB -> LUIS MIGUEL LIZARDO 8299935133',
+        'chat_sofia',
+        'CONV-2026-00002',                                   // 20. ID_Conversacion
+        'Memoria Micro SD 64 GB (Clase 10 / Vigilancia)',    // 21. Producto_SKU
+        '5',                                                 // 22. Cantidad
+        'Sofía informó que un asesor comercial se comunicaría para verificar inventario y cotizar.', // 23. Ofrecido_Por_Sofia
+        'Precio unitario y disponibilidad de 5 unidades en inventario',                              // 24. Falta_Confirmar
+        'Ventas debe verificar precio y existencia y responder al cliente al 8299935133',            // 25. Proxima_Accion
+        'Cliente solicitó precio para lote de 5 unidades para cámaras.'                               // 26. Notas_Internas
+      ]);
 
-    recordAuditLog_('sistema', 'solicitudes', 'recuperacion_captura', `Recuperación de solicitud histórica ${targetId}`, 'ing.lmlh@gmail.com', 'PENDIENTE', 'En gestion');
+      recordAuditLog_('sistema', 'solicitudes', 'recuperacion_captura', `Recuperación de solicitud histórica ${targetId2}`, 'ing.lmlh@gmail.com', 'PENDIENTE', 'Nueva');
+    }
   } catch(e) {
-    console.warn('Advertencia asegurando caso de captura histórica:', e);
+    console.warn('Advertencia asegurando casos de captura histórica:', e);
   }
 }
 
