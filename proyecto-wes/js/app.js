@@ -4079,7 +4079,10 @@ function renderUserProfileHeader(user) {
     roleEl.className = 'text-[11px] text-slate-300 font-medium tracking-wide mt-1 block';
   }
 
-  // ID únicamente visible en el formulario de edición (solo lectura), oculto de la vista principal
+  const previewAvatar = document.getElementById('profile-settings-preview-avatar');
+  if (previewAvatar) previewAvatar.textContent = initials;
+
+  // ID únicamente visible en el formulario de datos personales (solo lectura), oculto de la vista principal
   const clientIdEl = document.getElementById('profile-modal-client-id');
   if (clientIdEl) {
     clientIdEl.remove();
@@ -4109,21 +4112,127 @@ function closeUserProfileModal() {
   modal.classList.add('hidden');
   modal.style.display = 'none';
   document.body.classList.remove('overflow-hidden');
-  toggleEditProfileMode(false);
+  backFromSettingsToProfileMenu();
   backToProfileMenu();
 }
 
-function toggleEditProfileMode(enable) {
-  const editContainer = document.getElementById('profile-edit-container');
-  if (editContainer) {
-    if (enable) {
-      editContainer.classList.remove('hidden');
+// ----------------------------------------------------------------------------
+// NAVEGACIÓN DE VISTA DE CONFIGURACIÓN DEL PERFIL (ENGRANAJE)
+// ----------------------------------------------------------------------------
+function openProfileSettingsView() {
+  const menu = document.getElementById('profile-menu-container');
+  if (menu) menu.classList.add('hidden');
+
+  const contents = document.querySelectorAll('.profile-tab-content');
+  contents.forEach(c => c.classList.add('hidden'));
+
+  const settingsContainer = document.getElementById('profile-settings-container');
+  if (settingsContainer) {
+    settingsContainer.classList.remove('hidden');
+  }
+
+  backToSettingsMenu();
+}
+
+function backFromSettingsToProfileMenu() {
+  const settingsContainer = document.getElementById('profile-settings-container');
+  if (settingsContainer) settingsContainer.classList.add('hidden');
+
+  const menu = document.getElementById('profile-menu-container');
+  if (menu) menu.classList.remove('hidden');
+
+  closeEmailChangeFlow();
+}
+
+function openSettingsSubView(subId) {
+  const settingsList = document.getElementById('settings-menu-list');
+  if (settingsList) settingsList.classList.add('hidden');
+
+  const personalView = document.getElementById('settings-personal-view');
+  const emailView = document.getElementById('settings-email-view');
+  const notifView = document.getElementById('settings-notifications-view');
+
+  if (personalView) personalView.classList.add('hidden');
+  if (emailView) emailView.classList.add('hidden');
+  if (notifView) notifView.classList.add('hidden');
+
+  const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+
+  if (subId === 'personal') {
+    if (personalView) personalView.classList.remove('hidden');
+    if (user) {
       const editName = document.getElementById('profile-edit-name-input');
+      const editPhone = document.getElementById('profile-edit-phone-input');
+      const editId = document.getElementById('profile-edit-id-input');
+      if (editName) editName.value = user.name || '';
+      if (editPhone) editPhone.value = user.phone || '';
+      if (editId) editId.value = user.id || user.clientId || ('USR-' + (user.email ? user.email.split('@')[0] : '001'));
       if (editName) editName.focus();
-    } else {
-      editContainer.classList.add('hidden');
-      closeEmailChangeFlow();
     }
+  } else if (subId === 'email') {
+    if (emailView) emailView.classList.remove('hidden');
+    openEmailChangeFlow();
+  } else if (subId === 'notifications') {
+    if (notifView) notifView.classList.remove('hidden');
+    updateSettingsPushUI();
+  }
+}
+
+function backToSettingsMenu() {
+  const personalView = document.getElementById('settings-personal-view');
+  const emailView = document.getElementById('settings-email-view');
+  const notifView = document.getElementById('settings-notifications-view');
+
+  if (personalView) personalView.classList.add('hidden');
+  if (emailView) emailView.classList.add('hidden');
+  if (notifView) notifView.classList.add('hidden');
+
+  const settingsList = document.getElementById('settings-menu-list');
+  if (settingsList) settingsList.classList.remove('hidden');
+
+  closeEmailChangeFlow();
+}
+
+function toggleEditProfileMode(enable) {
+  if (enable) {
+    openProfileSettingsView();
+    openSettingsSubView('personal');
+  } else {
+    backFromSettingsToProfileMenu();
+  }
+}
+
+function updateSettingsPushUI() {
+  const btn = document.getElementById('settings-push-toggle-btn');
+  const statusText = document.getElementById('settings-push-status-text');
+  if (!btn || !statusText) return;
+
+  if (typeof UserMessagesService === 'undefined' || !UserMessagesService.checkPushSupport()) {
+    statusText.textContent = 'Estado: No compatible con este navegador o dispositivo.';
+    btn.textContent = 'No disponible';
+    btn.disabled = true;
+    btn.className = 'px-3 py-1.5 bg-slate-200 text-slate-400 rounded-xl text-[11px] font-bold cursor-not-allowed';
+    return;
+  }
+
+  btn.disabled = false;
+  if (UserMessagesService.isPushSubscribed()) {
+    statusText.textContent = 'Estado: Avisos Web Push activados en este dispositivo.';
+    btn.textContent = 'Desactivar';
+    btn.className = 'px-3 py-1.5 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 rounded-xl text-[11px] font-bold transition shadow-xs';
+  } else {
+    statusText.textContent = 'Estado: Avisos Web Push desactivados o pendientes de autorización.';
+    btn.textContent = 'Activar';
+    btn.className = 'px-3 py-1.5 bg-wes-blue text-white hover:bg-wes-dark rounded-xl text-[11px] font-bold transition shadow-xs';
+  }
+}
+
+async function toggleSettingsPushSubscription() {
+  if (typeof UserMessagesService !== 'undefined' && typeof UserMessagesService.togglePushSubscriptionFromProfile === 'function') {
+    await UserMessagesService.togglePushSubscriptionFromProfile();
+    updateSettingsPushUI();
+  } else {
+    showToast('El servicio de avisos no está disponible actualmente.', 'warning');
   }
 }
 
@@ -4699,6 +4808,12 @@ async function submitVerifyEmailChangeOtp() {
 window.openProfileSection = openProfileSection;
 window.backToProfileMenu = backToProfileMenu;
 window.switchProfileTab = switchProfileTab;
+window.openProfileSettingsView = openProfileSettingsView;
+window.backFromSettingsToProfileMenu = backFromSettingsToProfileMenu;
+window.openSettingsSubView = openSettingsSubView;
+window.backToSettingsMenu = backToSettingsMenu;
+window.toggleSettingsPushSubscription = toggleSettingsPushSubscription;
+window.updateSettingsPushUI = updateSettingsPushUI;
 window.openEmailChangeFlow = openEmailChangeFlow;
 window.closeEmailChangeFlow = closeEmailChangeFlow;
 window.submitRequestEmailChangeOtp = submitRequestEmailChangeOtp;
