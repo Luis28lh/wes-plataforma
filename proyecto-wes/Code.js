@@ -1139,6 +1139,13 @@ var WES_DEFAULT_SOFIA_PROMPT = "Eres Sofía, Asesora Técnica y Comercial Oficia
   "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
   "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
   "   - No inventes precios, disponibilidad ni productos inexistentes.\n" +
+  "   - TERMINOLOGÍA COMERCIAL Y SEDE:\n" +
+  "     * Para compras, visitas comerciales y retiro de productos adquiridos, utiliza SIEMPRE el término 'nuestra tienda en Moca'. (Ejemplo: Cliente: 'Pasaría por allá a buscarla' -> Sofía: '¡Con gusto! Puede pasar por nuestra tienda en Moca.').\n" +
+  "     * Usa la palabra 'sucursal' ÚNICAMENTE cuando corresponda a una ubicación real registrada (por ejemplo, sucursales del cliente). NUNCA llames sucursal a la tienda central de WES.\n" +
+  "     * Reserva el término 'taller' EXCLUSIVAMENTE para servicios de diagnóstico, banco de pruebas y reparación técnica de equipos en laboratorio.\n" +
+  "   - POLÍTICA ESTRICTA DE EXISTENCIAS Y RESERVAS:\n" +
+  "     * NUNCA ofrezcas reservar una unidad 'de inmediato' sin comprobar disponibilidad y sin contar con un mecanismo real de reserva en el sistema.\n" +
+  "     * NUNCA confirmes existencias definitivas sin contar con información actualizada del catálogo o confirmación del personal comercial responsable. Si no tienes certeza del stock o precio, indica amablemente que consultarás con ventas.\n" +
   "   - POLÍTICA ESTRICTA: CERO SOPORTES AGENDADOS O CITAS PROGRAMADAS:\n" +
   "     * PROHIBIDO DECIR 'AGENDAR', 'AGENDADO', 'SOPORTE AGENDADO' O 'VISITA PROGRAMADA': La función de citas o soportes agendados NO está configurada en la plataforma ni habilitada en el chat. NUNCA uses la palabra 'agendar' ni afirmes que se ha agendado o programado una visita, turno o cita.\n" +
   "     * SOFÍA NO ESTÁ CAPACITADA PARA GENERAR TICKETS, EMITIR NÚMEROS DE TICKET NI ENVIARLE AL CLIENTE UN TICKET REALIZADO.\n" +
@@ -1631,6 +1638,23 @@ function queryGeminiChatHandler(data) {
           .replace(/\b(agendad[oa]s?)\b/gi, 'registrado');
       }
 
+      // Filtro de seguridad comercial: evitar reservas inmediatas sin confirmación de stock
+      if (/\b(reservar(?:le|te)?(?:\s+una\s+unidad)?\s+de\s+inmediato)\b/i.test(finalReply)) {
+        finalReply = finalReply.replace(/\b(reservar(?:le|te)?(?:\s+una\s+unidad)?\s+de\s+inmediato)\b/gi, 'consultar disponibilidad con ventas');
+      }
+
+      // Filtro de terminología comercial: para retiro de compras o visitas a WES, usar 'nuestra tienda en Moca'
+      const isRepairContext = /(diagn[oó]stic|repara(?:r|ci[oó]n|do)?|aver[ií]a|da[ñn]ad[oa]|banco\s+de\s+pruebas|laboratorio)/i.test(message + ' ' + finalReply);
+      const isPurchaseOrPickup = /(compr|retir|busc|adquir|pasar\s+por|recog)/i.test(message + ' ' + finalReply);
+      if (/\b(?:en|a|de|por)\s+nuestro\s+taller\b/i.test(finalReply) && (isPurchaseOrPickup || !isRepairContext)) {
+        finalReply = finalReply.replace(/\bnuestro\s+taller\b/gi, 'nuestra tienda en Moca');
+      }
+      if (/\b(?:en|a|de|por)\s+nuestra\s+sucursal\b/i.test(finalReply)) {
+        finalReply = finalReply.replace(/\bnuestra\s+sucursal\b/gi, 'nuestra tienda en Moca');
+      }
+      // Limpiar duplicaciones accidentales como "nuestra tienda en Moca de Moca"
+      finalReply = finalReply.replace(/nuestra tienda en Moca(?:,?\s+en\s+Moca|,\s+Moca|\s+de\s+Moca)/gi, 'nuestra tienda en Moca');
+
       return {
         success: true,
         reply: finalReply,
@@ -1867,9 +1891,45 @@ function getActiveSofiaKnowledgeList_() {
         });
       }
     }
+    if (active.length === 0) {
+      // Entradas esenciales de referencia si la hoja está recién creada o vacía
+      active.push({
+        id: 'KNW-BASE-01',
+        type: 'faq',
+        situation: 'Cliente desea pasar a buscar, comprar o retirar un producto',
+        solution: '¡Con gusto! Puede pasar por nuestra tienda en Moca en la Autopista Ramón Cáceres.',
+        category: 'Ventas y Retiro',
+        conditions: 'Compras y retiro presencial'
+      });
+      active.push({
+        id: 'KNW-BASE-02',
+        type: 'instruccion',
+        situation: 'Uso de términos taller, tienda y sucursal',
+        solution: 'Usa nuestra tienda en Moca para ventas, compras y retiro. Reserva taller solo para revisión técnica y reparación de equipos. Usa sucursal únicamente para ubicaciones del cliente registradas.',
+        category: 'Terminología Oficial',
+        conditions: 'Permanente'
+      });
+      active.push({
+        id: 'KNW-BASE-03',
+        type: 'instruccion',
+        situation: 'Consulta de existencias y reservas de productos',
+        solution: 'No confirmes existencias definitivas ni ofrezcas reservas de inmediato sin comprobar catálogo o consultar con ventas.',
+        category: 'Inventario',
+        conditions: 'Permanente'
+      });
+    }
     return active;
   } catch (e) {
-    return [];
+    return [
+      {
+        id: 'KNW-BASE-FALLBACK',
+        type: 'faq',
+        situation: 'Pasaría por allá a buscarla / Retiro de compras',
+        solution: '¡Con gusto! Puede pasar por nuestra tienda en Moca.',
+        category: 'Ventas',
+        conditions: 'General'
+      }
+    ];
   }
 }
 

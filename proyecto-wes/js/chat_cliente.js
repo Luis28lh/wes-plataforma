@@ -840,7 +840,14 @@ function setupChatEvents() {
     "   - NUNCA afirmes que una cantidad de cámaras cubre perfectamente un local sin conocer sus dimensiones o distribución.\n" +
     "   - No agregues listas de características no solicitadas, ventajas comerciales, teléfonos ni WhatsApp si no han sido pedidos expresamente.\n" +
     "   - No inventes precios, disponibilidad ni productos inexistentes.\n" +
-  "   - POLÍTICA ESTRICTA: CERO SOPORTES AGENDADOS O CITAS: La función de citas o soportes agendados NO está configurada en la plataforma. NUNCA uses palabras como 'agendar', 'agendado' ni prometas fechas fijas. Ante cualquier reporte o solicitud de soporte, mantén la función del chat estrictamente hasta pedir su nombre, número de teléfono y el problema para que un técnico humano le atienda en horario laboral.\n\n" +
+    "   - TERMINOLOGÍA COMERCIAL Y SEDE:\n" +
+    "     * Para compras, visitas comerciales y retiro de productos adquiridos, utiliza SIEMPRE el término 'nuestra tienda en Moca'. (Ejemplo: Cliente: 'Pasaría por allá a buscarla' -> Sofía: '¡Con gusto! Puede pasar por nuestra tienda en Moca.').\n" +
+    "     * Usa la palabra 'sucursal' ÚNICAMENTE cuando corresponda a una ubicación real registrada (por ejemplo, sucursales del cliente). NUNCA llames sucursal a la tienda central de WES.\n" +
+    "     * Reserva el término 'taller' EXCLUSIVAMENTE para servicios de diagnóstico, banco de pruebas y reparación técnica de equipos en laboratorio.\n" +
+    "   - POLÍTICA ESTRICTA DE EXISTENCIAS Y RESERVAS:\n" +
+    "     * NUNCA ofrezcas reservar una unidad 'de inmediato' sin comprobar disponibilidad y sin contar con un mecanismo real de reserva en el sistema.\n" +
+    "     * NUNCA confirmes existencias definitivas sin contar con información actualizada del catálogo o confirmación del personal comercial responsable. Si no tienes certeza del stock o precio, indica amablemente que consultarás con ventas.\n" +
+    "   - POLÍTICA ESTRICTA: CERO SOPORTES AGENDADOS O CITAS: La función de citas o soportes agendados NO está configurada en la plataforma. NUNCA uses palabras como 'agendar', 'agendado' ni prometas fechas fijas. Ante cualquier reporte o solicitud de soporte, mantén la función del chat estrictamente hasta pedir su nombre, número de teléfono y el problema para que un técnico humano le atienda en horario laboral.\n\n" +
     "5. EXCEPCIÓN DE AMPLIACIÓN:\n" +
     "   - Amplía la explicación con detalles técnicos ÚNICAMENTE cuando el usuario solicite explícitamente detalles (ej. \"explícame con más detalle\"), desglose técnico o advertencias de seguridad.\n\n" +
     "6. HORARIOS Y SEDE:\n" +
@@ -1612,6 +1619,23 @@ function setupChatEvents() {
             .replace(/\b(agendar(?:te|le| la visita)?)\b/gi, 'tomar tus datos')
             .replace(/\b(agendad[oa]s?)\b/gi, 'registrado');
         }
+
+        // Filtro de seguridad comercial: evitar reservas inmediatas sin confirmación de stock
+        if (/\b(reservar(?:le|te)?(?:\s+una\s+unidad)?\s+de\s+inmediato)\b/i.test(sanitizedReply)) {
+          sanitizedReply = sanitizedReply.replace(/\b(reservar(?:le|te)?(?:\s+una\s+unidad)?\s+de\s+inmediato)\b/gi, 'consultar disponibilidad con ventas');
+        }
+
+        // Filtro de terminología comercial: para retiro de compras o visitas a WES, usar 'nuestra tienda en Moca'
+        const isRepairContext = /(diagn[oó]stic|repara(?:r|ci[oó]n|do)?|aver[ií]a|da[ñn]ad[oa]|banco\s+de\s+pruebas|laboratorio)/i.test(query + ' ' + sanitizedReply);
+        const isPurchaseOrPickup = /(compr|retir|busc|adquir|pasar\s+por|recog)/i.test(query + ' ' + sanitizedReply);
+        if (/\b(?:en|a|de|por)\s+nuestro\s+taller\b/i.test(sanitizedReply) && (isPurchaseOrPickup || !isRepairContext)) {
+          sanitizedReply = sanitizedReply.replace(/\bnuestro\s+taller\b/gi, 'nuestra tienda en Moca');
+        }
+        if (/\b(?:en|a|de|por)\s+nuestra\s+sucursal\b/i.test(sanitizedReply)) {
+          sanitizedReply = sanitizedReply.replace(/\bnuestra\s+sucursal\b/gi, 'nuestra tienda en Moca');
+        }
+        // Limpiar duplicaciones accidentales como "nuestra tienda en Moca de Moca"
+        sanitizedReply = sanitizedReply.replace(/nuestra tienda en Moca(?:,?\s+en\s+Moca|,\s+Moca|\s+de\s+Moca)/gi, 'nuestra tienda en Moca');
 
         // Respuesta puramente conversacional en burbuja limpia con enlaces seguros y fichas interactivas
         appendBotMessage(`
