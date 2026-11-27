@@ -34,22 +34,22 @@ const INITIAL_CATEGORIES = [
     nombre: "Routers",
     slug: "routers",
     parent_id: "cat-redes",
-    imagen_url: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80",
+    imagen_url: "https://eo-sgp-cos.ruijie.com/FU/Upload/Product/2022/4-15/20224154252470.png",
     icono: "fa-route",
     orden: 2,
     activo: true,
-    descripcion: "Enrutadores balanceadores de carga, VPN y gestión de ancho de banda."
+    descripcion: "Enrutadores balanceadores de carga Multi-WAN, VPN y gestión en nube."
   },
   {
     id: "sub-red-ap",
     nombre: "Puntos de Acceso",
     slug: "puntos-de-acceso",
     parent_id: "cat-redes",
-    imagen_url: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80",
+    imagen_url: "https://eo-sgp-cos.ruijie.com/FU/Upload/Product/2022/5-18/202251826473299.jpg",
     icono: "fa-wifi",
     orden: 3,
     activo: true,
-    descripcion: "Access Points de largo alcance para interiores y exteriores Wi-Fi 6."
+    descripcion: "Access Points de techo Wi-Fi 6 de ultra alto rendimiento y Reyee Mesh."
   },
   {
     id: "sub-red-cables-utp",
@@ -71,7 +71,7 @@ const INITIAL_CATEGORIES = [
     icono: "fa-plug",
     orden: 5,
     activo: true,
-    descripcion: "Cables de conexión directa armados de fábrica en 1m, 2m y medidas estándar."
+    descripcion: "Cables de conexión directa armados de fábrica en 1ft, 1m y 2m."
   },
   {
     id: "sub-red-conectores",
@@ -82,7 +82,7 @@ const INITIAL_CATEGORIES = [
     icono: "fa-link",
     orden: 6,
     activo: true,
-    descripcion: "Conectores plug RJ45 Cat5e/Cat6, botas de protección y jacks hembra."
+    descripcion: "Conectores plug RJ45 Cat5e/Cat6, RJ11 para telefonía y tomas UTP."
   },
 
   // 2. CÁMARAS DE SEGURIDAD
@@ -196,7 +196,7 @@ const INITIAL_CATEGORIES = [
     icono: "fa-tools",
     orden: 3,
     activo: true,
-    descripcion: "Cremalleras de acero y nylon, fotoceldas DIR10, tarjetas electrónicas ZBX y lámparas LED."
+    descripcion: "Cremalleras de acero y nylon, fotoceldas DIR10, tarjetas electrónicas ZBX y accesorios."
   },
 
   // 4. ENERGÍA Y RESPALDO
@@ -256,7 +256,99 @@ const INITIAL_CATEGORIES = [
     descripcion: "Medidores inteligentes Sonoff con pantalla LCD y monitoreo de consumo en tiempo real."
   },
 
-  // 5. CABLES Y ACCESORIOS DE INSTALACIÓN
+  // 5. MATERIAL ELÉCTRICO
+  {
+    id: "cat-electrico",
+    nombre: "Material Eléctrico",
+    slug: "material-electrico",
+    parent_id: null,
+    imagen_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-plug",
+    orden: 5,
+    activo: true,
+    descripcion: "Conductores eléctricos Phelps Dodge THHN, cables de goma y vinil, conectores industriales, breakers y tableros."
+  },
+  {
+    id: "sub-elec-cables",
+    nombre: "Cables Eléctricos",
+    slug: "cables-electricos",
+    parent_id: "cat-electrico",
+    imagen_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-bezier-curve",
+    orden: 1,
+    activo: true,
+    descripcion: "Conductores THHN #6 al #14 Phelps Dodge, cables de goma #8 al #14 y vinil de 2, 3 y 4 hilos."
+  },
+  {
+    id: "sub-elec-conectores",
+    nombre: "Conectores & Empalmes",
+    slug: "conectores-empalmes",
+    parent_id: "cat-electrico",
+    imagen_url: "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-compress-arrows-alt",
+    orden: 2,
+    activo: true,
+    descripcion: "Conectores LQT rectos/curvos, BX, EMT, conectores de compresión y empalmes."
+  },
+  {
+    id: "sub-elec-breakers",
+    nombre: "Breakers y Tableros",
+    slug: "breakers-tableros",
+    parent_id: "cat-electrico",
+    imagen_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-bolt",
+    orden: 3,
+    activo: true,
+    descripcion: "Cajas de breaker empotrables de 24 circuitos, contactores 110V y protección eléctrica."
+  },
+  {
+    id: "sub-elec-canalizacion",
+    nombre: "Tubería & Canalización",
+    slug: "tuberia-canalizacion",
+    parent_id: "cat-electrico",
+    imagen_url: "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-shield-alt",
+    orden: 4,
+    activo: true,
+    descripcion: "Tubería metálica EMT, tubería plástica PVC para canalizaciones eléctricas y de datos."
+  },
+
+  // 6. ILUMINACIÓN
+  {
+    id: "cat-iluminacion",
+    nombre: "Iluminación",
+    slug: "iluminacion",
+    parent_id: null,
+    imagen_url: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-lightbulb",
+    orden: 6,
+    activo: true,
+    descripcion: "Tubos LED de alta eficiencia, luminarias lineales y bases de montaje."
+  },
+  {
+    id: "sub-ilum-tubos",
+    nombre: "Tubos LED",
+    slug: "tubos-led",
+    parent_id: "cat-iluminacion",
+    imagen_url: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-lightbulb",
+    orden: 1,
+    activo: true,
+    descripcion: "Tubos LED 24\" y 48\", 9W, 18W y 45W Silvania y Sylvania en 6500K y 4100K."
+  },
+  {
+    id: "sub-ilum-accesorios",
+    nombre: "Bases y Accesorios",
+    slug: "bases-accesorios-iluminacion",
+    parent_id: "cat-iluminacion",
+    imagen_url: "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-layer-group",
+    orden: 2,
+    activo: true,
+    descripcion: "Bases para tubo LED 2-pin 40W y componentes de fijación para luminarias."
+  },
+
+  // 7. ACCESORIOS Y HERRAMIENTAS
   {
     id: "cat-accesorios",
     nombre: "Accesorios de Instalación",
@@ -264,48 +356,26 @@ const INITIAL_CATEGORIES = [
     parent_id: null,
     imagen_url: "assets/products/dahua-pfm922i-6un-c-gris-caja.png",
     icono: "fa-tools",
-    orden: 5,
+    orden: 7,
     activo: true,
-    descripcion: "Tubería EMT y PVC, conectores industriales LQT/EMT/BX, cables eléctricos THHN y herramientas."
+    descripcion: "Sierras copa para metal, flejadoras, organizadores de cables, tarugos y herramientas de montaje."
   },
   {
-    id: "sub-acc-conductores",
-    nombre: "Cables Eléctricos",
-    slug: "cables-electricos",
+    id: "sub-acc-herramientas",
+    nombre: "Herramientas y Montaje",
+    slug: "herramientas-montaje",
     parent_id: "cat-accesorios",
-    imagen_url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=400&q=80",
-    icono: "fa-bezier-curve",
+    imagen_url: "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=400&q=80",
+    icono: "fa-tools",
     orden: 1,
     activo: true,
-    descripcion: "Conductores de cobre Phelps Dodge THHN calibres #8, #10, #12, #14 y cables de vinil/goma."
-  },
-  {
-    id: "sub-acc-conectores-ind",
-    nombre: "Conectores y Empalmes",
-    slug: "conectores-empalmes",
-    parent_id: "cat-accesorios",
-    imagen_url: "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=400&q=80",
-    icono: "fa-compress-arrows-alt",
-    orden: 2,
-    activo: true,
-    descripcion: "Conectores LQT curvos y rectos, EMT, conectores de compresión, sillas y varillas de tierra."
-  },
-  {
-    id: "sub-acc-tuberia",
-    nombre: "Tubería y Canalización",
-    slug: "tuberia-canalizacion",
-    parent_id: "cat-accesorios",
-    imagen_url: "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=400&q=80",
-    icono: "fa-shield-alt",
-    orden: 3,
-    activo: true,
-    descripcion: "Tubos EMT y PVC, sierras copa para metal, organizadores de cables y elementos de fijación."
+    descripcion: "Sierras copa Makita, flejadoras de acero inox, organizadores de cable, tarugos y perchas."
   }
 ];
 
 // Helper global para el manejo y consulta de categorías estructuradas
 const CategoriesCatalog = {
-  STORAGE_KEY: 'wes_categories_structured_catalog_v1',
+  STORAGE_KEY: 'wes_categories_structured_catalog_v2',
 
   getAll: function() {
     try {

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Estado global de la aplicación
-const AppState = {
+var AppState = {
   cart: [],
   selectedCategory: 'all',
   selectedSubcategory: null,
@@ -316,9 +316,19 @@ function matchesCategoryFilter(product, selectedCat, selectedSubcat = null) {
     return prodCatName === 'energía y respaldo' || prodCatName === 'energia y respaldo' || prodCatId === 'energia' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-energia'));
   }
 
+  // Material Eléctrico
+  if (selCat.includes('electrico') || selCat.includes('eléctrico') || selCat === 'cat-electrico' || selCat === 'material-electrico') {
+    return prodCatName === 'material eléctrico' || prodCatName === 'material electrico' || prodCatId === 'electrico' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-electrico'));
+  }
+
+  // Iluminación
+  if (selCat.includes('ilumina') || selCat === 'cat-iluminacion' || selCat === 'iluminacion') {
+    return prodCatName === 'iluminación' || prodCatName === 'iluminacion' || prodCatId === 'iluminacion' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-iluminacion'));
+  }
+
   // Accesorios de Instalación
   if (selCat.includes('accesorio') || selCat === 'cat-accesorios' || selCat === 'accesorios-instalacion') {
-    return prodCatName === 'accesorios de instalación' || prodCatName === 'accesorios de instalacion' || prodCatId === 'cables' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-accesorios'));
+    return prodCatName === 'accesorios de instalación' || prodCatName === 'accesorios de instalacion' || prodCatId === 'accesorios' || prodCatId === 'cables' || (Array.isArray(product.category_ids) && product.category_ids.includes('cat-accesorios'));
   }
 
   return false;

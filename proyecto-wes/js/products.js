@@ -38,8 +38,8 @@ const INITIAL_PRODUCTS = [
     "disponibilidad": "Disponible",
     "availability": "Disponible",
     "stock": 4,
-    "imagen_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
-    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "https://eo-sgp-cos.ruijie.com/FU/Upload/Product/2022/5-18/202251826473299.jpg",
+    "image": "https://eo-sgp-cos.ruijie.com/FU/Upload/Product/2022/5-18/202251826473299.jpg",
     "code": "RG-RAP2260G",
     "name": "ACCESS POINT WI-FI 6 DUAL BAND GIGABIT AX1800 REYEE RUIJIE",
     "brand": "Ruijie",
@@ -85,8 +85,8 @@ const INITIAL_PRODUCTS = [
     "disponibilidad": "Disponible",
     "availability": "Disponible",
     "stock": 6,
-    "imagen_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
-    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+    "imagen_url": "https://eo-sgp-cos.ruijie.com/FU/Upload/Product/2022/4-15/20224154252470.png",
+    "image": "https://eo-sgp-cos.ruijie.com/FU/Upload/Product/2022/4-15/20224154252470.png",
     "code": "RG-EG105G-V2",
     "name": "ROUTER MULTI-WAN GIGABIT EMPRESARIAL REYEE RUIJIE (5 PUERTOS)",
     "brand": "Ruijie",
@@ -470,7 +470,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "2983",
     "nombre": "BTC NOBILE NEGRO TOMA UTP RJ45",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2983",
@@ -488,7 +488,7 @@ const INITIAL_PRODUCTS = [
     "code": "2983",
     "name": "BTC NOBILE NEGRO TOMA UTP RJ45",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 601.5,
     "currency": "DOP",
     "availability": "Disponible",
@@ -514,7 +514,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "3088",
     "nombre": "CABLE UTP CAT6 EXTERIOR DAHUA",
     "marca": "Dahua",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3088",
@@ -534,7 +534,7 @@ const INITIAL_PRODUCTS = [
     "code": "3088",
     "name": "CABLE UTP CAT6 EXTERIOR DAHUA",
     "brand": "Dahua",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 11.73,
     "currency": "DOP",
     "availability": "Disponible",
@@ -566,7 +566,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "1536",
     "nombre": "CABLE UTP DAHUA CAT 5 BLANCO",
     "marca": "Dahua",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1536",
@@ -586,7 +586,7 @@ const INITIAL_PRODUCTS = [
     "code": "1536",
     "name": "CABLE UTP DAHUA CAT 5 BLANCO",
     "brand": "Dahua",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 23,
     "currency": "DOP",
     "availability": "Disponible",
@@ -614,7 +614,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "2362",
     "nombre": "CABLE DE RED DAHUA CAT6 UL DH-PFM920I-6U-U (1000 PIES / 305M FLAME RETARDANT)",
     "marca": "Dahua",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Cable de red UTP Categoría 6 de alto rendimiento para instalaciones profesionales de telecomunicaciones, redes Gigabit y videovigilancia CCTV / IP. Fabricado con conductores de cobre 100% puro libre de oxígeno (99.97% OFC) calibre 23 AWG sólido, con aislamiento HDPE y separador central cruciforme en polietileno que minimiza la diafonía (crosstalk). Cubierta exterior en PVC ignífugo certificada bajo la norma ANSI UL CM (Flame Retardant Class) para máxima seguridad en edificaciones residenciales y comerciales. Compatible con transmisión de energía y datos Power over Ethernet (PoE, PoE+, Hi-PoE hasta 90W). Presentación en caja dispensadora tipo Pull Box de 1000 pies (305 metros) con hilo de rasgado (rip cord) para un desaislado rápido y limpio.",
     "caracteristicas": [
       "SKU: 2362",
@@ -677,7 +677,7 @@ const INITIAL_PRODUCTS = [
     "code": "2362",
     "name": "CABLE DE RED DAHUA CAT6 UL DH-PFM920I-6U-U (1000 PIES / 305M FLAME RETARDANT)",
     "brand": "Dahua",
-    "category": "Cables & Conectividad",
+    "category": "Redes y Conectividad",
     "price": 30.15,
     "currency": "DOP",
     "availability": "Disponible",
@@ -719,7 +719,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "2949",
     "nombre": "CABLE DE RED DAHUA CAT6 UTP GRIS DH-PFM922I-6UN-C (1000 FT / 305M CCA POE)",
     "marca": "Dahua",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Cable de red UTP Categoría 6 Dahua DH-PFM922I-6UN-C en color gris, especialmente diseñado para distribución estructurada en interiores, sistemas de videovigilancia CCTV / IP y conectividad de red de alta velocidad. Elaborado con conductores de aluminio revestido de cobre (CCA) calibre 23 AWG (0.57 mm) con alto contenido de cobre (22% al 31%), aislamiento HDPE y cruceta central separadora en polietileno (PE) que suprime la diafonía y reduce la atenuación de señal. Su cubierta exterior en PVC ignífugo cuenta con certificación retardante de llama CE CPR Eca. Totalmente compatible con tecnología Power over Ethernet (PoE) para energizar y transmitir video en cámaras IP sin cableado adicional. Presentación en caja dispensadora Pull Box de 305 metros (1000 pies) con hilo de rasgado integrado para una instalación rápida y eficiente.",
     "caracteristicas": [
       "SKU: 2949",
@@ -803,7 +803,7 @@ const INITIAL_PRODUCTS = [
     "code": "2949",
     "name": "CABLE DE RED DAHUA CAT6 UTP GRIS DH-PFM922I-6UN-C (1000 FT / 305M CCA POE)",
     "brand": "Dahua",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 41.23,
     "currency": "DOP",
     "availability": "Disponible",
@@ -840,7 +840,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "2487",
     "nombre": "CABLE UTP FERTEC CAT6 EXTERIOR DOUBLE",
     "marca": "Fertec",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional Fertec distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2487",
@@ -858,7 +858,7 @@ const INITIAL_PRODUCTS = [
     "code": "2487",
     "name": "CABLE UTP FERTEC CAT6 EXTERIOR DOUBLE",
     "brand": "Fertec",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 13.66,
     "currency": "DOP",
     "availability": "Disponible",
@@ -884,7 +884,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "252",
     "nombre": "CABLE DE RED LEVITON CAT6 UTP CLASIFICACIÓN CM (305M / 1000FT UTP6M-MLB)",
     "marca": "Leviton",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Cable UTP Categoría 6 de alto rendimiento Leviton Network Solutions certificado para aplicaciones de cableado estructurado comercial, corporativo y centros de datos. Diseñado con 4 pares trenzados de conductores de cobre electrolítico 100% sólido de calibre 23 AWG con cruceta central dieléctrica no metálica para minimizar la diafonía (NEXT / PS-NEXT). Cubierta exterior de PVC con clasificación CM (UL Listed para comunicaciones de uso general en edificaciones) y resistencia a la propagación del fuego. Rendimiento garantizado para Gigabit Ethernet 1000BASE-T, 2.5G/5GBASE-T y soporte PoE de alta potencia (PoE+ 802.3at y PoE++ 802.3bt hasta 90W) en cámaras IP y puntos de acceso WiFi 6/7. Suministrado en caja dispensadora 'Reel-in-a-Box' de 305 metros (1000 pies) con orificio dispensador suave y marcas de longitud descendente por pie/metro.",
     "caracteristicas": [
       "SKU: 252",
@@ -948,7 +948,7 @@ const INITIAL_PRODUCTS = [
     "code": "252",
     "name": "CABLE DE RED LEVITON CAT6 UTP CLASIFICACIÓN CM (305M / 1000FT UTP6M-MLB)",
     "brand": "Leviton",
-    "category": "Cables & Conectividad",
+    "category": "Redes y Conectividad",
     "price": 46.11,
     "currency": "DOP",
     "availability": "Disponible",
@@ -991,7 +991,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "1839",
     "nombre": "CABLE UTP LEVINTON CAT 6 GRIS",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1839",
@@ -1009,7 +1009,7 @@ const INITIAL_PRODUCTS = [
     "code": "1839",
     "name": "CABLE UTP LEVINTON CAT 6 GRIS",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 13.06,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1035,7 +1035,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "2051",
     "nombre": "CABLE UTP PANDUIT PANNET CAT 6 AZUL",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2051",
@@ -1053,7 +1053,7 @@ const INITIAL_PRODUCTS = [
     "code": "2051",
     "name": "CABLE UTP PANDUIT PANNET CAT 6 AZUL",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 53.56,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1079,7 +1079,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "2811",
     "nombre": "PATCH CORD UTP 1M CAT 6",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2811",
@@ -1097,7 +1097,7 @@ const INITIAL_PRODUCTS = [
     "code": "2811",
     "name": "PATCH CORD UTP 1M CAT 6",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 135.57,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1123,7 +1123,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "2813",
     "nombre": "PATCH CORD UTP 2M CAT 6",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2813",
@@ -1141,7 +1141,7 @@ const INITIAL_PRODUCTS = [
     "code": "2813",
     "name": "PATCH CORD UTP 2M CAT 6",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 197.62,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1167,7 +1167,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "3108",
     "nombre": "PATCH CORD UTP CAR 6 1M DAHUA",
     "marca": "Dahua",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3108",
@@ -1187,7 +1187,7 @@ const INITIAL_PRODUCTS = [
     "code": "3108",
     "name": "PATCH CORD UTP CAR 6 1M DAHUA",
     "brand": "Dahua",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 152.38,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1346,7 +1346,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "4509",
     "nombre": "BASE P/ TUBO LED 2-PIN 40W",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "iluminacion",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4509",
@@ -1364,7 +1364,7 @@ const INITIAL_PRODUCTS = [
     "code": "4509",
     "name": "BASE P/ TUBO LED 2-PIN 40W",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Iluminación",
     "price": 20.83,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1379,18 +1379,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-iluminacion",
+      "sub-ilum-tubos"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-ilum-tubos"
   },
   {
     "id": "odoo-5980",
     "codigo": "215",
     "nombre": "CABLE 18/4 MULTI FIBRA GENESIS",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 215",
@@ -1408,7 +1408,7 @@ const INITIAL_PRODUCTS = [
     "code": "215",
     "name": "CABLE 18/4 MULTI FIBRA GENESIS",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 25.07,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1423,18 +1423,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-5981",
     "codigo": "1629",
     "nombre": "CABLE 22/2 GENESIS",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1629",
@@ -1452,7 +1452,7 @@ const INITIAL_PRODUCTS = [
     "code": "1629",
     "name": "CABLE 22/2 GENESIS",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 9.39,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1467,18 +1467,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-5983",
     "codigo": "1836",
     "nombre": "CABLE 22/4 GENESIS MULTIFIBRA",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1836",
@@ -1496,7 +1496,7 @@ const INITIAL_PRODUCTS = [
     "code": "1836",
     "name": "CABLE 22/4 GENESIS MULTIFIBRA",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 11.24,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1511,18 +1511,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-5984",
     "codigo": "217",
     "nombre": "CABLE 22/4 GENESIS SOLIDO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 217",
@@ -1540,7 +1540,7 @@ const INITIAL_PRODUCTS = [
     "code": "217",
     "name": "CABLE 22/4 GENESIS SOLIDO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 9.99,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1555,18 +1555,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-5985",
     "codigo": "4164",
     "nombre": "CABLE 22/4 MULTIFIBRA ESEENET",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4164",
@@ -1584,7 +1584,7 @@ const INITIAL_PRODUCTS = [
     "code": "4164",
     "name": "CABLE 22/4 MULTIFIBRA ESEENET",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 5.79,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1599,18 +1599,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-5988",
     "codigo": "1870",
     "nombre": "CABLE ALTO VOLTAJE ENGOMADO P/CERCO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1870",
@@ -1628,7 +1628,7 @@ const INITIAL_PRODUCTS = [
     "code": "1870",
     "name": "CABLE ALTO VOLTAJE ENGOMADO P/CERCO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 31.54,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1643,11 +1643,11 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-5990",
@@ -1786,7 +1786,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "4530",
     "nombre": "CABLE CAT 6 EXTERIOR FASTCABLE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4530",
@@ -1804,7 +1804,7 @@ const INITIAL_PRODUCTS = [
     "code": "4530",
     "name": "CABLE CAT 6 EXTERIOR FASTCABLE",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Redes y Conectividad",
     "price": 50.27,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1830,7 +1830,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "198",
     "nombre": "CABLE COAXIAL",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 198",
@@ -1848,7 +1848,7 @@ const INITIAL_PRODUCTS = [
     "code": "198",
     "name": "CABLE COAXIAL",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 3.75,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1863,18 +1863,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6002",
     "codigo": "1813",
     "nombre": "CABLE DE GOMA #10/2",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1813",
@@ -1892,7 +1892,7 @@ const INITIAL_PRODUCTS = [
     "code": "1813",
     "name": "CABLE DE GOMA #10/2",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 37.53,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1907,18 +1907,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6003",
     "codigo": "2090",
     "nombre": "CABLE DE GOMA #10/3",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2090",
@@ -1936,7 +1936,7 @@ const INITIAL_PRODUCTS = [
     "code": "2090",
     "name": "CABLE DE GOMA #10/3",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 65.65,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1951,18 +1951,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6004",
     "codigo": "1859",
     "nombre": "CABLE DE GOMA #10/4",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1859",
@@ -1980,7 +1980,7 @@ const INITIAL_PRODUCTS = [
     "code": "1859",
     "name": "CABLE DE GOMA #10/4",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 103.46,
     "currency": "DOP",
     "availability": "Disponible",
@@ -1995,18 +1995,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6005",
     "codigo": "200",
     "nombre": "CABLE DE GOMA #12/2",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 200",
@@ -2024,7 +2024,7 @@ const INITIAL_PRODUCTS = [
     "code": "200",
     "name": "CABLE DE GOMA #12/2",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 32.2,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2039,18 +2039,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6006",
     "codigo": "201",
     "nombre": "CABLE DE GOMA #12/3",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 201",
@@ -2068,7 +2068,7 @@ const INITIAL_PRODUCTS = [
     "code": "201",
     "name": "CABLE DE GOMA #12/3",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 57.33,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2083,18 +2083,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6007",
     "codigo": "202",
     "nombre": "CABLE DE GOMA #14/2",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 202",
@@ -2112,7 +2112,7 @@ const INITIAL_PRODUCTS = [
     "code": "202",
     "name": "CABLE DE GOMA #14/2",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 21.29,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2127,18 +2127,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6008",
     "codigo": "203",
     "nombre": "CABLE DE GOMA #14/3",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 203",
@@ -2156,7 +2156,7 @@ const INITIAL_PRODUCTS = [
     "code": "203",
     "name": "CABLE DE GOMA #14/3",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 32.65,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2171,18 +2171,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6012",
     "codigo": "3038",
     "nombre": "CABLE DE GOMA #8/4",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3038",
@@ -2200,7 +2200,7 @@ const INITIAL_PRODUCTS = [
     "code": "3038",
     "name": "CABLE DE GOMA #8/4",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 174.11,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2215,18 +2215,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6016",
     "codigo": "204",
     "nombre": "CABLE DE VINIL #12/2",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 204",
@@ -2244,7 +2244,7 @@ const INITIAL_PRODUCTS = [
     "code": "204",
     "name": "CABLE DE VINIL #12/2",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 48.66,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2259,18 +2259,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6017",
     "codigo": "205",
     "nombre": "CABLE DE VINIL #12/3",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 205",
@@ -2288,7 +2288,7 @@ const INITIAL_PRODUCTS = [
     "code": "205",
     "name": "CABLE DE VINIL #12/3",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 54.74,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2303,18 +2303,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6018",
     "codigo": "206",
     "nombre": "CABLE DE VINIL #14/2",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 206",
@@ -2332,7 +2332,7 @@ const INITIAL_PRODUCTS = [
     "code": "206",
     "name": "CABLE DE VINIL #14/2",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 33.21,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2347,18 +2347,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6019",
     "codigo": "207",
     "nombre": "CABLE DE VINIL 14/3",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 207",
@@ -2376,7 +2376,7 @@ const INITIAL_PRODUCTS = [
     "code": "207",
     "name": "CABLE DE VINIL 14/3",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 40.55,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2391,18 +2391,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6021",
     "codigo": "209",
     "nombre": "CABLE DUPLEX #14",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 209",
@@ -2420,7 +2420,7 @@ const INITIAL_PRODUCTS = [
     "code": "209",
     "name": "CABLE DUPLEX #14",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 14.07,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2435,18 +2435,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6036",
     "codigo": "2679",
     "nombre": "CABLE ELEC PHELP D #10 AZUL",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2679",
@@ -2464,7 +2464,7 @@ const INITIAL_PRODUCTS = [
     "code": "2679",
     "name": "CABLE ELEC PHELP D #10 AZUL",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 22.83,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2479,18 +2479,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6037",
     "codigo": "224",
     "nombre": "CABLE ELEC PHELP D #10 BLANCO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 224",
@@ -2508,7 +2508,7 @@ const INITIAL_PRODUCTS = [
     "code": "224",
     "name": "CABLE ELEC PHELP D #10 BLANCO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 20.53,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2523,18 +2523,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6038",
     "codigo": "225",
     "nombre": "CABLE ELEC PHELP D #10 NEGRO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 225",
@@ -2552,7 +2552,7 @@ const INITIAL_PRODUCTS = [
     "code": "225",
     "name": "CABLE ELEC PHELP D #10 NEGRO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 21.18,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2567,18 +2567,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6039",
     "codigo": "226",
     "nombre": "CABLE ELEC PHELP D #10 ROJO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 226",
@@ -2596,7 +2596,7 @@ const INITIAL_PRODUCTS = [
     "code": "226",
     "name": "CABLE ELEC PHELP D #10 ROJO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 22.83,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2611,18 +2611,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6040",
     "codigo": "1736",
     "nombre": "CABLE ELEC PHELP D #10 VERDE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1736",
@@ -2640,7 +2640,7 @@ const INITIAL_PRODUCTS = [
     "code": "1736",
     "name": "CABLE ELEC PHELP D #10 VERDE",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 20.36,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2655,18 +2655,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6041",
     "codigo": "227",
     "nombre": "CABLE ELEC PHELP D #12 AMARILLO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 227",
@@ -2684,7 +2684,7 @@ const INITIAL_PRODUCTS = [
     "code": "227",
     "name": "CABLE ELEC PHELP D #12 AMARILLO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 16.64,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2699,18 +2699,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6042",
     "codigo": "228",
     "nombre": "CABLE ELEC PHELP D #12 AZUL",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 228",
@@ -2728,7 +2728,7 @@ const INITIAL_PRODUCTS = [
     "code": "228",
     "name": "CABLE ELEC PHELP D #12 AZUL",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 15.25,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2743,18 +2743,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6043",
     "codigo": "229",
     "nombre": "CABLE ELEC PHELP D #12 BLANCO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 229",
@@ -2772,7 +2772,7 @@ const INITIAL_PRODUCTS = [
     "code": "229",
     "name": "CABLE ELEC PHELP D #12 BLANCO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 15.28,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2787,18 +2787,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6044",
     "codigo": "230",
     "nombre": "CABLE ELEC PHELP D #12 NEGRO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 230",
@@ -2816,7 +2816,7 @@ const INITIAL_PRODUCTS = [
     "code": "230",
     "name": "CABLE ELEC PHELP D #12 NEGRO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 13.57,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2831,18 +2831,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6046",
     "codigo": "232",
     "nombre": "CABLE ELEC PHELP D #12 VERDE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 232",
@@ -2860,7 +2860,7 @@ const INITIAL_PRODUCTS = [
     "code": "232",
     "name": "CABLE ELEC PHELP D #12 VERDE",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 13.27,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2875,18 +2875,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6048",
     "codigo": "234",
     "nombre": "CABLE ELEC PHELP D #14 AZUL",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 234",
@@ -2904,7 +2904,7 @@ const INITIAL_PRODUCTS = [
     "code": "234",
     "name": "CABLE ELEC PHELP D #14 AZUL",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 10.24,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2919,18 +2919,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6049",
     "codigo": "235",
     "nombre": "CABLE ELEC PHELP D #14 BLANCO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 235",
@@ -2948,7 +2948,7 @@ const INITIAL_PRODUCTS = [
     "code": "235",
     "name": "CABLE ELEC PHELP D #14 BLANCO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 10.67,
     "currency": "DOP",
     "availability": "Disponible",
@@ -2963,18 +2963,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6050",
     "codigo": "236",
     "nombre": "CABLE ELEC PHELP D #14 NEGRO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 236",
@@ -2992,7 +2992,7 @@ const INITIAL_PRODUCTS = [
     "code": "236",
     "name": "CABLE ELEC PHELP D #14 NEGRO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 9.68,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3007,18 +3007,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6052",
     "codigo": "238",
     "nombre": "CABLE ELEC PHELP D #14 VERDE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 238",
@@ -3036,7 +3036,7 @@ const INITIAL_PRODUCTS = [
     "code": "238",
     "name": "CABLE ELEC PHELP D #14 VERDE",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 10.34,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3051,18 +3051,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6064",
     "codigo": "239",
     "nombre": "CABLE ELEC PHELP D #6 BLANCO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 239",
@@ -3080,7 +3080,7 @@ const INITIAL_PRODUCTS = [
     "code": "239",
     "name": "CABLE ELEC PHELP D #6 BLANCO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 58.2,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3095,18 +3095,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6065",
     "codigo": "240",
     "nombre": "CABLE ELEC PHELP D #6 NEGRO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 240",
@@ -3124,7 +3124,7 @@ const INITIAL_PRODUCTS = [
     "code": "240",
     "name": "CABLE ELEC PHELP D #6 NEGRO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 58.2,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3139,18 +3139,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6066",
     "codigo": "1742",
     "nombre": "CABLE ELEC PHELP D #6 ROJO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1742",
@@ -3168,7 +3168,7 @@ const INITIAL_PRODUCTS = [
     "code": "1742",
     "name": "CABLE ELEC PHELP D #6 ROJO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 63.05,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3183,18 +3183,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6067",
     "codigo": "241",
     "nombre": "CABLE ELEC PHELP D #6 VERDE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 241",
@@ -3212,7 +3212,7 @@ const INITIAL_PRODUCTS = [
     "code": "241",
     "name": "CABLE ELEC PHELP D #6 VERDE",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 58.2,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3227,18 +3227,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6068",
     "codigo": "242",
     "nombre": "CABLE ELEC PHELP D #8 BLANCO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 242",
@@ -3256,7 +3256,7 @@ const INITIAL_PRODUCTS = [
     "code": "242",
     "name": "CABLE ELEC PHELP D #8 BLANCO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 39.68,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3271,18 +3271,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6069",
     "codigo": "2677",
     "nombre": "CABLE ELEC PHELP D #8 GRIS",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2677",
@@ -3300,7 +3300,7 @@ const INITIAL_PRODUCTS = [
     "code": "2677",
     "name": "CABLE ELEC PHELP D #8 GRIS",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 33.62,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3315,18 +3315,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6070",
     "codigo": "243",
     "nombre": "CABLE ELEC PHELP D #8 NEGRO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 243",
@@ -3344,7 +3344,7 @@ const INITIAL_PRODUCTS = [
     "code": "243",
     "name": "CABLE ELEC PHELP D #8 NEGRO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 37.64,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3359,18 +3359,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6071",
     "codigo": "244",
     "nombre": "CABLE ELEC PHELP D #8 ROJO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 244",
@@ -3388,7 +3388,7 @@ const INITIAL_PRODUCTS = [
     "code": "244",
     "name": "CABLE ELEC PHELP D #8 ROJO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 38.28,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3403,18 +3403,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6072",
     "codigo": "245",
     "nombre": "CABLE ELEC PHELP D #8 VERDE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 245",
@@ -3432,7 +3432,7 @@ const INITIAL_PRODUCTS = [
     "code": "245",
     "name": "CABLE ELEC PHELP D #8 VERDE",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 38.9,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3447,18 +3447,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6079",
     "codigo": "246",
     "nombre": "CABLE HDMI 15FT",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 246",
@@ -3476,7 +3476,7 @@ const INITIAL_PRODUCTS = [
     "code": "246",
     "name": "CABLE HDMI 15FT",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 267.1,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3491,18 +3491,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6081",
     "codigo": "213",
     "nombre": "CABLE HDMI 25 FT",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 213",
@@ -3520,7 +3520,7 @@ const INITIAL_PRODUCTS = [
     "code": "213",
     "name": "CABLE HDMI 25 FT",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 840,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3535,18 +3535,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6083",
     "codigo": "247",
     "nombre": "CABLE HDMI 6FT",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 247",
@@ -3564,7 +3564,7 @@ const INITIAL_PRODUCTS = [
     "code": "247",
     "name": "CABLE HDMI 6FT",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 156.09,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3579,18 +3579,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6094",
     "codigo": "3425",
     "nombre": "CABLE VGA 6 FT F1 MONITOR",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3425",
@@ -3608,7 +3608,7 @@ const INITIAL_PRODUCTS = [
     "code": "3425",
     "name": "CABLE VGA 6 FT F1 MONITOR",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 133,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3623,18 +3623,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6096",
     "codigo": "256",
     "nombre": "CABLE VGA MYO 50FT MONITOR",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 256",
@@ -3652,7 +3652,7 @@ const INITIAL_PRODUCTS = [
     "code": "256",
     "name": "CABLE VGA MYO 50FT MONITOR",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 1208.25,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3667,18 +3667,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6102",
     "codigo": "3669",
     "nombre": "DETECTOR DE CABLES ELECTRICOS",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3669",
@@ -3696,7 +3696,7 @@ const INITIAL_PRODUCTS = [
     "code": "3669",
     "name": "DETECTOR DE CABLES ELECTRICOS",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 1547,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3711,18 +3711,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-breakers"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-breakers"
   },
   {
     "id": "odoo-6105",
     "codigo": "2383",
     "nombre": "EXPANSOR DE 8 ZONAS CABLEADO PS NEO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2383",
@@ -3740,7 +3740,7 @@ const INITIAL_PRODUCTS = [
     "code": "2383",
     "name": "EXPANSOR DE 8 ZONAS CABLEADO PS NEO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 2508.4,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3755,18 +3755,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-breakers"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-breakers"
   },
   {
     "id": "odoo-6109",
     "codigo": "1544",
     "nombre": "FLEJADORA CABLE TIE ACERO INOX",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "accesorios",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1544",
@@ -3800,17 +3800,17 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "category_ids": [
       "cat-accesorios",
-      "sub-acc-tuberia"
+      "sub-acc-herramientas"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-acc-herramientas"
   },
   {
     "id": "odoo-6130",
     "codigo": "1501",
     "nombre": "ORGANIZADOR CABLE 1.1/8",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1501",
@@ -3828,7 +3828,7 @@ const INITIAL_PRODUCTS = [
     "code": "1501",
     "name": "ORGANIZADOR CABLE 1.1/8",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 418.6,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3843,18 +3843,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6132",
     "codigo": "3819",
     "nombre": "ORGANIZADOR DE CABLE 30MM X 2M",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3819",
@@ -3872,7 +3872,7 @@ const INITIAL_PRODUCTS = [
     "code": "3819",
     "name": "ORGANIZADOR DE CABLE 30MM X 2M",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 558.6,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3887,18 +3887,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6137",
     "codigo": "643",
     "nombre": "PERCHA P/ACOM TENSOR CABLE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "accesorios",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 643",
@@ -3932,17 +3932,17 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "category_ids": [
       "cat-accesorios",
-      "sub-acc-tuberia"
+      "sub-acc-herramientas"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-acc-herramientas"
   },
   {
     "id": "odoo-6139",
     "codigo": "667",
     "nombre": "PORTA FUSIBLE P/CABLE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 667",
@@ -3960,7 +3960,7 @@ const INITIAL_PRODUCTS = [
     "code": "667",
     "name": "PORTA FUSIBLE P/CABLE",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 27,
     "currency": "DOP",
     "availability": "Disponible",
@@ -3975,18 +3975,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-breakers"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-breakers"
   },
   {
     "id": "odoo-6143",
     "codigo": "758",
     "nombre": "SIERRA HUECO MAKITA 1 3/4\" MAKITA ( TUBO 1 1/2\")",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 758",
@@ -4004,7 +4004,7 @@ const INITIAL_PRODUCTS = [
     "code": "758",
     "name": "SIERRA HUECO MAKITA 1 3/4\" MAKITA ( TUBO 1 1/2\")",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 656.1,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4019,18 +4019,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6145",
     "codigo": "760",
     "nombre": "SIERRA HUECO MAKITA METAL 2 1/4\" MAKITA ( TUBO 2\")",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 760",
@@ -4048,7 +4048,7 @@ const INITIAL_PRODUCTS = [
     "code": "760",
     "name": "SIERRA HUECO MAKITA METAL 2 1/4\" MAKITA ( TUBO 2\")",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 674.7,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4063,18 +4063,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6151",
     "codigo": "812",
     "nombre": "TAPON PLAS.1-1/2X1-1/2 P/ TUBO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 812",
@@ -4092,7 +4092,7 @@ const INITIAL_PRODUCTS = [
     "code": "812",
     "name": "TAPON PLAS.1-1/2X1-1/2 P/ TUBO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 11.7,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4107,18 +4107,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6152",
     "codigo": "2428",
     "nombre": "TARUGO PLAST SHEETRROCK AUTOROCABLE 40MM",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "accesorios",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2428",
@@ -4152,17 +4152,17 @@ const INITIAL_PRODUCTS = [
     "active": true,
     "category_ids": [
       "cat-accesorios",
-      "sub-acc-tuberia"
+      "sub-acc-herramientas"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-acc-herramientas"
   },
   {
     "id": "odoo-6153",
     "codigo": "1103",
     "nombre": "TERMINAL P/CABLE COAXIAL GENERICO METAL",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1103",
@@ -4180,7 +4180,7 @@ const INITIAL_PRODUCTS = [
     "code": "1103",
     "name": "TERMINAL P/CABLE COAXIAL GENERICO METAL",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 25.19,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4195,18 +4195,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6154",
     "codigo": "2073",
     "nombre": "TUBO 2'' HG",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2073",
@@ -4224,7 +4224,7 @@ const INITIAL_PRODUCTS = [
     "code": "2073",
     "name": "TUBO 2'' HG",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 3500,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4239,18 +4239,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6155",
     "codigo": "898",
     "nombre": "TUBO EMT 1\"X10` AMERICANO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 898",
@@ -4268,7 +4268,7 @@ const INITIAL_PRODUCTS = [
     "code": "898",
     "name": "TUBO EMT 1\"X10` AMERICANO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 780,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4283,18 +4283,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6156",
     "codigo": "2504",
     "nombre": "TUBO EMT 1\"X10` GENERICO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2504",
@@ -4312,7 +4312,7 @@ const INITIAL_PRODUCTS = [
     "code": "2504",
     "name": "TUBO EMT 1\"X10` GENERICO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 499.68,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4327,18 +4327,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6158",
     "codigo": "2506",
     "nombre": "TUBO EMT 1/2\"X10` GENERICO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2506",
@@ -4356,7 +4356,7 @@ const INITIAL_PRODUCTS = [
     "code": "2506",
     "name": "TUBO EMT 1/2\"X10` GENERICO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 281.98,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4371,18 +4371,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6165",
     "codigo": "2505",
     "nombre": "TUBO EMT 3/4\"X10` GENERICO",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2505",
@@ -4400,7 +4400,7 @@ const INITIAL_PRODUCTS = [
     "code": "2505",
     "name": "TUBO EMT 3/4\"X10` GENERICO",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 240.55,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4415,18 +4415,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6169",
     "codigo": "909",
     "nombre": "TUBO LED 24\" 9W 6500K",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "iluminacion",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 909",
@@ -4444,7 +4444,7 @@ const INITIAL_PRODUCTS = [
     "code": "909",
     "name": "TUBO LED 24\" 9W 6500K",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Iluminación",
     "price": 409,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4459,18 +4459,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-iluminacion",
+      "sub-ilum-tubos"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-ilum-tubos"
   },
   {
     "id": "odoo-6171",
     "codigo": "1761",
     "nombre": "TUBO LED 18W NEVADO 6500K",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "iluminacion",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1761",
@@ -4488,7 +4488,7 @@ const INITIAL_PRODUCTS = [
     "code": "1761",
     "name": "TUBO LED 18W NEVADO 6500K",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Iluminación",
     "price": 300.16,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4503,18 +4503,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-iluminacion",
+      "sub-ilum-tubos"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-ilum-tubos"
   },
   {
     "id": "odoo-6172",
     "codigo": "3189",
     "nombre": "TUBO LED 18W SILVANIA 6500K",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "iluminacion",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3189",
@@ -4532,7 +4532,7 @@ const INITIAL_PRODUCTS = [
     "code": "3189",
     "name": "TUBO LED 18W SILVANIA 6500K",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Iluminación",
     "price": 313.5,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4547,18 +4547,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-iluminacion",
+      "sub-ilum-tubos"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-ilum-tubos"
   },
   {
     "id": "odoo-6173",
     "codigo": "1364",
     "nombre": "TUBO LED 24\" 4100K",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "iluminacion",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1364",
@@ -4576,7 +4576,7 @@ const INITIAL_PRODUCTS = [
     "code": "1364",
     "name": "TUBO LED 24\" 4100K",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Iluminación",
     "price": 332.05,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4591,18 +4591,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-iluminacion",
+      "sub-ilum-tubos"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-ilum-tubos"
   },
   {
     "id": "odoo-6176",
     "codigo": "910",
     "nombre": "TUBO LED 48\" 18W 4100K",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "iluminacion",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 910",
@@ -4620,7 +4620,7 @@ const INITIAL_PRODUCTS = [
     "code": "910",
     "name": "TUBO LED 48\" 18W 4100K",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Iluminación",
     "price": 399.6,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4635,18 +4635,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-iluminacion",
+      "sub-ilum-tubos"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-ilum-tubos"
   },
   {
     "id": "odoo-6178",
     "codigo": "2334",
     "nombre": "TUBO LED SYLVANIA 24'' 9 W BLAN.",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "iluminacion",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2334",
@@ -4664,7 +4664,7 @@ const INITIAL_PRODUCTS = [
     "code": "2334",
     "name": "TUBO LED SYLVANIA 24'' 9 W BLAN.",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Iluminación",
     "price": 164.7,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4679,18 +4679,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-iluminacion",
+      "sub-ilum-tubos"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-ilum-tubos"
   },
   {
     "id": "odoo-6182",
     "codigo": "3461",
     "nombre": "TUBO LUMINOSO DE TRES LADOS 7X120CM45W BL",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "iluminacion",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3461",
@@ -4708,7 +4708,7 @@ const INITIAL_PRODUCTS = [
     "code": "3461",
     "name": "TUBO LUMINOSO DE TRES LADOS 7X120CM45W BL",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Iluminación",
     "price": 1580.5,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4723,18 +4723,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-iluminacion",
+      "sub-ilum-tubos"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-ilum-tubos"
   },
   {
     "id": "odoo-6183",
     "codigo": "904",
     "nombre": "TUBO PVC 1\"X19` SDR26",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 904",
@@ -4752,7 +4752,7 @@ const INITIAL_PRODUCTS = [
     "code": "904",
     "name": "TUBO PVC 1\"X19` SDR26",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 316.54,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4767,18 +4767,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6184",
     "codigo": "905",
     "nombre": "TUBO PVC 1/2\"X19` SDR26",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 905",
@@ -4796,7 +4796,7 @@ const INITIAL_PRODUCTS = [
     "code": "905",
     "name": "TUBO PVC 1/2\"X19` SDR26",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 123.4,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4811,18 +4811,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-tuberia"
+      "cat-electrico",
+      "sub-elec-canalizacion"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-tuberia"
+    "subcategoria_id": "sub-elec-canalizacion"
   },
   {
     "id": "odoo-6534",
     "codigo": "4142",
     "nombre": "CONECTOR HEMBRA",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4142",
@@ -4840,7 +4840,7 @@ const INITIAL_PRODUCTS = [
     "code": "4142",
     "name": "CONECTOR HEMBRA",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 18.03,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4855,18 +4855,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6535",
     "codigo": "4141",
     "nombre": "CONECTOR MACHO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4141",
@@ -4884,7 +4884,7 @@ const INITIAL_PRODUCTS = [
     "code": "4141",
     "name": "CONECTOR MACHO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 18.03,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4899,18 +4899,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6545",
     "codigo": "365",
     "nombre": "CONECTOR B AZUL / BLANCO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 365",
@@ -4928,7 +4928,7 @@ const INITIAL_PRODUCTS = [
     "code": "365",
     "name": "CONECTOR B AZUL / BLANCO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 8.64,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4943,18 +4943,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6546",
     "codigo": "2698",
     "nombre": "CONECTOR B.V 2/1",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2698",
@@ -4972,7 +4972,7 @@ const INITIAL_PRODUCTS = [
     "code": "2698",
     "name": "CONECTOR B.V 2/1",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 182.98,
     "currency": "DOP",
     "availability": "Disponible",
@@ -4987,18 +4987,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6550",
     "codigo": "367",
     "nombre": "CONECTOR BX 1/2``RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 367",
@@ -5016,7 +5016,7 @@ const INITIAL_PRODUCTS = [
     "code": "367",
     "name": "CONECTOR BX 1/2``RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 32.78,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5031,18 +5031,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6551",
     "codigo": "368",
     "nombre": "CONECTOR BX 1`` RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 368",
@@ -5060,7 +5060,7 @@ const INITIAL_PRODUCTS = [
     "code": "368",
     "name": "CONECTOR BX 1`` RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 32.74,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5075,18 +5075,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6552",
     "codigo": "4286",
     "nombre": "CONECTOR BX 1-1/2``RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4286",
@@ -5104,7 +5104,7 @@ const INITIAL_PRODUCTS = [
     "code": "4286",
     "name": "CONECTOR BX 1-1/2``RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 200.1,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5119,18 +5119,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6553",
     "codigo": "369",
     "nombre": "CONECTOR BX 3/4`` RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 369",
@@ -5148,7 +5148,7 @@ const INITIAL_PRODUCTS = [
     "code": "369",
     "name": "CONECTOR BX 3/4`` RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 43.49,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5163,18 +5163,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6559",
     "codigo": "3484",
     "nombre": "CONECTOR EMPALME 2/0 COBRE",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3484",
@@ -5192,7 +5192,7 @@ const INITIAL_PRODUCTS = [
     "code": "3484",
     "name": "CONECTOR EMPALME 2/0 COBRE",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 329.13,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5207,18 +5207,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6560",
     "codigo": "4641",
     "nombre": "CONECTOR EMPALME #12",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4641",
@@ -5236,7 +5236,7 @@ const INITIAL_PRODUCTS = [
     "code": "4641",
     "name": "CONECTOR EMPALME #12",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 20.02,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5251,18 +5251,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6563",
     "codigo": "4626",
     "nombre": "CONECTOR EMPALME COLOR GEN",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4626",
@@ -5280,7 +5280,7 @@ const INITIAL_PRODUCTS = [
     "code": "4626",
     "name": "CONECTOR EMPALME COLOR GEN",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 561.68,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5295,18 +5295,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6564",
     "codigo": "371",
     "nombre": "CONECTOR EMT 1",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 371",
@@ -5324,7 +5324,7 @@ const INITIAL_PRODUCTS = [
     "code": "371",
     "name": "CONECTOR EMT 1",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 34.04,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5339,18 +5339,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6565",
     "codigo": "372",
     "nombre": "CONECTOR EMT 1/2",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 372",
@@ -5368,7 +5368,7 @@ const INITIAL_PRODUCTS = [
     "code": "372",
     "name": "CONECTOR EMT 1/2",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 18.28,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5383,18 +5383,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6566",
     "codigo": "373",
     "nombre": "CONECTOR EMT 1-1/2",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 373",
@@ -5412,7 +5412,7 @@ const INITIAL_PRODUCTS = [
     "code": "373",
     "name": "CONECTOR EMT 1-1/2",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 98.86,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5427,18 +5427,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6567",
     "codigo": "374",
     "nombre": "CONECTOR EMT 2",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 374",
@@ -5456,7 +5456,7 @@ const INITIAL_PRODUCTS = [
     "code": "374",
     "name": "CONECTOR EMT 2",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 111.43,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5471,18 +5471,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6568",
     "codigo": "375",
     "nombre": "CONECTOR EMT 3/4",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 375",
@@ -5500,7 +5500,7 @@ const INITIAL_PRODUCTS = [
     "code": "375",
     "name": "CONECTOR EMT 3/4",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 29,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5515,18 +5515,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6569",
     "codigo": "376",
     "nombre": "CONECTOR EMT 3``",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 376",
@@ -5544,7 +5544,7 @@ const INITIAL_PRODUCTS = [
     "code": "376",
     "name": "CONECTOR EMT 3``",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 291.6,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5559,18 +5559,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6571",
     "codigo": "2663",
     "nombre": "CONECTOR GAL.HUB 1",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2663",
@@ -5588,7 +5588,7 @@ const INITIAL_PRODUCTS = [
     "code": "2663",
     "name": "CONECTOR GAL.HUB 1",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 357.12,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5603,18 +5603,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6574",
     "codigo": "2664",
     "nombre": "CONECTOR GAL.HUB 2",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2664",
@@ -5632,7 +5632,7 @@ const INITIAL_PRODUCTS = [
     "code": "2664",
     "name": "CONECTOR GAL.HUB 2",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 933.8,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5647,18 +5647,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6575",
     "codigo": "3844",
     "nombre": "CONECTOR GAL.HUB IMC 3/4",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3844",
@@ -5676,7 +5676,7 @@ const INITIAL_PRODUCTS = [
     "code": "3844",
     "name": "CONECTOR GAL.HUB IMC 3/4",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 146.98,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5691,18 +5691,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6578",
     "codigo": "377",
     "nombre": "CONECTOR LQT 1\" CURVO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 377",
@@ -5720,7 +5720,7 @@ const INITIAL_PRODUCTS = [
     "code": "377",
     "name": "CONECTOR LQT 1\" CURVO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 121.71,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5735,18 +5735,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6579",
     "codigo": "2389",
     "nombre": "CONECTOR LQT 1\" CURVO METALICO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2389",
@@ -5764,7 +5764,7 @@ const INITIAL_PRODUCTS = [
     "code": "2389",
     "name": "CONECTOR LQT 1\" CURVO METALICO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 121.1,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5779,18 +5779,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6580",
     "codigo": "378",
     "nombre": "CONECTOR LQT 1\" RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 378",
@@ -5808,7 +5808,7 @@ const INITIAL_PRODUCTS = [
     "code": "378",
     "name": "CONECTOR LQT 1\" RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 94.45,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5823,18 +5823,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6581",
     "codigo": "386",
     "nombre": "CONECTOR LQT 1\"RECTO METAL",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 386",
@@ -5852,7 +5852,7 @@ const INITIAL_PRODUCTS = [
     "code": "386",
     "name": "CONECTOR LQT 1\"RECTO METAL",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 133.65,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5867,18 +5867,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6582",
     "codigo": "379",
     "nombre": "CONECTOR LQT 1/2 RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 379",
@@ -5896,7 +5896,7 @@ const INITIAL_PRODUCTS = [
     "code": "379",
     "name": "CONECTOR LQT 1/2 RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 19.11,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5911,18 +5911,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6583",
     "codigo": "380",
     "nombre": "CONECTOR LQT 1/2\" CURVO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 380",
@@ -5940,7 +5940,7 @@ const INITIAL_PRODUCTS = [
     "code": "380",
     "name": "CONECTOR LQT 1/2\" CURVO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 105,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5955,18 +5955,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6584",
     "codigo": "1750",
     "nombre": "CONECTOR LQT 1/2\" CURVO METAL",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1750",
@@ -5984,7 +5984,7 @@ const INITIAL_PRODUCTS = [
     "code": "1750",
     "name": "CONECTOR LQT 1/2\" CURVO METAL",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 56.06,
     "currency": "DOP",
     "availability": "Disponible",
@@ -5999,18 +5999,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6585",
     "codigo": "388",
     "nombre": "CONECTOR LQT 1-1/2\" RECTO METAL",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 388",
@@ -6028,7 +6028,7 @@ const INITIAL_PRODUCTS = [
     "code": "388",
     "name": "CONECTOR LQT 1-1/2\" RECTO METAL",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 416.56,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6043,18 +6043,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6586",
     "codigo": "381",
     "nombre": "CONECTOR LQT 1-1/2`` RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 381",
@@ -6072,7 +6072,7 @@ const INITIAL_PRODUCTS = [
     "code": "381",
     "name": "CONECTOR LQT 1-1/2`` RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 147.84,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6087,18 +6087,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6587",
     "codigo": "382",
     "nombre": "CONECTOR LQT 1-1/2``CURVO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 382",
@@ -6116,7 +6116,7 @@ const INITIAL_PRODUCTS = [
     "code": "382",
     "name": "CONECTOR LQT 1-1/2``CURVO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 378,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6131,18 +6131,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6590",
     "codigo": "383",
     "nombre": "CONECTOR LQT 2`` RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 383",
@@ -6160,7 +6160,7 @@ const INITIAL_PRODUCTS = [
     "code": "383",
     "name": "CONECTOR LQT 2`` RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 241.27,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6175,18 +6175,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6591",
     "codigo": "384",
     "nombre": "CONECTOR LQT 3/4 CURVO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 384",
@@ -6204,7 +6204,7 @@ const INITIAL_PRODUCTS = [
     "code": "384",
     "name": "CONECTOR LQT 3/4 CURVO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 156.25,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6219,18 +6219,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6592",
     "codigo": "385",
     "nombre": "CONECTOR LQT 3/4 RECTO",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 385",
@@ -6248,7 +6248,7 @@ const INITIAL_PRODUCTS = [
     "code": "385",
     "name": "CONECTOR LQT 3/4 RECTO",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 59.16,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6263,18 +6263,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6593",
     "codigo": "387",
     "nombre": "CONECTOR LQT 3/4 RECTO METAL",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 387",
@@ -6292,7 +6292,7 @@ const INITIAL_PRODUCTS = [
     "code": "387",
     "name": "CONECTOR LQT 3/4 RECTO METAL",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 67.37,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6307,18 +6307,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6598",
     "codigo": "4348",
     "nombre": "CONECTOR P/ CABLE PG 21",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4348",
@@ -6336,7 +6336,7 @@ const INITIAL_PRODUCTS = [
     "code": "4348",
     "name": "CONECTOR P/ CABLE PG 21",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 96.33,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6351,18 +6351,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6600",
     "codigo": "392",
     "nombre": "CONECTOR P/ CABLE 1 PG 25",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 392",
@@ -6380,7 +6380,7 @@ const INITIAL_PRODUCTS = [
     "code": "392",
     "name": "CONECTOR P/ CABLE 1 PG 25",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 30,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6395,18 +6395,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6601",
     "codigo": "394",
     "nombre": "CONECTOR P/ CABLE 1/2 PG13.5",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 394",
@@ -6424,7 +6424,7 @@ const INITIAL_PRODUCTS = [
     "code": "394",
     "name": "CONECTOR P/ CABLE 1/2 PG13.5",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 27.43,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6439,18 +6439,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6602",
     "codigo": "393",
     "nombre": "CONECTOR P/ CABLE 3/4 PG19",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 393",
@@ -6468,7 +6468,7 @@ const INITIAL_PRODUCTS = [
     "code": "393",
     "name": "CONECTOR P/ CABLE 3/4 PG19",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 21.1,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6483,18 +6483,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6603",
     "codigo": "2903",
     "nombre": "CONECTOR P/ CABLE 3/8 PG 7",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2903",
@@ -6512,7 +6512,7 @@ const INITIAL_PRODUCTS = [
     "code": "2903",
     "name": "CONECTOR P/ CABLE 3/8 PG 7",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 36.63,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6527,18 +6527,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6606",
     "codigo": "4216",
     "nombre": "CONECTOR P/ CABLE PG 9",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4216",
@@ -6556,7 +6556,7 @@ const INITIAL_PRODUCTS = [
     "code": "4216",
     "name": "CONECTOR P/ CABLE PG 9",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 35.52,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6571,18 +6571,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6613",
     "codigo": "397",
     "nombre": "CONECTOR P/ VARILLA TIERRA 5/8",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 397",
@@ -6600,7 +6600,7 @@ const INITIAL_PRODUCTS = [
     "code": "397",
     "name": "CONECTOR P/ VARILLA TIERRA 5/8",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 79.66,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6615,18 +6615,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6615",
     "codigo": "4424",
     "nombre": "CONECTOR P/BARRAS 25MM",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 4424",
@@ -6644,7 +6644,7 @@ const INITIAL_PRODUCTS = [
     "code": "4424",
     "name": "CONECTOR P/BARRAS 25MM",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 610.18,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6659,18 +6659,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6618",
     "codigo": "1175",
     "nombre": "CONECTOR PLAS P/ CABLE DE GOMA",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1175",
@@ -6688,7 +6688,7 @@ const INITIAL_PRODUCTS = [
     "code": "1175",
     "name": "CONECTOR PLAS P/ CABLE DE GOMA",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 19.36,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6703,18 +6703,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-6620",
     "codigo": "399",
     "nombre": "CONECTOR PULPO 4 SALIDA",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 399",
@@ -6732,7 +6732,7 @@ const INITIAL_PRODUCTS = [
     "code": "399",
     "name": "CONECTOR PULPO 4 SALIDA",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 83.53,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6747,18 +6747,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6621",
     "codigo": "2031",
     "nombre": "CONECTOR PULPO 8 SALIDA",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2031",
@@ -6776,7 +6776,7 @@ const INITIAL_PRODUCTS = [
     "code": "2031",
     "name": "CONECTOR PULPO 8 SALIDA",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 141.74,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6791,11 +6791,11 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6623",
@@ -6934,7 +6934,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "3813",
     "nombre": "CONECTOR SENCILLO #4 2/0 TRIPLE",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3813",
@@ -6952,7 +6952,7 @@ const INITIAL_PRODUCTS = [
     "code": "3813",
     "name": "CONECTOR SENCILLO #4 2/0 TRIPLE",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 134.66,
     "currency": "DOP",
     "availability": "Disponible",
@@ -6967,18 +6967,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6628",
     "codigo": "2857",
     "nombre": "CONECTOR SILLA 1/0",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2857",
@@ -6996,7 +6996,7 @@ const INITIAL_PRODUCTS = [
     "code": "2857",
     "name": "CONECTOR SILLA 1/0",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 124.79,
     "currency": "DOP",
     "availability": "Disponible",
@@ -7011,18 +7011,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6635",
     "codigo": "2817",
     "nombre": "CONECTOR SILLA DOBLE 250 MCM",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 2817",
@@ -7040,7 +7040,7 @@ const INITIAL_PRODUCTS = [
     "code": "2817",
     "name": "CONECTOR SILLA DOBLE 250 MCM",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 400.78,
     "currency": "DOP",
     "availability": "Disponible",
@@ -7055,18 +7055,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6636",
     "codigo": "1047",
     "nombre": "CONECTOR SILLA N.2",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1047",
@@ -7084,7 +7084,7 @@ const INITIAL_PRODUCTS = [
     "code": "1047",
     "name": "CONECTOR SILLA N.2",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 26.05,
     "currency": "DOP",
     "availability": "Disponible",
@@ -7099,18 +7099,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6639",
     "codigo": "403",
     "nombre": "CONECTOR UF 1/2",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 403",
@@ -7128,7 +7128,7 @@ const INITIAL_PRODUCTS = [
     "code": "403",
     "name": "CONECTOR UF 1/2",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 21.61,
     "currency": "DOP",
     "availability": "Disponible",
@@ -7143,18 +7143,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6640",
     "codigo": "404",
     "nombre": "CONECTOR UF 3/4",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 404",
@@ -7172,7 +7172,7 @@ const INITIAL_PRODUCTS = [
     "code": "404",
     "name": "CONECTOR UF 3/4",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 30.66,
     "currency": "DOP",
     "availability": "Disponible",
@@ -7187,18 +7187,18 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-6644",
     "codigo": "1950",
     "nombre": "JUEGO DE CONECTORES 35MM2 SCHNEIDER",
     "marca": "WES",
-    "categoria_id": "redes",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 1950",
@@ -7216,7 +7216,7 @@ const INITIAL_PRODUCTS = [
     "code": "1950",
     "name": "JUEGO DE CONECTORES 35MM2 SCHNEIDER",
     "brand": "WES",
-    "category": "Redes y Conectividad",
+    "category": "Material Eléctrico",
     "price": 201.95,
     "currency": "DOP",
     "availability": "Disponible",
@@ -7231,11 +7231,11 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-conectores"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-conectores"
   },
   {
     "id": "odoo-18254",
@@ -9768,7 +9768,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "3745",
     "nombre": "ALAMBRE DE ACOMETIDA 6/3 COBRE",
     "marca": "WES",
-    "categoria_id": "cables",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3745",
@@ -9786,7 +9786,7 @@ const INITIAL_PRODUCTS = [
     "code": "3745",
     "name": "ALAMBRE DE ACOMETIDA 6/3 COBRE",
     "brand": "WES",
-    "category": "Accesorios de Instalación",
+    "category": "Material Eléctrico",
     "price": 333.42,
     "currency": "DOP",
     "availability": "Disponible",
@@ -9801,11 +9801,11 @@ const INITIAL_PRODUCTS = [
     "featured": true,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conductores"
+      "cat-electrico",
+      "sub-elec-cables"
     ],
     "needs_review": false,
-    "subcategoria_id": "sub-acc-conductores"
+    "subcategoria_id": "sub-elec-cables"
   },
   {
     "id": "odoo-34064",
@@ -9856,7 +9856,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "ODOO-34077",
     "nombre": "PATCH CORD DAHUA CAT6 1FT",
     "marca": "Dahua",
-    "categoria_id": "camaras",
+    "categoria_id": "redes",
     "descripcion": "Equipo profesional Dahua distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: ODOO-34077",
@@ -9876,7 +9876,7 @@ const INITIAL_PRODUCTS = [
     "code": "ODOO-34077",
     "name": "PATCH CORD DAHUA CAT6 1FT",
     "brand": "Dahua",
-    "category": "Cámaras de Seguridad",
+    "category": "Redes y Conectividad",
     "price": 1,
     "currency": "DOP",
     "availability": "Disponible",
@@ -9904,7 +9904,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "3-18-4683",
     "nombre": "CAJA DE BREAKER 24 CIRC EMP",
     "marca": "WES",
-    "categoria_id": "acceso",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: 3-18-4683",
@@ -9922,7 +9922,7 @@ const INITIAL_PRODUCTS = [
     "code": "3-18-4683",
     "name": "CAJA DE BREAKER 24 CIRC EMP",
     "brand": "WES",
-    "category": "Controles de Acceso",
+    "category": "Material Eléctrico",
     "price": 1,
     "currency": "DOP",
     "availability": "Disponible",
@@ -9937,11 +9937,11 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-breakers"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-breakers"
   },
   {
     "id": "odoo-34095",
@@ -9992,7 +9992,7 @@ const INITIAL_PRODUCTS = [
     "codigo": "ODOO-34096",
     "nombre": "CAJA BREAKER EMP 24 CIRCUITOS CISMA",
     "marca": "WES",
-    "categoria_id": "acceso",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: ODOO-34096",
@@ -10010,7 +10010,7 @@ const INITIAL_PRODUCTS = [
     "code": "ODOO-34096",
     "name": "CAJA BREAKER EMP 24 CIRCUITOS CISMA",
     "brand": "WES",
-    "category": "Controles de Acceso",
+    "category": "Material Eléctrico",
     "price": 500,
     "currency": "DOP",
     "availability": "Disponible",
@@ -10025,18 +10025,18 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-breakers"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-breakers"
   },
   {
     "id": "odoo-34127",
     "codigo": "ODOO-34127",
     "nombre": "CONTACTOR 110V 9A",
     "marca": "WES",
-    "categoria_id": "acceso",
+    "categoria_id": "electrico",
     "descripcion": "Equipo profesional WES distribuido por Warn Electrical Services. Modelo certificado para alta durabilidad.",
     "caracteristicas": [
       "SKU: ODOO-34127",
@@ -10054,7 +10054,7 @@ const INITIAL_PRODUCTS = [
     "code": "ODOO-34127",
     "name": "CONTACTOR 110V 9A",
     "brand": "WES",
-    "category": "Controles de Acceso",
+    "category": "Material Eléctrico",
     "price": 1,
     "currency": "DOP",
     "availability": "Disponible",
@@ -10069,11 +10069,11 @@ const INITIAL_PRODUCTS = [
     "featured": false,
     "active": true,
     "category_ids": [
-      "cat-accesorios",
-      "sub-acc-conectores-ind"
+      "cat-electrico",
+      "sub-elec-breakers"
     ],
     "needs_review": true,
-    "subcategoria_id": "sub-acc-conectores-ind"
+    "subcategoria_id": "sub-elec-breakers"
   },
   {
     "id": "odoo-34195",
@@ -11994,7 +11994,7 @@ const INITIAL_PRODUCTS = [
 
 const StorageService = {
   getProducts: function() {
-    const versionKey = 'wes_products_v31_catalog';
+    const versionKey = 'wes_products_v32_catalog';
     let products = null;
     try {
       if (typeof localStorage !== 'undefined') {
@@ -12078,7 +12078,9 @@ const StorageService = {
 
     const CATEGORY_NAMES = {
       'energia': 'Energía y Respaldo',
-      'cables': 'Accesorios de Instalación',
+      'cables': 'Material Eléctrico',
+      'electrico': 'Material Eléctrico',
+      'iluminacion': 'Iluminación',
       'redes': 'Redes y Conectividad',
       'camaras': 'Cámaras de Seguridad',
       'acceso': 'Controles de Acceso',
@@ -12098,7 +12100,9 @@ const StorageService = {
         if (c.includes('camara') || c.includes('cctv')) return 'camaras';
         if (c.includes('acceso') || c.includes('porton')) return 'acceso';
         if (c.includes('red')) return 'redes';
-        if (c.includes('cable') || c.includes('accesorio')) return 'cables';
+        if (c.includes('electrico') || c.includes('cable')) return 'electrico';
+        if (c.includes('ilumina')) return 'iluminacion';
+        if (c.includes('accesorio')) return 'accesorios';
         return 'otros';
       })();
 

@@ -30,6 +30,10 @@ const DEFAULT_FEATURE_FLAGS = {
     "Automatización y Domótica",
     "automatizacion",
     "Accesorios de Instalación",
+    "Material Eléctrico",
+    "electrico",
+    "Iluminación",
+    "iluminacion",
     "Cables & Conectividad",
     "cables",
     "Accesorios",
@@ -41,7 +45,7 @@ const DEFAULT_FEATURE_FLAGS = {
 };
 
 const FeatureFlags = {
-  STORAGE_KEY: 'wes_feature_flags_v2',
+  STORAGE_KEY: 'wes_feature_flags_v3',
 
   getFlags() {
     try {
