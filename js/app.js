@@ -5102,6 +5102,11 @@ function updateAuthHeaderUI() {
     if (mobLoginBtn) mobLoginBtn.classList.remove('hidden');
     if (mobLoggedContainer) mobLoggedContainer.classList.add('hidden');
   }
+
+  // Evaluar visibilidad del botón de instalación PWA según estado de sesión
+  if (typeof evaluatePwaInstallVisibility === 'function') {
+    evaluatePwaInstallVisibility();
+  }
 }
 
 async function handleLogout() {

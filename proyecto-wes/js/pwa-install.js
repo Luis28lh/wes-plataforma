@@ -1,9 +1,11 @@
-﻿// ==========================================
+// ==========================================
 // WARN ELECTRICAL SERVICES (WES)
 // Controlador Universal de Instalación PWA (Android & iOS)
 // Estándar W3C / Apple WebKit v2.0
 // ==========================================
 
+// Estado de instalación detectada en el dispositivo/navegador actual
+let isAppInstalledDetected = false;
 let deferredInstallPrompt = null;
 
 const isIOS = () => {
@@ -13,23 +15,60 @@ const isIOS = () => {
 const isStandaloneMode = () => {
   return window.matchMedia('(display-mode: standalone)').matches ||
          window.navigator.standalone === true ||
-         document.referrer.includes('android-app://');
+         document.referrer.includes('android-app://') ||
+         window.location.search.includes('source=pwa');
 };
+
+/**
+ * Evalúa rigurosamente si el botón de instalación del encabezado debe mostrarse u ocultarse.
+ * Reglas:
+ * 1. Ocultar si el visitante ha iniciado sesión (UserAuth.isAuthenticated()).
+ * 2. Ocultar si la página se está ejecutando en modo standalone (App instalada).
+ * 3. Ocultar si el navegador ya disparó appinstalled en esta sesión.
+ * 4. Mostrar solo cuando esté en el navegador, no haya sesión y exista método o instrucciones aplicables.
+ */
+function evaluatePwaInstallVisibility() {
+  const headerBtn = document.getElementById('header-pwa-install-btn');
+  const drawerBtn = document.getElementById('pwa-drawer-install-btn');
+
+  // Si está en modo App Standalone o ya se detectó instalada:
+  if (isStandaloneMode() || isAppInstalledDetected) {
+    if (headerBtn) headerBtn.classList.add('hidden');
+    if (drawerBtn) drawerBtn.classList.add('hidden');
+    return;
+  }
+
+  // Si el usuario está autenticado en la plataforma:
+  const isAuth = typeof UserAuth !== 'undefined' && typeof UserAuth.isAuthenticated === 'function' && UserAuth.isAuthenticated();
+  if (isAuth) {
+    if (headerBtn) headerBtn.classList.add('hidden');
+    if (drawerBtn) drawerBtn.classList.add('hidden');
+    return;
+  }
+
+  // Visitante no autenticado en navegador web:
+  // Mostrar si hay prompt nativo disponible (beforeinstallprompt), es iOS (Safari) o navegador estándar con instrucciones
+  const canInstall = Boolean(deferredInstallPrompt) || isIOS() || true;
+
+  if (canInstall) {
+    if (headerBtn) headerBtn.classList.remove('hidden');
+    if (drawerBtn) drawerBtn.classList.remove('hidden');
+  } else {
+    if (headerBtn) headerBtn.classList.add('hidden');
+    if (drawerBtn) drawerBtn.classList.add('hidden');
+  }
+}
 
 function initPwaInstall() {
   if (isStandaloneMode()) {
     console.log('[WES PWA] Ejecutándose en modo App Standalone.');
+    isAppInstalledDetected = true;
     hideAllInstallUI();
     return;
   }
 
-  const bannerDismissed = sessionStorage.getItem('wes_pwa_banner_dismissed') === 'true';
-  const smartBanner = document.getElementById('pwa-smart-banner');
-  if (smartBanner && !bannerDismissed) {
-    smartBanner.classList.remove('hidden');
-  }
-
-    if ('serviceWorker' in navigator) {
+  // Registrar Service Worker
+  if ('serviceWorker' in navigator) {
     let refreshing = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (!refreshing) {
@@ -63,66 +102,78 @@ function initPwaInstall() {
         navigator.serviceWorker.getRegistration().then(reg => {
           if (reg) reg.update();
         });
+        evaluatePwaInstallVisibility();
       }
     });
   }
 
+  // Captura de evento de instalación nativa programática (Chromium/Android/Edge)
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredInstallPrompt = e;
     console.log('[WES PWA] beforeinstallprompt capturado con éxito.');
-
-    const navBtn = document.getElementById('pwa-install-btn');
-    if (navBtn) navBtn.classList.remove('hidden');
-
-    const drawerBtn = document.getElementById('pwa-drawer-install-btn');
-    if (drawerBtn) drawerBtn.classList.remove('hidden');
-
-    const banner = document.getElementById('pwa-smart-banner');
-    if (banner && sessionStorage.getItem('wes_pwa_banner_dismissed') !== 'true') {
-      banner.classList.remove('hidden');
-    }
+    evaluatePwaInstallVisibility();
   });
 
+  // Detección real de app instalada por señal del navegador
   window.addEventListener('appinstalled', () => {
     console.log('[WES PWA] ¡App WES instalada satisfactoriamente!');
+    isAppInstalledDetected = true;
     deferredInstallPrompt = null;
     hideAllInstallUI();
     if (typeof showToast === 'function') {
-      showToast('¡Gracias por instalar la App de WES en tu teléfono!', 'success');
+      showToast('¡Gracias por instalar la App de WES en tu dispositivo!', 'success');
     }
   });
 
-  if (isIOS() && !isStandaloneMode()) {
-    const navBtn = document.getElementById('pwa-install-btn');
-    if (navBtn) navBtn.classList.remove('hidden');
+  // Re-evaluar ante cambios de display-mode
+  try {
+    const displayModeQuery = window.matchMedia('(display-mode: standalone)');
+    if (displayModeQuery && displayModeQuery.addEventListener) {
+      displayModeQuery.addEventListener('change', (evt) => {
+        if (evt.matches) {
+          isAppInstalledDetected = true;
+          hideAllInstallUI();
+        } else {
+          evaluatePwaInstallVisibility();
+        }
+      });
+    }
+  } catch (e) {}
 
-    const drawerBtn = document.getElementById('pwa-drawer-install-btn');
-    if (drawerBtn) drawerBtn.classList.remove('hidden');
-  } else if (!isStandaloneMode()) {
-    const navBtn = document.getElementById('pwa-install-btn');
-    if (navBtn) navBtn.classList.remove('hidden');
-  }
+  // Escuchar eventos de sesión de usuario (login y logout)
+  window.addEventListener('wes_user_login', () => evaluatePwaInstallVisibility());
+  window.addEventListener('wes_user_logout', () => evaluatePwaInstallVisibility());
+
+  // Evaluación inicial de visibilidad
+  evaluatePwaInstallVisibility();
 }
 
 async function triggerPwaInstall() {
-  if (isStandaloneMode()) {
+  if (isStandaloneMode() || isAppInstalledDetected) {
     if (typeof showToast === 'function') {
       showToast('Ya estás utilizando la App instalada de WES.', 'info');
     }
     return;
   }
 
-  // Caso 1: Android / PC con prompt nativo
+  // Caso 1: Android / PC con prompt nativo capturado
   if (deferredInstallPrompt) {
-    deferredInstallPrompt.prompt();
-    const { outcome } = await deferredInstallPrompt.userChoice;
-    console.log('[WES PWA] Elección del usuario:', outcome);
-    if (outcome === 'accepted') {
-      hideAllInstallUI();
+    try {
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      console.log('[WES PWA] Elección del usuario en diálogo nativo:', choice);
+      if (choice && choice.outcome === 'accepted') {
+        isAppInstalledDetected = true;
+        hideAllInstallUI();
+      }
+      // Nota: Si el usuario canceló (outcome: 'dismissed'), deferredInstallPrompt se consume
+      // pero NO se marca como instalada, permitiendo reintentar o ver la guía manual si pulsa otra vez.
+      deferredInstallPrompt = null;
+      return;
+    } catch (err) {
+      console.warn('[WES PWA] Error al invocar prompt nativo:', err);
     }
-    deferredInstallPrompt = null;
-    return;
   }
 
   // Caso 2: Apple iOS (Safari / iPhone / iPad)
@@ -131,7 +182,7 @@ async function triggerPwaInstall() {
     return;
   }
 
-  // Caso 3: Navegadores sin prompt directo
+  // Caso 3: Navegadores sin prompt programático directo o cuando no esté disponible
   openPwaAndroidGuideModal();
 }
 
@@ -147,16 +198,14 @@ function hideAllInstallUI() {
   const banner = document.getElementById('pwa-smart-banner');
   if (banner) banner.classList.add('hidden');
 
+  const headerBtn = document.getElementById('header-pwa-install-btn');
+  if (headerBtn) headerBtn.classList.add('hidden');
+
   const navBtn = document.getElementById('pwa-install-btn');
   if (navBtn) navBtn.classList.add('hidden');
 
   const drawerBtn = document.getElementById('pwa-drawer-install-btn');
-  if (drawerBtn) {
-    drawerBtn.innerHTML = '<i class="fas fa-check-circle mr-1 text-emerald-500"></i><span>App WES Instalada</span>';
-    drawerBtn.classList.remove('bg-gradient-to-r', 'from-wes-gold', 'to-amber-500', 'text-wes-dark');
-    drawerBtn.classList.add('bg-slate-100', 'text-slate-600');
-    drawerBtn.disabled = true;
-  }
+  if (drawerBtn) drawerBtn.classList.add('hidden');
 }
 
 function openPwaIosModal() {
@@ -201,3 +250,13 @@ window.triggerPwaInstall = triggerPwaInstall;
 window.dismissPwaBanner = dismissPwaBanner;
 window.closePwaIosModal = closePwaIosModal;
 window.closePwaGuideModal = closePwaGuideModal;
+window.evaluatePwaInstallVisibility = evaluatePwaInstallVisibility;
+window.hideAllInstallUI = hideAllInstallUI;
+Object.defineProperty(window, 'isAppInstalledDetected', {
+  get: () => isAppInstalledDetected,
+  set: (v) => { isAppInstalledDetected = v; }
+});
+Object.defineProperty(window, 'deferredInstallPrompt', {
+  get: () => deferredInstallPrompt,
+  set: (v) => { deferredInstallPrompt = v; }
+});

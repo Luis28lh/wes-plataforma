@@ -127,9 +127,20 @@
           <a href="#contacto" class="px-2.5 py-1.5 rounded-lg hover:text-wes-blue hover:bg-slate-100/70 transition">Contacto</a>
         </nav>
 
-        <!-- Bloque Derecho: Cuenta + Menú Hamburguesa -->
-        <div class="flex items-center space-x-2 shrink-0">
+        <!-- Bloque Derecho: Instalación PWA + Cuenta + Menú Hamburguesa -->
+        <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
           
+          <!-- Acceso de Instalación WES PWA (Visible solo en navegador, sin sesión y app no instalada) -->
+          <button id="header-pwa-install-btn" 
+                  type="button" 
+                  onclick="triggerPwaInstall()" 
+                  class="hidden h-9 sm:h-10 px-2 sm:px-2.5 rounded-full border border-slate-200 hover:border-wes-blue bg-white hover:bg-slate-50 text-slate-700 hover:text-wes-blue flex items-center space-x-1.5 transition shadow-xs active:scale-95 shrink-0" 
+                  title="Instalar aplicación WES" 
+                  aria-label="Instalar aplicación WES">
+            <img src="assets/icon-192.png" alt="WES App" class="w-5 h-5 rounded-md object-contain shadow-2xs shrink-0">
+            <span class="text-xs font-bold text-slate-800 hidden xs:inline whitespace-nowrap">Instalar app</span>
+          </button>
+
           <!-- Menú Compacto "Mi Cuenta" -->
           <div id="header-my-account-container" class="relative">
             <!-- Botón Mi Cuenta (Estado dinámico: Login compacto o Avatar+Nombre+⋮) -->
@@ -1906,7 +1917,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.115 (Build 115)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.116 (Build 116)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">

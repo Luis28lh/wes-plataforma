@@ -1879,6 +1879,7 @@ const AdminApp = {
       if (thumb && icon) {
         thumb.classList.add('hidden');
         icon.classList.remove('hidden');
+      }
     }
 
     // Renderizar documentos vinculados al producto en el modal

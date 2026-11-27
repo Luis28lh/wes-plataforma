@@ -2322,15 +2322,82 @@ async function renderProductTechnicalDocuments(product, loadId) {
 
   let docs = [];
 
-  // 1. Consulta en servicio local / datos verificados
+  // 1. Consulta inmediata en servicio local / datos verificados
   if (window.ProductDocumentsService && typeof window.ProductDocumentsService.getDocumentsForProduct === 'function') {
     docs = window.ProductDocumentsService.getDocumentsForProduct(product.id, product.code || product.codigo);
   }
 
-  // 2. Si no hay en servicio local o para complementar, consultar en PostgreSQL si está configurado
+  // Función interna para pintar documentos en la interfaz
+  const paintDocs = (items) => {
+    if (window.productModalLoadCounter !== loadId) return;
+
+    if (docsBadge) docsBadge.textContent = items.length;
+    if (!docsListEl || !noDocsEl) return;
+
+    if (items.length === 0) {
+      docsListEl.innerHTML = '';
+      noDocsEl.classList.remove('hidden');
+      return;
+    }
+
+    noDocsEl.classList.add('hidden');
+    docsListEl.innerHTML = items.map(doc => {
+      const meta = (window.ProductDocumentsService && typeof window.ProductDocumentsService.getMetaForType === 'function')
+        ? window.ProductDocumentsService.getMetaForType(doc.tipo)
+        : {
+            label: 'Documento Técnico',
+            badgeBg: 'bg-slate-100',
+            badgeText: 'text-slate-700',
+            badgeBorder: 'border-slate-200',
+            iconClass: 'fas fa-file-alt text-slate-600',
+            btnClass: 'bg-wes-blue hover:bg-wes-dark text-white'
+          };
+
+      const isExternal = doc.url.startsWith('http://') || doc.url.startsWith('https://');
+      const actionLabel = doc.url.toLowerCase().endsWith('.pdf') ? 'Descargar PDF' : (isExternal ? 'Abrir Documento Web' : 'Ver Documento');
+      const brandModel = [doc.marca, doc.modelo].filter(Boolean).join(' • ');
+
+      return `
+        <div class="p-4 sm:p-5 bg-white border border-slate-200 rounded-2xl shadow-xs hover:border-wes-blue/40 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-start space-x-3.5">
+            <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-xl shrink-0 mt-0.5">
+              <i class="${meta.iconClass}"></i>
+            </div>
+            <div class="space-y-1">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 text-[10px] font-bold rounded-md border ${meta.badgeBg} ${meta.badgeText} ${meta.badgeBorder}">
+                  ${meta.label}
+                </span>
+                ${brandModel ? `<span class="text-[11px] font-semibold text-slate-500">${brandModel}</span>` : ''}
+                ${doc.idioma ? `<span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded"><i class="fas fa-globe mr-1 text-[9px]"></i>${doc.idioma}</span>` : ''}
+                ${doc.version ? `<span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">v${doc.version}</span>` : ''}
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 leading-snug">${doc.titulo}</h4>
+              <div class="flex items-center space-x-2 text-[11px] text-emerald-600 font-semibold">
+                <i class="fas fa-check-circle text-xs"></i>
+                <span>Verificado por soporte técnico WES</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-auto shrink-0 pt-2 sm:pt-0">
+            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-4 py-2.5 ${meta.btnClass} rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-xs">
+              <i class="fas fa-external-link-alt text-xs"></i>
+              <span>${actionLabel}</span>
+            </a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  };
+
+  // Renderizado instantáneo de documentos verificados disponibles localmente
+  paintDocs(docs);
+
+  // 2. Consulta asíncrona complementaria en PostgreSQL (si está conectado)
   if (window.WesDB && typeof window.WesDB.getManual === 'function') {
-    try {
-      const dbManual = await window.WesDB.getManual(product.id, product.code || product.codigo);
+    window.WesDB.getManual(product.id, product.code || product.codigo).then(dbManual => {
+      if (window.productModalLoadCounter !== loadId) return;
       if (dbManual && dbManual.archivo_url) {
         const exists = docs.some(d => d.url === dbManual.archivo_url);
         if (!exists) {
@@ -2347,80 +2414,13 @@ async function renderProductTechnicalDocuments(product, loadId) {
             version: dbManual.version || 'Oficial',
             verificado: true
           });
+          paintDocs(docs);
         }
       }
-    } catch (e) {
-      console.warn('[renderProductTechnicalDocuments] Error al consultar en base de datos:', e);
-    }
+    }).catch(e => {
+      console.warn('[renderProductTechnicalDocuments] Error en consulta complementaria:', e);
+    });
   }
-
-  // Si otra petición abrió otro producto mientras ésta respondía, descartar
-  if (window.productModalLoadCounter !== loadId) {
-    return;
-  }
-
-  if (docsBadge) {
-    docsBadge.textContent = docs.length;
-  }
-
-  if (!docsListEl || !noDocsEl) return;
-
-  if (docs.length === 0) {
-    docsListEl.innerHTML = '';
-    noDocsEl.classList.remove('hidden');
-    return;
-  }
-
-  noDocsEl.classList.add('hidden');
-
-  docsListEl.innerHTML = docs.map(doc => {
-    const meta = (window.ProductDocumentsService && typeof window.ProductDocumentsService.getMetaForType === 'function')
-      ? window.ProductDocumentsService.getMetaForType(doc.tipo)
-      : {
-          label: 'Documento Técnico',
-          badgeBg: 'bg-slate-100',
-          badgeText: 'text-slate-700',
-          badgeBorder: 'border-slate-200',
-          iconClass: 'fas fa-file-alt text-slate-600',
-          btnClass: 'bg-wes-blue hover:bg-wes-dark text-white'
-        };
-
-    const isExternal = doc.url.startsWith('http://') || doc.url.startsWith('https://');
-    const actionLabel = doc.url.toLowerCase().endsWith('.pdf') ? 'Descargar PDF' : (isExternal ? 'Abrir Documento Web' : 'Ver Documento');
-    const brandModel = [doc.marca, doc.modelo].filter(Boolean).join(' • ');
-
-    return `
-      <div class="p-4 sm:p-5 bg-white border border-slate-200 rounded-2xl shadow-xs hover:border-wes-blue/40 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div class="flex items-start space-x-3.5">
-          <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-xl shrink-0 mt-0.5">
-            <i class="${meta.iconClass}"></i>
-          </div>
-          <div class="space-y-1">
-            <div class="flex flex-wrap items-center gap-1.5">
-              <span class="px-2 py-0.5 text-[10px] font-bold rounded-md border ${meta.badgeBg} ${meta.badgeText} ${meta.badgeBorder}">
-                ${meta.label}
-              </span>
-              ${brandModel ? `<span class="text-[11px] font-semibold text-slate-500">${brandModel}</span>` : ''}
-              ${doc.idioma ? `<span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded"><i class="fas fa-globe mr-1 text-[9px]"></i>${doc.idioma}</span>` : ''}
-              ${doc.version ? `<span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">v${doc.version}</span>` : ''}
-            </div>
-            <h4 class="font-bold text-sm text-slate-900 leading-snug">${doc.titulo}</h4>
-            <div class="flex items-center space-x-2 text-[11px] text-emerald-600 font-semibold">
-              <i class="fas fa-check-circle text-xs"></i>
-              <span>Verificado por soporte técnico WES</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="w-full sm:w-auto shrink-0 pt-2 sm:pt-0">
-          <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-4 py-2.5 ${meta.btnClass} rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-xs">
-            <i class="fas fa-external-link-alt text-xs"></i>
-            <span>${actionLabel}</span>
-          </a>
-        </div>
-      </div>
-    `;
-  }).join('');
 }
 
 /**
@@ -5101,6 +5101,11 @@ function updateAuthHeaderUI() {
 
     if (mobLoginBtn) mobLoginBtn.classList.remove('hidden');
     if (mobLoggedContainer) mobLoggedContainer.classList.add('hidden');
+  }
+
+  // Evaluar visibilidad del botón de instalación PWA según estado de sesión
+  if (typeof evaluatePwaInstallVisibility === 'function') {
+    evaluatePwaInstallVisibility();
   }
 }
 
