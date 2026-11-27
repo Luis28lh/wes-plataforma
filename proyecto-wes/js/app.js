@@ -6330,7 +6330,9 @@ async function loadInstallationProjects(silent = false) {
 
       if (lastSyncEl) {
         const now = new Date();
-        lastSyncEl.textContent = 'Última sincr.: ' + now.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dateStr = now.toLocaleDateString('es-DO', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        lastSyncEl.textContent = `${dateStr}, ${timeStr}`;
       }
 
       renderInstallationProjectsGrid(odooProjectsCache);

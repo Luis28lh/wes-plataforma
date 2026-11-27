@@ -1935,7 +1935,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.121 (Build 121)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.122 (Build 122)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -3899,38 +3899,13 @@
   <div id="modal-proyectos-instalacion" class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-proyectos-title">
     <div class="bg-slate-100 rounded-3xl max-w-6xl w-full shadow-2xl border border-slate-200 overflow-hidden my-3 sm:my-6 relative transition-all flex flex-col max-h-[94vh]">
       
-      <!-- Cabecera Institucional WES -->
-      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-4 sm:px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0 shadow-sm">
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-wes-gold flex items-center justify-center text-lg shadow-inner shrink-0">
-            <i class="fas fa-hard-hat"></i>
-          </div>
-          <div>
-            <div class="flex items-center space-x-2">
-              <h3 id="modal-proyectos-title" class="text-sm sm:text-base font-extrabold font-brand text-white">Proyectos en Instalación</h3>
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950">Columna Odoo</span>
-            </div>
-            <p class="text-[11px] text-slate-300">Tablero de solo lectura sincronizado en vivo con la columna «Instalación» de Odoo ERP.</p>
-          </div>
-        </div>
+      <!-- Cabecera Institucional WES (Simplificada) -->
+      <div class="bg-gradient-to-r from-wes-dark via-wes-blue to-slate-900 px-4 sm:px-6 py-2.5 sm:py-3 text-white flex items-center justify-between shrink-0 shadow-sm">
+        <h3 id="modal-proyectos-title" class="text-base sm:text-lg font-extrabold font-brand text-white tracking-tight">Proyectos en instalación</h3>
 
-        <div class="flex items-center space-x-2 self-end sm:self-auto">
-          <!-- Indicador de Auto-actualización y Botón Refrescar -->
-          <div class="flex items-center space-x-1.5 bg-white/10 px-3 py-1.5 rounded-xl text-[11px] font-mono text-slate-200 border border-white/10">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="hidden sm:inline text-slate-300">Auto:</span>
-            <span class="font-bold">60s</span>
-          </div>
-
-          <button type="button" onclick="loadInstallationProjects(false)" class="p-2 sm:px-3 sm:py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border border-white/10" title="Refrescar lista ahora">
-            <i class="fas fa-sync-alt text-[10px]"></i>
-            <span class="hidden sm:inline">Refrescar</span>
-          </button>
-
-          <button type="button" onclick="closeInstallationProjectsModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition" title="Cerrar ventana">
-            <i class="fas fa-times text-xs"></i>
-          </button>
-        </div>
+        <button type="button" onclick="loadInstallationProjects(false)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white flex items-center justify-center transition border border-white/10" title="Actualizar proyectos" aria-label="Actualizar proyectos">
+          <i class="fas fa-sync-alt text-xs"></i>
+        </button>
       </div>
 
       <!-- Barra de Filtros y Resumen Métrico -->
@@ -3979,15 +3954,14 @@
         </div>
       </div>
 
-      <!-- Pie del Modal -->
-      <div class="px-4 sm:px-6 py-3 bg-white border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 text-xs text-slate-500">
-        <div class="flex items-center space-x-2 text-[11px]">
-          <i class="fas fa-shield-alt text-emerald-600"></i>
-          <span>Fuente oficial: Odoo ERP • Modo Estrictamente Solo Lectura</span>
+      <!-- Pie del Modal (Simplificado) -->
+      <div class="px-4 sm:px-6 py-3 bg-white border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0 text-xs text-slate-500">
+        <div class="flex items-center space-x-2 text-xs">
+          <span class="text-slate-500">Última actualización:</span>
+          <span id="odoo-projects-last-sync" class="font-semibold text-slate-700">--</span>
         </div>
-        <div class="flex items-center space-x-3 w-full sm:w-auto justify-end">
-          <span id="odoo-projects-last-sync" class="text-[11px] font-mono text-slate-400">Última sincr.: --:--:--</span>
-          <button type="button" onclick="closeInstallationProjectsModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition">
+        <div class="flex items-center justify-end w-full sm:w-auto">
+          <button type="button" onclick="closeInstallationProjectsModal()" class="w-full sm:w-auto px-5 py-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs transition">
             Cerrar
           </button>
         </div>
