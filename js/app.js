@@ -2199,29 +2199,29 @@ function openProductDetailModal(productId) {
     `).join('');
   }
 
-  // 4. Manual de Instalación
-  const manualFeat = (product.features || []).find(f => typeof f === 'string' && f.startsWith('manual_url:'));
-  let manualUrl = product.manualUrl || product.manual_url || (manualFeat ? manualFeat.replace('manual_url:', '') : null);
-  const manualBtn = document.getElementById('detail-download-manual-btn');
-  if (manualBtn) {
-    if (manualUrl) {
-      manualBtn.href = manualUrl;
-      manualBtn.classList.remove('hidden');
-    } else {
-      manualBtn.href = '#';
-      manualBtn.classList.add('hidden');
-    }
-  }
+  // 4. Documentos y Manuales Técnicos (Relación Estricta por Producto)
+  // Prevención de race condition al alternar productos rápidamente
+  window.productModalLoadCounter = (window.productModalLoadCounter || 0) + 1;
+  const currentModalLoadId = window.productModalLoadCounter;
 
-  // Consulta asíncrona de manual en base de datos si existe registro oficial
-  if (window.WesDB && typeof window.WesDB.getManual === 'function') {
-    window.WesDB.getManual(product.id, product.code || product.codigo).then(dbManual => {
-      if (dbManual && dbManual.archivo_url && manualBtn) {
-        manualBtn.href = dbManual.archivo_url;
-        manualBtn.classList.remove('hidden');
-      }
-    }).catch(() => {});
+  const docsListEl = document.getElementById('detail-documents-list');
+  const noDocsEl = document.getElementById('detail-no-documents-msg');
+  const docsBadge = document.getElementById('tab-docs-badge');
+
+  // Limpieza inmediata del contenedor para evitar persistencia de datos previos
+  if (docsListEl) {
+    docsListEl.innerHTML = `
+      <div class="py-6 flex items-center justify-center space-x-2 text-slate-400 text-xs">
+        <i class="fas fa-spinner fa-spin text-wes-blue"></i>
+        <span>Consultando documentación técnica verificada...</span>
+      </div>
+    `;
   }
+  if (noDocsEl) noDocsEl.classList.add('hidden');
+  if (docsBadge) docsBadge.textContent = '...';
+
+  // Consulta asíncrona y sincronizada de documentos
+  renderProductTechnicalDocuments(product, currentModalLoadId);
 
   // 5. Cargar Reseñas y Métricas de Calidad
   switchDetailTab('specs');
@@ -2301,14 +2301,138 @@ function switchDetailTab(tab) {
     const content = document.getElementById(`tab-content-${t}`);
     if (btn && content) {
       if (t === tab) {
-        btn.className = 'px-4 py-2 font-bold text-xs rounded-xl transition bg-wes-blue text-white shadow-sm';
+        btn.className = 'px-4 py-2 font-bold text-xs rounded-xl transition bg-wes-blue text-white shadow-sm flex items-center space-x-1.5';
         content.classList.remove('hidden');
       } else {
-        btn.className = 'px-4 py-2 font-bold text-xs rounded-xl transition text-slate-600 hover:bg-slate-100';
+        btn.className = 'px-4 py-2 font-bold text-xs rounded-xl transition text-slate-600 hover:bg-slate-100 flex items-center space-x-1.5';
         content.classList.add('hidden');
       }
     }
   });
+}
+
+/**
+ * Consulta y renderiza la documentación técnica oficial vinculada exclusivamente al producto actual.
+ * Aplica protección contra race condition con currentModalLoadId.
+ */
+async function renderProductTechnicalDocuments(product, loadId) {
+  const docsListEl = document.getElementById('detail-documents-list');
+  const noDocsEl = document.getElementById('detail-no-documents-msg');
+  const docsBadge = document.getElementById('tab-docs-badge');
+
+  let docs = [];
+
+  // 1. Consulta inmediata en servicio local / datos verificados
+  if (window.ProductDocumentsService && typeof window.ProductDocumentsService.getDocumentsForProduct === 'function') {
+    docs = window.ProductDocumentsService.getDocumentsForProduct(product.id, product.code || product.codigo);
+  }
+
+  // Función interna para pintar documentos en la interfaz
+  const paintDocs = (items) => {
+    if (window.productModalLoadCounter !== loadId) return;
+
+    if (docsBadge) docsBadge.textContent = items.length;
+    if (!docsListEl || !noDocsEl) return;
+
+    if (items.length === 0) {
+      docsListEl.innerHTML = '';
+      noDocsEl.classList.remove('hidden');
+      return;
+    }
+
+    noDocsEl.classList.add('hidden');
+    docsListEl.innerHTML = items.map(doc => {
+      const meta = (window.ProductDocumentsService && typeof window.ProductDocumentsService.getMetaForType === 'function')
+        ? window.ProductDocumentsService.getMetaForType(doc.tipo)
+        : {
+            label: 'Documento Técnico',
+            badgeBg: 'bg-slate-100',
+            badgeText: 'text-slate-700',
+            badgeBorder: 'border-slate-200',
+            iconClass: 'fas fa-file-alt text-slate-600',
+            btnClass: 'bg-wes-blue hover:bg-wes-dark text-white'
+          };
+
+      const isExternal = doc.url.startsWith('http://') || doc.url.startsWith('https://');
+      const actionLabel = doc.url.toLowerCase().endsWith('.pdf') ? 'Descargar PDF' : (isExternal ? 'Abrir Documento Web' : 'Ver Documento');
+      const brandModel = [doc.marca, doc.modelo].filter(Boolean).join(' • ');
+
+      return `
+        <div class="p-4 sm:p-5 bg-white border border-slate-200 rounded-2xl shadow-xs hover:border-wes-blue/40 transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-start space-x-3.5">
+            <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-xl shrink-0 mt-0.5">
+              <i class="${meta.iconClass}"></i>
+            </div>
+            <div class="space-y-1">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 text-[10px] font-bold rounded-md border ${meta.badgeBg} ${meta.badgeText} ${meta.badgeBorder}">
+                  ${meta.label}
+                </span>
+                ${brandModel ? `<span class="text-[11px] font-semibold text-slate-500">${brandModel}</span>` : ''}
+                ${doc.idioma ? `<span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded"><i class="fas fa-globe mr-1 text-[9px]"></i>${doc.idioma}</span>` : ''}
+                ${doc.version ? `<span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">v${doc.version}</span>` : ''}
+              </div>
+              <h4 class="font-bold text-sm text-slate-900 leading-snug">${doc.titulo}</h4>
+              <div class="flex items-center space-x-2 text-[11px] text-emerald-600 font-semibold">
+                <i class="fas fa-check-circle text-xs"></i>
+                <span>Verificado por soporte técnico WES</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full sm:w-auto shrink-0 pt-2 sm:pt-0">
+            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-4 py-2.5 ${meta.btnClass} rounded-xl text-xs font-bold flex items-center justify-center space-x-2 transition shadow-xs">
+              <i class="fas fa-external-link-alt text-xs"></i>
+              <span>${actionLabel}</span>
+            </a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  };
+
+  // Renderizado instantáneo de documentos verificados disponibles localmente
+  paintDocs(docs);
+
+  // 2. Consulta asíncrona complementaria en PostgreSQL (si está conectado)
+  if (window.WesDB && typeof window.WesDB.getManual === 'function') {
+    window.WesDB.getManual(product.id, product.code || product.codigo).then(dbManual => {
+      if (window.productModalLoadCounter !== loadId) return;
+      if (dbManual && dbManual.archivo_url) {
+        const exists = docs.some(d => d.url === dbManual.archivo_url);
+        if (!exists) {
+          docs.push({
+            id: dbManual.id || 'pg-doc-' + Date.now(),
+            product_ids: [product.id],
+            skus: [product.code || product.codigo],
+            titulo: dbManual.titulo || 'Manual Técnico Oficial',
+            tipo: dbManual.tipo || 'manual',
+            url: dbManual.archivo_url,
+            marca: dbManual.marca || product.brand || product.marca || '',
+            modelo: dbManual.modelo || product.code || product.codigo || '',
+            idioma: dbManual.idioma || 'Español',
+            version: dbManual.version || 'Oficial',
+            verificado: true
+          });
+          paintDocs(docs);
+        }
+      }
+    }).catch(e => {
+      console.warn('[renderProductTechnicalDocuments] Error en consulta complementaria:', e);
+    });
+  }
+}
+
+/**
+ * Atajo para contactar a soporte técnico desde la ficha del producto cuando no hay documentación.
+ */
+function contactTechSupportForProduct() {
+  const currentModal = document.getElementById('product-detail-modal');
+  const title = document.getElementById('detail-title') ? document.getElementById('detail-title').textContent : 'Producto WES';
+  const sku = document.getElementById('detail-sku-badge') ? document.getElementById('detail-sku-badge').textContent : '';
+
+  const waMsg = encodeURIComponent(`Hola WES, requiero asistencia técnica / manual para el producto: ${title} (${sku})`);
+  window.open(`https://wa.me/18095781234?text=${waMsg}`, '_blank');
 }
 
 /**

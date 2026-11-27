@@ -1879,8 +1879,11 @@ const AdminApp = {
       if (thumb && icon) {
         thumb.classList.add('hidden');
         icon.classList.remove('hidden');
-      }
     }
+
+    // Renderizar documentos vinculados al producto en el modal
+    this.renderProductDocsInModal(productId);
+    this.toggleDocFormVisibility(false);
 
     modal.classList.remove('hidden');
   },
@@ -1888,6 +1891,170 @@ const AdminApp = {
   closeProductModal() {
     const modal = document.getElementById('admin-modal-product');
     if (modal) modal.classList.add('hidden');
+    this.toggleDocFormVisibility(false);
+  },
+
+  // Alterna la visibilidad del formulario para añadir un nuevo documento técnico
+  toggleDocFormVisibility(forceState = null) {
+    const container = document.getElementById('admin-doc-form-fields');
+    const toggleBtn = document.getElementById('btn-toggle-add-doc');
+    if (!container) return;
+
+    const willShow = forceState !== null ? forceState : container.classList.contains('hidden');
+    if (willShow) {
+      container.classList.remove('hidden');
+      if (toggleBtn) toggleBtn.textContent = 'Ocultar Formulario';
+    } else {
+      container.classList.add('hidden');
+      if (toggleBtn) toggleBtn.textContent = '+ Agregar Documento';
+      // Limpiar campos
+      ['admin-doc-input-title', 'admin-doc-input-url', 'admin-doc-input-model'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+    }
+  },
+
+  // Renderiza la lista de documentos asociados al producto actual en el modal
+  renderProductDocsInModal(productId) {
+    const listEl = document.getElementById('admin-product-docs-list');
+    const countBadge = document.getElementById('admin-product-docs-count-badge');
+    if (!listEl) return;
+
+    if (!productId || typeof ProductDocumentsService === 'undefined') {
+      listEl.innerHTML = `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-slate-400 text-xs">
+          Guarda o selecciona un producto para gestionar sus documentos técnicos oficiales.
+        </div>
+      `;
+      if (countBadge) countBadge.textContent = '0 docs';
+      return;
+    }
+
+    const form = document.getElementById('product-form');
+    const sku = form && form.code ? form.code.value.trim() : null;
+
+    const docs = ProductDocumentsService.getDocumentsForProduct(productId, sku);
+    if (countBadge) countBadge.textContent = `${docs.length} docs`;
+
+    if (docs.length === 0) {
+      listEl.innerHTML = `
+        <div class="p-3 bg-slate-50 border border-dashed border-slate-300 rounded-xl text-center text-slate-400 text-xs">
+          <i class="fas fa-file-alt mb-1 block text-sm"></i>
+          No hay documentos técnicos vinculados a este producto.
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = docs.map(doc => {
+      const meta = ProductDocumentsService.getMetaForType(doc.tipo);
+      const isExternal = doc.url.startsWith('http://') || doc.url.startsWith('https://');
+      const safeDocId = JSON.stringify(doc.id);
+      const safeProdId = JSON.stringify(productId);
+
+      return `
+        <div class="p-2.5 bg-white border border-slate-200 rounded-xl shadow-2xs flex items-center justify-between gap-2">
+          <div class="flex items-center space-x-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-lg ${meta.badgeBg} ${meta.badgeText} flex items-center justify-center text-sm shrink-0">
+              <i class="${meta.iconClass}"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center space-x-1.5">
+                <span class="text-[10px] font-bold ${meta.badgeText} uppercase">${meta.label}</span>
+                ${doc.idioma ? `<span class="text-[9px] text-slate-400 bg-slate-100 px-1 rounded">${doc.idioma}</span>` : ''}
+              </div>
+              <h5 class="font-bold text-xs text-slate-800 truncate" title="${doc.titulo}">${doc.titulo}</h5>
+              <div class="text-[10px] text-slate-400 truncate max-w-xs font-mono">${doc.url}</div>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-1 shrink-0">
+            <a href="${doc.url}" target="_blank" rel="noopener noreferrer" class="p-1.5 text-slate-500 hover:text-wes-blue hover:bg-slate-100 rounded-lg transition" title="Previsualizar">
+              <i class="fas fa-external-link-alt text-xs"></i>
+            </a>
+            <button type="button" onclick="AdminApp.handleUnlinkDocFromProduct(${safeDocId}, ${safeProdId})" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Desvincular de este producto (no borra de otros)">
+              <i class="fas fa-unlink text-xs"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  // Guarda y vincula un nuevo documento al producto actual
+  saveAndAttachDocToCurrentProduct() {
+    if (typeof ProductDocumentsService === 'undefined') {
+      alert('Servicio de documentos no disponible');
+      return;
+    }
+
+    const form = document.getElementById('product-form');
+    const productId = form && form.productId ? form.productId.value.trim() : null;
+    const sku = form && form.code ? form.code.value.trim() : null;
+    const brand = form && form.brand ? form.brand.value.trim() : '';
+
+    if (!productId) {
+      alert('Debes guardar primero el producto para poder vincularle documentos técnicos.');
+      return;
+    }
+
+    const title = (document.getElementById('admin-doc-input-title')?.value || '').trim();
+    const type = document.getElementById('admin-doc-input-type')?.value || 'manual';
+    const lang = (document.getElementById('admin-doc-input-lang')?.value || 'Español').trim();
+    const url = (document.getElementById('admin-doc-input-url')?.value || '').trim();
+    const model = (document.getElementById('admin-doc-input-model')?.value || sku || '').trim();
+    const version = (document.getElementById('admin-doc-input-version')?.value || '1.0').trim();
+
+    if (!title || !url) {
+      alert('Por favor completa el Título y la URL del documento.');
+      return;
+    }
+
+    const docData = {
+      product_ids: [productId],
+      skus: sku ? [sku] : [],
+      titulo: title,
+      tipo: type,
+      url: url,
+      marca: brand,
+      modelo: model,
+      idioma: lang,
+      version: version,
+      verificado: true
+    };
+
+    const res = ProductDocumentsService.saveDocument(docData);
+    if (res.success) {
+      this.toggleDocFormVisibility(false);
+      this.renderProductDocsInModal(productId);
+      this.showToast('Documento técnico vinculado exitosamente', 'success');
+      
+      // Sincronizar en PostgreSQL si está disponible
+      if (window.WesDB && typeof window.WesDB.logAudit === 'function') {
+        window.WesDB.logAudit('vincular_documento', 'productos', { docId: res.document.id, productId, sku, title });
+      }
+    }
+  },
+
+  // Desvincula un documento de un producto sin borrar el archivo de otros modelos
+  handleUnlinkDocFromProduct(docId, productId) {
+    if (!confirm('¿Deseas desvincular este documento de este producto? (El archivo se conservará si está asociado a otros modelos)')) {
+      return;
+    }
+
+    const form = document.getElementById('product-form');
+    const sku = form && form.code ? form.code.value.trim() : null;
+
+    if (typeof ProductDocumentsService !== 'undefined') {
+      ProductDocumentsService.unlinkProductFromDocument(docId, productId, sku);
+      this.renderProductDocsInModal(productId);
+      this.showToast('Documento desvinculado de este modelo', 'info');
+
+      if (window.WesDB && typeof window.WesDB.logAudit === 'function') {
+        window.WesDB.logAudit('desvincular_documento', 'productos', { docId, productId, sku });
+      }
+    }
   },
 
   handleProductSave(e) {

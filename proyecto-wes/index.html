@@ -1906,7 +1906,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.114 (Build 114)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.115 (Build 115)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -2252,8 +2252,10 @@
             <button id="tab-btn-specs" onclick="switchDetailTab('specs')" class="px-4 py-2 font-bold text-xs rounded-xl transition bg-wes-blue text-white">
               <i class="fas fa-list-ul mr-1.5"></i>Características Principales
             </button>
-            <button id="tab-btn-manual" onclick="switchDetailTab('manual')" class="px-4 py-2 font-bold text-xs rounded-xl transition text-slate-600 hover:bg-slate-100">
-              <i class="fas fa-file-pdf mr-1.5 text-red-500"></i>Manual de Instalación
+            <button id="tab-btn-manual" onclick="switchDetailTab('manual')" class="px-4 py-2 font-bold text-xs rounded-xl transition text-slate-600 hover:bg-slate-100 flex items-center space-x-1.5">
+              <i class="fas fa-file-alt text-wes-blue"></i>
+              <span>Documentos Técnicos</span>
+              <span id="tab-docs-badge" class="ml-1 px-1.5 py-0.2 text-[10px] bg-slate-200 text-slate-700 rounded-full font-bold">0</span>
             </button>
             <button id="tab-btn-reviews" onclick="switchDetailTab('reviews')" class="px-4 py-2 font-bold text-xs rounded-xl transition text-slate-600 hover:bg-slate-100">
               <i class="fas fa-star mr-1.5 text-amber-400"></i>Reseñas & Calidad (<span id="tab-reviews-badge">3</span>)
@@ -2272,22 +2274,28 @@
             </div>
           </div>
 
-          <!-- Pestaña 2: Manual Técnico -->
+          <!-- Pestaña 2: Manuales y Documentos Técnicos Dinámicos -->
           <div id="tab-content-manual" class="hidden pt-5 space-y-4">
-            <div class="p-6 bg-red-50/60 border border-red-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-2xl shrink-0">
-                  <i class="fas fa-file-pdf"></i>
-                </div>
-                <div>
-                  <h4 class="font-bold text-sm text-slate-900">Guía de Instalación y Diagrama Eléctrico CAME</h4>
-                  <p class="text-xs text-slate-500">Documento técnico del fabricante con conexiones de placa ZBX y regulaciones mecánicas.</p>
-                </div>
+            <!-- Listado Dinámico de Documentos -->
+            <div id="detail-documents-list" class="space-y-3">
+              <!-- Renderizado dinámicamente según el producto exacto -->
+            </div>
+
+            <!-- Estado cuando no hay documentos asociados -->
+            <div id="detail-no-documents-msg" class="hidden p-6 sm:p-8 bg-slate-50 border border-slate-200 rounded-2xl text-center">
+              <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-xl mx-auto mb-3">
+                <i class="fas fa-folder-open"></i>
               </div>
-              <a id="detail-download-manual-btn" href="#" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold flex items-center space-x-2 shrink-0 transition shadow">
-                <i class="fas fa-download"></i>
-                <span>Descargar Manual Oficial (PDF)</span>
-              </a>
+              <h4 class="font-bold text-sm text-slate-800 font-brand">Documentación técnica aún no disponible</h4>
+              <p class="text-xs text-slate-500 max-w-md mx-auto mt-1 leading-relaxed">
+                Este modelo no cuenta con manuales o fichas técnicas cargadas en este momento. Si requieres asistencia técnica directa, contáctanos a través de nuestro soporte especializado WES.
+              </p>
+              <div class="mt-4 flex items-center justify-center space-x-2">
+                <button type="button" onclick="contactTechSupportForProduct()" class="px-4 py-2 bg-wes-blue hover:bg-wes-dark text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center space-x-1.5">
+                  <i class="fas fa-headset"></i>
+                  <span>Solicitar Asistencia Técnica</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -3867,6 +3875,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/categories_data.js?v=20261126"></script>
   <script src="js/products.js?v=20261010_2120"></script>
+  <script src="js/product_documents_data.js?v=20261127_01"></script>
   <script src="js/supabase_client.js?v=20261026_0955"></script>
   <script src="js/feature_flags.js?v=20261031_1355"></script>
   <script src="js/admin_auth.js?v=20261104_1245"></script>

@@ -251,6 +251,14 @@ function doPost(e) {
         response = handleSaveSofiaNotifConfigAdmin(payload.data, payload.adminToken, payload.userEmail);
         break;
 
+      case 'get_product_documents':
+        response = handleGetProductDocuments();
+        break;
+
+      case 'save_product_document_admin':
+        response = handleSaveProductDocumentAdmin(payload.data, payload.adminToken, payload.userEmail);
+        break;
+
       default:
         response = { success: false, message: 'Acción no reconocida: ' + payload.action };
     }
@@ -5164,6 +5172,123 @@ function saveCategoriesCatalogAdminHandler(categoriesList, adminToken, userEmail
     };
   } catch (err) {
     return { success: false, message: 'Error guardando categorías: ' + err.toString() };
+  }
+}
+
+/**
+ * Retorna todos los documentos y manuales técnicos verificados por producto desde la hoja Documentos_Productos.
+ */
+function handleGetProductDocuments() {
+  try {
+    const ss = getSpreadsheet_();
+    let sheet = ss.getSheetByName('Documentos_Productos');
+    if (!sheet) {
+      sheet = ss.insertSheet('Documentos_Productos');
+      sheet.appendRow([
+        'ID', 'Producto_IDs', 'SKUs', 'Titulo', 'Tipo', 'URL', 'Marca', 'Modelo', 'Idioma', 'Version', 'Verificado', 'Updated_At'
+      ]);
+      sheet.getRange(1, 1, 1, 12).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+    }
+
+    const data = sheet.getDataRange().getValues();
+    if (data.length <= 1) {
+      return { success: true, documents: [] };
+    }
+
+    const docs = [];
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[0]) continue;
+      docs.push({
+        id: String(row[0]),
+        product_ids: row[1] ? String(row[1]).split(',').map(s => s.trim()) : [],
+        skus: row[2] ? String(row[2]).split(',').map(s => s.trim()) : [],
+        titulo: String(row[3] || ''),
+        tipo: String(row[4] || 'manual'),
+        url: String(row[5] || ''),
+        marca: String(row[6] || ''),
+        modelo: String(row[7] || ''),
+        idioma: String(row[8] || 'Español'),
+        version: String(row[9] || '1.0'),
+        verificado: Boolean(row[10]),
+        updated_at: String(row[11] || '')
+      });
+    }
+
+    return { success: true, documents: docs };
+  } catch (err) {
+    return { success: false, message: 'Error obteniendo documentos: ' + err.toString() };
+  }
+}
+
+/**
+ * Guarda o actualiza un documento técnico desde el panel administrativo.
+ */
+function handleSaveProductDocumentAdmin(docData, adminToken, userEmail) {
+  try {
+    const auth = validateAdminToken_(adminToken, userEmail);
+    if (!auth.valid) {
+      return { success: false, message: 'Sesión administrativa no válida o expirada' };
+    }
+
+    if (!docData || !docData.titulo || !docData.url) {
+      return { success: false, message: 'Título y URL son campos obligatorios' };
+    }
+
+    const ss = getSpreadsheet_();
+    let sheet = ss.getSheetByName('Documentos_Productos');
+    if (!sheet) {
+      sheet = ss.insertSheet('Documentos_Productos');
+      sheet.appendRow([
+        'ID', 'Producto_IDs', 'SKUs', 'Titulo', 'Tipo', 'URL', 'Marca', 'Modelo', 'Idioma', 'Version', 'Verificado', 'Updated_At'
+      ]);
+      sheet.getRange(1, 1, 1, 12).setFontWeight('bold').setBackground('#0D2A5C').setFontColor('#FFFFFF');
+    }
+
+    const docId = docData.id || ('doc-' + new Date().getTime());
+    const prodIds = Array.isArray(docData.product_ids) ? docData.product_ids.join(',') : (docData.producto_id || '');
+    const skus = Array.isArray(docData.skus) ? docData.skus.join(',') : (docData.sku || '');
+    const now = Utilities.formatDate(new Date(), 'GMT-4', 'yyyy-MM-dd HH:mm:ss');
+
+    const data = sheet.getDataRange().getValues();
+    let rowIndex = -1;
+    for (let i = 1; i < data.length; i++) {
+      if (String(data[i][0]) === String(docId)) {
+        rowIndex = i + 1;
+        break;
+      }
+    }
+
+    const rowValues = [
+      docId,
+      prodIds,
+      skus,
+      docData.titulo || '',
+      docData.tipo || 'manual',
+      docData.url || '',
+      docData.marca || '',
+      docData.modelo || '',
+      docData.idioma || 'Español',
+      docData.version || '1.0',
+      docData.verificado !== false,
+      now
+    ];
+
+    if (rowIndex > 0) {
+      sheet.getRange(rowIndex, 1, 1, 12).setValues([rowValues]);
+    } else {
+      sheet.appendRow(rowValues);
+    }
+
+    recordAuditLog_(userEmail, 'productos', 'guardar_documento_tecnico', 'Documento técnico guardado: ' + docData.titulo + ' (' + docId + ')', userEmail, 'DOCUMENTO', docId);
+
+    return {
+      success: true,
+      message: 'Documento técnico guardado correctamente',
+      docId: docId
+    };
+  } catch (err) {
+    return { success: false, message: 'Error guardando documento técnico: ' + err.toString() };
   }
 }
 
