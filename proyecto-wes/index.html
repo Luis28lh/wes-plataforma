@@ -1935,7 +1935,7 @@
           <!-- Indicador de Versión WES Oficial -->
           <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/90 text-wes-gold font-mono text-[11px] font-bold border border-slate-700 shadow-sm" title="Versión de Producción Oficial WES">
             <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" title="Sistema en línea"></span>
-            <span>Versión Oficial: <strong class="text-white font-mono">v1.123 (Build 123)</strong></span>
+            <span>Versión Oficial: <strong class="text-white font-mono">v1.125 (Build 125)</strong></span>
           </div>
           <!-- Botón de Actualización para Clientes y Móvil -->
           <button type="button" onclick="forceRefreshApp()" class="inline-flex items-center px-2.5 py-1 rounded-full bg-slate-800 hover:bg-wes-gold hover:text-wes-blue text-slate-300 font-sans text-[11px] font-semibold border border-slate-700 transition shadow-sm active:scale-95" title="Si notas cambios pendientes o una versión previa, pulsa aquí para forzar la actualización">
@@ -4025,6 +4025,26 @@
         <button type="button" id="user-messages-push-btn" onclick="UserMessagesService.togglePushSubscriptionFromProfile()" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-wes-blue border border-slate-300 rounded-lg text-[10px] font-bold shrink-0 transition">
           Activar
         </button>
+      </div>
+
+      <!-- Pestañas de la Bandeja: Recibidos, Leídos, Archivados -->
+      <div class="px-4 pt-2.5 pb-2 bg-white border-b border-slate-200 flex items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center space-x-1.5" role="tablist" aria-label="Filtros de avisos">
+          <button type="button" id="msg-tab-inbox" onclick="UserMessagesService.setActiveTab('inbox')" class="px-3 py-1 rounded-xl text-xs font-bold transition bg-wes-blue text-white shadow-xs" role="tab" aria-selected="true">
+            <i class="fas fa-inbox mr-1"></i>Recibidos <span id="msg-inbox-count" class="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white">0</span>
+          </button>
+          <button type="button" id="msg-tab-read" onclick="UserMessagesService.setActiveTab('read')" class="px-3 py-1 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-100" role="tab" aria-selected="false">
+            <i class="fas fa-check-double mr-1 text-emerald-600"></i>Leídos
+          </button>
+          <button type="button" id="msg-tab-archived" onclick="UserMessagesService.setActiveTab('archived')" class="px-3 py-1 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-100" role="tab" aria-selected="false">
+            <i class="fas fa-archive mr-1 text-slate-500"></i>Archivados
+          </button>
+        </div>
+        <div class="text-[10px] text-slate-400">
+          <button type="button" onclick="UserMessagesService.toggleAutoArchiveConfig()" class="text-slate-500 hover:text-wes-blue flex items-center space-x-1" title="Ajustes de archivado automático">
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Lista Scrollable de Mensajes -->

@@ -5183,16 +5183,16 @@ window.addEventListener('wes_user_logout', () => updateAuthHeaderUI());
 // Exponer funciones al scope global
 window.openAuthModal = openAuthModal;
 window.closeAuthModal = closeAuthModal;
-window.switchAuthTab = switchAuthTab;
-window.openRecoveryView = openRecoveryView;
-window.showLoginView = showLoginView;
-window.togglePasswordVisibility = togglePasswordVisibility;
-window.handleUserLoginSubmit = handleUserLoginSubmit;
-window.handleUserRegisterSubmit = handleUserRegisterSubmit;
-window.handleRecoveryStep1 = handleRecoveryStep1;
-window.handleRecoveryStep2 = handleRecoveryStep2;
-window.handleRecoveryStep3 = handleRecoveryStep3;
-window.resendRecoveryCode = resendRecoveryCode;
+if (typeof switchAuthTab !== 'undefined') window.switchAuthTab = switchAuthTab;
+if (typeof openRecoveryView !== 'undefined') window.openRecoveryView = openRecoveryView;
+if (typeof showLoginView !== 'undefined') window.showLoginView = showLoginView;
+if (typeof togglePasswordVisibility !== 'undefined') window.togglePasswordVisibility = togglePasswordVisibility;
+if (typeof handleUserLoginSubmit !== 'undefined') window.handleUserLoginSubmit = handleUserLoginSubmit;
+if (typeof handleUserRegisterSubmit !== 'undefined') window.handleUserRegisterSubmit = handleUserRegisterSubmit;
+if (typeof handleRecoveryStep1 !== 'undefined') window.handleRecoveryStep1 = handleRecoveryStep1;
+if (typeof handleRecoveryStep2 !== 'undefined') window.handleRecoveryStep2 = handleRecoveryStep2;
+if (typeof handleRecoveryStep3 !== 'undefined') window.handleRecoveryStep3 = handleRecoveryStep3;
+if (typeof resendRecoveryCode !== 'undefined') window.resendRecoveryCode = resendRecoveryCode;
 window.handleLogout = handleLogout;
 window.filterByMyQuotes = filterByMyQuotes;
 window.updateAuthHeaderUI = updateAuthHeaderUI;
@@ -5520,13 +5520,65 @@ window.handleMobileNavAction = handleMobileNavAction;
 const UserMessagesService = (function() {
   const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbyoN8TnzeN9Cg2X44YEt6KeQULahvG0DrEXP5m4HyLvJFs475maMjVrwjW8t-IRVIQ_OQ/exec';
   const READ_STORAGE_KEY = 'wes_read_message_ids';
+  const ARCHIVED_STORAGE_KEY = 'wes_archived_message_ids';
   const PUSH_LOCAL_KEY = 'wes_push_subscription_active';
+  const AUTO_ARCHIVE_CONFIG_KEY = 'wes_auto_archive_welcome_days';
   let cachedMessages = [];
+  let currentTab = 'inbox'; // 'inbox' | 'read' | 'archived'
 
   function getReadIds() {
     try {
       return JSON.parse(localStorage.getItem(READ_STORAGE_KEY) || '[]');
     } catch(e) { return []; }
+  }
+
+  function getArchivedIds() {
+    try {
+      return JSON.parse(localStorage.getItem(ARCHIVED_STORAGE_KEY) || '[]');
+    } catch(e) { return []; }
+  }
+
+  function getAutoArchiveDays() {
+    try {
+      const v = localStorage.getItem(AUTO_ARCHIVE_CONFIG_KEY);
+      return v ? parseInt(v, 10) : 7; // Por defecto 7 días tras lectura
+    } catch(e) { return 7; }
+  }
+
+  function setAutoArchiveDays(days) {
+    try {
+      localStorage.setItem(AUTO_ARCHIVE_CONFIG_KEY, String(days));
+    } catch(e) {}
+  }
+
+  function toggleAutoArchiveConfig() {
+    const current = getAutoArchiveDays();
+    const input = prompt('Configuración de auto-archivado para avisos de bienvenida leídos (en días, 0 para desactivar):', String(current));
+    if (input !== null) {
+      const parsed = parseInt(input, 10);
+      if (!isNaN(parsed) && parsed >= 0) {
+        setAutoArchiveDays(parsed);
+        if (window.showToast) window.showToast('Configuración de auto-archivado guardada (' + (parsed === 0 ? 'Desactivado' : parsed + ' días') + ').', 'info');
+      }
+    }
+  }
+
+  function setActiveTab(tab) {
+    currentTab = tab || 'inbox';
+    const tabs = ['inbox', 'read', 'archived'];
+    tabs.forEach(t => {
+      const btn = document.getElementById('msg-tab-' + t);
+      if (btn) {
+        if (t === currentTab) {
+          btn.className = 'px-3 py-1 rounded-xl text-xs font-bold transition bg-wes-blue text-white shadow-xs';
+          btn.setAttribute('aria-selected', 'true');
+        } else {
+          btn.className = 'px-3 py-1 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-100';
+          btn.setAttribute('aria-selected', 'false');
+        }
+      }
+    });
+    renderMessages();
   }
 
   async function markAsRead(id) {
@@ -5556,6 +5608,54 @@ const UserMessagesService = (function() {
     } catch(e) {}
   }
 
+  async function archiveMessage(id, isArchiving = true) {
+    if (!id) return;
+    const archived = getArchivedIds();
+    if (isArchiving) {
+      if (!archived.includes(id)) {
+        archived.push(id);
+        localStorage.setItem(ARCHIVED_STORAGE_KEY, JSON.stringify(archived));
+      }
+      // Al archivar, asegurar que también quede marcado como leído
+      markAsRead(id);
+    } else {
+      const idx = archived.indexOf(id);
+      if (idx !== -1) {
+        archived.splice(idx, 1);
+        localStorage.setItem(ARCHIVED_STORAGE_KEY, JSON.stringify(archived));
+      }
+    }
+    updateBadge();
+    renderMessages();
+
+    // Sincronizar archivo con el servidor
+    try {
+      const user = typeof UserAuth !== 'undefined' ? UserAuth.getCurrentUser() : null;
+      if (user && user.email) {
+        fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'archive_message_user',
+            messageId: id,
+            userEmail: user.email,
+            actionType: isArchiving ? 'archivar' : 'desarchivar'
+          })
+        }).catch(() => {});
+      }
+    } catch(e) {}
+  }
+
+  function jumpToProjects(id) {
+    if (id) markAsRead(id);
+    closeUserMessagesModal();
+    if (typeof window.openInstallationProjectsModal === 'function') {
+      window.openInstallationProjectsModal();
+    } else if (typeof window.handleMobileNavAction === 'function') {
+      window.handleMobileNavAction('proyectos');
+    }
+  }
+
   async function fetchMessagesForUser() {
     if (typeof UserAuth === 'undefined') return [];
     const user = UserAuth.getCurrentUser();
@@ -5574,6 +5674,27 @@ const UserMessagesService = (function() {
         const data = await res.json();
         if (data && data.success && Array.isArray(data.messages)) {
           cachedMessages = data.messages;
+
+          // Sincronizar estados locales desde el servidor
+          const localReads = getReadIds();
+          const localArchived = getArchivedIds();
+          let changedReads = false;
+          let changedArchived = false;
+
+          cachedMessages.forEach(m => {
+            if (m.isRead && !localReads.includes(m.id)) {
+              localReads.push(m.id);
+              changedReads = true;
+            }
+            if (m.isArchived && !localArchived.includes(m.id)) {
+              localArchived.push(m.id);
+              changedArchived = true;
+            }
+          });
+
+          if (changedReads) localStorage.setItem(READ_STORAGE_KEY, JSON.stringify(localReads));
+          if (changedArchived) localStorage.setItem(ARCHIVED_STORAGE_KEY, JSON.stringify(localArchived));
+
           updateBadge();
           return data.messages;
         }
@@ -5589,18 +5710,24 @@ const UserMessagesService = (function() {
     const dropdownBadge = document.getElementById('dropdown-messages-badge');
     const mobileBadge = document.getElementById('mobile-messages-badge');
     const bottomNavBadge = document.getElementById('mobile-bottom-notifications-badge');
+    const tabInboxBadge = document.getElementById('msg-inbox-count');
 
     if (typeof UserAuth === 'undefined' || !UserAuth.getCurrentUser()) {
       if (badge) badge.classList.add('hidden');
       if (dropdownBadge) dropdownBadge.classList.add('hidden');
       if (mobileBadge) mobileBadge.classList.add('hidden');
       if (bottomNavBadge) bottomNavBadge.classList.add('hidden');
+      if (tabInboxBadge) tabInboxBadge.textContent = '0';
       return;
     }
 
     const readIds = getReadIds();
-    const unreadCount = cachedMessages.filter(m => !readIds.includes(m.id)).length;
+    const archivedIds = getArchivedIds();
+    // No leídos: no están en readIds ni en archivedIds
+    const unreadCount = cachedMessages.filter(m => !readIds.includes(m.id) && !archivedIds.includes(m.id)).length;
     const countText = unreadCount > 9 ? '9+' : String(unreadCount);
+
+    if (tabInboxBadge) tabInboxBadge.textContent = String(unreadCount);
 
     [badge, dropdownBadge, mobileBadge, bottomNavBadge].forEach(b => {
       if (b) {
@@ -5810,20 +5937,39 @@ const UserMessagesService = (function() {
       return;
     }
 
-    if (cachedMessages.length === 0) {
+    const readIds = getReadIds();
+    const archivedIds = getArchivedIds();
+
+    // Filtrar según pestaña activa
+    let displayList = [];
+    if (currentTab === 'inbox') {
+      displayList = cachedMessages.filter(m => !archivedIds.includes(m.id));
+    } else if (currentTab === 'read') {
+      displayList = cachedMessages.filter(m => readIds.includes(m.id) && !archivedIds.includes(m.id));
+    } else if (currentTab === 'archived') {
+      displayList = cachedMessages.filter(m => archivedIds.includes(m.id));
+    }
+
+    if (displayList.length === 0) {
+      let emptyText = 'No tienes mensajes pendientes en esta sección.';
+      if (currentTab === 'read') emptyText = 'Aún no tienes mensajes en el listado de leídos.';
+      if (currentTab === 'archived') emptyText = 'No tienes mensajes archivados.';
+
       list.innerHTML = `
         <div class="p-8 text-center text-slate-400 text-xs">
           <i class="fas fa-envelope-open text-3xl mb-2 text-slate-300 block"></i>
-          <span class="font-medium text-slate-600 block">No tienes mensajes pendientes</span>
+          <span class="font-medium text-slate-600 block">${emptyText}</span>
           <span class="text-[11px] text-slate-400 mt-1 block">Cualquier respuesta o notificación de WES aparecerá aquí.</span>
         </div>
       `;
       return;
     }
 
-    const readIds = getReadIds();
-    list.innerHTML = cachedMessages.map(m => {
+    list.innerHTML = displayList.map(m => {
       const isUnread = !readIds.includes(m.id);
+      const isArchived = archivedIds.includes(m.id);
+      const isWelcomeTechnical = (m.subject && m.subject.toLowerCase().includes('bienvenido') && m.subject.toLowerCase().includes('equipo'));
+
       return `
         <div class="p-4 bg-white rounded-2xl border ${isUnread ? 'border-amber-400 ring-2 ring-amber-300/30 shadow-md' : 'border-slate-200'} space-y-2.5 transition">
           <div class="flex items-center justify-between">
@@ -5831,6 +5977,7 @@ const UserMessagesService = (function() {
               ${isUnread ? '<span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" title="Mensaje no leído"></span>' : '<i class="fas fa-check-double text-emerald-500 text-xs" title="Mensaje leído"></i>'}
               <span class="font-bold text-xs text-slate-900">${escapeHtml(m.sender || 'Equipo WES')}</span>
               ${isUnread ? '<span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-100 text-amber-800">Nuevo</span>' : ''}
+              ${isArchived ? '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 text-slate-600">Archivado</span>' : ''}
             </div>
             <span class="text-[10px] text-slate-400 font-mono">${escapeHtml(m.date || '')}</span>
           </div>
@@ -5840,23 +5987,41 @@ const UserMessagesService = (function() {
             ${escapeHtml(m.content || '')}
           </p>
 
-          <div class="pt-1 flex items-center justify-between text-xs">
-            ${isUnread ? `
-              <button type="button" onclick="UserMessagesService.markAsRead('${m.id}')" class="text-[11px] text-slate-500 hover:text-wes-blue font-semibold flex items-center space-x-1">
-                <i class="far fa-check-circle"></i>
-                <span>Marcar como leído</span>
-              </button>
-            ` : `
-              <span class="text-[10px] text-emerald-600 font-semibold flex items-center space-x-1">
-                <i class="fas fa-check"></i>
-                <span>Leído</span>
-              </span>
-            `}
+          <div class="pt-1 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div class="flex items-center space-x-2">
+              ${isUnread ? `
+                <button type="button" onclick="UserMessagesService.markAsRead('${m.id}')" class="text-[11px] text-slate-500 hover:text-wes-blue font-semibold flex items-center space-x-1">
+                  <i class="far fa-check-circle"></i>
+                  <span>Marcar como leído</span>
+                </button>
+              ` : `
+                <span class="text-[10px] text-emerald-600 font-semibold flex items-center space-x-1">
+                  <i class="fas fa-check"></i>
+                  <span>Leído</span>
+                </span>
+              `}
 
-            <button type="button" onclick="UserMessagesService.jumpToChat('${m.id}', '${escapeHtml(m.content || '').replace(/'/g, "\\'")}', '${escapeHtml(m.suggestedPrompt || 'Hola, deseo consultar sobre este mensaje.').replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-[#0D2A5C] hover:bg-[#071836] text-amber-300 font-extrabold text-[11px] rounded-xl flex items-center space-x-1 shadow-xs transition active:scale-95">
-              <i class="fas fa-comments"></i>
-              <span>Interactuar en el Chat</span>
-            </button>
+              <!-- Botón Archivar / Desarchivar -->
+              <button type="button" onclick="UserMessagesService.archiveMessage('${m.id}', ${!isArchived})" class="text-[11px] text-slate-400 hover:text-slate-700 font-semibold flex items-center space-x-1 transition" title="${isArchived ? 'Desarchivar y volver a la vista principal' : 'Archivar aviso'}">
+                <i class="fas ${isArchived ? 'fa-inbox' : 'fa-archive'} text-[10px]"></i>
+                <span>${isArchived ? 'Desarchivar' : 'Archivar'}</span>
+              </button>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <!-- Botón directo 'Ir a Mis proyectos' si es mensaje de bienvenida técnica -->
+              ${isWelcomeTechnical ? `
+                <button type="button" onclick="UserMessagesService.jumpToProjects('${m.id}')" class="px-3 py-1.5 bg-gradient-to-r from-wes-blue to-[#071836] hover:brightness-110 text-white font-extrabold text-[11px] rounded-xl flex items-center space-x-1.5 shadow-sm transition active:scale-95">
+                  <i class="fas fa-hard-hat text-amber-300"></i>
+                  <span>Ir a Mis proyectos</span>
+                </button>
+              ` : ''}
+
+              <button type="button" onclick="UserMessagesService.jumpToChat('${m.id}', '${escapeHtml(m.content || '').replace(/'/g, "\\'")}', '${escapeHtml(m.suggestedPrompt || 'Hola, deseo consultar sobre este mensaje.').replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-[#0D2A5C] hover:bg-[#071836] text-amber-300 font-extrabold text-[11px] rounded-xl flex items-center space-x-1 shadow-xs transition active:scale-95">
+                <i class="fas fa-comments"></i>
+                <span>Interactuar en el Chat</span>
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -5876,6 +6041,30 @@ const UserMessagesService = (function() {
   function escapeHtml(str) {
     if (!str) return '';
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function openModal() {
+    if (typeof window.closeMobileMenu === 'function') window.closeMobileMenu();
+    if (typeof window.closeMyAccountDropdown === 'function') window.closeMyAccountDropdown();
+
+    const modal = document.getElementById('user-messages-modal');
+    if (!modal) return;
+
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+    document.body.classList.add('overflow-hidden');
+
+    renderMessages();
+    fetchMessagesForUser().then(() => renderMessages());
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('user-messages-modal');
+    if (!modal) return;
+
+    modal.classList.add('hidden');
+    modal.style.display = 'none';
+    document.body.classList.remove('overflow-hidden');
   }
 
   function init() {
@@ -5925,11 +6114,38 @@ const UserMessagesService = (function() {
     fetchMessagesForUser,
     renderMessages,
     markAsRead,
+    archiveMessage,
+    jumpToProjects,
     jumpToChat,
+    setActiveTab,
+    switchTab: setActiveTab,
+    toggleAutoArchiveConfig,
     togglePushSubscriptionFromProfile,
     updatePushUI
   };
 })();
+
+function openUserMessagesModal() {
+  const modal = document.getElementById('user-messages-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    UserMessagesService.renderMessages();
+    UserMessagesService.fetchMessagesForUser().then(() => {
+      UserMessagesService.renderMessages();
+    });
+  }
+}
+
+function closeUserMessagesModal() {
+  const modal = document.getElementById('user-messages-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+UserMessagesService.openModal = openUserMessagesModal;
+UserMessagesService.closeModal = closeUserMessagesModal;
+
 window.UserMessagesService = UserMessagesService;
 window.openUserMessagesModal = openUserMessagesModal;
 window.closeUserMessagesModal = closeUserMessagesModal;

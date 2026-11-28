@@ -149,6 +149,10 @@ function doPost(e) {
         response = markMessageReadUserHandler(payload.messageId, payload.userEmail);
         break;
 
+      case 'archive_message_user':
+        response = archiveMessageUserHandler(payload.messageId, payload.userEmail, payload.actionType);
+        break;
+
       case 'admin_user_access_action':
         response = handleAdminUserAccessAction(payload.data, payload.adminToken, payload.userEmail);
         break;
@@ -2872,11 +2876,39 @@ function markMessageReadUserHandler(messageId, userEmail) {
         if (cleanEmail && targetEmail !== cleanEmail && targetEmail !== 'todos' && targetEmail !== 'all') {
           return { success: false, message: 'No autorizado para marcar este mensaje.' };
         }
-        sheet.getRange(i + 1, 8).setValue('LEIDO');
+        const currentStatus = String(rows[i][7] || '').toUpperCase().trim();
+        if (currentStatus !== 'ARCHIVADO') {
+          sheet.getRange(i + 1, 8).setValue('LEIDO');
+        }
         break;
       }
     }
-    return { success: true, message: 'Mensaje marcado como leído.' };
+    return { success: true, message: 'Mensaje marcado como leído en el servidor.' };
+  } catch (err) {
+    return { success: false, message: err.toString() };
+  }
+}
+
+function archiveMessageUserHandler(messageId, userEmail, actionType) {
+  try {
+    if (!messageId) return { success: false, message: 'ID de mensaje requerido.' };
+    const sheet = getCustomerMessagesSheet_();
+    const rows = sheet.getDataRange().getValues();
+    const cleanEmail = String(userEmail || '').toLowerCase().trim();
+    const nextStatus = (actionType === 'desarchivar' ? 'LEIDO' : 'ARCHIVADO');
+
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]) === String(messageId)) {
+        // Verificar destinatario
+        const targetEmail = String(rows[i][2] || '').toLowerCase().trim();
+        if (cleanEmail && targetEmail !== cleanEmail && targetEmail !== 'todos' && targetEmail !== 'all') {
+          return { success: false, message: 'No autorizado para archivar este mensaje.' };
+        }
+        sheet.getRange(i + 1, 8).setValue(nextStatus);
+        break;
+      }
+    }
+    return { success: true, message: 'Estado del mensaje actualizado a ' + nextStatus + '.' };
   } catch (err) {
     return { success: false, message: err.toString() };
   }
@@ -2889,9 +2921,9 @@ function getCustomerMessagesSheet_() {
     sheet = ss.insertSheet('Mensajes_Directos_Clientes');
     sheet.appendRow([
       'ID', 'Fecha', 'Email_Cliente', 'Remitente', 
-      'Asunto', 'Contenido', 'Prompt_Sugerido_Chat', 'Estado'
+      'Asunto', 'Contenido', 'Prompt_Sugerido_Chat', 'Estado', 'ID_Usuario'
     ]);
-    sheet.getRange(1, 1, 1, 8).setFontWeight('bold').setBackground('#075985').setFontColor('#FFFFFF');
+    sheet.getRange(1, 1, 1, 9).setFontWeight('bold').setBackground('#075985').setFontColor('#FFFFFF');
   }
   return sheet;
 }
@@ -2911,6 +2943,10 @@ function getUserDirectMessagesHandler(userEmail) {
       const r = rows[i];
       const targetEmail = String(r[2] || '').toLowerCase().trim();
       if (targetEmail === cleanEmail || targetEmail === 'todos' || targetEmail === 'all') {
+        const rawStatus = String(r[7] || 'NO_LEIDO').toUpperCase().trim();
+        const isRead = (rawStatus === 'LEIDO' || rawStatus === 'ARCHIVADO');
+        const isArchived = (rawStatus === 'ARCHIVADO');
+
         messages.unshift({
           id: String(r[0]),
           date: String(r[1]),
@@ -2919,7 +2955,10 @@ function getUserDirectMessagesHandler(userEmail) {
           subject: String(r[4] || 'Notificación WES'),
           content: String(r[5] || ''),
           suggestedPrompt: String(r[6] || 'Hola, deseo consultar sobre este mensaje.'),
-          status: String(r[7] || 'activo')
+          status: rawStatus.toLowerCase(),
+          isRead: isRead,
+          isArchived: isArchived,
+          targetUserId: String(r[8] || '')
         });
       }
     }
